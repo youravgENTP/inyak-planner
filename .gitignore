@@ -1,0 +1,4 @@
+.venv/
+crawler/browser-profile/
+crawler/output
+*.log
