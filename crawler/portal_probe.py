@@ -87,9 +87,96 @@ def main():
                     f"text={option.inner_text().strip()!r}, "
                     f"value={option.get_attribute('value')!r}"
                     )
-
+                
         print("(HTML, Screenshot) has been saved in (crawler/output)")
         # print("Press 'Enter' to close the browser")
+                
+        print("\n 조회조건 설정")
+
+        # 현재 화면에 존재하는 학부 정규학기 하나를 선택
+        lecture_frame.locator(
+            "#mainContent_ddl학년도"
+        ).select_option(value="01_2026_2")
+
+        # 학년도 선택으로 postback이 발생할 수 있으므로 잠시 대기
+        page.wait_for_timeout(2000)
+
+        # iframe 다시 찾기
+        lecture_frame = next(
+            frame for frame in page.frames if "navi.inje.ac.kr/AllUsers/Lecture.aspx" in frame.url
+        )
+
+
+        lecture_frame.locator(
+            "#mainContent_ddl수업트랙"
+        ).select_option(value="1")
+
+        lecture_frame.locator(
+            "#mainContent_ddl소속"
+        ).select_option(value="01995") # 약학과 01995
+
+        lecture_frame.locator(
+            "#mainContent_ddl작성언어"
+        ).select_option(value="1")
+
+        print("조회")
+
+        lecture_frame.locator(
+            "#mainContent_btn조회"
+        ).click()
+
+        page.wait_for_timeout(3000)
+
+        # iframe 다시 찾기
+        lecture_frame = next(
+            frame for frame in page.frames if "navi.inje.ac.kr/AllUsers/Lecture.aspx" in frame.url
+        )
+
+        # 조회 결과 저장
+        result_html = lecture_frame.content()
+
+        (OUTPUT_DIR / "lecture-result.html").write_text(
+            result_html,
+            encoding="utf-8"
+        )
+
+        lecture_frame.locator("body").screenshot(
+            path=str(OUTPUT_DIR / "lecture-result.png")
+        )
+
+        tables = lecture_frame.locator("table")
+
+        print(f"table 개수 : {tables.count()}")
+
+        for table_index in range(tables.count()):
+            table = tables.nth(table_index)
+
+            print(
+                    f"\n[table {table_index}] "
+                    f"id={table.get_attribute('id')!r}, "
+                    f"class={table.get_attribute('class')!r}"
+                )
+
+            print(table.inner_text()[:1000])
+
+            print("\n조회 후 발견된 링크와 버튼:")
+
+            controls = lecture_frame.locator(
+                "a, button, input[type='button'], input[type='submit']"
+            )
+
+            for index in range(controls.count()):
+                control = controls.nth(index)
+
+                print(
+                    f"[control {index}] "
+                    f"tag={control.evaluate('(el) => el.tagName')!r}, "
+                    f"id={control.get_attribute('id')!r}, "
+                    f"text={control.inner_text().strip()!r}, "
+                    f"value={control.get_attribute('value')!r}, "
+                    f"href={control.get_attribute('href')!r}, "
+                    f"onclick={control.get_attribute('onclick')!r}"
+                )                
 
         # context.close() # close browser
 
