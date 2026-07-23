@@ -1,4 +1,14 @@
 .venv/
 crawler/browser-profile/
-crawler/output
+crawler/output/
 *.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Generated databases
+data/db/*.db
