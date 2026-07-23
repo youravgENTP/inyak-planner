@@ -165,20 +165,123 @@ def main():
                 "a, button, input[type='button'], input[type='submit']"
             )
 
-            for index in range(controls.count()):
-                control = controls.nth(index)
+        # 수업계획서 XML & pdf 시험 다운로드
 
-                print(
-                    f"[control {index}] "
-                    f"tag={control.evaluate('(el) => el.tagName')!r}, "
-                    f"id={control.get_attribute('id')!r}, "
-                    f"text={control.inner_text().strip()!r}, "
-                    f"value={control.get_attribute('value')!r}, "
-                    f"href={control.get_attribute('href')!r}, "
-                    f"onclick={control.get_attribute('onclick')!r}"
-                )                
+        xml_url = (
+            "https://navi.inje.ac.kr/MRD/Subject/"
+            "SubjB0011R_XML.aspx"
+            "?SYS_CD=01"
+            "&YY=2026"
+            "&SMST=2"
+            "&TR=1"
+            "&SUBJ=ADA140"
+            "&BUNBAN=1"
+            "&LAN=1"
+            "&CAP=2"
+            "&ID="
+            "&AGIN=A"
+        )
 
-        # context.close() # close browser
+        xml_response = context.request.get(xml_url)
+
+        print(f"XML status: {xml_response.status}")
+        print(f"Content-Type: {xml_response.headers.get('content-type')}")
+
+        xml_text = xml_response.text()
+
+        (OUTPUT_DIR / "syllabus-ADA140-1.xml").write_text(
+            xml_text,
+            encoding="utf-8",
+        )
+
+        # PDF 생성 요청
+
+        pdf_create_response = context.request.post(
+            "https://reporttool.inje.ac.kr/ReportingServer/service",
+            headers={
+                "Accept": "*/*",
+                "Content-Type": (
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+                ),
+                "Origin": "https://navi.inje.ac.kr",
+                "Referer": "https://navi.inje.ac.kr/",
+            },
+            form={
+                "opcode": "500",
+                "mrd_path": (
+                    "https://navi.inje.ac.kr/MRD/Subject/"
+                    "SubjB0011R_02.mrd"
+                ),
+                "mrd_param": f"/rfn [{xml_url}]",
+                "export_type": "pdf",
+                "protocol": "sync",
+            },
+        )
+
+        print("PDF 생성 상태:", pdf_create_response.status)
+
+        pdf_create_text = pdf_create_response.text().strip()
+        print("PDF 생성 응답:", pdf_create_text)
+
+        if not pdf_create_response.ok:
+            raise RuntimeError(
+                f"PDF 생성 요청 실패: HTTP "
+                f"{pdf_create_response.status} / {pdf_create_text}"
+            )
+
+        if not pdf_create_text.startswith("1|"):
+            raise RuntimeError(
+                f"Crownix PDF 생성 실패: {pdf_create_text}"
+            )
+
+        temporary_pdf_path = pdf_create_text.split("|", 1)[1].strip()
+
+        if not temporary_pdf_path.lower().endswith(".pdf"):
+            raise RuntimeError(
+                f"잘못된 임시 PDF 경로: {temporary_pdf_path}"
+            )
+
+        print("임시 PDF 경로:", temporary_pdf_path)
+
+        pdf_download_response = context.request.get(
+            "https://reporttool.inje.ac.kr/ReportingServer/download",
+            params={
+                "filename": temporary_pdf_path,
+                "delete": "true",
+                "attatchment": "true",
+            },
+        )
+
+        print("PDF 다운로드 상태:", pdf_download_response.status)
+        print(
+            "PDF Content-Type:",
+            pdf_download_response.headers.get("content-type"),
+        )
+
+        pdf_bytes = pdf_download_response.body()
+
+        if not pdf_download_response.ok:
+            raise RuntimeError(
+                f"PDF 다운로드 실패: HTTP {pdf_download_response.status}"
+            )
+
+        if not pdf_bytes.startswith(b"%PDF"):
+            preview = pdf_bytes[:300].decode(
+                "utf-8",
+                errors="replace",
+            )
+            raise RuntimeError(
+                f"다운로드된 파일이 PDF가 아닙니다: {preview}"
+            )
+
+        pdf_output_path = OUTPUT_DIR / "syllabus-ADA140-1.pdf"
+        pdf_output_path.write_bytes(pdf_bytes)
+
+        print("PDF 저장 완료:", pdf_output_path)
+        print("PDF 크기:", len(pdf_bytes), "bytes")
+
+
+
 
 if __name__ == "__main__" : 
     main()
