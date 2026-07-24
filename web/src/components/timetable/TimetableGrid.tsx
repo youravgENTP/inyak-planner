@@ -127,12 +127,31 @@ export function TimetableGrid({
 
               const canRemove =
                 isEditing &&
+                !course.isPreview &&
                 course.sourceLectureId !== undefined &&
                 onRemoveLecture !== undefined
 
+              const blockClassName = [
+                'course-block',
+                `course-block--${course.color}`,
+                course.isPreview
+                  ? 'course-block--preview'
+                  : '',
+                course.isConflicting
+                  ? 'course-block--conflicting'
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')
+
+              const conflictLabel =
+                course.isConflicting
+                  ? ', 다른 수업과 시간이 겹칩니다'
+                  : ''
+
               return (
                 <article
-                  className={`course-block course-block--${course.color}`}
+                  className={blockClassName}
                   key={course.id}
                   style={{
                     top: geometry.top,
@@ -142,7 +161,7 @@ export function TimetableGrid({
                     course.startMinute,
                   )}부터 ${formatMinuteAsTime(
                     course.endMinute,
-                  )}까지`}
+                  )}까지${conflictLabel}`}
                 >
                   {canRemove && (
                     <button

@@ -1,5 +1,6 @@
 import type { Lecture } from './types'
 import { parseLectureSchedule } from './schedule'
+
 import type {
   CourseColor,
   TimetableCourse,
@@ -12,6 +13,10 @@ const COURSE_COLORS: CourseColor[] = [
   'slate',
 ]
 
+interface LectureToTimetableCourseOptions {
+  isPreview?: boolean
+}
+
 function getLectureColor(
   lectureId: number,
 ): CourseColor {
@@ -21,33 +26,44 @@ function getLectureColor(
 }
 
 /*
- * 강의 하나가 여러 요일에 열릴 수 있으므로,
- * 시간표 블록도 여러 개로 변환될 수 있습니다.
+ * 강의 하나를 시간표 블록으로 변환합니다.
  *
- * 예:
- * 월3,4수4 H동101
+ * 강의가 여러 요일에 열리면,
+ * 요일별로 여러 개의 블록이 만들어집니다.
  *
- * → 월요일 블록 1개
- * → 수요일 블록 1개
+ * options.isPreview가 true이면
+ * 검색 결과 hover용 미리보기 블록으로 표시합니다.
  */
 export function lectureToTimetableCourses(
   lecture: Lecture,
+  options: LectureToTimetableCourseOptions = {},
 ): TimetableCourse[] {
   const schedules = parseLectureSchedule(
     lecture.scheduleAndRoom,
   )
 
+  const isPreview = options.isPreview ?? false
+
   return schedules.map((schedule, index) => ({
     /*
-     * 각 시간표 블록의 고유 ID입니다.
+     * 미리보기 블록과 실제 블록의 ID가
+     * 서로 겹치지 않도록 구분합니다.
      */
-    id: `lecture-${lecture.id}-${index}`,
+    id: isPreview
+      ? `lecture-preview-${lecture.id}-${index}`
+      : `lecture-${lecture.id}-${index}`,
 
     /*
-     * 여러 블록이 같은 강의에서 생성됐다는 것을
-     * 식별하기 위한 원본 강의 ID입니다.
+     * 여러 요일 블록이 같은 원본 강의에서
+     * 생성됐다는 것을 식별하기 위한 값입니다.
      */
     sourceLectureId: lecture.id,
+
+    /*
+     * 검색 결과 hover로 만들어진
+     * 임시 블록인지 나타냅니다.
+     */
+    isPreview,
 
     code: lecture.courseCode,
     title: lecture.courseName,
@@ -62,10 +78,26 @@ export function lectureToTimetableCourses(
   }))
 }
 
+/*
+ * 여러 강의를 실제 시간표 블록 목록으로
+ * 한꺼번에 변환합니다.
+ */
 export function lecturesToTimetableCourses(
   lectures: Lecture[],
 ): TimetableCourse[] {
-  return lectures.flatMap(
-    lectureToTimetableCourses,
+  return lectures.flatMap((lecture) =>
+    lectureToTimetableCourses(lecture),
   )
+}
+
+/*
+ * 검색 결과에서 hover 중인 강의 하나를
+ * 미리보기 블록으로 변환합니다.
+ */
+export function lectureToPreviewCourses(
+  lecture: Lecture,
+): TimetableCourse[] {
+  return lectureToTimetableCourses(lecture, {
+    isPreview: true,
+  })
 }

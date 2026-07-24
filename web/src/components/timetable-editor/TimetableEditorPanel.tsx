@@ -17,7 +17,12 @@ type YearFilter = 'all' | number
 interface TimetableEditorPanelProps {
   lectures: Lecture[]
   selectedLectures: Lecture[]
+  previewLectureId: number | null
+  previewConflictCourseTitles: string[]
   onAddLecture: (lecture: Lecture) => void
+  onPreviewLectureChange: (
+    lecture: Lecture | null,
+  ) => void
 }
 
 const SEARCH_MODE_LABELS: Record<SearchMode, string> = {
@@ -158,7 +163,10 @@ function formatLectureCredits(
 export function TimetableEditorPanel({
   lectures,
   selectedLectures,
+  previewLectureId,
+  previewConflictCourseTitles,
   onAddLecture,
+  onPreviewLectureChange,
 }: TimetableEditorPanelProps) {
   const [searchMode, setSearchMode] =
     useState<SearchMode>('courseName')
@@ -206,10 +214,6 @@ export function TimetableEditorPanel({
 
   const filteredLectures = useMemo(() => {
     return lectures.filter((lecture) => {
-      /*
-       * 검색어가 비어 있으면 모든 강의가
-       * 검색어 조건을 통과합니다.
-       */
       const matchesSearch =
         !normalizedQuery ||
         getLectureSearchValue(
@@ -250,6 +254,7 @@ export function TimetableEditorPanel({
   ) {
     setSearchMode(nextMode)
     setSearchQuery('')
+    onPreviewLectureChange(null)
   }
 
   function handleAddLecture(
@@ -260,6 +265,21 @@ export function TimetableEditorPanel({
     }
 
     onAddLecture(lecture)
+    onPreviewLectureChange(null)
+  }
+
+  function handlePreviewStart(
+    lecture: Lecture,
+  ) {
+    if (selectedLectureIds.has(lecture.id)) {
+      return
+    }
+
+    onPreviewLectureChange(lecture)
+  }
+
+  function handlePreviewEnd() {
+    onPreviewLectureChange(null)
   }
 
   return (
@@ -311,11 +331,13 @@ export function TimetableEditorPanel({
             placeholder={getSearchPlaceholder(
               searchMode,
             )}
-            onChange={(event) =>
+            onChange={(event) => {
               setSearchQuery(
                 event.target.value,
               )
-            }
+
+              onPreviewLectureChange(null)
+            }}
           />
         </label>
       </section>
@@ -350,6 +372,8 @@ export function TimetableEditorPanel({
                       ? 'all'
                       : Number(nextValue),
                   )
+
+                  onPreviewLectureChange(null)
                 }}
               >
                 <option value="all">
@@ -372,12 +396,14 @@ export function TimetableEditorPanel({
 
               <select
                 value={completionTypeFilter}
-                onChange={(event) =>
+                onChange={(event) => {
                   setCompletionTypeFilter(
                     event.target
                       .value as CompletionTypeFilter,
                   )
-                }
+
+                  onPreviewLectureChange(null)
+                }}
               >
                 <option value="all">
                   전체
@@ -412,10 +438,52 @@ export function TimetableEditorPanel({
                       lecture.id,
                     )
 
+                  const isCurrentPreview =
+                    previewLectureId ===
+                    lecture.id
+
+                  const isConflictingPreview =
+                    isCurrentPreview &&
+                    previewConflictCourseTitles
+                      .length > 0
+
+                  const conflictTooltip =
+                    isConflictingPreview
+                      ? `시간이 겹치는 수업: ${previewConflictCourseTitles.join(
+                          ', ',
+                        )}`
+                      : undefined
+
+                  const itemClassName = [
+                    'lecture-result-item',
+                    isConflictingPreview
+                      ? 'lecture-result-item--conflicting'
+                      : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')
+
                   return (
                     <li
-                      className="lecture-result-item"
+                      className={itemClassName}
                       key={lecture.id}
+                      title={conflictTooltip}
+                      onMouseEnter={() =>
+                        handlePreviewStart(
+                          lecture,
+                        )
+                      }
+                      onMouseLeave={
+                        handlePreviewEnd
+                      }
+                      onFocusCapture={() =>
+                        handlePreviewStart(
+                          lecture,
+                        )
+                      }
+                      onBlurCapture={
+                        handlePreviewEnd
+                      }
                     >
                       <div className="lecture-result-content">
                         <strong className="lecture-result-title">
@@ -450,6 +518,15 @@ export function TimetableEditorPanel({
                             lecture.credits,
                           )}
                         </span>
+
+                        {isConflictingPreview && (
+                          <span className="lecture-result-conflict-message">
+                            {previewConflictCourseTitles.join(
+                              ', ',
+                            )}
+                            과 시간이 겹칩니다.
+                          </span>
+                        )}
                       </div>
 
                       <span
@@ -457,7 +534,9 @@ export function TimetableEditorPanel({
                         title={
                           isAlreadyAdded
                             ? '이미 추가된 강의입니다.'
-                            : '시간표에 추가'
+                            : isConflictingPreview
+                              ? conflictTooltip
+                              : '시간표에 추가'
                         }
                       >
                         <button

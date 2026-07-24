@@ -3,9 +3,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
 import { fetchLectures } from '../domain/lectures/api'
-import { lecturesToTimetableCourses } from '../domain/lectures/timetable'
+import {
+  lectureToPreviewCourses,
+  lecturesToTimetableCourses,
+} from '../domain/lectures/timetable'
 import type { Lecture } from '../domain/lectures/types'
 import { getTimetableConflicts } from '../domain/timetable/selectors'
+import type { TimetableCourse } from '../domain/timetable/types'
 
 function haveSameLectures(
   firstLectures: Lecture[],
@@ -28,28 +32,38 @@ function haveSameLectures(
   )
 }
 
+function doCoursesOverlap(
+  firstCourse: TimetableCourse,
+  secondCourse: TimetableCourse,
+): boolean {
+  if (firstCourse.day !== secondCourse.day) {
+    return false
+  }
+
+  return (
+    firstCourse.startMinute <
+      secondCourse.endMinute &&
+    secondCourse.startMinute <
+      firstCourse.endMinute
+  )
+}
+
 export function TimetablePage() {
   const [isEditing, setIsEditing] = useState(false)
 
-  /*
-   * API에서 가져온 전체 강의 목록입니다.
-   */
   const [lectures, setLectures] =
     useState<Lecture[]>([])
 
-  /*
-   * 마지막으로 "수정 완료"를 눌러
-   * 저장한 강의 목록입니다.
-   */
   const [savedLectures, setSavedLectures] =
     useState<Lecture[]>([])
 
-  /*
-   * 현재 편집 화면에서 임시로
-   * 수정 중인 강의 목록입니다.
-   */
   const [draftLectures, setDraftLectures] =
     useState<Lecture[]>([])
+
+  const [
+    previewLecture,
+    setPreviewLecture,
+  ] = useState<Lecture | null>(null)
 
   const [isLoadingLectures, setIsLoadingLectures] =
     useState(true)
@@ -63,7 +77,8 @@ export function TimetablePage() {
         setIsLoadingLectures(true)
         setLectureLoadError(null)
 
-        const loadedLectures = await fetchLectures()
+        const loadedLectures =
+          await fetchLectures()
 
         setLectures(loadedLectures)
       } catch (error) {
@@ -82,26 +97,147 @@ export function TimetablePage() {
     void loadLectures()
   }, [])
 
-  /*
-   * 편집 중에는 임시 강의 목록을,
-   * 평상시에는 저장된 강의 목록을 사용합니다.
-   */
   const displayedLectures = isEditing
     ? draftLectures
     : savedLectures
 
-  /*
-   * Lecture[]를 시간표 블록 데이터로 변환합니다.
-   *
-   * 한 강의가 여러 요일에 있다면
-   * 여러 개의 시간표 블록으로 변환됩니다.
-   */
-  const displayedCourses = useMemo(
+  const actualCourses = useMemo(
     () =>
       lecturesToTimetableCourses(
         displayedLectures,
       ),
     [displayedLectures],
+  )
+
+  const previewCourses = useMemo(() => {
+    if (!isEditing || !previewLecture) {
+      return []
+    }
+
+    return lectureToPreviewCourses(
+      previewLecture,
+    )
+  }, [isEditing, previewLecture])
+
+  const previewConflictState = useMemo(() => {
+    const conflictingActualCourseIds =
+      new Set<string>()
+
+    const conflictingPreviewCourseIds =
+      new Set<string>()
+
+    const conflictingLectureIds =
+      new Set<number>()
+
+    previewCourses.forEach((previewCourse) => {
+      actualCourses.forEach((actualCourse) => {
+        if (
+          !doCoursesOverlap(
+            previewCourse,
+            actualCourse,
+          )
+        ) {
+          return
+        }
+
+        conflictingPreviewCourseIds.add(
+          previewCourse.id,
+        )
+
+        conflictingActualCourseIds.add(
+          actualCourse.id,
+        )
+
+        if (
+          actualCourse.sourceLectureId !== undefined
+        ) {
+          conflictingLectureIds.add(
+            actualCourse.sourceLectureId,
+          )
+        }
+      })
+    })
+
+    return {
+      conflictingActualCourseIds,
+      conflictingPreviewCourseIds,
+      conflictingLectureIds,
+    }
+  }, [actualCourses, previewCourses])
+
+  /*
+   * 검색 결과 tooltip과 안내 문구에 사용할
+   * 겹치는 기존 과목명 목록입니다.
+   *
+   * 한 강의가 여러 요일 블록으로 나뉘어 있어도
+   * 과목명은 한 번만 표시됩니다.
+   */
+  const previewConflictCourseTitles =
+    useMemo(() => {
+      if (!previewLecture) {
+        return []
+      }
+
+      const titleSet = new Set<string>()
+
+      draftLectures.forEach((lecture) => {
+        if (
+          previewConflictState
+            .conflictingLectureIds
+            .has(lecture.id)
+        ) {
+          titleSet.add(lecture.courseName)
+        }
+      })
+
+      return [...titleSet]
+    }, [
+      draftLectures,
+      previewLecture,
+      previewConflictState,
+    ])
+
+  const displayedActualCourses =
+    useMemo(
+      () =>
+        actualCourses.map((course) => ({
+          ...course,
+          isConflicting:
+            previewConflictState
+              .conflictingActualCourseIds
+              .has(course.id),
+        })),
+      [
+        actualCourses,
+        previewConflictState,
+      ],
+    )
+
+  const displayedPreviewCourses =
+    useMemo(
+      () =>
+        previewCourses.map((course) => ({
+          ...course,
+          isConflicting:
+            previewConflictState
+              .conflictingPreviewCourseIds
+              .has(course.id),
+        })),
+      [
+        previewCourses,
+        previewConflictState,
+      ],
+    )
+
+  const displayedCourses = useMemo(
+    () => [
+      ...displayedActualCourses,
+      ...displayedPreviewCourses,
+    ],
+    [
+      displayedActualCourses,
+      displayedPreviewCourses,
+    ],
   )
 
   const hasUnsavedChanges =
@@ -111,10 +247,6 @@ export function TimetablePage() {
       draftLectures,
     )
 
-  /*
-   * 저장하지 않은 변경사항이 있을 때
-   * 새로고침이나 탭 닫기를 경고합니다.
-   */
   useEffect(() => {
     function handleBeforeUnload(
       event: BeforeUnloadEvent,
@@ -139,10 +271,6 @@ export function TimetablePage() {
     }
   }, [hasUnsavedChanges])
 
-  /*
-   * 강의 하나가 여러 시간표 블록으로 나뉘어도
-   * 학점은 한 번만 합산합니다.
-   */
   const creditCount = displayedLectures.reduce(
     (totalCredits, lecture) =>
       totalCredits + (lecture.credits ?? 0),
@@ -150,12 +278,13 @@ export function TimetablePage() {
   )
 
   const conflicts =
-    getTimetableConflicts(displayedCourses)
+    getTimetableConflicts(actualCourses)
 
   const hasConflicts = conflicts.length > 0
 
   function handleStartEditing() {
     setDraftLectures([...savedLectures])
+    setPreviewLecture(null)
     setIsEditing(true)
   }
 
@@ -173,14 +302,18 @@ export function TimetablePage() {
     }
 
     setDraftLectures([...savedLectures])
+    setPreviewLecture(null)
   }
 
   function handleSaveEditing() {
     setSavedLectures([...draftLectures])
+    setPreviewLecture(null)
     setIsEditing(false)
   }
 
-  function handleAddLecture(lecture: Lecture) {
+  function handleAddLecture(
+    lecture: Lecture,
+  ) {
     setDraftLectures((currentLectures) => {
       const isAlreadyAdded =
         currentLectures.some(
@@ -194,6 +327,8 @@ export function TimetablePage() {
 
       return [...currentLectures, lecture]
     })
+
+    setPreviewLecture(null)
   }
 
   function handleRemoveLecture(
@@ -204,6 +339,22 @@ export function TimetablePage() {
         (lecture) => lecture.id !== lectureId,
       ),
     )
+
+    setPreviewLecture((currentPreview) => {
+      if (
+        currentPreview?.id === lectureId
+      ) {
+        return null
+      }
+
+      return currentPreview
+    })
+  }
+
+  function handlePreviewLectureChange(
+    lecture: Lecture | null,
+  ) {
+    setPreviewLecture(lecture)
   }
 
   return (
@@ -335,7 +486,16 @@ export function TimetablePage() {
           <TimetableEditorPanel
             lectures={lectures}
             selectedLectures={draftLectures}
+            previewLectureId={
+              previewLecture?.id ?? null
+            }
+            previewConflictCourseTitles={
+              previewConflictCourseTitles
+            }
             onAddLecture={handleAddLecture}
+            onPreviewLectureChange={
+              handlePreviewLectureChange
+            }
           />
         )}
 
