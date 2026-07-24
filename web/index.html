@@ -1,13 +1,37 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web</title>
-  </head>
-  <body>
-    <div id="root"></div>
+<!doctype html> <!--해당문서가 HTML5 문서라고 알림-->
+<html lang="en"> <!--페이지의 기본언어가 영어라고 알림-->
+  <head> <!--페이지 설정 정보의 영역-->
+    <meta charset="UTF-8" /> <!--문자 인코딩 지정-->
+    <link rel="icon"     type="image/png"    href="/C_Cross.png" /> <!--웹페이지를 로딩했을 때, 브라우저 탭에 표시되는 작은 아이콘인 'favicon' 지정-->
+    <!--  페이지 아이콘 // 이미지 파일 형식이 png // 이미지 파일의 위치-->
+    <meta name="viewport"    content="width=device-width, initial-scale=1.0" />
+    <!--  모바일 화면 크기 조정 //   페이지너비 <- 기기화면너비    //    첫 확대율 = 100%  -->
+    <title>Inyak Academic Planner</title> 
+    <!--  브라우저 탭에 표시되는 이름        -->
+  </head> <!-- 설정 영역 끝 -->
+  <body> <!-- 화면에 실제로 표시되는 콘텐츠 영역 시작  -->
+    <div id="root"></div> <!-- React 앱이 들어가는 자리. 
+    Main.tsx가 <div></div> 안에 React앱을 렌더링함
+    이 div의 id가 root이므로, main.tsx에서도 `document.getElementById("root")`으로 해놓음-->
     <script type="module" src="/src/main.tsx"></script>
+    <!-- 
+    <script></script> : JavaScript/TypeScript 기반 코드를 페이지에서 실행하는 태그 
+    type="module" : `main.tsx`가 ES module 방식으로 작성됨
+    src="파일위치" : `main.tsx`의 위치. 이 파일을 실행시키는 것
+    -->
   </body>
 </html>
+
+
+<!--
+<!doctype html>
+<html>
+  <head>
+    페이지 설정
+  </head>
+  <body>
+    React가 들어갈 자리
+    React 시작 파일 실행
+  </body>
+</html>
+-->

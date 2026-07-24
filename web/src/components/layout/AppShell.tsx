@@ -1,3 +1,15 @@
+/* 
+AppShell
+├── sidebar
+│   ├── brand
+│   ├── navigation
+│   └── footer
+└── app-main
+    ├── topbar
+    └── page-content
+        └── children
+*/
+
 import type { ReactNode } from 'react'
 
 interface AppShellProps {
@@ -6,7 +18,7 @@ interface AppShellProps {
 
 const navigationItems = [
   { label: '시간표', active: true },
-  { label: '과목 탐색', active: false },
+  { label: '수강편람', active: false },
   { label: '졸업 요건', active: false },
 ]
 
@@ -15,10 +27,10 @@ export function AppShell({ children }: AppShellProps) {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark" aria-hidden="true">약</span>
+          <span className="brand-mark" aria-hidden="true">윤</span>
           <div>
-            <strong>인약 플래너</strong>
-            <span>Inyak Planner</span>
+            <strong>가칭</strong>
+            <span>devName</span>
           </div>
         </div>
 
