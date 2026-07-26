@@ -1,3 +1,13 @@
+/* =========================================================
+   1. 전역 디자인 설정
+   앱 전체에서 반복해서 사용하는 색상과 그림자를 정의
+   ========================================================= */
+
+
+
+
+
+/* 앱 전체에서 재사용하는 색상·그림자 CSS 변수 */
 :root {
   --navy-950: #10273a;
   --navy-900: #17384f;
@@ -14,16 +24,30 @@
   --shadow: 0 12px 30px rgba(16, 39, 58, 0.08);
 }
 
+/* React 앱이 삽입되는 최상위 #root 요소 */
 #root {
   min-height: 100vh;
 }
 
+/* =========================================================
+   2. 앱 전체 레이아웃
+   (왼쪽 사이드바, 오른쪽 메인 화면)의 기본 배치 정의
+   ========================================================= */
+
+/* (사이드바, 메인 영역)을 나누는 앱 전체 컨테이너*/
 .app-shell {
   display: grid;
   min-height: 100vh;
   grid-template-columns: 215px minmax(0, 1fr);
 }
 
+/* =========================================================
+   3. 사이드바
+   화면 왼쪽에 표시되는 고정형 메뉴 영역 정의
+   ========================================================= */
+
+
+/* 사이드바 전체 영역 */
 .sidebar {
   position: sticky;
   top: 0;
@@ -38,6 +62,13 @@
   background: var(--navy-950);
 }
 
+/* =========================================================
+   4. 사이드바 브랜드 영역
+   로고와 서비스 이름을 가로로 배치합니다.
+   ========================================================= */
+
+/* 로고와 브랜드명을 묶는 영역 */
+
 .brand {
   display: flex;
   align-items: center;
@@ -46,6 +77,7 @@
   padding: 0 8px 30px;
 }
 
+/* 왼쪽의 정사각형 브랜드 로고 */
 .brand-mark {
   display: grid;
   width: 42px;
@@ -62,15 +94,18 @@
   font-weight: 800;
 }
 
+/* 브랜드명과 보조명을 세로로 배치 */
 .brand div {
   display: grid;
   gap: 2px;
 }
 
+/* 브랜드의 주 이름 */
 .brand strong {
   font-size: 16px;
 }
 
+/* 브랜드 아래의 작은 보조 이름 */
 .brand span:last-child {
   color: #9fb4c1;
 
@@ -79,11 +114,18 @@
   text-transform: uppercase;
 }
 
+/* =========================================================
+   5. 사이드바 내비게이션
+   주요 메뉴 버튼과 활성 상태 정의
+   ========================================================= */
+
+/* 사이드바의 메뉴버튼 목록 grid */
 .sidebar-nav {
   display: grid;
   gap: 7px;
 }
 
+/* 각 네비게이션 메뉴의 버튼 */
 .nav-item {
   display: flex;
   align-items: center;
@@ -101,16 +143,20 @@
   text-align: left;
 }
 
+
+/* 메뉴 버튼에 마우스를 올렸을 때 */
 .nav-item:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.06);
 }
 
+/* 현재 선택된 메뉴 버튼 */
 .nav-item--active {
   color: #ffffff;
   background: rgba(33, 143, 139, 0.2);
 }
 
+/* 메뉴 왼쪽의 하얀 점 */
 .nav-dot {
   width: 7px;
   height: 7px;
@@ -119,11 +165,18 @@
   background: currentColor;
 }
 
+/* 현재 보고 있는 메뉴의 상태 표시점 */
 .nav-item--active .nav-dot {
   background: #52c6be;
   box-shadow: 0 0 0 4px rgba(82, 198, 190, 0.12);
 }
 
+/* =========================================================
+   6. 사이드바 하단 정보
+   학기와 학과 정보를 사이드바 아래쪽에 표시
+   ========================================================= */
+
+/* 사이드바 하단의 학기·학과 정보 영역 */
 .sidebar-footer {
   display: grid;
   gap: 6px;
@@ -134,20 +187,29 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-footer span {
+/* 학기 정보 텍스트 */
+   .sidebar-footer span {
   color: #83a1af;
   font-size: 12px;
 }
 
+/* 학과명 텍스트 */
 .sidebar-footer strong {
   font-size: 12px;
   line-height: 1.5;
 }
 
+/* =========================================================
+   7. 메인 영역과 상단 바
+   사이드바 오른쪽의 화면과 상단 제목 영역을 정의
+   ========================================================= */
+
+/* 상단 바와 페이지 본문을 포함하는 (사이드바 기준 왼쪽)의 오른쪽 메인 영역  */
 .app-main {
   min-width: 0;
 }
 
+/* 메인 영역 (최상단)의 제목 및 사용자 메뉴 바 */
 .topbar {
   display: flex;
   min-height: 78px;
@@ -160,11 +222,13 @@
   background: rgba(255, 255, 255, 0.9);
 }
 
+/* (최상단 바) 왼쪽의 보조 제목과 주 제목 묶음 */
 .topbar > div {
   display: grid;
   gap: 2px;
 }
 
+/* (최상단 바)의 작은 영문 보조 제목 : ACADEMIC WORKSPACE */
 .topbar-eyebrow {
   color: var(--teal-700);
 
@@ -174,11 +238,14 @@
   text-transform: uppercase;
 }
 
+/* (최상단 바)의 주 제목 : 나의 학업계획*/
 .topbar strong {
   color: var(--navy-950);
   font-size: 15px;
 }
 
+
+/* (최상단 바) 오른쪽의 사용자 프로필 버튼 */
 .profile-button {
   display: grid;
   width: 38px;
@@ -196,6 +263,12 @@
   font-weight: 800;
 }
 
+/* =========================================================
+   8. 페이지 본문과 제목 영역
+   (페이지 콘텐츠의 최대 너비, 제목 배치) 정의
+   ========================================================= */
+
+/* (시간표, 시간표 편집기)가 들어가는 중앙 영역 */
 .page-content {
   width: min(1440px, 100%);
 
@@ -203,6 +276,7 @@
   padding: 38px 36px 56px;
 }
 
+/* 페이지 제목(주간시간표)과 오른쪽 (시간표 수정 버튼)을 한 줄에 배치 */
 .page-heading-row {
   display: flex;
   align-items: flex-end;
@@ -212,6 +286,7 @@
   margin-bottom: 26px;
 }
 
+/* 페이지 제목(주간시간표) 위에 표시되는 작은 분류 라벨(학년도-학기) */
 .page-kicker {
   display: block;
 
@@ -223,12 +298,14 @@
   font-weight: 800;
 }
 
+/* 제목과 문단의 브라우저 기본 여백 제거 */
 h1,
 h2,
 p {
   margin: 0;
 }
 
+/* 페이지 제목(주간시간표) : (색, 폰트사이즈, 글자간 간격) */
 h1 {
   color: var(--navy-950);
 
@@ -236,6 +313,7 @@ h1 {
   letter-spacing: -0.04em;
 }
 
+/* 페이지 제목 아래 설명 문구 (수강 과목의 시간과 강의실을 한눈에 확인합니다.) */
 .page-heading-row p {
   margin-top: 9px;
 
@@ -243,6 +321,12 @@ h1 {
   font-size: 14px;
 }
 
+/* =========================================================
+   9. 공통 버튼
+   (주요 버튼, 보조 버튼)의 기본 모양 정의
+   ========================================================= */
+
+/* (주요 버튼, 보조 버튼)에 공통으로 적용되는 스타일 */
 .primary-button,
 .secondary-button {
   border-radius: 10px;
@@ -251,6 +335,7 @@ h1 {
   font-weight: 750;
 }
 
+/* (시간표수정) 버튼 스타일 */
 .primary-button {
   padding: 12px 17px;
 
@@ -260,6 +345,7 @@ h1 {
   box-shadow: 0 8px 18px rgba(25, 123, 120, 0.2);
 }
 
+/* (시간표 수정 내역 초기화) 버튼 스타일 */
 .secondary-button {
   padding: 9px 13px;
 
@@ -269,6 +355,12 @@ h1 {
   background: #ffffff;
 }
 
+/* =========================================================
+   10. 요약 카드
+   학점·과목 수 같은 핵심 정보를 카드 형태로 요약
+   ========================================================= */
+
+/* 요약 카드를 3열로 배치하는 그리드 */
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -277,6 +369,7 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* 개별 요약 정보 카드 */
 .summary-card {
   display: grid;
   gap: 5px;
@@ -291,25 +384,31 @@ h1 {
   box-shadow: 0 6px 18px rgba(16, 39, 58, 0.04);
 }
 
-.summary-card span,
-.summary-card small {
-  color: var(--ink-700);
-}
-
+/* 요약 카드의 이름 텍스트 */
 .summary-card span {
   font-size: 12px;
   font-weight: 750;
 }
 
+/* 요약 카드의 핵심 수치 텍스트 */
 .summary-card strong {
   color: var(--navy-950);
   font-size: 25px;
 }
 
+/* 요약 카드 내의 보조 텍스트 */
+.summary-card span,
+.summary-card small {
+  color: var(--ink-700);
+}
+
+
+/* 요약 카드의 추가 설명 */
 .summary-card small {
   font-size: 11px;
 }
 
+/* 강조가 필요한 요약 카드에 적용되는 스타일 */
 .summary-card--accent {
   border-color: #bcdedb;
   background: linear-gradient(
@@ -318,6 +417,11 @@ h1 {
     var(--teal-100)
   );
 }
+
+/* =========================================================
+   11. 공통 패널
+   시간표처럼 큰 콘텐츠 영역을 카드 형태로 감쌉니다.
+   ========================================================= */
 
 .panel {
   overflow: hidden;
