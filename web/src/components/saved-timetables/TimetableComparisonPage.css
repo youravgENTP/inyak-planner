@@ -1,0 +1,397 @@
+/* =========================================================
+   시간표 비교 페이지 전체
+   ========================================================= */
+
+/* 비교 페이지 전체를 세로로 배치합니다. */
+.timetable-comparison-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   비교 페이지 상단 헤더
+   ========================================================= */
+
+/* 제목과 뒤로가기 버튼을 좌우로 배치합니다. */
+.timetable-comparison-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* 비교 페이지 제목입니다. */
+.timetable-comparison-page__header h1 {
+  margin: 8px 0 0;
+
+  color: #10283c;
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+/* 제목 아래 설명 문구입니다. */
+.timetable-comparison-page__header p {
+  margin: 10px 0 0;
+
+  color: #718493;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   비교 표 가로 스크롤
+   ========================================================= */
+
+/* 화면이 좁을 때 전체 비교 표에 가로 스크롤을 허용합니다. */
+.timetable-comparison-page__scroll {
+  width: 100%;
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: visible;
+
+  padding-bottom: 8px;
+}
+
+
+/* =========================================================
+   비교 표 그리드
+   ========================================================= */
+
+/*
+ * 첫 번째 열은 행 제목용입니다.
+ * 그 뒤에 선택된 시간표 수만큼 비교 열을 만듭니다.
+ */
+.timetable-comparison-grid {
+  display: grid;
+  grid-template-columns:
+    140px
+    repeat(
+      var(--comparison-column-count),
+      minmax(300px, 1fr)
+    );
+
+  width: 100%;
+  min-width:
+    calc(
+      140px +
+      var(--comparison-column-count) * 300px
+    );
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #dce7ea;
+  border-radius: 22px;
+
+  box-shadow:
+    0 12px 30px rgba(15, 49, 64, 0.07);
+}
+
+
+/* =========================================================
+   비교 표 좌측 상단 빈 셀
+   ========================================================= */
+
+/* 열 제목과 행 제목이 교차하는 왼쪽 위 셀입니다. */
+.timetable-comparison-grid__corner {
+  min-height: 86px;
+
+  background: #f4f8f9;
+  border-right: 1px solid #dfe8eb;
+  border-bottom: 1px solid #dfe8eb;
+}
+
+
+/* =========================================================
+   시간표별 열 헤더
+   ========================================================= */
+
+/* 각 시간표 열 상단의 이름과 학기 정보입니다. */
+.timetable-comparison-grid__column-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 0;
+  min-height: 86px;
+  padding: 18px 20px;
+
+  background: #f8fbfb;
+  border-right: 1px solid #dfe8eb;
+  border-bottom: 1px solid #dfe8eb;
+}
+
+/* 마지막 시간표 열의 오른쪽 테두리를 제거합니다. */
+.timetable-comparison-grid__column-header:last-of-type {
+  border-right: 0;
+}
+
+/* 시간표 이름입니다. */
+.timetable-comparison-grid__column-header strong {
+  overflow: hidden;
+
+  color: #173348;
+  font-size: 17px;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 학년도와 학기 정보입니다. */
+.timetable-comparison-grid__column-header span {
+  color: #7f919e;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   좌측 행 제목
+   ========================================================= */
+
+/* 각 비교 항목의 이름을 표시하는 첫 번째 열입니다. */
+.timetable-comparison-grid__row-label {
+  display: flex;
+  align-items: center;
+
+  padding: 18px 16px;
+
+  color: #405b6d;
+  font-size: 14px;
+  font-weight: 800;
+
+  background: #f7fafb;
+  border-right: 1px solid #dfe8eb;
+  border-bottom: 1px solid #e4ecee;
+}
+
+
+/* =========================================================
+   시간표 미리보기 행
+   ========================================================= */
+
+/* 각 열의 세로형 시간표 미리보기 영역입니다. */
+.timetable-comparison-grid__timetable {
+  min-width: 0;
+  padding: 16px;
+
+  background: #ffffff;
+  border-right: 1px solid #e4ecee;
+  border-bottom: 1px solid #e4ecee;
+}
+
+/* 비교 페이지에서는 미니 시간표 높이를 조금 더 크게 사용합니다. */
+.timetable-comparison-grid__timetable
+  .timetable-mini-preview {
+  height: 480px;
+}
+
+/* 비교 페이지에서는 시간표 원본을 조금 더 크게 보여줍니다. */
+.timetable-comparison-grid__timetable
+  .timetable-mini-preview
+  .timetable-scroll {
+  transform:
+    translateX(-50%)
+    scale(0.46);
+}
+
+
+/* =========================================================
+   숫자 지표 셀
+   ========================================================= */
+
+/* 학점과 과목 수를 표시하는 공통 셀입니다. */
+.timetable-comparison-grid__metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+
+  min-height: 78px;
+  padding: 18px;
+
+  text-align: center;
+
+  background: #ffffff;
+  border-right: 1px solid #e4ecee;
+  border-bottom: 1px solid #e4ecee;
+}
+
+/* 주요 숫자입니다. */
+.timetable-comparison-grid__metric strong {
+  color: #176f69;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* 숫자 옆 단위나 보조 설명입니다. */
+.timetable-comparison-grid__metric span {
+  color: #738895;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   등록 과목 목록 셀
+   ========================================================= */
+
+/* 각 시간표에 포함된 강의 목록입니다. */
+.timetable-comparison-grid__course-list {
+  min-width: 0;
+  padding: 14px;
+
+  background: #ffffff;
+  border-right: 1px solid #e4ecee;
+}
+
+/* 강의 목록 기본 스타일을 제거합니다. */
+.timetable-comparison-grid__course-list ul {
+  display: grid;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+/* 강의 하나를 표시하는 항목입니다. */
+.timetable-comparison-grid__course-list li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 11px 12px;
+
+  background: #f7fafb;
+  border: 1px solid #e3ebed;
+  border-radius: 12px;
+}
+
+/* 과목명과 교수명을 세로로 배치합니다. */
+.timetable-comparison-grid__course-list li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+/* 과목명입니다. */
+.timetable-comparison-grid__course-list li strong {
+  overflow: hidden;
+
+  color: #213d51;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 교수명입니다. */
+.timetable-comparison-grid__course-list li span {
+  overflow: hidden;
+
+  color: #83939f;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 전필·전선 등 이수 구분입니다. */
+.timetable-comparison-grid__course-list li small {
+  flex: 0 0 auto;
+
+  padding: 4px 7px;
+
+  color: #27756f;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+
+  background: #eaf6f5;
+  border: 1px solid #cce5e2;
+  border-radius: 999px;
+}
+
+/* 과목이 없을 때의 안내 문구입니다. */
+.timetable-comparison-grid__course-list > p {
+  margin: 0;
+  padding: 20px 12px;
+
+  color: #8797a2;
+  font-size: 13px;
+  text-align: center;
+}
+
+
+/* =========================================================
+   각 행의 마지막 열 테두리 제거
+   ========================================================= */
+
+/*
+ * 그리드 구조상 각 행 마지막 셀을 직접 선택하기 어렵기 때문에,
+ * 오른쪽 테두리가 있어도 시각적으로 어색하지 않도록 유지합니다.
+ *
+ * 바깥쪽 카드 자체가 overflow: hidden이므로
+ * 실제 외곽에서는 선이 겹쳐 보이지 않습니다.
+ */
+
+
+/* =========================================================
+   반응형 레이아웃
+   ========================================================= */
+
+/* 태블릿 너비에서 제목 영역을 세로로 배치합니다. */
+@media (max-width: 800px) {
+  .timetable-comparison-page__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .timetable-comparison-page__header
+    .secondary-button {
+    align-self: flex-start;
+  }
+
+  .timetable-comparison-page__header h1 {
+    font-size: 29px;
+  }
+}
+
+/* 모바일 너비에서 좌측 행 제목 열을 조금 줄입니다. */
+@media (max-width: 640px) {
+  .timetable-comparison-grid {
+    grid-template-columns:
+      112px
+      repeat(
+        var(--comparison-column-count),
+        minmax(280px, 1fr)
+      );
+
+    min-width:
+      calc(
+        112px +
+        var(--comparison-column-count) * 280px
+      );
+  }
+
+  .timetable-comparison-grid__row-label {
+    padding: 14px 12px;
+
+    font-size: 13px;
+  }
+
+  .timetable-comparison-grid__column-header {
+    padding: 16px;
+  }
+}
