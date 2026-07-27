@@ -1,24 +1,58 @@
 export type TimetableDownloadMode =
   | 'custom'
-  | 'device'
+  | 'preset'
 
-export type DeviceManufacturer =
-  | 'Apple'
-  | 'Samsung'
+export type ResolutionPresetSource =
+  | 'apple'
+  | 'generic'
 
-export type MobileDeviceType =
-  | 'smartphone'
-  | 'tablet'
+export type DevicePresetCategory =
+  | 'iphone'
+  | 'ipad'
+  | 'macbook'
+  | 'imac'
+  | 'generic-display'
+
+export type PresetOrientation =
+  | 'portrait'
+  | 'landscape'
 
 export interface ImageDimensions {
   width: number
   height: number
 }
 
-export interface MobileDevicePreset {
+export interface CustomSizeValues {
+  width: string
+  height: string
+}
+
+export interface DeviceResolutionPreset {
   id: string
-  manufacturer: DeviceManufacturer
-  type: MobileDeviceType
-  model: string
+  source: ResolutionPresetSource
+  category: DevicePresetCategory
+  label: string
+  width: number
+  height: number
+  orientation: PresetOrientation
+  diagonalInches?: number
+  models: readonly string[]
+  note?: string
+}
+
+export type DimensionValidationResult =
+  | {
+      isValid: true
+      dimensions: ImageDimensions
+    }
+  | {
+      isValid: false
+      errorMessage: string
+    }
+
+export interface DownloadTimetablePngOptions {
+  element: HTMLElement
   dimensions: ImageDimensions
+  filename?: string
+  backgroundColor?: string
 }
