@@ -18,6 +18,7 @@ import type {
 } from '../../domain/timetable-download/types'
 import CustomSizeSettings from './CustomSizeSettings'
 import DevicePresetSettings from './DevicePresetSettings'
+import './TimetableDownloadModal.css'
 
 interface TimetableDownloadModalProps {
   isOpen: boolean
