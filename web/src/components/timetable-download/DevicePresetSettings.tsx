@@ -47,6 +47,49 @@ const APPLE_CATEGORY_OPTIONS: readonly CategoryOption[] = [
   },
 ]
 
+const SAMSUNG_CATEGORY_OPTIONS: readonly CategoryOption[] = [
+  {
+    value: 'galaxy-phone',
+    label: 'Galaxy 스마트폰',
+  },
+  {
+    value: 'galaxy-tab',
+    label: 'Galaxy Tab',
+  },
+  {
+    value: 'galaxy-book',
+    label: 'Galaxy Book',
+  },
+  {
+    value: 'samsung-display',
+    label: 'Samsung 모니터',
+  },
+]
+
+const getDefaultCategory = (
+  source: ResolutionPresetSource,
+): DevicePresetCategory => {
+  if (source === 'samsung') {
+    return 'galaxy-phone'
+  }
+
+  if (source === 'generic') {
+    return 'generic-display'
+  }
+
+  return 'iphone'
+}
+
+const getCategoryOptions = (
+  source: ResolutionPresetSource,
+): readonly CategoryOption[] => {
+  if (source === 'samsung') {
+    return SAMSUNG_CATEGORY_OPTIONS
+  }
+
+  return APPLE_CATEGORY_OPTIONS
+}
+
 const getInitialSource = (
   selectedPresetId: string,
 ): ResolutionPresetSource => {
@@ -66,14 +109,25 @@ const getInitialCategory = (
     selectedPresetId,
   )
 
-  if (
-    selectedPreset?.source === 'apple' &&
-    selectedPreset.category !== 'generic-display'
-  ) {
+  if (selectedPreset !== undefined) {
     return selectedPreset.category
   }
 
   return 'iphone'
+}
+
+const getSearchPlaceholder = (
+  source: ResolutionPresetSource,
+): string => {
+  if (source === 'apple') {
+    return '예: iPhone 16 Pro'
+  }
+
+  if (source === 'samsung') {
+    return '예: Galaxy S25 Ultra'
+  }
+
+  return '예: 1920 × 1080'
 }
 
 function DevicePresetSettings({
@@ -92,14 +146,16 @@ function DevicePresetSettings({
 
   const [searchQuery, setSearchQuery] = useState('')
 
+  const effectiveCategory =
+    source === 'generic'
+      ? 'generic-display'
+      : category
+
   const filteredPresets = filterResolutionPresets(
     ALL_RESOLUTION_PRESETS,
     {
       source,
-      category:
-        source === 'apple'
-          ? category
-          : 'generic-display',
+      category: effectiveCategory,
       searchQuery,
     },
   )
@@ -117,10 +173,7 @@ function DevicePresetSettings({
       ALL_RESOLUTION_PRESETS,
       {
         source: nextSource,
-        category:
-          nextSource === 'apple'
-            ? nextCategory
-            : 'generic-display',
+        category: nextCategory,
       },
     )
 
@@ -137,10 +190,17 @@ function DevicePresetSettings({
     const nextSource =
       event.target.value as ResolutionPresetSource
 
+    const nextCategory =
+      getDefaultCategory(nextSource)
+
     setSource(nextSource)
+    setCategory(nextCategory)
     setSearchQuery('')
 
-    selectFirstPreset(nextSource, category)
+    selectFirstPreset(
+      nextSource,
+      nextCategory,
+    )
   }
 
   const handleCategoryChange = (
@@ -152,7 +212,10 @@ function DevicePresetSettings({
     setCategory(nextCategory)
     setSearchQuery('')
 
-    selectFirstPreset('apple', nextCategory)
+    selectFirstPreset(
+      source,
+      nextCategory,
+    )
   }
 
   const handleSearchChange = (
@@ -174,6 +237,9 @@ function DevicePresetSettings({
     }
   }
 
+  const categoryOptions =
+    getCategoryOptions(source)
+
   return (
     <section
       className="timetable-download-preset-settings"
@@ -185,8 +251,8 @@ function DevicePresetSettings({
         </h3>
 
         <p>
-          Apple 기기 또는 일반 화면 해상도를 선택해
-          주세요.
+          Apple·Samsung 기기 또는 일반 화면
+          해상도를 선택해 주세요.
         </p>
       </div>
 
@@ -211,6 +277,18 @@ function DevicePresetSettings({
           <input
             type="radio"
             name="resolution-preset-source"
+            value="samsung"
+            checked={source === 'samsung'}
+            onChange={handleSourceChange}
+          />
+
+          <span>Samsung 기기</span>
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="resolution-preset-source"
             value="generic"
             checked={source === 'generic'}
             onChange={handleSourceChange}
@@ -220,7 +298,7 @@ function DevicePresetSettings({
         </label>
       </fieldset>
 
-      {source === 'apple' && (
+      {source !== 'generic' && (
         <label className="timetable-download-preset-field">
           <span className="timetable-download-field-label">
             제품군
@@ -230,7 +308,7 @@ function DevicePresetSettings({
             value={category}
             onChange={handleCategoryChange}
           >
-            {APPLE_CATEGORY_OPTIONS.map((option) => (
+            {categoryOptions.map((option) => (
               <option
                 key={option.value}
                 value={option.value}
@@ -250,11 +328,7 @@ function DevicePresetSettings({
         <input
           type="search"
           value={searchQuery}
-          placeholder={
-            source === 'apple'
-              ? '예: iPhone 16 Pro'
-              : '예: 1920 × 1080'
-          }
+          placeholder={getSearchPlaceholder(source)}
           autoComplete="off"
           onChange={handleSearchChange}
         />
@@ -268,7 +342,8 @@ function DevicePresetSettings({
         <select
           value={
             filteredPresets.some(
-              (preset) => preset.id === selectedPresetId,
+              (preset) =>
+                preset.id === selectedPresetId,
             )
               ? selectedPresetId
               : ''
