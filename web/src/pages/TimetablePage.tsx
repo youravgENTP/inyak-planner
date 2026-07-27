@@ -5,7 +5,7 @@ import {
   useState,
 } from 'react'
 
-import  TimetableDownloadModal  from '../components/timetable-download/TimetableDownloadModal'
+import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
 import { fetchLectures } from '../domain/lectures/api'
@@ -14,24 +14,88 @@ import {
   lecturesToTimetableCourses,
 } from '../domain/lectures/timetable'
 import type { Lecture } from '../domain/lectures/types'
+import {
+  createSavedTimetable,
+  getActiveTimetable,
+  loadActiveTimetableId,
+  loadSavedTimetables,
+  replaceTimetable,
+  saveActiveTimetableId,
+  saveSavedTimetables,
+  updateSavedTimetable,
+  type SavedTimetable,
+} from '../domain/saved-timetables'
 import { getTimetableConflicts } from '../domain/timetable/selectors'
 import type { TimetableCourse } from '../domain/timetable/types'
 
-function haveSameLectures(
-  firstLectures: Lecture[],
-  secondLectures: Lecture[],
+interface TimetableCollectionState {
+  timetables: SavedTimetable[]
+  activeTimetableId: string
+}
+
+function createInitialTimetableState():
+  TimetableCollectionState {
+  const storedTimetables =
+    loadSavedTimetables()
+
+  const storedActiveTimetableId =
+    loadActiveTimetableId()
+
+  if (storedTimetables.length > 0) {
+    const hasStoredActiveTimetable =
+      storedActiveTimetableId !== null &&
+      storedTimetables.some(
+        (timetable) =>
+          timetable.id ===
+          storedActiveTimetableId,
+      )
+
+    return {
+      timetables: storedTimetables,
+      activeTimetableId:
+        hasStoredActiveTimetable
+          ? storedActiveTimetableId
+          : storedTimetables[0].id,
+    }
+  }
+
+  const initialTimetable =
+    createSavedTimetable({
+      name: '내 시간표',
+      academicYear: 2026,
+      semester: 2,
+      lectureIds: [],
+    })
+
+  return {
+    timetables: [initialTimetable],
+    activeTimetableId:
+      initialTimetable.id,
+  }
+}
+
+function haveSameLectureIds(
+  firstLectureIds: readonly number[],
+  secondLectureIds: readonly number[],
 ): boolean {
-  if (firstLectures.length !== secondLectures.length) {
+  if (
+    firstLectureIds.length !==
+    secondLectureIds.length
+  ) {
     return false
   }
 
-  const firstIds = firstLectures
-    .map((lecture) => lecture.id)
-    .sort((firstId, secondId) => firstId - secondId)
+  const firstIds = [...firstLectureIds].sort(
+    (firstId, secondId) =>
+      firstId - secondId,
+  )
 
-  const secondIds = secondLectures
-    .map((lecture) => lecture.id)
-    .sort((firstId, secondId) => firstId - secondId)
+  const secondIds = [
+    ...secondLectureIds,
+  ].sort(
+    (firstId, secondId) =>
+      firstId - secondId,
+  )
 
   return firstIds.every(
     (id, index) => id === secondIds[index],
@@ -54,8 +118,23 @@ function doCoursesOverlap(
   )
 }
 
+function createDownloadFilename(
+  timetable: SavedTimetable,
+): string {
+  const safeName = timetable.name
+    .trim()
+    .replace(/[\\/:*?"<>|]/g, '-')
+
+  return [
+    timetable.academicYear,
+    timetable.semester,
+    safeName || '시간표',
+  ].join('-') + '.png'
+}
+
 export function TimetablePage() {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] =
+    useState(false)
 
   const [
     isDownloadModalOpen,
@@ -65,25 +144,100 @@ export function TimetablePage() {
   const timetableElementRef =
     useRef<HTMLDivElement>(null)
 
+  const [
+    timetableState,
+    setTimetableState,
+  ] = useState<TimetableCollectionState>(
+    createInitialTimetableState,
+  )
+
   const [lectures, setLectures] =
     useState<Lecture[]>([])
 
-  const [savedLectures, setSavedLectures] =
-    useState<Lecture[]>([])
-
-  const [draftLectures, setDraftLectures] =
-    useState<Lecture[]>([])
+  const [
+    draftLectureIds,
+    setDraftLectureIds,
+  ] = useState<number[]>([])
 
   const [
     previewLecture,
     setPreviewLecture,
   ] = useState<Lecture | null>(null)
 
-  const [isLoadingLectures, setIsLoadingLectures] =
-    useState(true)
+  const [
+    isLoadingLectures,
+    setIsLoadingLectures,
+  ] = useState(true)
 
-  const [lectureLoadError, setLectureLoadError] =
-    useState<string | null>(null)
+  const [
+    lectureLoadError,
+    setLectureLoadError,
+  ] = useState<string | null>(null)
+
+  const activeTimetable = useMemo(
+    () =>
+      getActiveTimetable(
+        timetableState.timetables,
+        timetableState.activeTimetableId,
+      ),
+    [
+      timetableState.activeTimetableId,
+      timetableState.timetables,
+    ],
+  )
+
+  const lectureMap = useMemo(
+    () =>
+      new Map(
+        lectures.map(
+          (lecture) =>
+            [lecture.id, lecture] as const,
+        ),
+      ),
+    [lectures],
+  )
+
+  const savedLectures = useMemo(() => {
+    if (activeTimetable === undefined) {
+      return []
+    }
+
+    return activeTimetable.lectureIds
+      .map((lectureId) =>
+        lectureMap.get(lectureId),
+      )
+      .filter(
+        (
+          lecture,
+        ): lecture is Lecture =>
+          lecture !== undefined,
+      )
+  }, [activeTimetable, lectureMap])
+
+  const draftLectures = useMemo(
+    () =>
+      draftLectureIds
+        .map((lectureId) =>
+          lectureMap.get(lectureId),
+        )
+        .filter(
+          (
+            lecture,
+          ): lecture is Lecture =>
+            lecture !== undefined,
+        ),
+    [draftLectureIds, lectureMap],
+  )
+
+  useEffect(() => {
+    saveSavedTimetables(
+      timetableState.timetables,
+    )
+
+    saveActiveTimetableId(
+      timetableState.activeTimetableId,
+    )
+  }, [timetableState])
 
   useEffect(() => {
     async function loadLectures() {
@@ -143,34 +297,39 @@ export function TimetablePage() {
     const conflictingLectureIds =
       new Set<number>()
 
-    previewCourses.forEach((previewCourse) => {
-      actualCourses.forEach((actualCourse) => {
-        if (
-          !doCoursesOverlap(
-            previewCourse,
-            actualCourse,
-          )
-        ) {
-          return
-        }
+    previewCourses.forEach(
+      (previewCourse) => {
+        actualCourses.forEach(
+          (actualCourse) => {
+            if (
+              !doCoursesOverlap(
+                previewCourse,
+                actualCourse,
+              )
+            ) {
+              return
+            }
 
-        conflictingPreviewCourseIds.add(
-          previewCourse.id,
+            conflictingPreviewCourseIds.add(
+              previewCourse.id,
+            )
+
+            conflictingActualCourseIds.add(
+              actualCourse.id,
+            )
+
+            if (
+              actualCourse.sourceLectureId !==
+              undefined
+            ) {
+              conflictingLectureIds.add(
+                actualCourse.sourceLectureId,
+              )
+            }
+          },
         )
-
-        conflictingActualCourseIds.add(
-          actualCourse.id,
-        )
-
-        if (
-          actualCourse.sourceLectureId !== undefined
-        ) {
-          conflictingLectureIds.add(
-            actualCourse.sourceLectureId,
-          )
-        }
-      })
-    })
+      },
+    )
 
     return {
       conflictingActualCourseIds,
@@ -256,9 +415,10 @@ export function TimetablePage() {
 
   const hasUnsavedChanges =
     isEditing &&
-    !haveSameLectures(
-      savedLectures,
-      draftLectures,
+    activeTimetable !== undefined &&
+    !haveSameLectureIds(
+      activeTimetable.lectureIds,
+      draftLectureIds,
     )
 
   useEffect(() => {
@@ -285,26 +445,39 @@ export function TimetablePage() {
     }
   }, [hasUnsavedChanges])
 
-  const creditCount = displayedLectures.reduce(
-    (totalCredits, lecture) =>
-      totalCredits + (lecture.credits ?? 0),
-    0,
-  )
+  const creditCount =
+    displayedLectures.reduce(
+      (totalCredits, lecture) =>
+        totalCredits +
+        (lecture.credits ?? 0),
+      0,
+    )
 
   const conflicts =
     getTimetableConflicts(actualCourses)
 
-  const hasConflicts = conflicts.length > 0
+  const hasConflicts =
+    conflicts.length > 0
 
   function handleStartEditing() {
-    setDraftLectures([...savedLectures])
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    setDraftLectureIds([
+      ...activeTimetable.lectureIds,
+    ])
+
     setPreviewLecture(null)
     setIsDownloadModalOpen(false)
     setIsEditing(true)
   }
 
   function handleResetEditing() {
-    if (!hasUnsavedChanges) {
+    if (
+      !hasUnsavedChanges ||
+      activeTimetable === undefined
+    ) {
       return
     }
 
@@ -316,12 +489,36 @@ export function TimetablePage() {
       return
     }
 
-    setDraftLectures([...savedLectures])
+    setDraftLectureIds([
+      ...activeTimetable.lectureIds,
+    ])
+
     setPreviewLecture(null)
   }
 
   function handleSaveEditing() {
-    setSavedLectures([...draftLectures])
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    const updatedTimetable =
+      updateSavedTimetable(
+        activeTimetable,
+        {
+          lectureIds: draftLectureIds,
+        },
+      )
+
+    setTimetableState(
+      (currentState) => ({
+        ...currentState,
+        timetables: replaceTimetable(
+          currentState.timetables,
+          updatedTimetable,
+        ),
+      }),
+    )
+
     setPreviewLecture(null)
     setIsEditing(false)
   }
@@ -337,19 +534,22 @@ export function TimetablePage() {
   function handleAddLecture(
     lecture: Lecture,
   ) {
-    setDraftLectures((currentLectures) => {
-      const isAlreadyAdded =
-        currentLectures.some(
-          (currentLecture) =>
-            currentLecture.id === lecture.id,
-        )
+    setDraftLectureIds(
+      (currentLectureIds) => {
+        if (
+          currentLectureIds.includes(
+            lecture.id,
+          )
+        ) {
+          return currentLectureIds
+        }
 
-      if (isAlreadyAdded) {
-        return currentLectures
-      }
-
-      return [...currentLectures, lecture]
-    })
+        return [
+          ...currentLectureIds,
+          lecture.id,
+        ]
+      },
+    )
 
     setPreviewLecture(null)
   }
@@ -357,21 +557,26 @@ export function TimetablePage() {
   function handleRemoveLecture(
     lectureId: number,
   ) {
-    setDraftLectures((currentLectures) =>
-      currentLectures.filter(
-        (lecture) => lecture.id !== lectureId,
-      ),
+    setDraftLectureIds(
+      (currentLectureIds) =>
+        currentLectureIds.filter(
+          (currentLectureId) =>
+            currentLectureId !== lectureId,
+        ),
     )
 
-    setPreviewLecture((currentPreview) => {
-      if (
-        currentPreview?.id === lectureId
-      ) {
-        return null
-      }
+    setPreviewLecture(
+      (currentPreview) => {
+        if (
+          currentPreview?.id ===
+          lectureId
+        ) {
+          return null
+        }
 
-      return currentPreview
-    })
+        return currentPreview
+      },
+    )
   }
 
   function handlePreviewLectureChange(
@@ -380,13 +585,25 @@ export function TimetablePage() {
     setPreviewLecture(lecture)
   }
 
+  if (activeTimetable === undefined) {
+    return (
+      <section className="timetable-page">
+        <p role="alert">
+          현재 시간표를 불러오지 못했습니다.
+        </p>
+      </section>
+    )
+  }
+
   return (
     <section className="timetable-page">
       {!isEditing && (
         <div className="page-heading-row">
           <div>
             <span className="page-kicker">
-              2026학년도 2학기
+              {activeTimetable.academicYear}
+              학년도{' '}
+              {activeTimetable.semester}학기
             </span>
 
             <h1>주간 시간표</h1>
@@ -529,7 +746,7 @@ export function TimetablePage() {
           <div className="panel-header">
             <div>
               <h2 id="timetable-title">
-                내 시간표
+                {activeTimetable.name}
               </h2>
 
               <p>
@@ -542,7 +759,9 @@ export function TimetablePage() {
               <button
                 className="secondary-button"
                 type="button"
-                onClick={handleOpenDownloadModal}
+                onClick={
+                  handleOpenDownloadModal
+                }
               >
                 시간표 다운로드
               </button>
@@ -575,7 +794,9 @@ export function TimetablePage() {
           <TimetableGrid
             courses={displayedCourses}
             isEditing={isEditing}
-            timetableRef={timetableElementRef}
+            timetableRef={
+              timetableElementRef
+            }
             onRemoveLecture={
               handleRemoveLecture
             }
@@ -588,7 +809,9 @@ export function TimetablePage() {
         timetableElement={
           timetableElementRef.current
         }
-        filename="2026-2-시간표.png"
+        filename={createDownloadFilename(
+          activeTimetable,
+        )}
         onClose={handleCloseDownloadModal}
       />
     </section>
