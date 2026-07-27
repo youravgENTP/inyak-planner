@@ -30,7 +30,7 @@ import {
   type SavedTimetable,
 } from '../domain/saved-timetables'
 import type { TimetableCourse } from '../domain/timetable/types'
-import './SavedTimetablesModal.css'
+import '../components/saved-timetables/SavedTimetablesModal.css'
 
 interface TimetableCollectionState {
   timetables: SavedTimetable[]
