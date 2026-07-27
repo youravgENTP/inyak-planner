@@ -6,6 +6,7 @@ import {
 } from 'react'
 
 import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
+import { RenameTimetableModal } from '../components/saved-timetables/RenameTimetableModal'
 import { TimetableComparisonPage } from '../components/saved-timetables/TimetableComparisonPage'
 import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
@@ -156,9 +157,14 @@ export function TimetablePage() {
   ] = useState(false)
 
   const [
-  isComparisonPageOpen,
-  setIsComparisonPageOpen,
-] = useState(false)
+    isRenameTimetableModalOpen,
+    setIsRenameTimetableModalOpen,
+  ] = useState(false)
+
+  const [
+    isComparisonPageOpen,
+    setIsComparisonPageOpen,
+  ] = useState(false)
 
   const [
     comparisonTimetableIds,
@@ -592,6 +598,44 @@ export function TimetablePage() {
     setIsSavedTimetablesModalOpen(false)
   }
 
+  function handleOpenRenameTimetableModal() {
+  setIsDownloadModalOpen(false)
+  setIsSavedTimetablesModalOpen(false)
+  setIsRenameTimetableModalOpen(true)
+}
+
+function handleCloseRenameTimetableModal() {
+  setIsRenameTimetableModalOpen(false)
+}
+
+function handleRenameTimetable(
+    name: string,
+  ) {
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    const renamedTimetable =
+      updateSavedTimetable(
+        activeTimetable,
+        {
+          name,
+        },
+      )
+
+    setTimetableState(
+      (currentState) => ({
+        ...currentState,
+        timetables: replaceTimetable(
+          currentState.timetables,
+          renamedTimetable,
+        ),
+      }),
+    )
+
+    setIsRenameTimetableModalOpen(false)
+  }
+  
   function handleSelectTimetable(
     timetableId: string,
   ) {
@@ -921,7 +965,26 @@ function handleCloseComparisonPage() {
           <div className="panel-header">
             <div>
               <h2 id="timetable-title">
-                {activeTimetable.name}
+                <button
+                  className="timetable-title-button"
+                  type="button"
+                  onClick={
+                    handleOpenRenameTimetableModal
+                  }
+                  aria-label={`${activeTimetable.name} 시간표 이름 변경`}
+                  title="시간표 이름 변경"
+                >
+                  <span>
+                    {activeTimetable.name}
+                  </span>
+
+                  <span
+                    className="timetable-title-button__icon"
+                    aria-hidden="true"
+                  >
+                    ✎
+                  </span>
+                </button>
               </h2>
 
               <p>
@@ -1037,6 +1100,21 @@ function handleCloseComparisonPage() {
         }
         onCompare={
           handleCompareTimetables
+        }
+      />
+
+      <RenameTimetableModal
+        isOpen={
+          isRenameTimetableModalOpen
+        }
+        currentName={
+          activeTimetable.name
+        }
+        onClose={
+          handleCloseRenameTimetableModal
+        }
+        onSave={
+          handleRenameTimetable
         }
       />
 
