@@ -28,11 +28,6 @@ interface ComparisonGridStyle
   '--comparison-count': number
 }
 
-interface ComparisonGridStyle
-  extends CSSProperties {
-  '--comparison-count': number
-}
-
 interface SavedTimetablesModalProps {
   isOpen: boolean
   timetables: readonly SavedTimetable[]
