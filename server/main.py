@@ -172,6 +172,57 @@ def download_syllabi(
                 lecture["course_code"]
             )
 
+            course_name = str(
+                lecture["course_name"]
+            )
+
+            section = str(
+                lecture["section"]
+            )
+
+            academic_year = int(
+                lecture["academic_year"]
+            )
+
+            semester = int(
+                lecture["semester"]
+            )
+
+            source_filename = (
+                f"{course_code}-{section}.pdf"
+            )
+
+            syllabus_path = (
+                SYLLABI_ROOT
+                / str(academic_year)
+                / str(semester)
+                / source_filename
+            )
+
+            if not syllabus_path.is_file():
+                missing_syllabi.append(
+                    source_filename
+                )
+
+                continue
+
+            safe_course_name = (
+                sanitize_filename(course_name)
+                or course_code
+            )
+
+            zip_filename = (
+                f"{safe_course_name}.pdf"
+            )
+
+            zip_file.write(
+                syllabus_path,
+                arcname=zip_filename,
+            )
+            course_code = str(
+                lecture["course_code"]
+            )
+
             section = str(
                 lecture["section"]
             )
@@ -202,10 +253,10 @@ def download_syllabi(
 
                 continue
 
-            zip_file.write(
-                syllabus_path,
-                arcname=syllabus_filename,
-            )
+            # zip_file.write(
+            #     syllabus_path,
+            #     arcname=syllabus_filename,
+            # )
 
     if missing_syllabi:
         missing_files_text = ", ".join(
