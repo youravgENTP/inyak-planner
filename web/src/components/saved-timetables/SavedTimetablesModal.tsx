@@ -27,30 +27,16 @@ interface ComparisonGridStyle
   extends CSSProperties {
   '--comparison-count': number
 }
-/////////////////
-interface SavedTimetablesModalProps {
-  isOpen: boolean
-  timetables: readonly SavedTimetable[]
-  activeTimetableId: string
-  comparisonTimetableIds: readonly string[]
-  onClose: () => void
-  onSelectTimetable: (
-    timetableId: string,
-  ) => void
-  onComparisonTimetableIdsChange: (
-    timetableIds: string[],
-  ) => void
-  onCreateEmptyTimetable: () => void
-  onDuplicateActiveTimetable: () => void
-  onCompare: (
-    timetableIds: readonly string[],
-  ) => void
+
+interface ComparisonGridStyle
+  extends CSSProperties {
+  '--comparison-count': number
 }
 
 interface SavedTimetablesModalProps {
   isOpen: boolean
   timetables: readonly SavedTimetable[]
-  lectures?: readonly Lecture[]
+  lectures: readonly Lecture[]
   activeTimetableId: string
   comparisonTimetableIds: readonly string[]
   onClose: () => void
@@ -70,7 +56,7 @@ interface SavedTimetablesModalProps {
 export function SavedTimetablesModal({
   isOpen,
   timetables,
-  lectures = [],
+  lectures,
   activeTimetableId,
   comparisonTimetableIds,
   onClose,

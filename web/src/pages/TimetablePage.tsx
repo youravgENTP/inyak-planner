@@ -965,6 +965,7 @@ export function TimetablePage() {
         timetables={
           timetableState.timetables
         }
+        lectures={lectures}
         activeTimetableId={
           timetableState.activeTimetableId
         }
