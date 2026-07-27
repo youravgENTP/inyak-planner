@@ -5,7 +5,7 @@ import {
   useState,
 } from 'react'
 
-import { TimetableDownloadModal } from '../components/timetable-download/TimetableDownloadModal'
+import  TimetableDownloadModal  from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
 import { fetchLectures } from '../domain/lectures/api'
