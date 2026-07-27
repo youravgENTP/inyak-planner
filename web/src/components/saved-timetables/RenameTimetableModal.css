@@ -1,0 +1,270 @@
+/* =========================================================
+   시간표 이름 변경 모달 오버레이
+   ========================================================= */
+
+/* 화면 전체를 덮는 반투명 배경입니다. */
+.rename-timetable-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(8, 23, 38, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+
+/* =========================================================
+   시간표 이름 변경 모달 본체
+   ========================================================= */
+
+/* 이름 변경 내용을 담는 작은 모달입니다. */
+.rename-timetable-modal {
+  width: min(100%, 480px);
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #dce7ea;
+  border-radius: 20px;
+
+  box-shadow:
+    0 24px 64px rgba(8, 31, 46, 0.2);
+}
+
+
+/* =========================================================
+   모달 상단 헤더
+   ========================================================= */
+
+/* 제목과 닫기 버튼을 좌우로 배치합니다. */
+.rename-timetable-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 24px 24px 20px;
+
+  background: #f8fbfb;
+  border-bottom: 1px solid #e3ebed;
+}
+
+/* 제목과 설명을 세로로 배치합니다. */
+.rename-timetable-modal__header > div {
+  min-width: 0;
+}
+
+/* 모달 제목입니다. */
+.rename-timetable-modal__header h2 {
+  margin: 0;
+
+  color: #173247;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+/* 모달 제목 아래 설명입니다. */
+.rename-timetable-modal__header p {
+  margin: 8px 0 0;
+
+  color: #748793;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* 우측 상단 닫기 버튼입니다. */
+.rename-timetable-modal__header > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  color: #6d808d;
+  font: inherit;
+  font-size: 23px;
+  line-height: 1;
+
+  background: #ffffff;
+  border: 1px solid #dce5e8;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+/* 닫기 버튼에 마우스를 올렸을 때입니다. */
+.rename-timetable-modal__header > button:hover {
+  color: #b84848;
+
+  background: #fff1f1;
+  border-color: #efc9c9;
+}
+
+/* 닫기 버튼을 키보드로 선택했을 때입니다. */
+.rename-timetable-modal__header > button:focus-visible {
+  outline: 3px solid rgba(30, 130, 126, 0.18);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   이름 입력 폼
+   ========================================================= */
+
+/* 입력창과 하단 버튼을 담는 폼입니다. */
+.rename-timetable-modal__form {
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px;
+}
+
+/* 시간표 이름 입력창의 라벨입니다. */
+.rename-timetable-modal__form > label {
+  margin-bottom: 8px;
+
+  color: #2d485a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* 시간표 이름을 입력하는 텍스트 필드입니다. */
+.rename-timetable-modal__form > input {
+  width: 100%;
+  height: 46px;
+  padding: 0 13px;
+
+  color: #183247;
+  font: inherit;
+  font-size: 15px;
+
+  background: #ffffff;
+  border: 1px solid #cfdcdf;
+  border-radius: 12px;
+
+  outline: none;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* 이름 입력창을 선택했을 때입니다. */
+.rename-timetable-modal__form > input:focus {
+  border-color: #3a918b;
+
+  box-shadow:
+    0 0 0 4px rgba(30, 130, 126, 0.11);
+}
+
+
+/* =========================================================
+   입력창 하단 안내
+   ========================================================= */
+
+/* 입력 안내와 글자 수를 좌우로 배치합니다. */
+.rename-timetable-modal__input-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 8px;
+}
+
+/* 입력 규칙 안내 문구입니다. */
+.rename-timetable-modal__input-footer span {
+  color: #85949f;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* 우측 글자 수 표시입니다. */
+.rename-timetable-modal__input-footer span:last-child {
+  flex: 0 0 auto;
+
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 올바르지 않은 이름에 대한 오류 문구입니다. */
+.rename-timetable-modal__error {
+  margin: 10px 0 0;
+
+  color: #b44949;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   모달 하단 버튼
+   ========================================================= */
+
+/* 취소와 저장 버튼을 오른쪽에 배치합니다. */
+.rename-timetable-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 24px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e5ecee;
+}
+
+/* 저장할 수 없는 상태의 버튼입니다. */
+.rename-timetable-modal__actions
+  .primary-button:disabled {
+  opacity: 0.52;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   반응형 레이아웃
+   ========================================================= */
+
+/* 모바일 화면에서는 모달의 바깥 여백을 줄입니다. */
+@media (max-width: 520px) {
+  .rename-timetable-modal-overlay {
+    align-items: flex-end;
+
+    padding: 12px;
+  }
+
+  .rename-timetable-modal {
+    width: 100%;
+
+    border-radius: 18px;
+  }
+
+  .rename-timetable-modal__header {
+    padding: 20px 18px 17px;
+  }
+
+  .rename-timetable-modal__form {
+    padding: 20px 18px;
+  }
+
+  .rename-timetable-modal__header h2 {
+    font-size: 20px;
+  }
+}
