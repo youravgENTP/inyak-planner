@@ -13,6 +13,8 @@ import {
   type SavedTimetable,
 } from '../../domain/saved-timetables'
 
+import './SavedTimetablesModal.css'
+
 const MAX_COMPARISON_TIMETABLES = 3
 
 const TIMETABLE_DRAG_DATA_TYPE =
