@@ -1,0 +1,275 @@
+/* =========================================================
+   로그인·회원가입 페이지 전체 배경
+   ========================================================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background:
+    linear-gradient(
+      145deg,
+      #eef5f6 0%,
+      #f7f9fb 55%,
+      #edf2f7 100%
+    );
+}
+
+
+/* =========================================================
+   로그인·회원가입 카드
+   ========================================================= */
+
+.auth-card {
+  width: min(100%, 420px);
+  padding: 36px;
+  border: 1px solid rgba(20, 61, 78, 0.1);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 20px 50px rgba(19, 52, 68, 0.1);
+}
+
+
+/* =========================================================
+   카드 상단 제목 영역
+   ========================================================= */
+
+.auth-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+
+/* 서비스 이름 */
+
+.auth-eyebrow {
+  margin: 0 0 10px;
+  color: #15747a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+
+/* 로그인·회원가입 제목 */
+
+.auth-title {
+  margin: 0;
+  color: #183746;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+
+/* 제목 아래 설명 */
+
+.auth-description {
+  margin: 12px 0 0;
+  color: #647682;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   로그인·회원가입 전환 버튼
+   ========================================================= */
+
+.auth-mode-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #edf2f3;
+}
+
+
+/* 일반 전환 버튼 */
+
+.auth-mode-button {
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 12px;
+  color: #6b7c84;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* 현재 선택된 전환 버튼 */
+
+.auth-mode-button.active {
+  color: #174553;
+  background: #ffffff;
+  box-shadow:
+    0 2px 8px rgba(31, 67, 79, 0.1);
+}
+
+
+/* 전환 버튼 키보드 포커스 */
+
+.auth-mode-button:focus-visible {
+  outline: 3px solid rgba(22, 116, 122, 0.22);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   입력 폼
+   ========================================================= */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+/* 입력 항목 하나 */
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+/* 입력 항목 이름 */
+
+.auth-label {
+  color: #304f5c;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+
+/* 사용자 ID·비밀번호 입력창 */
+
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #cfdadd;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #183746;
+  background: #ffffff;
+  font: inherit;
+  font-size: 15px;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+/* 입력창 포커스 */
+
+.auth-input:focus {
+  border-color: #26868b;
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(38, 134, 139, 0.14);
+}
+
+
+/* 비활성화된 입력창 */
+
+.auth-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   오류 메시지
+   ========================================================= */
+
+.auth-error {
+  margin: -4px 0 0;
+  border-radius: 9px;
+  padding: 10px 12px;
+  color: #a63d3d;
+  background: #fff0f0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   로그인·회원가입 제출 버튼
+   ========================================================= */
+
+.auth-submit-button {
+  width: 100%;
+  border: 0;
+  border-radius: 11px;
+  padding: 13px 16px;
+  color: #ffffff;
+  background: #176f75;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+
+/* 제출 버튼 마우스 오버 */
+
+.auth-submit-button:hover:not(:disabled) {
+  background: #125d62;
+}
+
+
+/* 제출 버튼 클릭 */
+
+.auth-submit-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+
+/* 제출 버튼 키보드 포커스 */
+
+.auth-submit-button:focus-visible {
+  outline: 3px solid rgba(22, 116, 122, 0.25);
+  outline-offset: 3px;
+}
+
+
+/* 처리 중 제출 버튼 */
+
+.auth-submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   작은 화면 대응
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .auth-page {
+    align-items: flex-start;
+    padding: 20px 14px;
+  }
+
+  .auth-card {
+    margin-top: 40px;
+    padding: 28px 22px;
+    border-radius: 16px;
+  }
+
+  .auth-title {
+    font-size: 26px;
+  }
+}
