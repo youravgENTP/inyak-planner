@@ -1,4 +1,7 @@
-import type { CSSProperties } from 'react'
+import type {
+  CSSProperties,
+  Ref,
+} from 'react'
 
 import {
   TIMETABLE_DAYS,
@@ -20,6 +23,7 @@ import type { TimetableCourse } from '../../domain/timetable/types'
 interface TimetableGridProps {
   courses: TimetableCourse[]
   isEditing?: boolean
+  timetableRef?: Ref<HTMLDivElement>
   onRemoveLecture?: (lectureId: number) => void
 }
 
@@ -45,6 +49,7 @@ const gridHeight =
 export function TimetableGrid({
   courses,
   isEditing = false,
+  timetableRef,
   onRemoveLecture,
 }: TimetableGridProps) {
   function handleRemoveCourse(
@@ -63,6 +68,7 @@ export function TimetableGrid({
   return (
     <div className="timetable-scroll">
       <div
+        ref={timetableRef}
         className="timetable"
         style={
           {
