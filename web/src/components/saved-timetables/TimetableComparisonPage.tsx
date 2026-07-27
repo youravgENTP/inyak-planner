@@ -3,6 +3,8 @@ import {
   type CSSProperties,
 } from 'react'
 
+import "./TimetableComparisonPage.css"
+
 import type { Lecture } from '../../domain/lectures/types'
 import type { SavedTimetable } from '../../domain/saved-timetables'
 import { TimetableMiniPreview } from './TimetableMiniPreview'
