@@ -17,7 +17,7 @@
     repeat(5, minmax(0, 1fr));
 
   grid-template-rows:
-    48px
+    36px
     var(--grid-height);
 
   background: #ffffff;
@@ -26,16 +26,21 @@
 
 /* ---------------------------------------------------------
    휴대폰용 요일 머리글
-   좁은 열에서도 요일이 잘 보이도록 크기를 줄입니다.
+   글자 위아래에 충분한 여백만 남기도록 높이를 줄입니다.
    --------------------------------------------------------- */
 
 .timetable--mobile-portrait .day-heading {
-  gap: 1px;
+  gap: 0;
   min-width: 0;
+
+  padding:
+    8px
+    2px;
 }
 
 .timetable--mobile-portrait .day-heading strong {
   font-size: 12px;
+  line-height: 1;
 }
 
 .timetable--mobile-portrait .day-heading span {
@@ -44,12 +49,21 @@
 
 
 /* ---------------------------------------------------------
-   휴대폰용 시간 표시 열
-   시간 열의 너비가 줄어든 만큼 여백과 글자 크기를 조정합니다.
+   휴대폰용 시간 표시 열과 격자 슬롯
+   기본 34px 대신 30분당 28px를 사용합니다.
    --------------------------------------------------------- */
 
+.timetable--mobile-portrait .time-label,
+.timetable--mobile-portrait .grid-slot {
+  height: 28px;
+}
+
 .timetable--mobile-portrait .time-label {
-  padding-right: 6px;
+  padding:
+    5px
+    6px
+    0
+    0;
 
   font-size: 8px;
 }
@@ -57,24 +71,25 @@
 
 /* ---------------------------------------------------------
    휴대폰용 수업 블록
-   좁은 요일 열 안에서 과목 정보를 표시합니다.
+   줄어든 높이 안에서도 텍스트가 안정적으로 표시되도록
+   패딩과 줄 간격을 조금 더 압축합니다.
    --------------------------------------------------------- */
 
 .timetable--mobile-portrait .course-block {
   padding:
-    6px
+    5px
     3px;
 }
 
 .timetable--mobile-portrait .course-block strong {
   width: 100%;
   margin:
-    1px
     0
-    3px;
+    0
+    2px;
 
   font-size: 9px;
-  line-height: 1.2;
+  line-height: 1.15;
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -83,7 +98,7 @@
   width: 100%;
 
   font-size: 7px;
-  line-height: 1.25;
+  line-height: 1.2;
   white-space: normal;
   overflow-wrap: anywhere;
 }

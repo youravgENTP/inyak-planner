@@ -1,5 +1,8 @@
 import { toPng } from 'html-to-image'
 
+import {
+  TIMETABLE_SLOT_HEIGHT,
+} from '../timetable/constants'
 import { validateOutputDimensions } from './dimensions'
 import type {
   DownloadTimetablePngOptions,
@@ -10,6 +13,12 @@ import type {
 const DEFAULT_FILENAME = 'inyak-timetable.png'
 const DEFAULT_BACKGROUND_COLOR = '#ffffff'
 const MAX_RENDER_PIXEL_RATIO = 4
+
+const MOBILE_PORTRAIT_SLOT_HEIGHT = 28
+
+const MOBILE_PORTRAIT_HEIGHT_SCALE =
+  MOBILE_PORTRAIT_SLOT_HEIGHT /
+  TIMETABLE_SLOT_HEIGHT
 
 interface ContainedImagePlacement {
   x: number
@@ -23,12 +32,16 @@ interface PreparedRenderElement {
   cleanup: () => void
 }
 
-const ensurePngExtension = (filename: string): string =>
+const ensurePngExtension = (
+  filename: string,
+): string =>
   filename.toLowerCase().endsWith('.png')
     ? filename
     : `${filename}.png`
 
-const sanitizeFilename = (filename: string): string => {
+const sanitizeFilename = (
+  filename: string,
+): string => {
   const trimmedFilename = filename.trim()
 
   const safeFilename = trimmedFilename
@@ -43,9 +56,10 @@ const sanitizeFilename = (filename: string): string => {
   )
 }
 
-const waitForDocumentFonts = async (): Promise<void> => {
-  await document.fonts.ready
-}
+const waitForDocumentFonts =
+  async (): Promise<void> => {
+    await document.fonts.ready
+  }
 
 const waitForNextPaint = (): Promise<void> =>
   new Promise((resolve) => {
@@ -176,6 +190,101 @@ const getLayoutClassName = (
   return undefined
 }
 
+const scalePixelValue = (
+  pixelValue: string,
+  scale: number,
+): string | undefined => {
+  const numericValue = Number.parseFloat(pixelValue)
+
+  if (!Number.isFinite(numericValue)) {
+    return undefined
+  }
+
+  return `${numericValue * scale}px`
+}
+
+const applyMobilePortraitGeometry = (
+  timetableElement: HTMLElement,
+): void => {
+  const currentGridHeight =
+    timetableElement.style.getPropertyValue(
+      '--grid-height',
+    )
+
+  const scaledGridHeight = scalePixelValue(
+    currentGridHeight,
+    MOBILE_PORTRAIT_HEIGHT_SCALE,
+  )
+
+  if (scaledGridHeight !== undefined) {
+    timetableElement.style.setProperty(
+      '--grid-height',
+      scaledGridHeight,
+    )
+  }
+
+  const dayColumns =
+    timetableElement.querySelectorAll<HTMLElement>(
+      '.day-column',
+    )
+
+  dayColumns.forEach((dayColumn) => {
+    const scaledHeight = scalePixelValue(
+      dayColumn.style.height,
+      MOBILE_PORTRAIT_HEIGHT_SCALE,
+    )
+
+    if (scaledHeight !== undefined) {
+      dayColumn.style.height = scaledHeight
+    }
+  })
+
+  const courseBlocks =
+    timetableElement.querySelectorAll<HTMLElement>(
+      '.course-block',
+    )
+
+  courseBlocks.forEach((courseBlock) => {
+    const scaledTop = scalePixelValue(
+      courseBlock.style.top,
+      MOBILE_PORTRAIT_HEIGHT_SCALE,
+    )
+
+    const scaledHeight = scalePixelValue(
+      courseBlock.style.height,
+      MOBILE_PORTRAIT_HEIGHT_SCALE,
+    )
+
+    if (scaledTop !== undefined) {
+      courseBlock.style.top = scaledTop
+    }
+
+    if (scaledHeight !== undefined) {
+      courseBlock.style.height = scaledHeight
+    }
+  })
+}
+
+const applyRenderLayout = (
+  timetableElement: HTMLElement,
+  layout: TimetableRenderLayout,
+): void => {
+  const layoutClassName =
+    getLayoutClassName(layout)
+
+  if (layoutClassName !== undefined) {
+    timetableElement.classList.add(
+      layoutClassName,
+    )
+  }
+
+  if (layout === 'mobile-portrait') {
+    applyMobilePortraitGeometry(
+      timetableElement,
+    )
+  }
+}
+
 const prepareRenderElement = (
   sourceElement: HTMLElement,
   layout: TimetableRenderLayout,
@@ -186,12 +295,10 @@ const prepareRenderElement = (
   const clonedElement =
     sourceElement.cloneNode(true) as HTMLElement
 
-  const layoutClassName =
-    getLayoutClassName(layout)
-
-  if (layoutClassName !== undefined) {
-    clonedElement.classList.add(layoutClassName)
-  }
+  applyRenderLayout(
+    clonedElement,
+    layout,
+  )
 
   stagingContainer.setAttribute(
     'aria-hidden',

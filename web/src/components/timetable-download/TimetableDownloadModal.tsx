@@ -49,9 +49,13 @@ const getErrorMessage = (
 const getPresetRenderLayout = (
   preset: DeviceResolutionPreset,
 ): TimetableRenderLayout => {
+  if (preset.category === 'iphone') {
+    return 'mobile-portrait'
+  }
+
   if (
-    preset.category === 'iphone' ||
-    preset.category === 'galaxy-phone'
+    preset.category === 'galaxy-phone' &&
+    preset.orientation === 'portrait'
   ) {
     return 'mobile-portrait'
   }
