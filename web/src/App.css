@@ -449,6 +449,86 @@ h1 {
   font-size: 17px;
 }
 
+/* 시간표 이름을 클릭해서 수정할 수 있는 제목 버튼입니다. */
+.timetable-title-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  max-width: 100%;
+  padding: 2px 5px;
+  margin: -2px -5px;
+
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+/* 시간표 이름이 너무 길면 한 줄 말줄임표로 표시합니다. */
+.timetable-title-button > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 제목 옆의 이름 변경 연필 아이콘입니다. */
+.timetable-title-button__icon {
+  flex: 0 0 auto;
+
+  color: var(--ink-500);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+
+  opacity: 0.6;
+
+  transition:
+    color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+/* 제목 버튼에 마우스를 올렸을 때입니다. */
+.timetable-title-button:hover {
+  color: var(--teal-700);
+
+  background: var(--teal-100);
+}
+
+/* 마우스를 올리면 연필 아이콘을 선명하게 표시합니다. */
+.timetable-title-button:hover
+  .timetable-title-button__icon {
+  color: var(--teal-700);
+
+  opacity: 1;
+  transform: translateX(1px);
+}
+
+/* 키보드로 제목 버튼을 선택했을 때입니다. */
+.timetable-title-button:focus-visible {
+  outline: 3px solid rgba(33, 143, 139, 0.18);
+  outline-offset: 2px;
+}
+
+/* 편집 중에는 이름 변경 버튼을 일반 제목처럼 보이게 합니다. */
+.timetable-workspace--editing
+  .timetable-title-button {
+  cursor: default;
+}
+
 .panel-header p {
   margin-top: 4px;
 
