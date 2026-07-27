@@ -6,6 +6,7 @@ import {
 } from 'react'
 
 import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
+import { TimetableComparisonPage } from '../components/saved-timetables/TimetableComparisonPage'
 import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
@@ -155,6 +156,11 @@ export function TimetablePage() {
   ] = useState(false)
 
   const [
+  isComparisonPageOpen,
+  setIsComparisonPageOpen,
+] = useState(false)
+
+  const [
     comparisonTimetableIds,
     setComparisonTimetableIds,
   ] = useState<string[]>([])
@@ -203,6 +209,27 @@ export function TimetablePage() {
       timetableState.timetables,
     ],
   )
+
+  const comparisonTimetables = useMemo(
+  () =>
+    comparisonTimetableIds
+      .map((timetableId) =>
+        timetableState.timetables.find(
+          (timetable) =>
+            timetable.id === timetableId,
+        ),
+      )
+      .filter(
+        (
+          timetable,
+        ): timetable is SavedTimetable =>
+          timetable !== undefined,
+      ),
+  [
+    comparisonTimetableIds,
+    timetableState.timetables,
+  ],
+)
 
   const lectureMap = useMemo(
     () =>
@@ -556,6 +583,7 @@ export function TimetablePage() {
   }
 
   function handleOpenSavedTimetablesModal() {
+    setIsComparisonPageOpen(false)
     setIsDownloadModalOpen(false)
     setIsSavedTimetablesModalOpen(true)
   }
@@ -671,27 +699,34 @@ export function TimetablePage() {
     setIsSavedTimetablesModalOpen(false)
   }
 
-  function handleCompareTimetables(
-    timetableIds: readonly string[],
-  ) {
-    const validTimetableIds =
-      getValidComparisonTimetableIds(
-        timetableState.timetables,
-        timetableIds,
-      )
-
-    if (validTimetableIds.length < 2) {
-      return
-    }
-
-    setComparisonTimetableIds(
-      validTimetableIds,
+function handleCompareTimetables(
+  timetableIds: readonly string[],
+) {
+  const validTimetableIds =
+    getValidComparisonTimetableIds(
+      timetableState.timetables,
+      timetableIds,
     )
 
-    window.alert(
-      `${validTimetableIds.length}개의 시간표가 선택되었습니다. 비교 페이지는 다음 단계에서 연결됩니다.`,
-    )
+  if (validTimetableIds.length < 2) {
+    return
   }
+
+  setComparisonTimetableIds(
+    validTimetableIds,
+  )
+
+  setIsSavedTimetablesModalOpen(false)
+  setIsDownloadModalOpen(false)
+  setIsEditing(false)
+  setPreviewLecture(null)
+  setIsComparisonPageOpen(true)
+}
+
+function handleCloseComparisonPage() {
+  setIsComparisonPageOpen(false)
+}
+
 
   function handleDownloadSyllabi() {
     window.alert(
@@ -760,6 +795,19 @@ export function TimetablePage() {
           현재 시간표를 불러오지 못했습니다.
         </p>
       </section>
+    )
+  }
+
+  if (
+    isComparisonPageOpen &&
+    comparisonTimetables.length >= 2
+  ) {
+    return (
+      <TimetableComparisonPage
+        timetables={comparisonTimetables}
+        lectures={lectures}
+        onBack={handleCloseComparisonPage}
+      />
     )
   }
 
