@@ -116,20 +116,6 @@ const getInitialCategory = (
   return 'iphone'
 }
 
-const getSearchPlaceholder = (
-  source: ResolutionPresetSource,
-): string => {
-  if (source === 'apple') {
-    return '예: iPhone 16 Pro'
-  }
-
-  if (source === 'samsung') {
-    return '예: Galaxy S25 Ultra'
-  }
-
-  return '예: 1920 × 1080'
-}
-
 function DevicePresetSettings({
   selectedPresetId,
   onPresetChange,
@@ -247,20 +233,14 @@ function DevicePresetSettings({
     >
       <div className="timetable-download-setting-heading">
         <h3 id="preset-settings-heading">
-          해상도 프리셋
+          제조사·기기종류 선택
         </h3>
-
-        <p>
-          Apple·Samsung 기기 또는 일반 화면
-          해상도를 선택해 주세요.
-        </p>
       </div>
 
-      <fieldset className="timetable-download-preset-source">
-        <legend className="timetable-download-field-label">
-          프리셋 종류
-        </legend>
-
+      <fieldset
+        className="timetable-download-preset-source"
+        aria-label="제조사 또는 화면 종류"
+      >
         <label>
           <input
             type="radio"
@@ -322,23 +302,22 @@ function DevicePresetSettings({
 
       <label className="timetable-download-preset-field">
         <span className="timetable-download-field-label">
-          모델 또는 해상도 검색
+          모델 검색 후 해상도 선택
         </span>
 
         <input
           type="search"
           value={searchQuery}
-          placeholder={getSearchPlaceholder(source)}
+          placeholder="예: S25 또는 iPhone 16 Pro"
           autoComplete="off"
           onChange={handleSearchChange}
         />
       </label>
 
-      <label className="timetable-download-preset-field">
-        <span className="timetable-download-field-label">
-          해상도 선택
-        </span>
-
+      <label
+        className="timetable-download-preset-field"
+        aria-label="지원 해상도 선택"
+      >
         <select
           value={
             filteredPresets.some(
@@ -353,12 +332,12 @@ function DevicePresetSettings({
         >
           {filteredPresets.length === 0 ? (
             <option value="">
-              일치하는 프리셋이 없습니다
+              일치하는 기기 또는 해상도가 없습니다
             </option>
           ) : (
             <>
               <option value="" disabled>
-                프리셋을 선택해 주세요
+                검색한 기기에서 지원되는 해상도를 선택해 주세요
               </option>
 
               {filteredPresets.map((preset) => (
@@ -379,7 +358,7 @@ function DevicePresetSettings({
           className="timetable-download-empty-message"
           role="status"
         >
-          검색 조건과 일치하는 해상도 프리셋이
+          검색 조건과 일치하는 기기 또는 해상도가
           없습니다.
         </p>
       )}
