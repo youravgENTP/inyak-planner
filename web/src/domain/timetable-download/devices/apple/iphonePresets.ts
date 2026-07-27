@@ -2,6 +2,89 @@ import type { DeviceResolutionPreset } from '../../types'
 
 export const IPHONE_RESOLUTION_PRESETS = [
   {
+    id: 'iphone-se-4-7-750x1334',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone SE 4.7형 — 750 × 1334',
+    width: 750,
+    height: 1334,
+    orientation: 'portrait',
+    diagonalInches: 4.7,
+    models: [
+      'iPhone SE (2nd generation)',
+      'iPhone SE (3rd generation)',
+      'iPhone SE 2',
+      'iPhone SE 3',
+    ],
+    note:
+      '홈 버튼을 사용하는 4.7형 iPhone SE 2세대와 3세대의 세로 화면 해상도입니다.',
+  },
+  {
+    id: 'iphone-x-5-8-1125x2436',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone 5.8형 — 1125 × 2436',
+    width: 1125,
+    height: 2436,
+    orientation: 'portrait',
+    diagonalInches: 5.8,
+    models: [
+      'iPhone X',
+      'iPhone XS',
+      'iPhone 11 Pro',
+    ],
+    note:
+      'iPhone X, iPhone XS 및 iPhone 11 Pro가 사용하는 5.8형 OLED 화면 해상도입니다.',
+  },
+  {
+    id: 'iphone-xr-6-1-828x1792',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone 6.1형 LCD — 828 × 1792',
+    width: 828,
+    height: 1792,
+    orientation: 'portrait',
+    diagonalInches: 6.1,
+    models: [
+      'iPhone XR',
+      'iPhone 11',
+    ],
+    note:
+      'iPhone XR과 iPhone 11이 사용하는 6.1형 Liquid Retina LCD 해상도입니다.',
+  },
+  {
+    id: 'iphone-xs-max-6-5-1242x2688',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone 6.5형 — 1242 × 2688',
+    width: 1242,
+    height: 2688,
+    orientation: 'portrait',
+    diagonalInches: 6.5,
+    models: [
+      'iPhone XS Max',
+      'iPhone 11 Pro Max',
+    ],
+    note:
+      'iPhone XS Max와 iPhone 11 Pro Max가 사용하는 6.5형 OLED 화면 해상도입니다.',
+  },
+  {
+    id: 'iphone-mini-5-4-1080x2340',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone mini 5.4형 — 1080 × 2340',
+    width: 1080,
+    height: 2340,
+    orientation: 'portrait',
+    diagonalInches: 5.4,
+    models: [
+      'iPhone 12 mini',
+      'iPhone 13 mini',
+    ],
+    note:
+      'iPhone 12 mini와 iPhone 13 mini가 사용하는 5.4형 세로 화면 해상도입니다.',
+  },
+  {
     id: 'iphone-6-1-1170x2532',
     source: 'apple',
     category: 'iphone',
@@ -11,9 +94,33 @@ export const IPHONE_RESOLUTION_PRESETS = [
     orientation: 'portrait',
     diagonalInches: 6.1,
     models: [
-      'iPhone 17e',
+      'iPhone 12',
+      'iPhone 12 Pro',
+      'iPhone 13',
+      'iPhone 13 Pro',
+      'iPhone 14',
       'iPhone 16e',
+      'iPhone 17e',
     ],
+    note:
+      '여러 세대의 6.1형 iPhone에서 사용하는 1170 × 2532 세로 화면 해상도입니다.',
+  },
+  {
+    id: 'iphone-6-7-1284x2778',
+    source: 'apple',
+    category: 'iphone',
+    label: 'iPhone 6.7형 — 1284 × 2778',
+    width: 1284,
+    height: 2778,
+    orientation: 'portrait',
+    diagonalInches: 6.7,
+    models: [
+      'iPhone 12 Pro Max',
+      'iPhone 13 Pro Max',
+      'iPhone 14 Plus',
+    ],
+    note:
+      'iPhone 12 Pro Max, 13 Pro Max 및 14 Plus가 사용하는 6.7형 화면 해상도입니다.',
   },
   {
     id: 'iphone-6-1-1179x2556',
@@ -25,11 +132,13 @@ export const IPHONE_RESOLUTION_PRESETS = [
     orientation: 'portrait',
     diagonalInches: 6.1,
     models: [
-      'iPhone 16',
+      'iPhone 14 Pro',
       'iPhone 15',
       'iPhone 15 Pro',
-      'iPhone 14 Pro',
+      'iPhone 16',
     ],
+    note:
+      'Dynamic Island을 사용하는 일부 6.1형 iPhone의 세로 화면 해상도입니다.',
   },
   {
     id: 'iphone-6-3-1206x2622',
@@ -41,10 +150,12 @@ export const IPHONE_RESOLUTION_PRESETS = [
     orientation: 'portrait',
     diagonalInches: 6.3,
     models: [
+      'iPhone 16 Pro',
       'iPhone 17',
       'iPhone 17 Pro',
-      'iPhone 16 Pro',
     ],
+    note:
+      '6.3형 Pro 계열 및 동일 해상도를 사용하는 iPhone 모델의 세로 화면 해상도입니다.',
   },
   {
     id: 'iphone-air-6-5-1260x2736',
@@ -58,6 +169,8 @@ export const IPHONE_RESOLUTION_PRESETS = [
     models: [
       'iPhone Air',
     ],
+    note:
+      'iPhone Air의 6.5형 세로 화면 해상도입니다.',
   },
   {
     id: 'iphone-6-7-1290x2796',
@@ -69,11 +182,13 @@ export const IPHONE_RESOLUTION_PRESETS = [
     orientation: 'portrait',
     diagonalInches: 6.7,
     models: [
-      'iPhone 16 Plus',
+      'iPhone 14 Pro Max',
       'iPhone 15 Plus',
       'iPhone 15 Pro Max',
-      'iPhone 14 Pro Max',
+      'iPhone 16 Plus',
     ],
+    note:
+      '일부 6.7형 Plus 및 Pro Max 모델이 사용하는 세로 화면 해상도입니다.',
   },
   {
     id: 'iphone-pro-max-6-9-1320x2868',
@@ -85,8 +200,10 @@ export const IPHONE_RESOLUTION_PRESETS = [
     orientation: 'portrait',
     diagonalInches: 6.9,
     models: [
-      'iPhone 17 Pro Max',
       'iPhone 16 Pro Max',
+      'iPhone 17 Pro Max',
     ],
+    note:
+      '6.9형 iPhone Pro Max 모델의 세로 화면 해상도입니다.',
   },
 ] as const satisfies readonly DeviceResolutionPreset[]
