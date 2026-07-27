@@ -8,6 +8,9 @@ import {
   type MouseEvent,
 } from 'react'
 
+import { TimetableMiniPreview } from './TimetableMiniPreview'
+import type { Lecture } from '../../domain/lectures/types'
+
 import {
   groupTimetablesBySemester,
   type SavedTimetable,
@@ -24,7 +27,7 @@ interface ComparisonGridStyle
   extends CSSProperties {
   '--comparison-count': number
 }
-
+/////////////////
 interface SavedTimetablesModalProps {
   isOpen: boolean
   timetables: readonly SavedTimetable[]
@@ -44,9 +47,30 @@ interface SavedTimetablesModalProps {
   ) => void
 }
 
+interface SavedTimetablesModalProps {
+  isOpen: boolean
+  timetables: readonly SavedTimetable[]
+  lectures?: readonly Lecture[]
+  activeTimetableId: string
+  comparisonTimetableIds: readonly string[]
+  onClose: () => void
+  onSelectTimetable: (
+    timetableId: string,
+  ) => void
+  onComparisonTimetableIdsChange: (
+    timetableIds: string[],
+  ) => void
+  onCreateEmptyTimetable: () => void
+  onDuplicateActiveTimetable: () => void
+  onCompare: (
+    timetableIds: readonly string[],
+  ) => void
+}
+
 export function SavedTimetablesModal({
   isOpen,
   timetables,
+  lectures = [],
   activeTimetableId,
   comparisonTimetableIds,
   onClose,
@@ -182,7 +206,7 @@ export function SavedTimetablesModal({
       onClose()
     }
   }
-
+///////////
   function handleTimetableDragStart(
     event: DragEvent<HTMLDivElement>,
     timetableId: string,
@@ -621,9 +645,10 @@ export function SavedTimetablesModal({
                           </header>
 
                           <div className="comparison-selection-preview__canvas">
-                            <span>
-                              세로형 시간표 미리보기
-                            </span>
+                            <TimetableMiniPreview
+                              timetable={timetable}
+                              lectures={lectures}
+                            />
                           </div>
                         </article>
                       ),
