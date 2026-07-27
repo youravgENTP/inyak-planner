@@ -6,7 +6,19 @@ import type {
 
 const API_BASE_URL = 'http://127.0.0.1:8000'
 
-function mapLectureApiItem(item: LectureApiItem): Lecture {
+interface DownloadSyllabiRequest {
+  lecture_ids: number[]
+  timetable_name: string
+}
+
+export interface SyllabiZipDownload {
+  blob: Blob
+  filename: string
+}
+
+function mapLectureApiItem(
+  item: LectureApiItem,
+): Lecture {
   return {
     id: item.id,
     academicYear: item.academic_year,
@@ -26,16 +38,161 @@ function mapLectureApiItem(item: LectureApiItem): Lecture {
   }
 }
 
-export async function fetchLectures(): Promise<Lecture[]> {
-  const response = await fetch(`${API_BASE_URL}/api/lectures`)
+function getDownloadFilename(
+  response: Response,
+  fallbackFilename: string,
+): string {
+  const contentDisposition =
+    response.headers.get(
+      'Content-Disposition',
+    )
+
+  if (contentDisposition === null) {
+    return fallbackFilename
+  }
+
+  const encodedFilenameMatch =
+    contentDisposition.match(
+      /filename\*=UTF-8''([^;]+)/i,
+    )
+
+  if (encodedFilenameMatch?.[1]) {
+    try {
+      return decodeURIComponent(
+        encodedFilenameMatch[1],
+      )
+    } catch {
+      return fallbackFilename
+    }
+  }
+
+  const plainFilenameMatch =
+    contentDisposition.match(
+      /filename="?([^";]+)"?/i,
+    )
+
+  return (
+    plainFilenameMatch?.[1]?.trim() ||
+    fallbackFilename
+  )
+}
+
+async function getApiErrorMessage(
+  response: Response,
+  fallbackMessage: string,
+): Promise<string> {
+  try {
+    const data = (
+      await response.json()
+    ) as {
+      detail?: unknown
+    }
+
+    if (
+      typeof data.detail === 'string' &&
+      data.detail.trim().length > 0
+    ) {
+      return data.detail
+    }
+  } catch {
+    // JSON 오류 본문이 아니면 기본 메시지를 사용합니다.
+  }
+
+  return `${fallbackMessage} 상태 코드: ${response.status}`
+}
+
+function createFallbackZipFilename(
+  timetableName: string,
+): string {
+  const safeName = timetableName
+    .trim()
+    .replace(/[\\/:*?"<>|]/g, '-')
+
+  return `${
+    safeName || '시간표'
+  }-강의계획서.zip`
+}
+
+export async function fetchLectures():
+  Promise<Lecture[]> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/lectures`,
+  )
 
   if (!response.ok) {
     throw new Error(
-      `강의 목록을 불러오지 못했습니다. 상태 코드: ${response.status}`,
+      await getApiErrorMessage(
+        response,
+        '강의 목록을 불러오지 못했습니다.',
+      ),
     )
   }
 
-  const data = (await response.json()) as LectureListApiResponse
+  const data =
+    (await response.json()) as
+      LectureListApiResponse
 
-  return data.lectures.map(mapLectureApiItem)
+  return data.lectures.map(
+    mapLectureApiItem,
+  )
+}
+
+export async function downloadSyllabiZip(
+  lectureIds: readonly number[],
+  timetableName: string,
+): Promise<SyllabiZipDownload> {
+  if (lectureIds.length === 0) {
+    throw new Error(
+      '다운로드할 강의가 없습니다.',
+    )
+  }
+
+  const requestBody:
+    DownloadSyllabiRequest = {
+      lecture_ids: [...lectureIds],
+      timetable_name:
+        timetableName.trim() || '시간표',
+    }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/syllabi/download`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type':
+          'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getApiErrorMessage(
+        response,
+        '강의계획서를 다운로드하지 못했습니다.',
+      ),
+    )
+  }
+
+  const blob = await response.blob()
+
+  if (blob.size === 0) {
+    throw new Error(
+      '서버에서 빈 ZIP 파일을 반환했습니다.',
+    )
+  }
+
+  const fallbackFilename =
+    createFallbackZipFilename(
+      timetableName,
+    )
+
+  return {
+    blob,
+    filename: getDownloadFilename(
+      response,
+      fallbackFilename,
+    ),
+  }
 }
