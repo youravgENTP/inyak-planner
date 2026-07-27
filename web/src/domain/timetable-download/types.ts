@@ -4,6 +4,7 @@ export type TimetableDownloadMode =
 
 export type ResolutionPresetSource =
   | 'apple'
+  | 'samsung'
   | 'generic'
 
 export type DevicePresetCategory =
@@ -11,6 +12,10 @@ export type DevicePresetCategory =
   | 'ipad'
   | 'macbook'
   | 'imac'
+  | 'galaxy-phone'
+  | 'galaxy-tab'
+  | 'galaxy-book'
+  | 'samsung-display'
   | 'generic-display'
 
 export type PresetOrientation =

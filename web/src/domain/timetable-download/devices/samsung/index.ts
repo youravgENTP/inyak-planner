@@ -1,0 +1,19 @@
+import type { DeviceResolutionPreset } from '../../types'
+import { GALAXY_BOOK_RESOLUTION_PRESETS } from './galaxyBookPresets'
+import { GALAXY_PHONE_RESOLUTION_PRESETS } from './galaxyPhonePresets'
+import { GALAXY_TAB_RESOLUTION_PRESETS } from './galaxyTabPresets'
+import { SAMSUNG_DISPLAY_RESOLUTION_PRESETS } from './samsungDisplayPresets'
+
+export {
+  GALAXY_BOOK_RESOLUTION_PRESETS,
+  GALAXY_PHONE_RESOLUTION_PRESETS,
+  GALAXY_TAB_RESOLUTION_PRESETS,
+  SAMSUNG_DISPLAY_RESOLUTION_PRESETS,
+}
+
+export const SAMSUNG_DEVICE_RESOLUTION_PRESETS = [
+  ...GALAXY_PHONE_RESOLUTION_PRESETS,
+  ...GALAXY_TAB_RESOLUTION_PRESETS,
+  ...GALAXY_BOOK_RESOLUTION_PRESETS,
+  ...SAMSUNG_DISPLAY_RESOLUTION_PRESETS,
+] as const satisfies readonly DeviceResolutionPreset[]
