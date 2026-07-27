@@ -24,6 +24,14 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from server.auth_router import router as auth_router
+
+from server.database import (
+    get_lecture_by_id,
+    get_lectures,
+    get_lectures_by_ids,
+)
+
 from server.database import (
     get_lecture_by_id,
     get_lectures,
@@ -46,6 +54,8 @@ app = FastAPI(
     title="Inyak Planner API",
     version="0.1.0",
 )
+
+app.include_router(auth_router)
 
 
 app.add_middleware(
