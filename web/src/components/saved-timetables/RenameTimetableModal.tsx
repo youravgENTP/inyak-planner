@@ -6,6 +6,8 @@ import {
   type MouseEvent,
 } from 'react'
 
+import './RenameTimetableModal.css'
+
 const MAX_TIMETABLE_NAME_LENGTH = 30
 
 interface RenameTimetableModalProps {
