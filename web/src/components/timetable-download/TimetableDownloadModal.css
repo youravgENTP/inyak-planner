@@ -1,0 +1,808 @@
+/* =========================================================
+   시간표 PNG 다운로드 모달
+   모달 오버레이, 크기 설정, 기기 프리셋 UI를 정의
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. 모달 배경과 위치
+   --------------------------------------------------------- */
+
+
+/* 전체 화면을 덮는 어두운 모달 배경 */
+.timetable-download-modal-overlay {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  padding: 32px;
+
+  background: rgba(8, 24, 37, 0.68);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* 화면 중앙에 표시되는 다운로드 모달 */
+.timetable-download-modal {
+  display: flex;
+  width: min(680px, 100%);
+  max-height: min(840px, calc(100vh - 64px));
+  flex-direction: column;
+  overflow: hidden;
+
+  border: 1px solid rgba(219, 229, 232, 0.9);
+  border-radius: 20px;
+
+  color: var(--ink-900);
+  background: var(--surface);
+
+  box-shadow:
+    0 28px 80px rgba(4, 20, 32, 0.3),
+    0 6px 20px rgba(4, 20, 32, 0.14);
+}
+
+
+/* ---------------------------------------------------------
+   2. 모달 상단
+   --------------------------------------------------------- */
+
+
+/* 제목, 설명, 닫기 버튼을 배치하는 상단 영역 */
+.timetable-download-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 26px 28px 22px;
+
+  border-bottom: 1px solid var(--line);
+}
+
+
+/* 제목과 설명을 세로로 배치 */
+.timetable-download-modal-header > div {
+  display: grid;
+  gap: 8px;
+}
+
+
+/* 시간표 다운로드 제목 */
+.timetable-download-modal-header h2 {
+  color: var(--navy-950);
+
+  font-size: 22px;
+  letter-spacing: -0.025em;
+}
+
+
+/* 모달 제목 아래의 안내 문구 */
+.timetable-download-modal-header p {
+  max-width: 520px;
+
+  color: var(--ink-700);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+
+/* 우측 상단 모달 닫기 버튼 */
+.timetable-download-modal-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+
+  padding: 0;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+
+  color: var(--ink-700);
+  background: var(--surface-muted);
+
+  cursor: pointer;
+
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+
+/* 닫기 버튼에 마우스를 올렸을 때 */
+.timetable-download-modal-close:hover {
+  border-color: #b9c9ce;
+
+  color: var(--navy-950);
+  background: #edf3f4;
+}
+
+
+/* 닫기 버튼에 키보드 포커스가 있을 때 */
+.timetable-download-modal-close:focus-visible {
+  outline: 3px solid rgba(33, 143, 139, 0.24);
+  outline-offset: 2px;
+}
+
+
+/* ---------------------------------------------------------
+   3. 모달 본문
+   --------------------------------------------------------- */
+
+
+/* 모드 선택과 세부 설정이 들어가는 스크롤 영역 */
+.timetable-download-modal-body {
+  display: grid;
+  gap: 22px;
+  overflow-y: auto;
+
+  padding: 24px 28px 28px;
+
+  overscroll-behavior: contain;
+}
+
+
+/* ---------------------------------------------------------
+   4. 출력 크기 선택 방식
+   --------------------------------------------------------- */
+
+
+/* 사용자 지정과 프리셋을 선택하는 영역 */
+.timetable-download-mode-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+}
+
+
+/* 크기 선택 방식의 접근성용 제목 */
+.timetable-download-mode-selector legend {
+  grid-column: 1 / -1;
+
+  margin-bottom: 2px;
+
+  color: var(--navy-900);
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* 각 모드 선택 버튼 */
+.timetable-download-mode-selector label {
+  position: relative;
+
+  display: block;
+
+  cursor: pointer;
+}
+
+
+/* 기본 라디오 버튼은 화면에서 숨김 */
+.timetable-download-mode-selector input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* 사용자 지정 또는 프리셋 선택 카드 */
+.timetable-download-mode-selector span {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+
+  padding: 10px 14px;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+
+  color: var(--ink-700);
+  background: var(--surface);
+
+  font-size: 13px;
+  font-weight: 750;
+
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+/* 선택 방식 카드에 마우스를 올렸을 때 */
+.timetable-download-mode-selector label:hover span {
+  border-color: #a9c5c6;
+
+  color: var(--teal-700);
+  background: #f6fbfa;
+}
+
+
+/* 현재 선택된 크기 선택 방식 */
+.timetable-download-mode-selector input:checked + span {
+  border-color: var(--teal-600);
+
+  color: var(--teal-700);
+  background: var(--teal-100);
+
+  box-shadow: inset 0 0 0 1px rgba(33, 143, 139, 0.08);
+}
+
+
+/* 키보드로 선택 카드에 포커스했을 때 */
+.timetable-download-mode-selector input:focus-visible + span {
+  outline: 3px solid rgba(33, 143, 139, 0.22);
+  outline-offset: 2px;
+}
+
+
+/* ---------------------------------------------------------
+   5. 설정 영역 공통
+   --------------------------------------------------------- */
+
+
+/* 사용자 지정 및 프리셋 설정 영역 */
+.timetable-download-custom-size,
+.timetable-download-preset-settings {
+  display: grid;
+  gap: 18px;
+
+  padding: 20px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: var(--surface-muted);
+}
+
+
+/* 설정 영역 제목과 설명 */
+.timetable-download-setting-heading {
+  display: grid;
+  gap: 5px;
+}
+
+
+/* 설정 영역의 작은 제목 */
+.timetable-download-setting-heading h3 {
+  margin: 0;
+
+  color: var(--navy-950);
+
+  font-size: 15px;
+  letter-spacing: -0.015em;
+}
+
+
+/* 설정 제목 아래의 설명 */
+.timetable-download-setting-heading p {
+  color: var(--ink-700);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* 입력 필드의 이름 */
+.timetable-download-field-label {
+  color: var(--navy-900);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* 다운로드 설정의 input과 select 공통 */
+.timetable-download-custom-size input[type='text'],
+.timetable-download-preset-settings input[type='search'],
+.timetable-download-preset-settings select {
+  width: 100%;
+  min-height: 42px;
+
+  padding: 9px 12px;
+
+  border: 1px solid #cbd9dd;
+  border-radius: 9px;
+
+  color: var(--ink-900);
+  background: var(--surface);
+
+  font: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+/* 입력 요소의 안내 문구 */
+.timetable-download-custom-size input::placeholder,
+.timetable-download-preset-settings input::placeholder {
+  color: var(--ink-500);
+}
+
+
+/* 입력 요소에 포커스가 있을 때 */
+.timetable-download-custom-size input[type='text']:focus,
+.timetable-download-preset-settings input[type='search']:focus,
+.timetable-download-preset-settings select:focus {
+  border-color: var(--teal-600);
+  outline: none;
+
+  box-shadow: 0 0 0 3px rgba(33, 143, 139, 0.14);
+}
+
+
+/* 비활성화된 입력 요소 */
+.timetable-download-preset-settings select:disabled {
+  color: var(--ink-500);
+  background: #edf2f3;
+
+  cursor: not-allowed;
+}
+
+
+/* ---------------------------------------------------------
+   6. 사용자 지정 크기 설정
+   --------------------------------------------------------- */
+
+
+/* 가로와 세로 입력칸을 2열로 배치 */
+.timetable-download-size-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+
+/* 입력 필드의 제목과 입력창을 세로로 배치 */
+.timetable-download-size-field {
+  display: grid;
+  gap: 7px;
+}
+
+
+/* 숫자 입력과 px 단위를 감싸는 영역 */
+.timetable-download-input-with-unit {
+  position: relative;
+
+  display: block;
+}
+
+
+/* px 단위 공간을 확보한 크기 입력창 */
+.timetable-download-input-with-unit input {
+  padding-right: 42px;
+}
+
+
+/* 입력창 오른쪽의 px 단위 */
+.timetable-download-input-with-unit > span {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+
+  color: var(--ink-500);
+
+  font-size: 11px;
+  font-weight: 700;
+
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+
+/* 현재 브라우저 화면 크기 체크박스 영역 */
+.timetable-download-browser-size-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  width: fit-content;
+
+  color: var(--ink-700);
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+
+/* 브라우저 화면 크기 적용 체크박스 */
+.timetable-download-browser-size-option input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: var(--teal-700);
+}
+
+
+/* 사용자 지정 크기 오류 메시지 */
+.timetable-download-setting-error {
+  padding: 10px 12px;
+
+  border: 1px solid #f1c6c6;
+  border-radius: 9px;
+
+  color: #9b3030;
+  background: #fff3f3;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   7. 해상도 프리셋 설정
+   --------------------------------------------------------- */
+
+
+/* Apple과 일반 화면을 선택하는 영역 */
+.timetable-download-preset-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+}
+
+
+/* 프리셋 종류 제목 */
+.timetable-download-preset-source legend {
+  width: 100%;
+  margin-bottom: -3px;
+}
+
+
+/* 프리셋 종류의 각 라디오 항목 */
+.timetable-download-preset-source label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: var(--ink-700);
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* 프리셋 종류 라디오 버튼 */
+.timetable-download-preset-source input {
+  width: 16px;
+  height: 16px;
+
+  margin: 0;
+
+  accent-color: var(--teal-700);
+}
+
+
+/* 제품군, 검색, 해상도 선택 필드 */
+.timetable-download-preset-field {
+  display: grid;
+  gap: 7px;
+}
+
+
+/* 검색 결과가 없을 때 표시되는 문구 */
+.timetable-download-empty-message {
+  padding: 12px;
+
+  border: 1px dashed #c4d3d7;
+  border-radius: 9px;
+
+  color: var(--ink-700);
+  background: rgba(255, 255, 255, 0.65);
+
+  font-size: 12px;
+  text-align: center;
+}
+
+
+/* 선택된 프리셋 정보를 보여주는 카드 */
+.timetable-download-preset-summary {
+  display: grid;
+  gap: 12px;
+
+  padding: 16px;
+
+  border: 1px solid #cce2e1;
+  border-radius: 11px;
+
+  background: #eff9f8;
+}
+
+
+/* 프리셋 해상도와 방향을 표시하는 행 */
+.timetable-download-preset-summary > div {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+
+/* 프리셋 요약의 항목명 */
+.timetable-download-preset-summary > div > span {
+  flex: 0 0 auto;
+
+  color: var(--ink-700);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* 프리셋 요약의 값 */
+.timetable-download-preset-summary strong {
+  color: var(--navy-950);
+
+  font-size: 12px;
+  text-align: right;
+}
+
+
+/* 같은 해상도를 사용하는 기기 목록 */
+.timetable-download-preset-summary ul {
+  display: grid;
+  gap: 3px;
+
+  margin: 0;
+  padding: 0;
+
+  color: var(--navy-900);
+
+  font-size: 11px;
+  line-height: 1.45;
+  list-style: none;
+  text-align: right;
+}
+
+
+/* 프리셋에 포함된 추가 안내 문구 */
+.timetable-download-preset-summary > p {
+  padding-top: 10px;
+
+  border-top: 1px solid rgba(25, 123, 120, 0.15);
+
+  color: var(--ink-700);
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* ---------------------------------------------------------
+   8. 다운로드 오류 메시지
+   --------------------------------------------------------- */
+
+
+/* PNG 생성 과정에서 발생한 오류 */
+.timetable-download-error {
+  padding: 12px 14px;
+
+  border: 1px solid #efc0c0;
+  border-radius: 10px;
+
+  color: #992d2d;
+  background: #fff0f0;
+
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+
+/* ---------------------------------------------------------
+   9. 모달 하단 버튼
+   --------------------------------------------------------- */
+
+
+/* 취소와 PNG 다운로드 버튼을 배치하는 하단 영역 */
+.timetable-download-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  padding: 18px 28px;
+
+  border-top: 1px solid var(--line);
+
+  background: var(--surface);
+}
+
+
+/* 모달 하단 버튼 공통 */
+.timetable-download-cancel-button,
+.timetable-download-submit-button {
+  min-height: 42px;
+  padding: 9px 17px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+
+/* 취소 버튼 */
+.timetable-download-cancel-button {
+  border: 1px solid var(--line);
+
+  color: var(--navy-900);
+  background: var(--surface);
+}
+
+
+/* 취소 버튼에 마우스를 올렸을 때 */
+.timetable-download-cancel-button:hover:not(:disabled) {
+  border-color: #b7c8cd;
+
+  background: var(--surface-muted);
+}
+
+
+/* PNG 다운로드 버튼 */
+.timetable-download-submit-button {
+  border: 1px solid var(--teal-700);
+
+  color: #ffffff;
+  background: var(--teal-700);
+
+  box-shadow: 0 8px 18px rgba(25, 123, 120, 0.2);
+}
+
+
+/* PNG 다운로드 버튼에 마우스를 올렸을 때 */
+.timetable-download-submit-button:hover:not(:disabled) {
+  border-color: #146c69;
+
+  background: #146c69;
+
+  box-shadow: 0 10px 22px rgba(25, 123, 120, 0.28);
+}
+
+
+/* 하단 버튼의 키보드 포커스 */
+.timetable-download-cancel-button:focus-visible,
+.timetable-download-submit-button:focus-visible {
+  outline: 3px solid rgba(33, 143, 139, 0.22);
+  outline-offset: 2px;
+}
+
+
+/* 처리 중이거나 사용할 수 없는 버튼 */
+.timetable-download-cancel-button:disabled,
+.timetable-download-submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+  box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   10. 작은 화면 대응
+   --------------------------------------------------------- */
+
+
+/* 태블릿 및 좁은 브라우저에서 모달 여백 조정 */
+@media (max-width: 720px) {
+  .timetable-download-modal-overlay {
+    padding: 16px;
+  }
+
+  .timetable-download-modal {
+    max-height: calc(100vh - 32px);
+
+    border-radius: 16px;
+  }
+
+  .timetable-download-modal-header {
+    padding: 21px 20px 18px;
+  }
+
+  .timetable-download-modal-body {
+    padding: 20px;
+  }
+
+  .timetable-download-modal-footer {
+    padding: 16px 20px;
+  }
+}
+
+
+/* 모바일 너비에서 입력칸과 모드 버튼을 한 열로 배치 */
+@media (max-width: 480px) {
+  .timetable-download-modal-overlay {
+    padding: 0;
+  }
+
+  .timetable-download-modal {
+    width: 100%;
+    max-height: 100vh;
+
+    border: 0;
+    border-radius: 0;
+  }
+
+  .timetable-download-modal-header {
+    gap: 14px;
+  }
+
+  .timetable-download-mode-selector,
+  .timetable-download-size-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .timetable-download-custom-size,
+  .timetable-download-preset-settings {
+    padding: 16px;
+  }
+
+  .timetable-download-modal-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .timetable-download-cancel-button,
+  .timetable-download-submit-button {
+    width: 100%;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   11. 움직임 감소 설정
+   --------------------------------------------------------- */
+
+
+/* 애니메이션 감소를 설정한 사용자의 전환 효과 제거 */
+@media (prefers-reduced-motion: reduce) {
+  .timetable-download-mode-selector span,
+  .timetable-download-custom-size input,
+  .timetable-download-preset-settings input,
+  .timetable-download-preset-settings select,
+  .timetable-download-cancel-button,
+  .timetable-download-submit-button {
+    transition: none;
+  }
+}
