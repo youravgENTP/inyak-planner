@@ -22,6 +22,10 @@ export type PresetOrientation =
   | 'portrait'
   | 'landscape'
 
+export type TimetableRenderLayout =
+  | 'standard'
+  | 'mobile-portrait'
+
 export interface ImageDimensions {
   width: number
   height: number
@@ -58,6 +62,7 @@ export type DimensionValidationResult =
 export interface DownloadTimetablePngOptions {
   element: HTMLElement
   dimensions: ImageDimensions
+  layout?: TimetableRenderLayout
   filename?: string
   backgroundColor?: string
 }
