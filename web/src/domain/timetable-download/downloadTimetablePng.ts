@@ -4,6 +4,7 @@ import { validateOutputDimensions } from './dimensions'
 import type {
   DownloadTimetablePngOptions,
   ImageDimensions,
+  TimetableRenderLayout,
 } from './types'
 
 const DEFAULT_FILENAME = 'inyak-timetable.png'
@@ -15,6 +16,11 @@ interface ContainedImagePlacement {
   y: number
   width: number
   height: number
+}
+
+interface PreparedRenderElement {
+  element: HTMLElement
+  cleanup: () => void
 }
 
 const ensurePngExtension = (filename: string): string =>
@@ -40,6 +46,15 @@ const sanitizeFilename = (filename: string): string => {
 const waitForDocumentFonts = async (): Promise<void> => {
   await document.fonts.ready
 }
+
+const waitForNextPaint = (): Promise<void> =>
+  new Promise((resolve) => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        resolve()
+      })
+    })
+  })
 
 const loadImage = (
   source: string,
@@ -151,16 +166,72 @@ const triggerBlobDownload = (
   }
 }
 
+const getLayoutClassName = (
+  layout: TimetableRenderLayout,
+): string | undefined => {
+  if (layout === 'mobile-portrait') {
+    return 'timetable--mobile-portrait'
+  }
+
+  return undefined
+}
+
+const prepareRenderElement = (
+  sourceElement: HTMLElement,
+  layout: TimetableRenderLayout,
+): PreparedRenderElement => {
+  const stagingContainer =
+    document.createElement('div')
+
+  const clonedElement =
+    sourceElement.cloneNode(true) as HTMLElement
+
+  const layoutClassName =
+    getLayoutClassName(layout)
+
+  if (layoutClassName !== undefined) {
+    clonedElement.classList.add(layoutClassName)
+  }
+
+  stagingContainer.setAttribute(
+    'aria-hidden',
+    'true',
+  )
+
+  Object.assign(stagingContainer.style, {
+    position: 'fixed',
+    top: '0',
+    left: '-100000px',
+    width: 'max-content',
+    height: 'max-content',
+    overflow: 'visible',
+    pointerEvents: 'none',
+    zIndex: '-1',
+  })
+
+  stagingContainer.appendChild(clonedElement)
+  document.body.appendChild(stagingContainer)
+
+  return {
+    element: clonedElement,
+    cleanup: () => {
+      stagingContainer.remove()
+    },
+  }
+}
+
 export const downloadTimetablePng = async ({
   element,
   dimensions,
+  layout = 'standard',
   filename = DEFAULT_FILENAME,
   backgroundColor = DEFAULT_BACKGROUND_COLOR,
 }: DownloadTimetablePngOptions): Promise<void> => {
-  const dimensionValidation = validateOutputDimensions(
-    dimensions.width,
-    dimensions.height,
-  )
+  const dimensionValidation =
+    validateOutputDimensions(
+      dimensions.width,
+      dimensions.height,
+    )
 
   if (!dimensionValidation.isValid) {
     throw new Error(
@@ -174,83 +245,103 @@ export const downloadTimetablePng = async ({
     )
   }
 
-  const elementBounds = element.getBoundingClientRect()
-
-  const sourceDimensions = {
-    width: elementBounds.width,
-    height: elementBounds.height,
-  }
-
-  if (
-    sourceDimensions.width <= 0 ||
-    sourceDimensions.height <= 0
-  ) {
-    throw new Error(
-      '시간표의 실제 크기를 확인할 수 없습니다.',
-    )
-  }
-
   await waitForDocumentFonts()
 
-  const renderPixelRatio = calculateRenderPixelRatio(
-    sourceDimensions,
-    dimensions,
-  )
-
-  const timetableDataUrl = await toPng(element, {
-    backgroundColor,
-    cacheBust: true,
-    pixelRatio: renderPixelRatio,
-  })
-
-  const timetableImage = await loadImage(
-    timetableDataUrl,
-  )
-
-  const outputCanvas = createCanvas(dimensions)
-  const context = outputCanvas.getContext('2d')
-
-  if (context === null) {
-    throw new Error(
-      '이미지 출력 화면을 생성하지 못했습니다.',
+  const preparedRenderElement =
+    prepareRenderElement(
+      element,
+      layout,
     )
+
+  try {
+    await waitForNextPaint()
+
+    const elementBounds =
+      preparedRenderElement.element
+        .getBoundingClientRect()
+
+    const sourceDimensions = {
+      width: elementBounds.width,
+      height: elementBounds.height,
+    }
+
+    if (
+      sourceDimensions.width <= 0 ||
+      sourceDimensions.height <= 0
+    ) {
+      throw new Error(
+        '시간표의 실제 크기를 확인할 수 없습니다.',
+      )
+    }
+
+    const renderPixelRatio =
+      calculateRenderPixelRatio(
+        sourceDimensions,
+        dimensions,
+      )
+
+    const timetableDataUrl = await toPng(
+      preparedRenderElement.element,
+      {
+        backgroundColor,
+        cacheBust: true,
+        pixelRatio: renderPixelRatio,
+      },
+    )
+
+    const timetableImage = await loadImage(
+      timetableDataUrl,
+    )
+
+    const outputCanvas = createCanvas(dimensions)
+    const context =
+      outputCanvas.getContext('2d')
+
+    if (context === null) {
+      throw new Error(
+        '이미지 출력 화면을 생성하지 못했습니다.',
+      )
+    }
+
+    context.fillStyle = backgroundColor
+    context.fillRect(
+      0,
+      0,
+      dimensions.width,
+      dimensions.height,
+    )
+
+    const placement =
+      calculateContainedPlacement(
+        {
+          width: timetableImage.naturalWidth,
+          height: timetableImage.naturalHeight,
+        },
+        dimensions,
+      )
+
+    context.imageSmoothingEnabled = true
+    context.imageSmoothingQuality = 'high'
+
+    context.drawImage(
+      timetableImage,
+      placement.x,
+      placement.y,
+      placement.width,
+      placement.height,
+    )
+
+    const pngBlob = await canvasToPngBlob(
+      outputCanvas,
+    )
+
+    triggerBlobDownload(
+      pngBlob,
+      sanitizeFilename(filename),
+    )
+  } finally {
+    preparedRenderElement.cleanup()
   }
-
-  context.fillStyle = backgroundColor
-  context.fillRect(
-    0,
-    0,
-    dimensions.width,
-    dimensions.height,
-  )
-
-  const placement = calculateContainedPlacement(
-    {
-      width: timetableImage.naturalWidth,
-      height: timetableImage.naturalHeight,
-    },
-    dimensions,
-  )
-
-  context.imageSmoothingEnabled = true
-  context.imageSmoothingQuality = 'high'
-
-  context.drawImage(
-    timetableImage,
-    placement.x,
-    placement.y,
-    placement.width,
-    placement.height,
-  )
-
-  const pngBlob = await canvasToPngBlob(
-    outputCanvas,
-  )
-
-  triggerBlobDownload(
-    pngBlob,
-    sanitizeFilename(filename),
-  )
 }
 
 export default downloadTimetablePng

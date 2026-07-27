@@ -15,10 +15,12 @@ import type {
   DeviceResolutionPreset,
   ImageDimensions,
   TimetableDownloadMode,
+  TimetableRenderLayout,
 } from '../../domain/timetable-download/types'
 import CustomSizeSettings from './CustomSizeSettings'
 import DevicePresetSettings from './DevicePresetSettings'
 import './TimetableDownloadModal.css'
+import './TimetableDownloadLayout.css'
 
 interface TimetableDownloadModalProps {
   isOpen: boolean
@@ -42,6 +44,19 @@ const getErrorMessage = (
   }
 
   return '시간표 이미지를 생성하는 중 알 수 없는 오류가 발생했습니다.'
+}
+
+const getPresetRenderLayout = (
+  preset: DeviceResolutionPreset,
+): TimetableRenderLayout => {
+  if (
+    preset.category === 'iphone' ||
+    preset.category === 'galaxy-phone'
+  ) {
+    return 'mobile-portrait'
+  }
+
+  return 'standard'
 }
 
 function TimetableDownloadModal({
@@ -192,6 +207,17 @@ function TimetableDownloadModal({
     return validationResult.dimensions
   }
 
+  const getSelectedRenderLayout =
+    (): TimetableRenderLayout => {
+      if (mode !== 'preset') {
+        return 'standard'
+      }
+
+      return getPresetRenderLayout(
+        selectedPreset,
+      )
+    }
+
   const handleDownload = async () => {
     if (isDownloading) {
       return
@@ -214,12 +240,16 @@ function TimetableDownloadModal({
       return
     }
 
+    const layout =
+      getSelectedRenderLayout()
+
     setIsDownloading(true)
 
     try {
       await downloadTimetablePng({
         element: timetableElement,
         dimensions,
+        layout,
         filename,
         backgroundColor: '#ffffff',
       })
@@ -256,8 +286,8 @@ function TimetableDownloadModal({
 
             <p id="timetable-download-modal-description">
               PNG 이미지의 출력 크기를 선택해 주세요.
-              시간표의 비율은 유지되며 남는 공간에는
-              배경색이 적용됩니다.
+              휴대폰은 세로형 시간표로, 태블릿과
+              노트북은 가로형 시간표로 저장됩니다.
             </p>
           </div>
 

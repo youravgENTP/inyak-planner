@@ -1,0 +1,99 @@
+/* =========================================================
+   시간표 PNG 전용 레이아웃
+   화면에 표시되는 원본 시간표에는 적용되지 않습니다.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   휴대폰용 세로 시간표 전체 구조
+   --------------------------------------------------------- */
+
+.timetable--mobile-portrait {
+  width: 360px;
+  min-width: 360px;
+
+  grid-template-columns:
+    44px
+    repeat(5, minmax(0, 1fr));
+
+  grid-template-rows:
+    48px
+    var(--grid-height);
+
+  background: #ffffff;
+}
+
+
+/* ---------------------------------------------------------
+   휴대폰용 요일 머리글
+   좁은 열에서도 요일이 잘 보이도록 크기를 줄입니다.
+   --------------------------------------------------------- */
+
+.timetable--mobile-portrait .day-heading {
+  gap: 1px;
+  min-width: 0;
+}
+
+.timetable--mobile-portrait .day-heading strong {
+  font-size: 12px;
+}
+
+.timetable--mobile-portrait .day-heading span {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   휴대폰용 시간 표시 열
+   시간 열의 너비가 줄어든 만큼 여백과 글자 크기를 조정합니다.
+   --------------------------------------------------------- */
+
+.timetable--mobile-portrait .time-label {
+  padding-right: 6px;
+
+  font-size: 8px;
+}
+
+
+/* ---------------------------------------------------------
+   휴대폰용 수업 블록
+   좁은 요일 열 안에서 과목 정보를 표시합니다.
+   --------------------------------------------------------- */
+
+.timetable--mobile-portrait .course-block {
+  padding:
+    6px
+    3px;
+}
+
+.timetable--mobile-portrait .course-block strong {
+  width: 100%;
+  margin:
+    1px
+    0
+    3px;
+
+  font-size: 9px;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.timetable--mobile-portrait .course-block span {
+  width: 100%;
+
+  font-size: 7px;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+
+/* ---------------------------------------------------------
+   다운로드용 복제본에서는 삭제 버튼을 숨깁니다.
+   --------------------------------------------------------- */
+
+.timetable--mobile-portrait
+  .course-block-remove-button {
+  display: none;
+}
