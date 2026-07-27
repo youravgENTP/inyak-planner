@@ -131,3 +131,56 @@ def get_lecture_by_id(
         return None
 
     return dict(row)
+
+def get_lectures_by_ids(
+    lecture_ids: List[int],
+) -> List[Dict[str, Any]]:
+    """여러 강의 ID에 해당하는 강의를 한 번에 조회한다."""
+    if not lecture_ids:
+        return []
+
+    unique_lecture_ids = list(
+        dict.fromkeys(lecture_ids)
+    )
+
+    placeholders = ", ".join(
+        "?" for _ in unique_lecture_ids
+    )
+
+    sql = f"""
+        SELECT
+            id,
+            academic_year,
+            semester,
+            track,
+            course_code,
+            course_name,
+            section,
+            completion_type,
+            credits,
+            professor,
+            department,
+            recommended_year,
+            grading_method,
+            competency_type,
+            schedule_and_room
+        FROM courses
+        WHERE id IN ({placeholders})
+    """
+
+    with connect_database() as connection:
+        rows = connection.execute(
+            sql,
+            unique_lecture_ids,
+        ).fetchall()
+
+    lecture_map = {
+        row["id"]: dict(row)
+        for row in rows
+    }
+
+    return [
+        lecture_map[lecture_id]
+        for lecture_id in unique_lecture_ids
+        if lecture_id in lecture_map
+    ]

@@ -12,8 +12,9 @@ import TimetableDownloadModal from '../components/timetable-download/TimetableDo
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
 import { 
+  downloadSyllabiZip,
   fetchLectures,
-  downloadSyllabiZip, } from '../domain/lectures/api'
+} from '../domain/lectures/api'
 import {
   lectureToPreviewCourses,
   lecturesToTimetableCourses,
