@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react'
 
+import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
 import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
@@ -15,9 +16,11 @@ import {
 } from '../domain/lectures/timetable'
 import type { Lecture } from '../domain/lectures/types'
 import {
+  createEmptyTimetable,
   createSavedTimetable,
+  duplicateTimetable,
   getActiveTimetable,
-  groupTimetablesBySemester,
+  getValidComparisonTimetableIds,
   loadActiveTimetableId,
   loadSavedTimetables,
   replaceTimetable,
@@ -27,6 +30,7 @@ import {
   type SavedTimetable,
 } from '../domain/saved-timetables'
 import type { TimetableCourse } from '../domain/timetable/types'
+import './SavedTimetablesModal.css'
 
 interface TimetableCollectionState {
   timetables: SavedTimetable[]
@@ -146,9 +150,14 @@ export function TimetablePage() {
   ] = useState(false)
 
   const [
-    isSavedTimetablesPanelOpen,
-    setIsSavedTimetablesPanelOpen,
+    isSavedTimetablesModalOpen,
+    setIsSavedTimetablesModalOpen,
   ] = useState(false)
+
+  const [
+    comparisonTimetableIds,
+    setComparisonTimetableIds,
+  ] = useState<string[]>([])
 
   const timetableElementRef =
     useRef<HTMLDivElement>(null)
@@ -193,14 +202,6 @@ export function TimetablePage() {
       timetableState.activeTimetableId,
       timetableState.timetables,
     ],
-  )
-
-  const timetableGroups = useMemo(
-    () =>
-      groupTimetablesBySemester(
-        timetableState.timetables,
-      ),
-    [timetableState.timetables],
   )
 
   const lectureMap = useMemo(
@@ -255,6 +256,16 @@ export function TimetablePage() {
       timetableState.activeTimetableId,
     )
   }, [timetableState])
+
+  useEffect(() => {
+    setComparisonTimetableIds(
+      (currentTimetableIds) =>
+        getValidComparisonTimetableIds(
+          timetableState.timetables,
+          currentTimetableIds,
+        ),
+    )
+  }, [timetableState.timetables])
 
   useEffect(() => {
     async function loadLectures() {
@@ -481,7 +492,7 @@ export function TimetablePage() {
 
     setPreviewLecture(null)
     setIsDownloadModalOpen(false)
-    setIsSavedTimetablesPanelOpen(false)
+    setIsSavedTimetablesModalOpen(false)
     setIsEditing(true)
   }
 
@@ -536,7 +547,7 @@ export function TimetablePage() {
   }
 
   function handleOpenDownloadModal() {
-    setIsSavedTimetablesPanelOpen(false)
+    setIsSavedTimetablesModalOpen(false)
     setIsDownloadModalOpen(true)
   }
 
@@ -544,12 +555,13 @@ export function TimetablePage() {
     setIsDownloadModalOpen(false)
   }
 
-  function handleToggleSavedTimetablesPanel() {
+  function handleOpenSavedTimetablesModal() {
     setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(true)
+  }
 
-    setIsSavedTimetablesPanelOpen(
-      (isOpen) => !isOpen,
-    )
+  function handleCloseSavedTimetablesModal() {
+    setIsSavedTimetablesModalOpen(false)
   }
 
   function handleSelectTimetable(
@@ -559,7 +571,7 @@ export function TimetablePage() {
       timetableId ===
       timetableState.activeTimetableId
     ) {
-      setIsSavedTimetablesPanelOpen(false)
+      setIsSavedTimetablesModalOpen(false)
 
       return
     }
@@ -586,7 +598,99 @@ export function TimetablePage() {
     setPreviewLecture(null)
     setIsEditing(false)
     setIsDownloadModalOpen(false)
-    setIsSavedTimetablesPanelOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+  }
+
+  function handleComparisonTimetableIdsChange(
+    timetableIds: string[],
+  ) {
+    setComparisonTimetableIds(
+      getValidComparisonTimetableIds(
+        timetableState.timetables,
+        timetableIds,
+      ),
+    )
+  }
+
+  function handleCreateEmptyTimetable() {
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    const newTimetable =
+      createEmptyTimetable(
+        timetableState.timetables,
+        activeTimetable.academicYear,
+        activeTimetable.semester,
+      )
+
+    setTimetableState(
+      (currentState) => ({
+        timetables: [
+          ...currentState.timetables,
+          newTimetable,
+        ],
+        activeTimetableId:
+          newTimetable.id,
+      }),
+    )
+
+    setDraftLectureIds([])
+    setPreviewLecture(null)
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+    setIsEditing(true)
+  }
+
+  function handleDuplicateActiveTimetable() {
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    const duplicatedTimetable =
+      duplicateTimetable(
+        activeTimetable,
+        timetableState.timetables,
+      )
+
+    setTimetableState(
+      (currentState) => ({
+        timetables: [
+          ...currentState.timetables,
+          duplicatedTimetable,
+        ],
+        activeTimetableId:
+          duplicatedTimetable.id,
+      }),
+    )
+
+    setDraftLectureIds([])
+    setPreviewLecture(null)
+    setIsEditing(false)
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+  }
+
+  function handleCompareTimetables(
+    timetableIds: readonly string[],
+  ) {
+    const validTimetableIds =
+      getValidComparisonTimetableIds(
+        timetableState.timetables,
+        timetableIds,
+      )
+
+    if (validTimetableIds.length < 2) {
+      return
+    }
+
+    setComparisonTimetableIds(
+      validTimetableIds,
+    )
+
+    window.alert(
+      `${validTimetableIds.length}개의 시간표가 선택되었습니다. 비교 페이지는 다음 단계에서 연결됩니다.`,
+    )
   }
 
   function handleDownloadSyllabi() {
@@ -681,167 +785,51 @@ export function TimetablePage() {
       )}
 
       {!isEditing && (
-        <>
-          <div
-            className="summary-grid"
-            aria-label="시간표 요약"
+        <div
+          className="summary-grid"
+          aria-label="시간표 요약"
+        >
+          <article className="summary-card">
+            <span>등록 과목</span>
+
+            <strong>
+              {displayedLectures.length}
+            </strong>
+
+            <small>
+              현재 시간표의 과목 수
+            </small>
+          </article>
+
+          <article className="summary-card">
+            <span>예상 학점</span>
+
+            <strong>{creditCount}</strong>
+
+            <small>
+              선택 과목의 총 학점
+            </small>
+          </article>
+
+          <button
+            className="summary-card summary-card--button"
+            type="button"
+            onClick={
+              handleOpenSavedTimetablesModal
+            }
+            aria-haspopup="dialog"
           >
-            <article className="summary-card">
-              <span>등록 과목</span>
+            <span>저장된 시간표</span>
 
-              <strong>
-                {displayedLectures.length}
-              </strong>
+            <strong>
+              {timetableState.timetables.length}
+            </strong>
 
-              <small>
-                현재 시간표의 과목 수
-              </small>
-            </article>
-
-            <article className="summary-card">
-              <span>예상 학점</span>
-
-              <strong>{creditCount}</strong>
-
-              <small>
-                선택 과목의 총 학점
-              </small>
-            </article>
-
-            <button
-              className="summary-card summary-card--button"
-              type="button"
-              onClick={
-                handleToggleSavedTimetablesPanel
-              }
-              aria-expanded={
-                isSavedTimetablesPanelOpen
-              }
-              aria-controls="saved-timetables-panel"
-            >
-              <span>저장된 시간표</span>
-
-              <strong>
-                {timetableState.timetables.length}
-              </strong>
-
-              <small>
-                {isSavedTimetablesPanelOpen
-                  ? '시간표 목록 닫기'
-                  : '시간표 목록 보기'}
-              </small>
-            </button>
-          </div>
-
-          {isSavedTimetablesPanelOpen && (
-            <section
-              id="saved-timetables-panel"
-              className="panel saved-timetables-panel"
-              aria-labelledby="saved-timetables-title"
-            >
-              <div className="panel-header">
-                <div>
-                  <h2 id="saved-timetables-title">
-                    저장된 시간표
-                  </h2>
-
-                  <p>
-                    시간표 이름을 선택하면 해당
-                    시간표로 이동합니다.
-                  </p>
-                </div>
-
-                <button
-                  className="secondary-button"
-                  type="button"
-                  onClick={
-                    handleToggleSavedTimetablesPanel
-                  }
-                  aria-label="저장된 시간표 목록 닫기"
-                >
-                  닫기
-                </button>
-              </div>
-
-              <div className="saved-timetable-groups">
-                {timetableGroups.map(
-                  (group) => (
-                    <section
-                      className="saved-timetable-group"
-                      key={`${group.academicYear}-${group.semester}`}
-                    >
-                      <h3>
-                        {group.academicYear}
-                        학년도{' '}
-                        {group.semester}학기
-                      </h3>
-
-                      <div className="saved-timetable-list">
-                        {group.timetables.map(
-                          (timetable) => {
-                            const isActive =
-                              timetable.id ===
-                              activeTimetable.id
-
-                            return (
-                              <button
-                                className={`saved-timetable-list-item${
-                                  isActive
-                                    ? ' saved-timetable-list-item--active'
-                                    : ''
-                                }`}
-                                type="button"
-                                key={timetable.id}
-                                onClick={() =>
-                                  handleSelectTimetable(
-                                    timetable.id,
-                                  )
-                                }
-                                aria-current={
-                                  isActive
-                                    ? 'page'
-                                    : undefined
-                                }
-                              >
-                                <span>
-                                  {timetable.name}
-                                </span>
-
-                                <small>
-                                  {
-                                    timetable
-                                      .lectureIds
-                                      .length
-                                  }
-                                  개 과목
-                                </small>
-                              </button>
-                            )
-                          },
-                        )}
-                      </div>
-                    </section>
-                  ),
-                )}
-              </div>
-
-              <div className="saved-timetable-comparison-placeholder">
-                <p>
-                  비교할 시간표를 선택하는 영역은
-                  다음 단계에서 추가됩니다.
-                </p>
-
-                <button
-                  className="primary-button"
-                  type="button"
-                  disabled
-                >
-                  비교하기
-                </button>
-              </div>
-            </section>
-          )}
-        </>
+            <small>
+              시간표 목록 보기
+            </small>
+          </button>
+        </div>
       )}
 
       {lectureLoadError && (
@@ -969,6 +957,39 @@ export function TimetablePage() {
           />
         </section>
       </div>
+
+      <SavedTimetablesModal
+        isOpen={
+          isSavedTimetablesModalOpen
+        }
+        timetables={
+          timetableState.timetables
+        }
+        activeTimetableId={
+          timetableState.activeTimetableId
+        }
+        comparisonTimetableIds={
+          comparisonTimetableIds
+        }
+        onClose={
+          handleCloseSavedTimetablesModal
+        }
+        onSelectTimetable={
+          handleSelectTimetable
+        }
+        onComparisonTimetableIdsChange={
+          handleComparisonTimetableIdsChange
+        }
+        onCreateEmptyTimetable={
+          handleCreateEmptyTimetable
+        }
+        onDuplicateActiveTimetable={
+          handleDuplicateActiveTimetable
+        }
+        onCompare={
+          handleCompareTimetables
+        }
+      />
 
       <TimetableDownloadModal
         isOpen={isDownloadModalOpen}
