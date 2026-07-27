@@ -458,95 +458,53 @@
    비교 드롭 영역
    ========================================================= */
 
-/* 시간표를 끌어다 놓을 수 있는 영역입니다. */
-.comparison-selection-drop-zone {
-  min-height: 220px;
-  padding: 18px;
-
-  background: #f8fbfb;
-  border: 2px dashed #cbdadd;
-  border-radius: 20px;
-
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-/* 시간표가 드롭 영역 위에 있을 때입니다. */
-.comparison-selection-drop-zone--active {
-  background: #ecf8f6;
-  border-color: #3b918b;
-
-  box-shadow:
-    inset 0 0 0 4px rgba(30, 130, 126, 0.08);
-}
-
-/* 최대 3개의 시간표가 모두 선택된 상태입니다. */
-.comparison-selection-drop-zone--full {
-  border-style: solid;
-}
-
-/* 아무 시간표도 선택되지 않았을 때의 큰 안내 영역입니다. */
-.comparison-selection-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
-
-  min-height: 180px;
-  padding: 24px;
-
-  text-align: center;
-}
-
-/* 빈 드롭존의 주요 안내 문구입니다. */
-.comparison-selection-empty strong {
-  color: #385568;
-  font-size: 16px;
-}
-
-/* 빈 드롭존의 보조 안내 문구입니다. */
-.comparison-selection-empty span {
-  color: #8998a4;
-  font-size: 14px;
-}
-
-
 /* =========================================================
    비교 미리보기 가로 스크롤
    ========================================================= */
 
-/* 미리보기들이 너무 좁아지면 가로 스크롤을 허용합니다. */
+/* 미리보기들이 최소 너비보다 좁아지면 가로 스크롤을 허용합니다. */
 .comparison-selection-scroll {
+  width: 100%;
   max-width: 100%;
+
   overflow-x: auto;
   overflow-y: hidden;
 
-  padding-bottom: 4px;
+  padding-bottom: 6px;
 }
 
-/* 선택 개수에 따라 1열·2열·3열로 변하는 그리드입니다. */
+/*
+ * 선택한 시간표 수에 따라 실제 열 개수를 변경합니다.
+ *
+ * 1개 선택: 1열
+ * 2개 선택: 2열
+ * 3개 선택: 3열
+ *
+ * 선택하지 않은 빈 열은 생성하지 않습니다.
+ */
 .comparison-selection-grid {
   display: grid;
   grid-template-columns:
     repeat(
       var(--comparison-count),
-      minmax(240px, 1fr)
+      minmax(300px, 1fr)
     );
   gap: 16px;
 
-  min-width: max-content;
+  width: 100%;
+  min-width:
+    calc(
+      var(--comparison-count) * 300px +
+      (var(--comparison-count) - 1) * 16px
+    );
 }
 
-/* 미리보기 하나의 카드입니다. */
+/* 미리보기 하나를 감싸는 세로형 카드입니다. */
 .comparison-selection-preview {
   display: flex;
   flex-direction: column;
 
-  min-width: 240px;
-  min-height: 420px;
+  min-width: 300px;
   overflow: hidden;
 
   background: #ffffff;
@@ -557,7 +515,12 @@
     0 10px 24px rgba(15, 49, 64, 0.07);
 }
 
-/* 미리보기 카드의 상단 정보입니다. */
+
+/* =========================================================
+   비교 미리보기 카드 헤더
+   ========================================================= */
+
+/* 시간표 이름, 학기 정보와 제거 버튼을 배치합니다. */
 .comparison-selection-preview__header {
   display: flex;
   align-items: flex-start;
@@ -566,10 +529,11 @@
 
   padding: 14px 14px 12px;
 
+  background: #ffffff;
   border-bottom: 1px solid #e7edef;
 }
 
-/* 미리보기 이름과 학기를 세로로 배치합니다. */
+/* 미리보기 이름과 학기 정보를 세로로 배치합니다. */
 .comparison-selection-preview__header > div {
   display: flex;
   flex-direction: column;
@@ -580,21 +544,23 @@
 
 /* 미리보기의 시간표 이름입니다. */
 .comparison-selection-preview__header strong {
+  max-width: 100%;
   overflow: hidden;
 
   color: #193348;
   font-size: 14px;
+  font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 미리보기의 학기 정보입니다. */
+/* 미리보기의 학년도 및 학기 정보입니다. */
 .comparison-selection-preview__header small {
   color: #83939f;
   font-size: 12px;
 }
 
-/* 비교 대상에서 제거하는 × 버튼입니다. */
+/* 비교 대상에서 시간표를 제거하는 × 버튼입니다. */
 .comparison-selection-preview__header button {
   display: inline-flex;
   align-items: center;
@@ -616,6 +582,11 @@
   border-radius: 9px;
 
   cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 
 /* 제거 버튼에 마우스를 올렸을 때입니다. */
@@ -626,39 +597,98 @@
   border-color: #efcaca;
 }
 
-/* 실제 세로형 시간표가 들어갈 영역입니다. */
+/* 제거 버튼을 키보드로 선택했을 때입니다. */
+.comparison-selection-preview__header button:focus-visible {
+  outline: 3px solid rgba(187, 78, 78, 0.16);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   실제 미니 시간표 표시 영역
+   ========================================================= */
+
+/* 축소된 시간표가 표시되는 세로형 캔버스입니다. */
 .comparison-selection-preview__canvas {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex: 1 1 auto;
 
-  min-height: 350px;
-  padding: 16px;
+  min-height: 440px;
+  padding: 12px;
 
-  color: #8aa0aa;
+  overflow: hidden;
+
+  background: #f7fafb;
+}
+
+/*
+ * 미니 시간표 전체를 감싸는 viewport입니다.
+ *
+ * 실제 TimetableGrid는 원래 데스크톱 시간표 크기로 렌더링되고,
+ * 이 영역에서 축소한 뒤 넘치는 부분을 숨깁니다.
+ */
+.timetable-mini-preview {
+  position: relative;
+
+  width: 100%;
+  height: 416px;
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e2eaed;
+  border-radius: 12px;
+
+  pointer-events: none;
+}
+
+/* 원래 TimetableGrid의 스크롤바가 미리보기에 나타나지 않도록 합니다. */
+.timetable-mini-preview .timetable-scroll {
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  width: 760px;
+  overflow: visible;
+
+  transform:
+    translateX(-50%)
+    scale(0.4);
+  transform-origin: top center;
+}
+
+/* 축소 전에 시간표가 사용할 원본 너비를 고정합니다. */
+.timetable-mini-preview .timetable {
+  width: 760px;
+  min-width: 760px;
+}
+
+/* 미리보기에서는 요일 제목을 조금 더 간결하게 표시합니다. */
+.timetable-mini-preview .day-heading {
+  min-width: 0;
+}
+
+/* 미리보기에서는 요일의 긴 이름을 숨기고 한 글자만 보여줍니다. */
+.timetable-mini-preview .day-heading span {
+  display: none;
+}
+
+/* 축소 상태에서도 과목명이 지나치게 굵어 보이지 않게 조정합니다. */
+.timetable-mini-preview .course-block strong {
   font-size: 13px;
-  text-align: center;
+  line-height: 1.3;
+}
 
-  background:
-    linear-gradient(
-      rgba(255, 255, 255, 0.74),
-      rgba(255, 255, 255, 0.74)
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      #e8eff1 0,
-      #e8eff1 1px,
-      transparent 1px,
-      transparent 26px
-    ),
-    repeating-linear-gradient(
-      to right,
-      #edf2f4 0,
-      #edf2f4 1px,
-      transparent 1px,
-      transparent 20%
-    );
+/* 교수명과 강의실 텍스트 크기를 조정합니다. */
+.timetable-mini-preview .course-block span {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+/* 편집용 삭제 버튼은 미리보기에서 항상 숨깁니다. */
+.timetable-mini-preview .course-block-remove-button {
+  display: none;
 }
 
 
