@@ -25,9 +25,10 @@ import {
   updateSavedTimetable,
   type SavedTimetable,
 } from '../domain/saved-timetables'
-import { getTimetableConflicts } from '../domain/timetable/selectors'
 import type { TimetableCourse } from '../domain/timetable/types'
 
+// DEPRECATED
+// import { getTimetableConflicts } from '../domain/timetable/selectors'
 interface TimetableCollectionState {
   timetables: SavedTimetable[]
   activeTimetableId: string
@@ -452,12 +453,13 @@ export function TimetablePage() {
         (lecture.credits ?? 0),
       0,
     )
+  
+  // DEPRECATED
+  // const conflicts =
+  //   getTimetableConflicts(actualCourses)
 
-  const conflicts =
-    getTimetableConflicts(actualCourses)
-
-  const hasConflicts =
-    conflicts.length > 0
+  // const hasConflicts =
+  //   conflicts.length > 0
 
   function handleStartEditing() {
     if (activeTimetable === undefined) {
