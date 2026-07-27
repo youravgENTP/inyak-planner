@@ -1,5 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
+import { TimetableDownloadModal } from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
 import { fetchLectures } from '../domain/lectures/api'
@@ -50,6 +56,14 @@ function doCoursesOverlap(
 
 export function TimetablePage() {
   const [isEditing, setIsEditing] = useState(false)
+
+  const [
+    isDownloadModalOpen,
+    setIsDownloadModalOpen,
+  ] = useState(false)
+
+  const timetableElementRef =
+    useRef<HTMLDivElement>(null)
 
   const [lectures, setLectures] =
     useState<Lecture[]>([])
@@ -285,6 +299,7 @@ export function TimetablePage() {
   function handleStartEditing() {
     setDraftLectures([...savedLectures])
     setPreviewLecture(null)
+    setIsDownloadModalOpen(false)
     setIsEditing(true)
   }
 
@@ -309,6 +324,14 @@ export function TimetablePage() {
     setSavedLectures([...draftLectures])
     setPreviewLecture(null)
     setIsEditing(false)
+  }
+
+  function handleOpenDownloadModal() {
+    setIsDownloadModalOpen(true)
+  }
+
+  function handleCloseDownloadModal() {
+    setIsDownloadModalOpen(false)
   }
 
   function handleAddLecture(
@@ -515,6 +538,16 @@ export function TimetablePage() {
               </p>
             </div>
 
+            {!isEditing && (
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={handleOpenDownloadModal}
+              >
+                시간표 다운로드
+              </button>
+            )}
+
             {isEditing && (
               <div className="timetable-edit-actions">
                 <button
@@ -542,12 +575,22 @@ export function TimetablePage() {
           <TimetableGrid
             courses={displayedCourses}
             isEditing={isEditing}
+            timetableRef={timetableElementRef}
             onRemoveLecture={
               handleRemoveLecture
             }
           />
         </section>
       </div>
+
+      <TimetableDownloadModal
+        isOpen={isDownloadModalOpen}
+        timetableElement={
+          timetableElementRef.current
+        }
+        filename="2026-2-시간표.png"
+        onClose={handleCloseDownloadModal}
+      />
     </section>
   )
 }
