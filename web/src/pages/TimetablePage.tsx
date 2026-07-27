@@ -11,7 +11,9 @@ import { TimetableComparisonPage } from '../components/saved-timetables/Timetabl
 import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
-import { fetchLectures } from '../domain/lectures/api'
+import { 
+  fetchLectures,
+  downloadSyllabiZip, } from '../domain/lectures/api'
 import {
   lectureToPreviewCourses,
   lecturesToTimetableCourses,
@@ -203,6 +205,17 @@ export function TimetablePage() {
     lectureLoadError,
     setLectureLoadError,
   ] = useState<string | null>(null)
+
+  const [
+    isDownloadingSyllabi,
+    setIsDownloadingSyllabi,
+  ] = useState(false)
+
+  const [
+    syllabiDownloadError,
+    setSyllabiDownloadError,
+  ] = useState<string | null>(null)
+
 
   const activeTimetable = useMemo(
     () =>
@@ -772,11 +785,54 @@ function handleCloseComparisonPage() {
 }
 
 
-  function handleDownloadSyllabi() {
-    window.alert(
-      '강의계획서 ZIP 다운로드 기능은 다음 단계에서 연결됩니다.',
-    )
+async function handleDownloadSyllabi() {
+  if (
+    activeTimetable === undefined ||
+    savedLectures.length === 0 ||
+    isDownloadingSyllabi
+  ) {
+    return
   }
+
+  setSyllabiDownloadError(null)
+  setIsDownloadingSyllabi(true)
+
+  try {
+    const { blob, filename } =
+      await downloadSyllabiZip(
+        activeTimetable.lectureIds,
+        activeTimetable.name,
+      )
+
+    const downloadUrl =
+      URL.createObjectURL(blob)
+
+    const downloadLink =
+      document.createElement('a')
+
+    downloadLink.href = downloadUrl
+    downloadLink.download = filename
+
+    document.body.appendChild(
+      downloadLink,
+    )
+
+    downloadLink.click()
+    downloadLink.remove()
+
+    URL.revokeObjectURL(
+      downloadUrl,
+    )
+  } catch (error) {
+    setSyllabiDownloadError(
+      error instanceof Error
+        ? error.message
+        : '강의계획서를 다운로드하지 못했습니다.',
+    )
+  } finally {
+    setIsDownloadingSyllabi(false)
+  }
+}
 
   function handleAddLecture(
     lecture: Lecture,
@@ -934,6 +990,15 @@ function handleCloseComparisonPage() {
         </p>
       )}
 
+      {syllabiDownloadError && (
+        <p
+          className="page-error-message"
+          role="alert"
+        >
+          {syllabiDownloadError}
+        </p>
+      )}
+
       <div
         className={`timetable-workspace${
           isEditing
@@ -1014,10 +1079,13 @@ function handleCloseComparisonPage() {
                     handleDownloadSyllabi
                   }
                   disabled={
-                    savedLectures.length === 0
+                    savedLectures.length === 0 ||
+                    isDownloadingSyllabi
                   }
                 >
-                  강의계획서 다운로드
+                  {isDownloadingSyllabi
+                    ? '다운로드 준비 중…'
+                    : '강의계획서 다운로드'}
                 </button>
 
                 <button
