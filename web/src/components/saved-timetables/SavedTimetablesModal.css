@@ -1,0 +1,777 @@
+/* =========================================================
+   저장된 시간표 모달 오버레이
+   ========================================================= */
+
+/* 화면 전체를 덮는 반투명 배경입니다. */
+.saved-timetables-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px;
+
+  background: rgba(8, 23, 38, 0.48);
+  backdrop-filter: blur(6px);
+}
+
+
+/* =========================================================
+   저장된 시간표 모달 본체
+   ========================================================= */
+
+/* 저장된 시간표 목록과 비교 선택 영역을 감싸는 모달입니다. */
+.saved-timetables-modal {
+  display: flex;
+  flex-direction: column;
+
+  width: min(1180px, 100%);
+  max-height: calc(100vh - 64px);
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #dfe8ec;
+  border-radius: 24px;
+
+  box-shadow:
+    0 28px 80px rgba(8, 23, 38, 0.24),
+    0 8px 24px rgba(8, 23, 38, 0.12);
+}
+
+
+/* =========================================================
+   모달 상단 헤더
+   ========================================================= */
+
+/* 모달 제목과 닫기 버튼을 좌우로 배치합니다. */
+.saved-timetables-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 28px 32px 24px;
+
+  border-bottom: 1px solid #e3ecef;
+}
+
+/* 모달 제목입니다. */
+.saved-timetables-modal__header h2 {
+  margin: 0;
+
+  color: #10283c;
+  font-size: 28px;
+  line-height: 1.25;
+}
+
+/* 모달 제목 아래의 안내 문구입니다. */
+.saved-timetables-modal__header p {
+  margin: 8px 0 0;
+
+  color: #708395;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* 우측 상단의 × 닫기 버튼입니다. */
+.saved-timetables-modal__close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  color: #526a7d;
+  font: inherit;
+  font-size: 30px;
+  line-height: 1;
+
+  background: #f5f8f9;
+  border: 1px solid #dce7ea;
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+/* 닫기 버튼에 마우스를 올렸을 때의 상태입니다. */
+.saved-timetables-modal__close-button:hover {
+  color: #10283c;
+
+  background: #edf3f5;
+  border-color: #cbdadd;
+
+  transform: translateY(-1px);
+}
+
+/* 키보드로 닫기 버튼을 선택했을 때의 포커스입니다. */
+.saved-timetables-modal__close-button:focus-visible {
+  outline: 3px solid rgba(30, 130, 126, 0.22);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   모달 스크롤 본문
+   ========================================================= */
+
+/* 시간표 목록과 비교 영역이 들어가는 스크롤 영역입니다. */
+.saved-timetables-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  min-height: 0;
+  padding: 28px 32px 32px;
+
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   공통 섹션 제목
+   ========================================================= */
+
+/* 섹션 제목과 우측 액션을 나란히 배치합니다. */
+.saved-timetables-modal__section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 18px;
+}
+
+/* 각 섹션의 제목입니다. */
+.saved-timetables-modal__section-heading h3 {
+  margin: 0;
+
+  color: #152e43;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+/* 섹션 제목 아래의 설명 문구입니다. */
+.saved-timetables-modal__section-heading p {
+  margin: 6px 0 0;
+
+  color: #7b8d9c;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   새 시간표 생성 메뉴
+   ========================================================= */
+
+/* 새 시간표 버튼과 펼쳐지는 메뉴의 기준점입니다. */
+.saved-timetables-create {
+  position: relative;
+
+  flex: 0 0 auto;
+}
+
+/* 새 시간표 메뉴입니다. */
+.saved-timetables-create__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+
+  display: grid;
+
+  min-width: 190px;
+  padding: 8px;
+
+  background: #ffffff;
+  border: 1px solid #dbe6e9;
+  border-radius: 14px;
+
+  box-shadow:
+    0 16px 38px rgba(8, 23, 38, 0.15),
+    0 4px 12px rgba(8, 23, 38, 0.08);
+}
+
+/* 새 시간표 메뉴의 각 선택 버튼입니다. */
+.saved-timetables-create__menu button {
+  width: 100%;
+  padding: 11px 12px;
+
+  color: #183247;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+/* 새 시간표 메뉴 항목에 마우스를 올렸을 때입니다. */
+.saved-timetables-create__menu button:hover {
+  background: #eef7f6;
+}
+
+/* 새 시간표 메뉴 항목의 키보드 포커스입니다. */
+.saved-timetables-create__menu button:focus-visible {
+  outline: 3px solid rgba(30, 130, 126, 0.2);
+  outline-offset: 1px;
+}
+
+
+/* =========================================================
+   저장된 시간표 목록 섹션
+   ========================================================= */
+
+/* 지금까지 만든 시간표 목록 전체 영역입니다. */
+.saved-timetables-modal__list-section {
+  min-width: 0;
+}
+
+/* 학기 그룹들을 세로로 배치합니다. */
+.saved-timetable-groups {
+  display: grid;
+  gap: 20px;
+}
+
+/* 학기별 시간표 그룹입니다. */
+.saved-timetable-group {
+  padding: 18px;
+
+  background: #f8fafb;
+  border: 1px solid #e1eaed;
+  border-radius: 18px;
+}
+
+/* 학기 그룹의 제목입니다. */
+.saved-timetable-group h4 {
+  margin: 0 0 12px;
+
+  color: #354e61;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* 한 학기에 저장된 시간표 목록입니다. */
+.saved-timetable-list {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(245px, 1fr));
+  gap: 12px;
+}
+
+/* 드래그 가능한 시간표 항목 전체입니다. */
+.saved-timetable-list-item {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+
+  min-width: 0;
+  padding: 6px;
+
+  background: #ffffff;
+  border: 1px solid #dce6e9;
+  border-radius: 14px;
+
+  cursor: grab;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+/* 시간표 항목을 누르고 드래그할 때의 커서입니다. */
+.saved-timetable-list-item:active {
+  cursor: grabbing;
+}
+
+/* 시간표 항목에 마우스를 올렸을 때입니다. */
+.saved-timetable-list-item:hover {
+  border-color: #bcd6d5;
+
+  box-shadow:
+    0 8px 18px rgba(22, 67, 80, 0.08);
+
+  transform: translateY(-1px);
+}
+
+/* 현재 메인 화면에 열려 있는 시간표입니다. */
+.saved-timetable-list-item--active {
+  background: #f2fbfa;
+  border-color: #4a9994;
+}
+
+/* 비교 목록에 이미 추가된 시간표입니다. */
+.saved-timetable-list-item--selected {
+  border-color: #83b9b5;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(30, 130, 126, 0.12);
+}
+
+/* 시간표를 여는 메인 버튼입니다. */
+.saved-timetable-list-item__open {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+
+  min-width: 0;
+  padding: 10px 12px;
+
+  color: inherit;
+  font: inherit;
+  text-align: left;
+
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+/* 시간표 이름입니다. */
+.saved-timetable-list-item__open span {
+  display: block;
+
+  max-width: 100%;
+  overflow: hidden;
+
+  color: #183247;
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 시간표의 과목 수입니다. */
+.saved-timetable-list-item__open small {
+  color: #7a8d9c;
+  font-size: 13px;
+}
+
+/* 시간표 열기 버튼의 포커스입니다. */
+.saved-timetable-list-item__open:focus-visible {
+  outline: 3px solid rgba(30, 130, 126, 0.18);
+  outline-offset: 1px;
+}
+
+/* 비교 목록에 추가하는 보조 버튼입니다. */
+.saved-timetable-list-item__compare {
+  flex: 0 0 auto;
+
+  align-self: center;
+
+  padding: 8px 10px;
+
+  color: #24766f;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+
+  background: #edf8f7;
+  border: 1px solid #c9e4e1;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+/* 비교 추가 버튼에 마우스를 올렸을 때입니다. */
+.saved-timetable-list-item__compare:hover:not(:disabled) {
+  color: #155c56;
+
+  background: #dff1ef;
+  border-color: #9ecbc7;
+}
+
+/* 이미 추가되었거나 최대 개수에 도달한 버튼입니다. */
+.saved-timetable-list-item__compare:disabled {
+  color: #93a2ad;
+
+  background: #f2f4f5;
+  border-color: #e0e5e7;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   비교 선택 섹션
+   ========================================================= */
+
+/* 비교할 시간표를 구성하는 하단 영역입니다. */
+.saved-timetables-modal__comparison-section {
+  min-width: 0;
+  padding-top: 28px;
+
+  border-top: 1px solid #e3ecef;
+}
+
+/* 선택된 시간표 개수 표시입니다. */
+.comparison-selection-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 54px;
+  height: 36px;
+  padding: 0 12px;
+
+  color: #176d67;
+  font-size: 14px;
+  font-weight: 900;
+
+  background: #eaf7f5;
+  border: 1px solid #c6e5e1;
+  border-radius: 999px;
+}
+
+
+/* =========================================================
+   비교 드롭 영역
+   ========================================================= */
+
+/* 시간표를 끌어다 놓을 수 있는 영역입니다. */
+.comparison-selection-drop-zone {
+  min-height: 220px;
+  padding: 18px;
+
+  background: #f8fbfb;
+  border: 2px dashed #cbdadd;
+  border-radius: 20px;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* 시간표가 드롭 영역 위에 있을 때입니다. */
+.comparison-selection-drop-zone--active {
+  background: #ecf8f6;
+  border-color: #3b918b;
+
+  box-shadow:
+    inset 0 0 0 4px rgba(30, 130, 126, 0.08);
+}
+
+/* 최대 3개의 시간표가 모두 선택된 상태입니다. */
+.comparison-selection-drop-zone--full {
+  border-style: solid;
+}
+
+/* 아무 시간표도 선택되지 않았을 때의 큰 안내 영역입니다. */
+.comparison-selection-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+
+  min-height: 180px;
+  padding: 24px;
+
+  text-align: center;
+}
+
+/* 빈 드롭존의 주요 안내 문구입니다. */
+.comparison-selection-empty strong {
+  color: #385568;
+  font-size: 16px;
+}
+
+/* 빈 드롭존의 보조 안내 문구입니다. */
+.comparison-selection-empty span {
+  color: #8998a4;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   비교 미리보기 가로 스크롤
+   ========================================================= */
+
+/* 미리보기들이 너무 좁아지면 가로 스크롤을 허용합니다. */
+.comparison-selection-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: 4px;
+}
+
+/* 선택 개수에 따라 1열·2열·3열로 변하는 그리드입니다. */
+.comparison-selection-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      var(--comparison-count),
+      minmax(240px, 1fr)
+    );
+  gap: 16px;
+
+  min-width: max-content;
+}
+
+/* 미리보기 하나의 카드입니다. */
+.comparison-selection-preview {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 240px;
+  min-height: 420px;
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #dce7e9;
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 24px rgba(15, 49, 64, 0.07);
+}
+
+/* 미리보기 카드의 상단 정보입니다. */
+.comparison-selection-preview__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 14px 12px;
+
+  border-bottom: 1px solid #e7edef;
+}
+
+/* 미리보기 이름과 학기를 세로로 배치합니다. */
+.comparison-selection-preview__header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+/* 미리보기의 시간표 이름입니다. */
+.comparison-selection-preview__header strong {
+  overflow: hidden;
+
+  color: #193348;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 미리보기의 학기 정보입니다. */
+.comparison-selection-preview__header small {
+  color: #83939f;
+  font-size: 12px;
+}
+
+/* 비교 대상에서 제거하는 × 버튼입니다. */
+.comparison-selection-preview__header button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 28px;
+  height: 28px;
+  padding: 0;
+
+  color: #718491;
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+
+  background: #f3f6f7;
+  border: 1px solid #e0e7e9;
+  border-radius: 9px;
+
+  cursor: pointer;
+}
+
+/* 제거 버튼에 마우스를 올렸을 때입니다. */
+.comparison-selection-preview__header button:hover {
+  color: #bb4e4e;
+
+  background: #fff0f0;
+  border-color: #efcaca;
+}
+
+/* 실제 세로형 시간표가 들어갈 영역입니다. */
+.comparison-selection-preview__canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+
+  min-height: 350px;
+  padding: 16px;
+
+  color: #8aa0aa;
+  font-size: 13px;
+  text-align: center;
+
+  background:
+    linear-gradient(
+      rgba(255, 255, 255, 0.74),
+      rgba(255, 255, 255, 0.74)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      #e8eff1 0,
+      #e8eff1 1px,
+      transparent 1px,
+      transparent 26px
+    ),
+    repeating-linear-gradient(
+      to right,
+      #edf2f4 0,
+      #edf2f4 1px,
+      transparent 1px,
+      transparent 20%
+    );
+}
+
+
+/* =========================================================
+   모달 하단 푸터
+   ========================================================= */
+
+/* 선택 상태 안내와 하단 버튼을 배치합니다. */
+.saved-timetables-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 20px 32px;
+
+  background: #fbfcfc;
+  border-top: 1px solid #e3ecef;
+}
+
+/* 좌측 선택 상태 안내 문구입니다. */
+.saved-timetables-modal__footer p {
+  margin: 0;
+
+  color: #788b99;
+  font-size: 14px;
+}
+
+/* 우측 취소·비교 버튼 그룹입니다. */
+.saved-timetables-modal__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   반응형 레이아웃
+   ========================================================= */
+
+/* 태블릿 이하에서 모달 여백을 줄입니다. */
+@media (max-width: 900px) {
+  .saved-timetables-modal-overlay {
+    padding: 18px;
+  }
+
+  .saved-timetables-modal {
+    max-height: calc(100vh - 36px);
+  }
+
+  .saved-timetables-modal__header,
+  .saved-timetables-modal__body,
+  .saved-timetables-modal__footer {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .saved-timetable-list {
+    grid-template-columns:
+      repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+/* 모바일 너비에서 헤더와 푸터를 세로로 재배치합니다. */
+@media (max-width: 640px) {
+  .saved-timetables-modal-overlay {
+    align-items: stretch;
+
+    padding: 0;
+  }
+
+  .saved-timetables-modal {
+    width: 100%;
+    max-height: none;
+
+    border: 0;
+    border-radius: 0;
+  }
+
+  .saved-timetables-modal__header {
+    padding-top: 20px;
+  }
+
+  .saved-timetables-modal__header h2 {
+    font-size: 23px;
+  }
+
+  .saved-timetables-modal__section-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .saved-timetables-create {
+    align-self: flex-start;
+  }
+
+  .saved-timetables-create__menu {
+    right: auto;
+    left: 0;
+  }
+
+  .saved-timetable-list {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-timetables-modal__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .saved-timetables-modal__footer-actions {
+    justify-content: flex-end;
+  }
+}
