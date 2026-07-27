@@ -17,6 +17,7 @@ import type { Lecture } from '../domain/lectures/types'
 import {
   createSavedTimetable,
   getActiveTimetable,
+  groupTimetablesBySemester,
   loadActiveTimetableId,
   loadSavedTimetables,
   replaceTimetable,
@@ -27,8 +28,6 @@ import {
 } from '../domain/saved-timetables'
 import type { TimetableCourse } from '../domain/timetable/types'
 
-// DEPRECATED
-// import { getTimetableConflicts } from '../domain/timetable/selectors'
 interface TimetableCollectionState {
   timetables: SavedTimetable[]
   activeTimetableId: string
@@ -86,7 +85,9 @@ function haveSameLectureIds(
     return false
   }
 
-  const firstIds = [...firstLectureIds].sort(
+  const firstIds = [
+    ...firstLectureIds,
+  ].sort(
     (firstId, secondId) =>
       firstId - secondId,
   )
@@ -126,11 +127,13 @@ function createDownloadFilename(
     .trim()
     .replace(/[\\/:*?"<>|]/g, '-')
 
-  return [
-    timetable.academicYear,
-    timetable.semester,
-    safeName || '시간표',
-  ].join('-') + '.png'
+  return (
+    [
+      timetable.academicYear,
+      timetable.semester,
+      safeName || '시간표',
+    ].join('-') + '.png'
+  )
 }
 
 export function TimetablePage() {
@@ -140,6 +143,11 @@ export function TimetablePage() {
   const [
     isDownloadModalOpen,
     setIsDownloadModalOpen,
+  ] = useState(false)
+
+  const [
+    isSavedTimetablesPanelOpen,
+    setIsSavedTimetablesPanelOpen,
   ] = useState(false)
 
   const timetableElementRef =
@@ -185,6 +193,14 @@ export function TimetablePage() {
       timetableState.activeTimetableId,
       timetableState.timetables,
     ],
+  )
+
+  const timetableGroups = useMemo(
+    () =>
+      groupTimetablesBySemester(
+        timetableState.timetables,
+      ),
+    [timetableState.timetables],
   )
 
   const lectureMap = useMemo(
@@ -453,13 +469,6 @@ export function TimetablePage() {
         (lecture.credits ?? 0),
       0,
     )
-  
-  // DEPRECATED
-  // const conflicts =
-  //   getTimetableConflicts(actualCourses)
-
-  // const hasConflicts =
-  //   conflicts.length > 0
 
   function handleStartEditing() {
     if (activeTimetable === undefined) {
@@ -472,6 +481,7 @@ export function TimetablePage() {
 
     setPreviewLecture(null)
     setIsDownloadModalOpen(false)
+    setIsSavedTimetablesPanelOpen(false)
     setIsEditing(true)
   }
 
@@ -526,11 +536,63 @@ export function TimetablePage() {
   }
 
   function handleOpenDownloadModal() {
+    setIsSavedTimetablesPanelOpen(false)
     setIsDownloadModalOpen(true)
   }
 
   function handleCloseDownloadModal() {
     setIsDownloadModalOpen(false)
+  }
+
+  function handleToggleSavedTimetablesPanel() {
+    setIsDownloadModalOpen(false)
+
+    setIsSavedTimetablesPanelOpen(
+      (isOpen) => !isOpen,
+    )
+  }
+
+  function handleSelectTimetable(
+    timetableId: string,
+  ) {
+    if (
+      timetableId ===
+      timetableState.activeTimetableId
+    ) {
+      setIsSavedTimetablesPanelOpen(false)
+
+      return
+    }
+
+    if (hasUnsavedChanges) {
+      const shouldDiscardChanges =
+        window.confirm(
+          '저장하지 않은 변경사항이 있습니다. 다른 시간표로 이동하시겠습니까?',
+        )
+
+      if (!shouldDiscardChanges) {
+        return
+      }
+    }
+
+    setTimetableState(
+      (currentState) => ({
+        ...currentState,
+        activeTimetableId: timetableId,
+      }),
+    )
+
+    setDraftLectureIds([])
+    setPreviewLecture(null)
+    setIsEditing(false)
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesPanelOpen(false)
+  }
+
+  function handleDownloadSyllabi() {
+    window.alert(
+      '강의계획서 ZIP 다운로드 기능은 다음 단계에서 연결됩니다.',
+    )
   }
 
   function handleAddLecture(
@@ -615,106 +677,181 @@ export function TimetablePage() {
               한눈에 확인합니다.
             </p>
           </div>
-
-          <button
-            className="primary-button"
-            type="button"
-            onClick={handleStartEditing}
-          >
-            시간표 수정
-          </button>
         </div>
       )}
 
       {!isEditing && (
-        <div
-          className="summary-grid"
-          aria-label="시간표 요약"
-        >
-          <article className="summary-card">
-            <span>등록 과목</span>
-
-            <strong>
-              {displayedLectures.length}
-            </strong>
-
-            <small>저장된 시간표</small>
-          </article>
-
-          <article className="summary-card">
-            <span>예상 학점</span>
-
-            <strong>{creditCount}</strong>
-
-            <small>
-              선택 과목의 총 학점
-            </small>
-          </article>
-
-          <article
-            className={`summary-card${
-              hasConflicts
-                ? ''
-                : ' summary-card--accent'
-            }`}
+        <>
+          <div
+            className="summary-grid"
+            aria-label="시간표 요약"
           >
-            <span>시간표 상태</span>
+            <article className="summary-card">
+              <span>등록 과목</span>
 
-            <strong>
-              {hasConflicts
-                ? '충돌 있음'
-                : '정상'}
-            </strong>
+              <strong>
+                {displayedLectures.length}
+              </strong>
 
-            <small>
-              {hasConflicts
-                ? `${conflicts.length}개의 시간 충돌이 있습니다.`
-                : '겹치는 수업 없음'}
-            </small>
-          </article>
-        </div>
-      )}
+              <small>
+                현재 시간표의 과목 수
+              </small>
+            </article>
 
-      {!isEditing && (
-        <section
-          className="panel"
-          aria-labelledby="lecture-api-title"
-        >
-          <div className="panel-header">
-            <div>
-              <h2 id="lecture-api-title">
-                강의 데이터 연결
-              </h2>
+            <article className="summary-card">
+              <span>예상 학점</span>
 
-              <p>
-                FastAPI와 SQLite에서 실제 강의
-                목록을 불러옵니다.
-              </p>
-            </div>
+              <strong>{creditCount}</strong>
+
+              <small>
+                선택 과목의 총 학점
+              </small>
+            </article>
+
+            <button
+              className="summary-card summary-card--button"
+              type="button"
+              onClick={
+                handleToggleSavedTimetablesPanel
+              }
+              aria-expanded={
+                isSavedTimetablesPanelOpen
+              }
+              aria-controls="saved-timetables-panel"
+            >
+              <span>저장된 시간표</span>
+
+              <strong>
+                {timetableState.timetables.length}
+              </strong>
+
+              <small>
+                {isSavedTimetablesPanelOpen
+                  ? '시간표 목록 닫기'
+                  : '시간표 목록 보기'}
+              </small>
+            </button>
           </div>
 
-          {isLoadingLectures && (
-            <p>
-              강의 목록을 불러오는 중입니다.
-            </p>
-          )}
+          {isSavedTimetablesPanelOpen && (
+            <section
+              id="saved-timetables-panel"
+              className="panel saved-timetables-panel"
+              aria-labelledby="saved-timetables-title"
+            >
+              <div className="panel-header">
+                <div>
+                  <h2 id="saved-timetables-title">
+                    저장된 시간표
+                  </h2>
 
-          {lectureLoadError && (
-            <p role="alert">
-              강의 목록을 불러오지 못했습니다:{' '}
-              {lectureLoadError}
-            </p>
-          )}
+                  <p>
+                    시간표 이름을 선택하면 해당
+                    시간표로 이동합니다.
+                  </p>
+                </div>
 
-          {!isLoadingLectures &&
-            !lectureLoadError && (
-              <p>
-                DB에서 강의{' '}
-                {lectures.length}개를
-                불러왔습니다.
-              </p>
-            )}
-        </section>
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={
+                    handleToggleSavedTimetablesPanel
+                  }
+                  aria-label="저장된 시간표 목록 닫기"
+                >
+                  닫기
+                </button>
+              </div>
+
+              <div className="saved-timetable-groups">
+                {timetableGroups.map(
+                  (group) => (
+                    <section
+                      className="saved-timetable-group"
+                      key={`${group.academicYear}-${group.semester}`}
+                    >
+                      <h3>
+                        {group.academicYear}
+                        학년도{' '}
+                        {group.semester}학기
+                      </h3>
+
+                      <div className="saved-timetable-list">
+                        {group.timetables.map(
+                          (timetable) => {
+                            const isActive =
+                              timetable.id ===
+                              activeTimetable.id
+
+                            return (
+                              <button
+                                className={`saved-timetable-list-item${
+                                  isActive
+                                    ? ' saved-timetable-list-item--active'
+                                    : ''
+                                }`}
+                                type="button"
+                                key={timetable.id}
+                                onClick={() =>
+                                  handleSelectTimetable(
+                                    timetable.id,
+                                  )
+                                }
+                                aria-current={
+                                  isActive
+                                    ? 'page'
+                                    : undefined
+                                }
+                              >
+                                <span>
+                                  {timetable.name}
+                                </span>
+
+                                <small>
+                                  {
+                                    timetable
+                                      .lectureIds
+                                      .length
+                                  }
+                                  개 과목
+                                </small>
+                              </button>
+                            )
+                          },
+                        )}
+                      </div>
+                    </section>
+                  ),
+                )}
+              </div>
+
+              <div className="saved-timetable-comparison-placeholder">
+                <p>
+                  비교할 시간표를 선택하는 영역은
+                  다음 단계에서 추가됩니다.
+                </p>
+
+                <button
+                  className="primary-button"
+                  type="button"
+                  disabled
+                >
+                  비교하기
+                </button>
+              </div>
+            </section>
+          )}
+        </>
+      )}
+
+      {lectureLoadError && (
+        <p
+          className="page-error-message"
+          role="alert"
+        >
+          강의 목록을 불러오지 못했습니다:{' '}
+          {lectureLoadError}
+        </p>
       )}
 
       <div
@@ -758,15 +895,42 @@ export function TimetablePage() {
             </div>
 
             {!isEditing && (
-              <button
-                className="secondary-button"
-                type="button"
-                onClick={
-                  handleOpenDownloadModal
-                }
-              >
-                시간표 다운로드
-              </button>
+              <div className="timetable-view-actions">
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={handleStartEditing}
+                  disabled={
+                    isLoadingLectures ||
+                    lectureLoadError !== null
+                  }
+                >
+                  시간표 수정
+                </button>
+
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={
+                    handleDownloadSyllabi
+                  }
+                  disabled={
+                    savedLectures.length === 0
+                  }
+                >
+                  강의계획서 다운로드
+                </button>
+
+                <button
+                  className="primary-button"
+                  type="button"
+                  onClick={
+                    handleOpenDownloadModal
+                  }
+                >
+                  시간표 다운로드
+                </button>
+              </div>
             )}
 
             {isEditing && (
