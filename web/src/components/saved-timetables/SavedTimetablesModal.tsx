@@ -43,6 +43,9 @@ interface SavedTimetablesModalProps {
   ) => void
   onCreateEmptyTimetable: () => void
   onDuplicateActiveTimetable: () => void
+  onDeleteTimetable?: (
+    timetableId: string,
+  ) => void
   onCompare: (
     timetableIds: readonly string[],
   ) => void
@@ -59,6 +62,7 @@ export function SavedTimetablesModal({
   onComparisonTimetableIdsChange,
   onCreateEmptyTimetable,
   onDuplicateActiveTimetable,
+  onDeleteTimetable,
   onCompare,
 }: SavedTimetablesModalProps) {
   const modalRef =
@@ -280,24 +284,6 @@ export function SavedTimetablesModal({
     )
   }
 
-  function handleAddToComparison(
-    timetableId: string,
-  ) {
-    if (
-      comparisonTimetableIds.includes(
-        timetableId,
-      ) ||
-      isComparisonFull
-    ) {
-      return
-    }
-
-    onComparisonTimetableIdsChange([
-      ...comparisonTimetableIds,
-      timetableId,
-    ])
-  }
-
   function handleCreateEmptyTimetable() {
     setIsCreateMenuOpen(false)
     onCreateEmptyTimetable()
@@ -498,24 +484,28 @@ export function SavedTimetablesModal({
                                   개 과목
                                 </small>
                               </button>
-
                               <button
-                                className="saved-timetable-list-item__compare"
+                                className="saved-timetable-list-item__delete"
                                 type="button"
                                 onClick={() =>
-                                  handleAddToComparison(
+                                  onDeleteTimetable?.(
                                     timetable.id,
                                   )
                                 }
                                 disabled={
-                                  isSelected ||
-                                  isComparisonFull
+                                  timetables.length <= 1 ||
+                                  onDeleteTimetable === undefined
+                                }
+                                aria-label={`${timetable.name} 시간표 삭제`}
+                                title={
+                                  timetables.length <= 1
+                                    ? '마지막 시간표는 삭제할 수 없습니다.'
+                                    : '시간표 삭제'
                                 }
                               >
-                                {isSelected
-                                  ? '추가됨'
-                                  : '비교에 추가'}
+                                ×
                               </button>
+                              
                             </div>
                           )
                         },
