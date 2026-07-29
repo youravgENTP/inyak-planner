@@ -473,6 +473,72 @@
    비교 드롭 영역
    ========================================================= */
 
+/* 시간표를 끌어다 놓는 비교 선택 영역입니다. */
+.comparison-selection-drop-zone {
+  display: flex;
+  align-items: stretch;
+
+  width: 100%;
+  min-height: 190px;
+  padding: 16px;
+
+  background: #f7fafb;
+  border: 2px dashed #cbdadd;
+  border-radius: 18px;
+
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* 시간표를 드래그해서 영역 위에 올린 상태입니다. */
+.comparison-selection-drop-zone--active {
+  background: #edf8f7;
+  border-color: #4a9994;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(30, 130, 126, 0.12);
+}
+
+/* 비교 가능한 최대 개수에 도달한 상태입니다. */
+.comparison-selection-drop-zone--full {
+  border-style: solid;
+}
+
+/* 아직 비교 시간표가 없는 빈 상태 안내입니다. */
+.comparison-selection-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+
+  min-width: 0;
+  min-height: 154px;
+  padding: 24px;
+
+  color: #718491;
+  text-align: center;
+
+  pointer-events: none;
+}
+
+/* 빈 비교 영역의 주요 안내 문구입니다. */
+.comparison-selection-empty strong {
+  color: #354e61;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* 빈 비교 영역의 보조 안내 문구입니다. */
+.comparison-selection-empty span {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
 /* =========================================================
    비교 미리보기 가로 스크롤
    ========================================================= */

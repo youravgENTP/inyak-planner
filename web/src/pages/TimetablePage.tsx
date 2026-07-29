@@ -1255,9 +1255,6 @@ async function handleDownloadSyllabi() {
         onDuplicateActiveTimetable={
           handleDuplicateActiveTimetable
         }
-        onDuplicateActiveTimetable={
-          handleDuplicateActiveTimetable
-        }
         onDeleteTimetable={
           handleDeleteTimetable
         }
