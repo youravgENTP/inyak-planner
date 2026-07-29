@@ -377,22 +377,27 @@
   outline-offset: 1px;
 }
 
-/* 비교 목록에 추가하는 보조 버튼입니다. */
-.saved-timetable-list-item__compare {
-  flex: 0 0 auto;
+/* 저장된 시간표를 삭제하는 × 버튼입니다. */
+.saved-timetable-list-item__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
+  flex: 0 0 auto;
   align-self: center;
 
-  padding: 8px 10px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
 
-  color: #24766f;
+  color: #7b8d9c;
   font: inherit;
-  font-size: 12px;
-  font-weight: 800;
-  white-space: nowrap;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
 
-  background: #edf8f7;
-  border: 1px solid #c9e4e1;
+  background: #f5f8f9;
+  border: 1px solid #dce7ea;
   border-radius: 10px;
 
   cursor: pointer;
@@ -400,25 +405,35 @@
   transition:
     color 160ms ease,
     background-color 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    transform 160ms ease;
 }
 
-/* 비교 추가 버튼에 마우스를 올렸을 때입니다. */
-.saved-timetable-list-item__compare:hover:not(:disabled) {
-  color: #155c56;
+/* 삭제 버튼에 마우스를 올렸을 때입니다. */
+.saved-timetable-list-item__delete:hover:not(:disabled) {
+  color: #a33a3a;
 
-  background: #dff1ef;
-  border-color: #9ecbc7;
+  background: #fff1f1;
+  border-color: #e4b3b3;
+
+  transform: translateY(-1px);
 }
 
-/* 이미 추가되었거나 최대 개수에 도달한 버튼입니다. */
-.saved-timetable-list-item__compare:disabled {
-  color: #93a2ad;
+/* 키보드로 삭제 버튼을 선택했을 때입니다. */
+.saved-timetable-list-item__delete:focus-visible {
+  outline: 3px solid rgba(163, 58, 58, 0.18);
+  outline-offset: 2px;
+}
 
-  background: #f2f4f5;
-  border-color: #e0e5e7;
+/* 마지막 남은 시간표의 비활성화된 삭제 버튼입니다. */
+.saved-timetable-list-item__delete:disabled {
+  color: #b9c3ca;
+
+  background: #f5f7f8;
+  border-color: #e5eaec;
 
   cursor: not-allowed;
+  opacity: 0.65;
 }
 
 
