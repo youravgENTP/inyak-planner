@@ -632,6 +632,60 @@ h1 {
   overflow-x: auto;
 }
 
+/* 시간이 지정되지 않은 과목을 시간표 아래에 표시하는 영역 */
+.unscheduled-lectures {
+  padding: 16px 18px 18px;
+
+  background: var(--surface-muted);
+  border-top: 1px solid var(--line);
+}
+
+/* 시간이 지정되지 않은 과목 카드 목록 */
+.unscheduled-lectures__list {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+/* 시간이 지정되지 않은 개별 과목 카드 */
+.unscheduled-lecture {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+
+  min-width: 0;
+  padding: 12px 14px;
+
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+/* 과목명 */
+.unscheduled-lecture strong {
+  min-width: 0;
+  overflow: hidden;
+
+  color: var(--navy-900);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 교수명 */
+.unscheduled-lecture span {
+  flex: 0 0 auto;
+
+  color: var(--ink-500);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
 .timetable {
   display: grid;
 
