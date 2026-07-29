@@ -10,7 +10,9 @@ from datetime import (
 from typing import Any
 from uuid import uuid4
 
-from server.database import connect_database
+from server.auth_database import (
+    connect_auth_database,
+)
 
 
 SESSION_DURATION_DAYS = 7
@@ -53,7 +55,7 @@ def create_session(
         )
     )
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         connection.execute(
             """
             INSERT INTO sessions (
@@ -86,13 +88,16 @@ def get_user_by_session_token(
     )
     current_time = get_current_time().isoformat()
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         row = connection.execute(
             """
             SELECT
                 users.id,
                 users.username,
-                users.created_at
+                users.password_hash,
+                users.profile_image_filename,
+                users.created_at,
+                users.updated_at
             FROM sessions
             JOIN users
                 ON users.id = sessions.user_id
@@ -119,7 +124,7 @@ def delete_session(
         session_token
     )
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         connection.execute(
             """
             DELETE FROM sessions
