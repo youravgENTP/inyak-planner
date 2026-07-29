@@ -110,6 +110,7 @@ def require_authenticated_user(
     session_token: Optional[str],
 ) -> dict[str, Any]:
     """세션 쿠키를 확인하고 로그인된 사용자를 반환한다."""
+    create_auth_tables()
     if session_token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -294,6 +295,7 @@ def change_password(
 
 
 @router.post("/logout")
+
 def logout(
     response: Response,
     session_token: Optional[str] = Cookie(
@@ -302,17 +304,7 @@ def logout(
     ),
 ) -> dict[str, str]:
     """현재 로그인 세션을 삭제한다."""
+    create_auth_tables()
+
     if session_token is not None:
         delete_session(session_token)
-
-    response.delete_cookie(
-        key=SESSION_COOKIE_NAME,
-        path="/",
-        httponly=True,
-        secure=False,
-        samesite="lax",
-    )
-
-    return {
-        "message": "로그아웃되었습니다.",
-    }
