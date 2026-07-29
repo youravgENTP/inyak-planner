@@ -1090,7 +1090,7 @@ async function handleDownloadSyllabi() {
                 </button>
 
                 <button
-                  className="primary-button"
+                  className="secondary-button"
                   type="button"
                   onClick={
                     handleOpenDownloadModal

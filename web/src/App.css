@@ -574,6 +574,13 @@ h1 {
   font-size: 12px;
 }
 
+/* 시간표 보기 상태의 작업 버튼 묶음 */
+.timetable-view-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /* 시간표 편집 버튼 */
 
 .timetable-edit-actions {
