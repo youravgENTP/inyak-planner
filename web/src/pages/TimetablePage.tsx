@@ -1259,14 +1259,32 @@ async function handleDownloadSyllabi() {
                       className="unscheduled-lecture"
                       key={lecture.id}
                     >
-                      <strong>
-                        {lecture.courseName}
-                      </strong>
+                      <div className="unscheduled-lecture__info">
+                        <strong>
+                          {lecture.courseName}
+                        </strong>
 
-                      {lecture.professor && (
-                        <span>
-                          {lecture.professor}
-                        </span>
+                        {lecture.professor && (
+                          <span>
+                            {lecture.professor}
+                          </span>
+                        )}
+                      </div>
+
+                      {isEditing && (
+                        <button
+                          className="unscheduled-lecture__remove"
+                          type="button"
+                          onClick={() =>
+                            handleRemoveLecture(
+                              lecture.id,
+                            )
+                          }
+                          aria-label={`${lecture.courseName} 시간표에서 삭제`}
+                          title="시간표에서 삭제"
+                        >
+                          ×
+                        </button>
                       )}
                     </article>
                   ),

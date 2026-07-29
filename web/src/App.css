@@ -3,10 +3,6 @@
    앱 전체에서 반복해서 사용하는 색상과 그림자를 정의
    ========================================================= */
 
-
-
-
-
 /* 앱 전체에서 재사용하는 색상·그림자 CSS 변수 */
 :root {
   --navy-950: #10273a;
@@ -649,9 +645,11 @@ h1 {
 }
 
 /* 시간이 지정되지 않은 개별 과목 카드 */
+
+/* 시간이 지정되지 않은 개별 과목 카드 */
 .unscheduled-lecture {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
 
@@ -663,8 +661,20 @@ h1 {
   border-radius: 10px;
 }
 
+/* 과목명과 교수명을 한 줄에 배치하는 영역 */
+.unscheduled-lecture__info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+
+  min-width: 0;
+  overflow: hidden;
+}
+
 /* 과목명 */
-.unscheduled-lecture strong {
+.unscheduled-lecture__info strong {
+  flex: 0 1 auto;
+
   min-width: 0;
   overflow: hidden;
 
@@ -677,13 +687,57 @@ h1 {
 }
 
 /* 교수명 */
-.unscheduled-lecture span {
-  flex: 0 0 auto;
+.unscheduled-lecture__info span {
+  flex: 0 1 auto;
+
+  min-width: 0;
+  overflow: hidden;
 
   color: var(--ink-500);
   font-size: 12px;
   line-height: 1.4;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 편집 중 시간 미지정 과목을 삭제하는 버튼 */
+.unscheduled-lecture__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 28px;
+  height: 28px;
+  padding: 0;
+
+  color: #6d8190;
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+/* 삭제 버튼에 마우스를 올렸을 때 */
+.unscheduled-lecture__remove:hover {
+  color: #a33a3a;
+  background: #fff0f0;
+}
+
+/* 키보드로 삭제 버튼을 선택했을 때 */
+.unscheduled-lecture__remove:focus-visible {
+  outline: 3px solid rgba(163, 58, 58, 0.18);
+  outline-offset: 2px;
 }
 
 .timetable {
