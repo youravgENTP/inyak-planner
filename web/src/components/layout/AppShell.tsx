@@ -8,6 +8,7 @@ import {
 interface AppShellProps {
   children: ReactNode
   username: string
+  onOpenAccount: () => void
   onLogout: () => void
 }
 
@@ -35,6 +36,7 @@ function getProfileInitial(
 export function AppShell({
   children,
   username,
+  onOpenAccount,
   onLogout,
 }: AppShellProps) {
   const [
@@ -115,10 +117,7 @@ export function AppShell({
 
   function handleProfileSettingsClick() {
     setIsProfileMenuOpen(false)
-
-    window.alert(
-      '내 정보 관리 페이지는 다음 단계에서 구현합니다.',
-    )
+    onOpenAccount()
   }
 
   function handleLogoutClick() {

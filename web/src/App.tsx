@@ -10,12 +10,22 @@ import {
   logout,
   type AuthUser,
 } from './domain/auth/api'
+import { AccountPage } from './pages/AccountPage'
 import { AuthPage } from './pages/AuthPage'
 import { TimetablePage } from './pages/TimetablePage'
+
+type AppPage =
+  | 'timetable'
+  | 'account'
 
 function App() {
   const [currentUser, setCurrentUser] =
     useState<AuthUser | null>(null)
+
+  const [
+    currentPage,
+    setCurrentPage,
+  ] = useState<AppPage>('timetable')
 
   const [
     isCheckingAuthentication,
@@ -35,7 +45,8 @@ function App() {
   useEffect(() => {
     async function checkAuthentication() {
       try {
-        const user = await getCurrentUser()
+        const user =
+          await getCurrentUser()
 
         setCurrentUser(user)
       } catch (error) {
@@ -66,7 +77,9 @@ function App() {
 
     try {
       await logout()
+
       setCurrentUser(null)
+      setCurrentPage('timetable')
     } catch (error) {
       if (error instanceof Error) {
         setAuthenticationError(
@@ -80,6 +93,13 @@ function App() {
     } finally {
       setIsLoggingOut(false)
     }
+  }
+
+  function handleAuthenticated(
+    user: AuthUser,
+  ) {
+    setCurrentUser(user)
+    setCurrentPage('timetable')
   }
 
   if (isCheckingAuthentication) {
@@ -122,7 +142,9 @@ function App() {
   if (currentUser === null) {
     return (
       <AuthPage
-        onAuthenticated={setCurrentUser}
+        onAuthenticated={
+          handleAuthenticated
+        }
       />
     )
   }
@@ -130,11 +152,26 @@ function App() {
   return (
     <AppShell
       username={currentUser.username}
+      onOpenAccount={() =>
+        setCurrentPage('account')
+      }
       onLogout={() => {
         void handleLogout()
       }}
     >
-      <TimetablePage />
+      {currentPage === 'account' ? (
+        <AccountPage
+          username={currentUser.username}
+          onBack={() =>
+            setCurrentPage('timetable')
+          }
+          onLogout={() => {
+            void handleLogout()
+          }}
+        />
+      ) : (
+        <TimetablePage />
+      )}
     </AppShell>
   )
 }

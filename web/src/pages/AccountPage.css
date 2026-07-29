@@ -1,0 +1,256 @@
+/* =========================================================
+   계정 관리 페이지 전체
+   ========================================================= */
+
+.account-page {
+  display: grid;
+  gap: 28px;
+}
+
+
+/* =========================================================
+   계정 관리 페이지 상단
+   ========================================================= */
+
+.account-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+
+/* 제목 아래 설명 */
+
+.account-page-header p {
+  margin-top: 9px;
+
+  color: var(--ink-700);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   계정 설정 섹션
+   ========================================================= */
+
+.account-section {
+  overflow: hidden;
+
+  border: 1px solid var(--line);
+  border-radius: 16px;
+
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+
+/* 섹션 제목 영역 */
+
+.account-section-heading {
+  padding: 22px 24px;
+
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+
+
+/* 섹션 제목 */
+
+.account-section-heading h2 {
+  color: var(--navy-950);
+
+  font-size: 18px;
+}
+
+
+/* 섹션 설명 */
+
+.account-section-heading p {
+  margin-top: 6px;
+
+  color: var(--ink-700);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   프로필 카드
+   ========================================================= */
+
+.account-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 24px;
+}
+
+
+/* 프로필 이미지 자리 */
+
+.account-profile-avatar {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  place-items: center;
+
+  border-radius: 18px;
+
+  color: #ffffff;
+  background: var(--teal-600);
+
+  font-size: 24px;
+  font-weight: 800;
+}
+
+
+/* 사용자 ID 정보 */
+
+.account-profile-info {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 5px;
+}
+
+
+/* 사용자 ID 라벨 */
+
+.account-profile-info span {
+  color: var(--ink-500);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* 실제 사용자 ID */
+
+.account-profile-info strong {
+  overflow: hidden;
+
+  color: var(--navy-950);
+
+  font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   계정 설정 행
+   ========================================================= */
+
+.account-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 24px;
+}
+
+
+/* 설정 설명 영역 */
+
+.account-setting-row > div {
+  display: grid;
+  gap: 5px;
+}
+
+
+/* 설정 이름 */
+
+.account-setting-row strong {
+  color: var(--navy-950);
+
+  font-size: 15px;
+}
+
+
+/* 설정 설명 */
+
+.account-setting-row span {
+  color: var(--ink-700);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   위험 작업 버튼
+   ========================================================= */
+
+.account-danger-button {
+  padding: 11px 15px;
+
+  border: 1px solid #e7b8b8;
+  border-radius: 10px;
+
+  color: #a63d3d;
+  background: #fff5f5;
+
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+
+/* 위험 버튼 마우스 오버 */
+
+.account-danger-button:hover {
+  border-color: #d69292;
+
+  color: #8f2929;
+  background: #ffeaea;
+}
+
+
+/* 위험 버튼 키보드 포커스 */
+
+.account-danger-button:focus-visible {
+  outline: 3px solid rgba(166, 61, 61, 0.18);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   비활성화 버튼
+   ========================================================= */
+
+.account-page button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* =========================================================
+   작은 화면 대응
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .account-page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .account-profile-card,
+  .account-setting-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .account-profile-card .secondary-button,
+  .account-setting-row .secondary-button,
+  .account-danger-button {
+    width: 100%;
+  }
+}
