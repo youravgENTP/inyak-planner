@@ -7,6 +7,7 @@ import './App.css'
 import { AppShell } from './components/layout/AppShell'
 import {
   getCurrentUser,
+  logout,
   type AuthUser,
 } from './domain/auth/api'
 import { AuthPage } from './pages/AuthPage'
@@ -25,6 +26,11 @@ function App() {
     authenticationError,
     setAuthenticationError,
   ] = useState<string | null>(null)
+
+  const [
+    isLoggingOut,
+    setIsLoggingOut,
+  ] = useState(false)
 
   useEffect(() => {
     async function checkAuthentication() {
@@ -50,10 +56,38 @@ function App() {
     void checkAuthentication()
   }, [])
 
+  async function handleLogout() {
+    if (isLoggingOut) {
+      return
+    }
+
+    setIsLoggingOut(true)
+    setAuthenticationError(null)
+
+    try {
+      await logout()
+      setCurrentUser(null)
+    } catch (error) {
+      if (error instanceof Error) {
+        setAuthenticationError(
+          error.message,
+        )
+      } else {
+        setAuthenticationError(
+          '로그아웃하지 못했습니다.',
+        )
+      }
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
   if (isCheckingAuthentication) {
     return (
       <main className="auth-page">
-        <p>로그인 상태를 확인하고 있습니다...</p>
+        <p>
+          로그인 상태를 확인하고 있습니다...
+        </p>
       </main>
     )
   }
@@ -61,9 +95,26 @@ function App() {
   if (authenticationError !== null) {
     return (
       <main className="auth-page">
-        <p role="alert">
-          {authenticationError}
-        </p>
+        <section className="auth-card">
+          <p
+            className="auth-error"
+            role="alert"
+          >
+            {authenticationError}
+          </p>
+
+          {currentUser !== null && (
+            <button
+              className="auth-submit-button"
+              type="button"
+              onClick={() =>
+                setAuthenticationError(null)
+              }
+            >
+              돌아가기
+            </button>
+          )}
+        </section>
       </main>
     )
   }
@@ -77,7 +128,12 @@ function App() {
   }
 
   return (
-    <AppShell>
+    <AppShell
+      username={currentUser.username}
+      onLogout={() => {
+        void handleLogout()
+      }}
+    >
       <TimetablePage />
     </AppShell>
   )

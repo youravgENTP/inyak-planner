@@ -63,26 +63,59 @@
 }
 
 /* =========================================================
-   4. 사이드바 브랜드 영역
-   로고와 서비스 이름을 가로로 배치합니다.
+   4. 사이드바 사용자 프로필
+   로그인한 사용자 정보와 계정 메뉴를 표시
    ========================================================= */
 
-/* 로고와 브랜드명을 묶는 영역 */
+/* 사용자 프로필과 드롭다운 메뉴를 감싸는 영역 */
+.sidebar-profile {
+  position: relative;
+  margin-bottom: 28px;
+}
 
-.brand {
+
+/* 사용자 프로필 버튼 전체 */
+.sidebar-profile-button {
   display: flex;
   align-items: center;
   gap: 12px;
 
-  padding: 0 8px 30px;
+  width: 100%;
+  padding: 8px;
+
+  border: 0;
+  border-radius: 12px;
+
+  color: inherit;
+  background: transparent;
+
+  cursor: pointer;
+  text-align: left;
 }
 
-/* 왼쪽의 정사각형 브랜드 로고 */
-.brand-mark {
+
+/* 프로필 버튼에 마우스를 올렸을 때 */
+.sidebar-profile-button:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+
+/* 프로필 버튼 키보드 포커스 */
+.sidebar-profile-button:focus-visible {
+  outline: 2px solid #52c6be;
+  outline-offset: 2px;
+}
+
+
+/* 프로필 사진 또는 사용자 이름 첫 글자 */
+.sidebar-profile-avatar {
   display: grid;
   width: 42px;
   height: 42px;
+  flex: 0 0 42px;
   place-items: center;
+
+  overflow: hidden;
 
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 12px;
@@ -90,29 +123,97 @@
   color: #ffffff;
   background: var(--teal-600);
 
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
 }
 
-/* 브랜드명과 보조명을 세로로 배치 */
-.brand div {
+
+/* 사용자 이름과 보조 문구 */
+.sidebar-profile-text {
   display: grid;
-  gap: 2px;
+  min-width: 0;
+  gap: 3px;
 }
 
-/* 브랜드의 주 이름 */
-.brand strong {
-  font-size: 16px;
+
+/* 로그인한 사용자 이름 */
+.sidebar-profile-text strong {
+  overflow: hidden;
+
+  color: #ffffff;
+
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* 브랜드 아래의 작은 보조 이름 */
-.brand span:last-child {
+
+/* 사용자 이름 아래 보조 문구 */
+.sidebar-profile-text span {
   color: #9fb4c1;
 
   font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
+
+
+/* 프로필 버튼 아래에 열리는 메뉴 */
+.sidebar-profile-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  left: 0;
+
+  display: grid;
+  width: 100%;
+  padding: 6px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+
+  background: var(--navy-900);
+  box-shadow:
+    0 14px 30px rgba(4, 19, 30, 0.28);
+}
+
+
+/* 프로필 메뉴 안의 각 버튼 */
+.sidebar-profile-menu-item {
+  width: 100%;
+  padding: 10px 11px;
+
+  border: 0;
+  border-radius: 8px;
+
+  color: #dbe8ed;
+  background: transparent;
+
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+
+
+/* 프로필 메뉴 버튼에 마우스를 올렸을 때 */
+.sidebar-profile-menu-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* 로그아웃 버튼 */
+.sidebar-profile-menu-item--danger {
+  color: #ffc4c4;
+}
+
+
+/* 로그아웃 버튼에 마우스를 올렸을 때 */
+.sidebar-profile-menu-item--danger:hover {
+  color: #ffffff;
+  background: rgba(197, 67, 67, 0.24);
+}
+
 
 /* =========================================================
    5. 사이드바 내비게이션
@@ -199,69 +300,6 @@
   line-height: 1.5;
 }
 
-/* =========================================================
-   7. 메인 영역과 상단 바
-   사이드바 오른쪽의 화면과 상단 제목 영역을 정의
-   ========================================================= */
-
-/* 상단 바와 페이지 본문을 포함하는 (사이드바 기준 왼쪽)의 오른쪽 메인 영역  */
-.app-main {
-  min-width: 0;
-}
-
-/* 메인 영역 (최상단)의 제목 및 사용자 메뉴 바 */
-.topbar {
-  display: flex;
-  min-height: 78px;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 36px;
-
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* (최상단 바) 왼쪽의 보조 제목과 주 제목 묶음 */
-.topbar > div {
-  display: grid;
-  gap: 2px;
-}
-
-/* (최상단 바)의 작은 영문 보조 제목 : ACADEMIC WORKSPACE */
-.topbar-eyebrow {
-  color: var(--teal-700);
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-/* (최상단 바)의 주 제목 : 나의 학업계획*/
-.topbar strong {
-  color: var(--navy-950);
-  font-size: 15px;
-}
-
-
-/* (최상단 바) 오른쪽의 사용자 프로필 버튼 */
-.profile-button {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-
-  border-radius: 11px;
-
-  color: #ffffff;
-  background: var(--navy-900);
-
-  cursor: pointer;
-
-  font-size: 12px;
-  font-weight: 800;
-}
 
 /* =========================================================
    8. 페이지 본문과 제목 영역

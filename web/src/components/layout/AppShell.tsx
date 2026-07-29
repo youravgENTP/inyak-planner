@@ -1,19 +1,14 @@
-/* 
-AppShell
-├── sidebar
-│   ├── brand
-│   ├── navigation
-│   └── footer
-└── app-main
-    ├── topbar
-    └── page-content
-        └── children
-*/
-
-import type { ReactNode } from 'react'
+import {
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 interface AppShellProps {
   children: ReactNode
+  username: string
+  onLogout: () => void
 }
 
 const navigationItems = [
@@ -22,26 +17,198 @@ const navigationItems = [
   { label: '졸업 요건', active: false },
 ]
 
-export function AppShell({ children }: AppShellProps) {
+function getProfileInitial(
+  username: string,
+): string {
+  const normalizedUsername =
+    username.trim()
+
+  if (normalizedUsername.length === 0) {
+    return '?'
+  }
+
+  return normalizedUsername
+    .slice(0, 1)
+    .toUpperCase()
+}
+
+export function AppShell({
+  children,
+  username,
+  onLogout,
+}: AppShellProps) {
+  const [
+    isProfileMenuOpen,
+    setIsProfileMenuOpen,
+  ] = useState(false)
+
+  const profileAreaRef =
+    useRef<HTMLDivElement>(null)
+
+  const profileInitial =
+    getProfileInitial(username)
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) {
+      return
+    }
+
+    function handleDocumentPointerDown(
+      event: PointerEvent,
+    ) {
+      const clickedElement =
+        event.target
+
+      if (
+        !(clickedElement instanceof Node)
+      ) {
+        return
+      }
+
+      if (
+        profileAreaRef.current?.contains(
+          clickedElement,
+        )
+      ) {
+        return
+      }
+
+      setIsProfileMenuOpen(false)
+    }
+
+    function handleDocumentKeyDown(
+      event: KeyboardEvent,
+    ) {
+      if (event.key === 'Escape') {
+        setIsProfileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener(
+      'pointerdown',
+      handleDocumentPointerDown,
+    )
+
+    document.addEventListener(
+      'keydown',
+      handleDocumentKeyDown,
+    )
+
+    return () => {
+      document.removeEventListener(
+        'pointerdown',
+        handleDocumentPointerDown,
+      )
+
+      document.removeEventListener(
+        'keydown',
+        handleDocumentKeyDown,
+      )
+    }
+  }, [isProfileMenuOpen])
+
+  function handleProfileButtonClick() {
+    setIsProfileMenuOpen(
+      (currentValue) => !currentValue,
+    )
+  }
+
+  function handleProfileSettingsClick() {
+    setIsProfileMenuOpen(false)
+
+    window.alert(
+      '내 정보 관리 페이지는 다음 단계에서 구현합니다.',
+    )
+  }
+
+  function handleLogoutClick() {
+    setIsProfileMenuOpen(false)
+    onLogout()
+  }
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true">윤</span>
-          <div>
-            <strong>가칭</strong>
-            <span>devName</span>
-          </div>
+        <div
+          className="sidebar-profile"
+          ref={profileAreaRef}
+        >
+          <button
+            className="sidebar-profile-button"
+            type="button"
+            aria-expanded={isProfileMenuOpen}
+            aria-haspopup="menu"
+            onClick={
+              handleProfileButtonClick
+            }
+          >
+            <span
+              className="sidebar-profile-avatar"
+              aria-hidden="true"
+            >
+              {profileInitial}
+            </span>
+
+            <span className="sidebar-profile-text">
+              <strong>{username}</strong>
+              <span>내 계정</span>
+            </span>
+          </button>
+
+          {isProfileMenuOpen && (
+            <div
+              className="sidebar-profile-menu"
+              role="menu"
+            >
+              <button
+                className="sidebar-profile-menu-item"
+                type="button"
+                role="menuitem"
+                onClick={
+                  handleProfileSettingsClick
+                }
+              >
+                내 정보 관리
+              </button>
+
+              <button
+                className="
+                  sidebar-profile-menu-item
+                  sidebar-profile-menu-item--danger
+                "
+                type="button"
+                role="menuitem"
+                onClick={
+                  handleLogoutClick
+                }
+              >
+                로그아웃
+              </button>
+            </div>
+          )}
         </div>
 
-        <nav className="sidebar-nav" aria-label="주요 메뉴">
+        <nav
+          className="sidebar-nav"
+          aria-label="주요 메뉴"
+        >
           {navigationItems.map((item) => (
             <button
-              className={`nav-item${item.active ? ' nav-item--active' : ''}`}
+              className={
+                `nav-item${
+                  item.active
+                    ? ' nav-item--active'
+                    : ''
+                }`
+              }
               key={item.label}
               type="button"
             >
-              <span className="nav-dot" aria-hidden="true" />
+              <span
+                className="nav-dot"
+                aria-hidden="true"
+              />
+
               {item.label}
             </button>
           ))}
@@ -49,22 +216,17 @@ export function AppShell({ children }: AppShellProps) {
 
         <div className="sidebar-footer">
           <span>2026학년도 2학기</span>
-          <strong>Department of Pharmacy</strong>
+
+          <strong>
+            Department of Pharmacy
+          </strong>
         </div>
       </aside>
 
       <div className="app-main">
-        <header className="topbar">
-          <div>
-            <span className="topbar-eyebrow">Academic workspace</span>
-            <strong>나의 학업 계획</strong>
-          </div>
-          <button className="profile-button" type="button" aria-label="사용자 메뉴">
-            HY
-          </button>
-        </header>
-
-        <main className="page-content">{children}</main>
+        <main className="page-content">
+          {children}
+        </main>
       </div>
     </div>
   )
