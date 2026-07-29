@@ -353,6 +353,30 @@ export function TimetablePage() {
     [displayedLectures],
   )
 
+  const unscheduledLectures = useMemo(() => {
+    const scheduledLectureIds =
+      new Set(
+        actualCourses
+          .map(
+            (course) =>
+              course.sourceLectureId,
+          )
+          .filter(
+            (
+              lectureId,
+            ): lectureId is number =>
+              lectureId !== undefined,
+          ),
+      )
+
+    return displayedLectures.filter(
+      (lecture) =>
+        !scheduledLectureIds.has(
+          lecture.id,
+        ),
+    )
+  }, [actualCourses, displayedLectures])
+
   const previewCourses = useMemo(() => {
     if (!isEditing || !previewLecture) {
       return []
@@ -1223,6 +1247,34 @@ async function handleDownloadSyllabi() {
               handleRemoveLecture
             }
           />
+          {unscheduledLectures.length > 0 && (
+            <section
+              className="unscheduled-lectures"
+              aria-labelledby="unscheduled-lectures-title"
+            >
+              <div className="unscheduled-lectures__list">
+                {unscheduledLectures.map(
+                  (lecture) => (
+                    <article
+                      className="unscheduled-lecture"
+                      key={lecture.id}
+                    >
+                      <strong>
+                        {lecture.courseName}
+                      </strong>
+
+                      {lecture.professor && (
+                        <span>
+                          {lecture.professor}
+                        </span>
+                      )}
+                    </article>
+                  ),
+                )}
+              </div>
+            </section>
+          )}
+
         </section>
       </div>
 
