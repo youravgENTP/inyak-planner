@@ -15,6 +15,7 @@ from server.auth_database import (
     create_auth_tables,
     create_user,
     get_user_by_username,
+    update_user_password,
 )
 from server.security import (
     hash_password,
@@ -57,6 +58,17 @@ class LoginRequest(BaseModel):
     )
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(
+        min_length=1,
+        max_length=128,
+    )
+    new_password: str = Field(
+        min_length=1,
+        max_length=128,
+    )
+
+
 def set_session_cookie(
     response: Response,
     session_token: str,
@@ -85,8 +97,36 @@ def get_public_user(
     return {
         "id": user["id"],
         "username": user["username"],
+        "profile_image_filename": (
+            user.get(
+                "profile_image_filename"
+            )
+        ),
         "created_at": user["created_at"],
     }
+
+
+def require_authenticated_user(
+    session_token: Optional[str],
+) -> dict[str, Any]:
+    """세션 쿠키를 확인하고 로그인된 사용자를 반환한다."""
+    if session_token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="로그인이 필요합니다.",
+        )
+
+    user = get_user_by_session_token(
+        session_token
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="로그인 세션이 유효하지 않습니다.",
+        )
+
+    return user
 
 
 @router.post(
@@ -102,7 +142,9 @@ def register(
 
     if not username:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
             detail="사용자 ID를 입력해 주세요.",
         )
 
@@ -186,24 +228,68 @@ def read_current_user(
     ),
 ) -> dict[str, Any]:
     """현재 브라우저에 로그인된 사용자를 반환한다."""
-    if session_token is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="로그인이 필요합니다.",
-        )
-
-    user = get_user_by_session_token(
+    user = require_authenticated_user(
         session_token
     )
 
-    if user is None:
+    return {
+        "user": get_public_user(user),
+    }
+
+
+@router.post("/password")
+def change_password(
+    request: ChangePasswordRequest,
+    session_token: Optional[str] = Cookie(
+        default=None,
+        alias=SESSION_COOKIE_NAME,
+    ),
+) -> dict[str, str]:
+    """현재 비밀번호를 확인하고 새 비밀번호로 변경한다."""
+    user = require_authenticated_user(
+        session_token
+    )
+
+    current_password_is_valid = (
+        verify_password(
+            request.current_password,
+            user["password_hash"],
+        )
+    )
+
+    if not current_password_is_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="로그인 세션이 유효하지 않습니다.",
+            detail="현재 비밀번호가 올바르지 않습니다.",
+        )
+
+    if request.new_password == "":
+        raise HTTPException(
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
+            detail="새 비밀번호를 입력해 주세요.",
+        )
+
+    password_was_updated = (
+        update_user_password(
+            user_id=user["id"],
+            password_hash=hash_password(
+                request.new_password
+            ),
+        )
+    )
+
+    if not password_was_updated:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail="비밀번호를 변경하지 못했습니다.",
         )
 
     return {
-        "user": get_public_user(user),
+        "message": "비밀번호가 변경되었습니다.",
     }
 
 
