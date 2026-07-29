@@ -29,6 +29,7 @@ import {
   loadActiveTimetableId,
   loadSavedTimetables,
   replaceTimetable,
+  removeTimetable,
   saveActiveTimetableId,
   saveSavedTimetables,
   updateSavedTimetable,
@@ -781,10 +782,97 @@ function handleCompareTimetables(
   setIsComparisonPageOpen(true)
 }
 
+function handleDeleteTimetable(
+  timetableId: string,
+) {
+  if (
+    timetableState.timetables.length <= 1
+  ) {
+    return
+  }
+
+  const timetableToDelete =
+    timetableState.timetables.find(
+      (timetable) =>
+        timetable.id === timetableId,
+    )
+
+  if (timetableToDelete === undefined) {
+    return
+  }
+
+  const shouldDelete = window.confirm(
+    `'${timetableToDelete.name}' 시간표를 삭제하시겠습니까?`,
+  )
+
+  if (!shouldDelete) {
+    return
+  }
+
+  const isDeletingActiveTimetable =
+    timetableId ===
+    timetableState.activeTimetableId
+
+  setTimetableState((currentState) => {
+    const deletedTimetableIndex =
+      currentState.timetables.findIndex(
+        (timetable) =>
+          timetable.id === timetableId,
+      )
+
+    if (deletedTimetableIndex < 0) {
+      return currentState
+    }
+
+    const remainingTimetables =
+      removeTimetable(
+        currentState.timetables,
+        timetableId,
+      )
+
+    if (remainingTimetables.length === 0) {
+      return currentState
+    }
+
+    const nextActiveTimetableId =
+      currentState.activeTimetableId ===
+      timetableId
+        ? remainingTimetables[
+            Math.min(
+              deletedTimetableIndex,
+              remainingTimetables.length - 1,
+            )
+          ].id
+        : currentState.activeTimetableId
+
+    return {
+      timetables: remainingTimetables,
+      activeTimetableId:
+        nextActiveTimetableId,
+    }
+  })
+
+  setComparisonTimetableIds(
+    (currentTimetableIds) =>
+      currentTimetableIds.filter(
+        (currentTimetableId) =>
+          currentTimetableId !==
+          timetableId,
+      ),
+  )
+
+  if (isDeletingActiveTimetable) {
+    setDraftLectureIds([])
+    setPreviewLecture(null)
+    setIsEditing(false)
+    setIsDownloadModalOpen(false)
+    setIsRenameTimetableModalOpen(false)
+  }
+}
+
 function handleCloseComparisonPage() {
   setIsComparisonPageOpen(false)
 }
-
 
 async function handleDownloadSyllabi() {
   if (
@@ -1166,6 +1254,12 @@ async function handleDownloadSyllabi() {
         }
         onDuplicateActiveTimetable={
           handleDuplicateActiveTimetable
+        }
+        onDuplicateActiveTimetable={
+          handleDuplicateActiveTimetable
+        }
+        onDeleteTimetable={
+          handleDeleteTimetable
         }
         onCompare={
           handleCompareTimetables
