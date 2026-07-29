@@ -2,15 +2,46 @@ from __future__ import annotations
 
 import sqlite3
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from server.database import connect_database
+
+PROJECT_ROOT = Path(
+    __file__
+).resolve().parents[1]
+
+AUTH_DATABASE_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "db"
+    / "auth.db"
+)
+
+
+def connect_auth_database() -> sqlite3.Connection:
+    """회원과 세션 정보를 저장하는 인증 DB에 연결한다."""
+    AUTH_DATABASE_PATH.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    connection = sqlite3.connect(
+        AUTH_DATABASE_PATH
+    )
+    connection.row_factory = sqlite3.Row
+    connection.execute(
+        "PRAGMA foreign_keys = ON"
+    )
+
+    return connection
 
 
 def get_current_time() -> str:
     """현재 UTC 시각을 ISO 문자열로 반환한다."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(
+        timezone.utc
+    ).isoformat()
 
 
 def ensure_profile_image_column() -> None:
@@ -20,7 +51,7 @@ def ensure_profile_image_column() -> None:
     SQLite의 CREATE TABLE IF NOT EXISTS는 기존 테이블의
     컬럼을 자동으로 변경하지 않으므로 별도 마이그레이션이 필요하다.
     """
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         columns = connection.execute(
             """
             PRAGMA table_info(users)
@@ -47,7 +78,7 @@ def ensure_profile_image_column() -> None:
 
 def create_auth_tables() -> None:
     """회원과 로그인 세션에 필요한 테이블을 생성한다."""
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS users (
@@ -84,7 +115,9 @@ def create_auth_tables() -> None:
     ensure_profile_image_column()
 
 
-def normalize_username(username: str) -> str:
+def normalize_username(
+    username: str,
+) -> str:
     """사용자 ID 비교를 위해 공백과 대소문자를 정리한다."""
     return username.strip().casefold()
 
@@ -94,7 +127,7 @@ def create_user(
     username: str,
     password_hash: str,
 ) -> dict[str, Any]:
-    """새 사용자를 DB에 저장한다."""
+    """새 사용자를 인증 DB에 저장한다."""
     user_id = str(uuid4())
     normalized_username = normalize_username(
         username
@@ -102,7 +135,7 @@ def create_user(
     current_time = get_current_time()
 
     try:
-        with connect_database() as connection:
+        with connect_auth_database() as connection:
             connection.execute(
                 """
                 INSERT INTO users (
@@ -148,7 +181,7 @@ def get_user_by_username(
         username
     )
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         row = connection.execute(
             """
             SELECT
@@ -175,7 +208,7 @@ def get_user_by_id(
     user_id: str,
 ) -> dict[str, Any] | None:
     """사용자 고유 ID로 회원 정보를 조회한다."""
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         row = connection.execute(
             """
             SELECT
@@ -206,7 +239,7 @@ def update_user_password(
     """사용자의 비밀번호 해시를 변경한다."""
     current_time = get_current_time()
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         cursor = connection.execute(
             """
             UPDATE users
@@ -233,7 +266,7 @@ def update_profile_image_filename(
     """사용자의 프로필 이미지 파일명을 변경한다."""
     current_time = get_current_time()
 
-    with connect_database() as connection:
+    with connect_auth_database() as connection:
         cursor = connection.execute(
             """
             UPDATE users
