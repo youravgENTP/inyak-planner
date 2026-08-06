@@ -192,7 +192,12 @@ function App() {
     ) : currentPage === 'curriculum' ? (
       <CurriculumPage />
     ) : currentPage === 'progress' ? (
-      <ProgressTrackerPage />
+      <ProgressTrackerPage
+        user={currentUser}
+        onOpenAccount={()=>
+          setCurrentPage('account')
+        }
+      />
     ) : currentPage === 'gpa' ? (
       <GpaCalculatorPage />
     ) : (
