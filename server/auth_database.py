@@ -412,3 +412,290 @@ def update_user_academic_profile(
         )
 
     return cursor.rowcount > 0
+
+def create_user_course_record(
+    *,
+    user_id: str,
+    curriculum_course_id: int | None,
+    lecture_id: int | None,
+    academic_year: int | None,
+    semester: int | None,
+    course_name: str,
+    course_code: str | None,
+    completion_type: str,
+    credits: float,
+    status: str,
+    letter_grade: str | None,
+    is_retake: bool,
+    note: str | None,
+) -> dict[str, Any]:
+    """사용자의 과목 이수 기록을 생성한다."""
+    record_id = str(uuid4())
+    current_time = get_current_time()
+
+    with connect_auth_database() as connection:
+        connection.execute(
+            """
+            INSERT INTO user_course_records (
+                id,
+                user_id,
+                curriculum_course_id,
+                lecture_id,
+                academic_year,
+                semester,
+                course_name,
+                course_code,
+                completion_type,
+                credits,
+                status,
+                letter_grade,
+                is_retake,
+                note,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?
+            )
+            """,
+            (
+                record_id,
+                user_id,
+                curriculum_course_id,
+                lecture_id,
+                academic_year,
+                semester,
+                course_name.strip(),
+                (
+                    course_code.strip()
+                    if course_code is not None
+                    else None
+                ),
+                completion_type,
+                credits,
+                status,
+                letter_grade,
+                int(is_retake),
+                (
+                    note.strip()
+                    if note is not None
+                    else None
+                ),
+                current_time,
+                current_time,
+            ),
+        )
+
+    return {
+        "id": record_id,
+        "user_id": user_id,
+        "curriculum_course_id":
+            curriculum_course_id,
+        "lecture_id": lecture_id,
+        "academic_year": academic_year,
+        "semester": semester,
+        "course_name": course_name.strip(),
+        "course_code": (
+            course_code.strip()
+            if course_code is not None
+            else None
+        ),
+        "completion_type": completion_type,
+        "credits": credits,
+        "status": status,
+        "letter_grade": letter_grade,
+        "is_retake": is_retake,
+        "note": (
+            note.strip()
+            if note is not None
+            else None
+        ),
+        "created_at": current_time,
+        "updated_at": current_time,
+    }
+
+
+def get_user_course_records(
+    *,
+    user_id: str,
+) -> list[dict[str, Any]]:
+    """사용자에게 저장된 모든 과목 이수 기록을 조회한다."""
+    with connect_auth_database() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                id,
+                user_id,
+                curriculum_course_id,
+                lecture_id,
+                academic_year,
+                semester,
+                course_name,
+                course_code,
+                completion_type,
+                credits,
+                status,
+                letter_grade,
+                is_retake,
+                note,
+                created_at,
+                updated_at
+            FROM user_course_records
+            WHERE user_id = ?
+            ORDER BY
+                CASE
+                    WHEN academic_year IS NULL
+                    THEN 1
+                    ELSE 0
+                END,
+                academic_year,
+                semester,
+                course_name
+            """,
+            (user_id,),
+        ).fetchall()
+
+    records: list[dict[str, Any]] = []
+
+    for row in rows:
+        record = dict(row)
+        record["is_retake"] = bool(
+            record["is_retake"]
+        )
+        records.append(record)
+
+    return records
+
+
+def update_user_course_record(
+    *,
+    record_id: str,
+    user_id: str,
+    curriculum_course_id: int | None,
+    lecture_id: int | None,
+    academic_year: int | None,
+    semester: int | None,
+    course_name: str,
+    course_code: str | None,
+    completion_type: str,
+    credits: float,
+    status: str,
+    letter_grade: str | None,
+    is_retake: bool,
+    note: str | None,
+) -> dict[str, Any] | None:
+    """사용자 소유의 과목 이수 기록을 변경한다."""
+    current_time = get_current_time()
+
+    with connect_auth_database() as connection:
+        cursor = connection.execute(
+            """
+            UPDATE user_course_records
+            SET
+                curriculum_course_id = ?,
+                lecture_id = ?,
+                academic_year = ?,
+                semester = ?,
+                course_name = ?,
+                course_code = ?,
+                completion_type = ?,
+                credits = ?,
+                status = ?,
+                letter_grade = ?,
+                is_retake = ?,
+                note = ?,
+                updated_at = ?
+            WHERE id = ?
+              AND user_id = ?
+            """,
+            (
+                curriculum_course_id,
+                lecture_id,
+                academic_year,
+                semester,
+                course_name.strip(),
+                (
+                    course_code.strip()
+                    if course_code is not None
+                    else None
+                ),
+                completion_type,
+                credits,
+                status,
+                letter_grade,
+                int(is_retake),
+                (
+                    note.strip()
+                    if note is not None
+                    else None
+                ),
+                current_time,
+                record_id,
+                user_id,
+            ),
+        )
+
+        if cursor.rowcount == 0:
+            return None
+
+        row = connection.execute(
+            """
+            SELECT
+                id,
+                user_id,
+                curriculum_course_id,
+                lecture_id,
+                academic_year,
+                semester,
+                course_name,
+                course_code,
+                completion_type,
+                credits,
+                status,
+                letter_grade,
+                is_retake,
+                note,
+                created_at,
+                updated_at
+            FROM user_course_records
+            WHERE id = ?
+              AND user_id = ?
+            """,
+            (
+                record_id,
+                user_id,
+            ),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    record = dict(row)
+    record["is_retake"] = bool(
+        record["is_retake"]
+    )
+
+    return record
+
+
+def delete_user_course_record(
+    *,
+    record_id: str,
+    user_id: str,
+) -> bool:
+    """사용자 소유의 과목 이수 기록을 삭제한다."""
+    with connect_auth_database() as connection:
+        cursor = connection.execute(
+            """
+            DELETE FROM user_course_records
+            WHERE id = ?
+              AND user_id = ?
+            """,
+            (
+                record_id,
+                user_id,
+            ),
+        )
+
+    return cursor.rowcount > 0
