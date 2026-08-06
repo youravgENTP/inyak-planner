@@ -83,35 +83,6 @@ def ensure_user_profile_columns() -> None:
                     {column_name} {column_type}
                 """
             )
-    """
-    기존 users 테이블에 프로필 이미지 컬럼이 없으면 추가한다.
-
-    SQLite의 CREATE TABLE IF NOT EXISTS는 기존 테이블의
-    컬럼을 자동으로 변경하지 않으므로 별도 마이그레이션이 필요하다.
-    """
-    with connect_auth_database() as connection:
-        columns = connection.execute(
-            """
-            PRAGMA table_info(users)
-            """
-        ).fetchall()
-
-        column_names = {
-            column["name"]
-            for column in columns
-        }
-
-        if (
-            "profile_image_filename"
-            not in column_names
-        ):
-            connection.execute(
-                """
-                ALTER TABLE users
-                ADD COLUMN
-                    profile_image_filename TEXT
-                """
-            )
 
 
 def create_auth_tables() -> None:
@@ -189,7 +160,7 @@ def create_user(
                     created_at,
                     updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     user_id,
@@ -266,6 +237,7 @@ def get_user_by_id(
                 password_hash,
                 profile_image_filename,
                 entry_year,
+                student_type,
                 created_at,
                 updated_at
             FROM users
