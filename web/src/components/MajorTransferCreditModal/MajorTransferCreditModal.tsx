@@ -7,9 +7,11 @@ import {
 
 import {
   createCourseRecord,
+  updateCourseRecord,
 } from '../../domain/course-records/api'
 import type {
   CourseRecord,
+  CourseRecordInput,
 } from '../../domain/course-records/types'
 import type {
   Curriculum,
@@ -20,8 +22,12 @@ import './MajorTransferCreditModal.css'
 
 interface MajorTransferCreditModalProps {
   curriculum: Curriculum
+  record?: CourseRecord | null
   onClose: () => void
   onCreated: (
+    record: CourseRecord,
+  ) => void
+  onUpdated?: (
     record: CourseRecord,
   ) => void
 }
@@ -29,18 +35,50 @@ interface MajorTransferCreditModalProps {
 
 export function MajorTransferCreditModal({
   curriculum,
+  record = null,
   onClose,
   onCreated,
+  onUpdated,
 }: MajorTransferCreditModalProps) {
   const [
     selectedCourseId,
     setSelectedCourseId,
-  ] = useState('')
+  ] = useState(() => {
+    if (
+      record?.curriculumCourseId ===
+      null ||
+      record?.curriculumCourseId ===
+      undefined
+    ) {
+      return ''
+    }
+
+    return String(
+      record.curriculumCourseId,
+    )
+  })
 
   const [
     courseSearchQuery,
     setCourseSearchQuery,
-  ] = useState('')
+  ] = useState(() => {
+    if (
+      record?.curriculumCourseId ===
+      null ||
+      record?.curriculumCourseId ===
+      undefined
+    ) {
+      return ''
+    }
+
+    return (
+      curriculum.courses.find(
+        (course) =>
+          course.id ===
+          record.curriculumCourseId,
+      )?.courseName ?? ''
+    )
+  })
 
   const [
     searchIsOpen,
@@ -50,12 +88,16 @@ export function MajorTransferCreditModal({
   const [
     sourceCourseName,
     setSourceCourseName,
-  ] = useState('')
+  ] = useState(
+    record?.courseName ?? '',
+  )
 
   const [
     note,
     setNote,
-  ] = useState('')
+  ] = useState(
+    record?.note ?? '',
+  )
 
   const [
     formError,
@@ -123,6 +165,9 @@ export function MajorTransferCreditModal({
       curriculum.courses,
     ])
 
+  const isEditing =
+    record !== null
+
   useEffect(() => {
     function handleKeyDown(
       event: KeyboardEvent,
@@ -177,41 +222,57 @@ export function MajorTransferCreditModal({
     setFormIsSubmitting(true)
 
     try {
-      const createdRecord =
-        await createCourseRecord({
-          curriculumCourseId:
-            selectedCourse.id,
-          lectureId: null,
-          generalEducationRequirementId:
-            null,
-          generalEducationAreaId:
-            null,
-          academicYear: null,
-          semester: null,
-          courseName:
-            sourceCourseName.trim(),
-          courseCode: null,
-          completionType:
-            selectedCourse
-              .completionType,
-          credits:
-            selectedCourse.credits,
-          status: 'substituted',
-          letterGrade: null,
-          isRetake: false,
-          note:
-            note.trim().length === 0
-              ? null
-              : note.trim(),
-        })
+      const input: CourseRecordInput = {
+        curriculumCourseId:
+          selectedCourse.id,
+        lectureId: null,
+        generalEducationRequirementId:
+          null,
+        generalEducationAreaId:
+          null,
+        academicYear: null,
+        semester: null,
+        courseName:
+          sourceCourseName.trim(),
+        courseCode: null,
+        completionType:
+          selectedCourse.completionType,
+        credits:
+          selectedCourse.credits,
+        status: 'substituted',
+        letterGrade: null,
+        isRetake: false,
+        note:
+          note.trim().length === 0
+            ? null
+            : note.trim(),
+      }
 
-      onCreated(createdRecord)
+      if (record === null) {
+        const createdRecord =
+          await createCourseRecord(input)
+
+        onCreated(createdRecord)
+      } else {
+        const updatedRecord =
+          await updateCourseRecord(
+            record.id,
+            input,
+          )
+
+        onUpdated?.(updatedRecord)
+      }
+
       onClose()
     } catch (error) {
       setFormError(
         error instanceof Error
           ? error.message
-          : '인정 과목을 저장하지 못했습니다.',
+          : (
+            isEditing
+              ? '인정 과목을 수정하지 못했습니다.'
+              : '인정 과목을 저장하지 못했습니다.'
+          ),
       )
     } finally {
       setFormIsSubmitting(false)
@@ -242,7 +303,9 @@ export function MajorTransferCreditModal({
             <p>전적대 학점 인정</p>
 
             <h2 id="major-transfer-modal-title">
-              전공 인정 과목 추가
+              {isEditing
+                ? '전공 인정 과목 수정'
+                : '전공 인정 과목 추가'}
             </h2>
           </div>
 
@@ -473,7 +536,11 @@ export function MajorTransferCreditModal({
             >
               {formIsSubmitting
                 ? '저장 중...'
-                : '인정 과목 저장'}
+                : (
+                  isEditing
+                    ? '변경사항 저장'
+                    : '인정 과목 저장'
+                )}
             </button>
           </footer>
         </form>
