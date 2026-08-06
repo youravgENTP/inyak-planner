@@ -265,3 +265,86 @@
     flex-direction: column;
   }
 }
+
+/* =========================================================
+   접이식 교양 세부 이수영역
+   ========================================================= */
+
+.graduation-progress-details {
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.graduation-progress-details-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.graduation-progress-details-summary::-webkit-details-marker {
+  display: none;
+}
+
+.graduation-progress-details-summary::after {
+  content: '펼치기';
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+}
+
+.graduation-progress-details[open]
+  .graduation-progress-details-summary::after {
+  content: '접기';
+}
+
+.graduation-progress-details-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graduation-progress-details-summary p {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #777;
+}
+
+.graduation-progress-details-summary strong {
+  font-size: 17px;
+}
+
+.graduation-progress-details-summary > span {
+  margin-left: auto;
+  font-size: 13px;
+  color: #777;
+}
+
+.graduation-progress-details-content {
+  padding: 0 20px 20px;
+  border-top: 1px solid #ededed;
+}
+
+.graduation-progress-details-content
+  .graduation-progress-requirement-list {
+  margin-top: 20px;
+}
+
+@media (max-width: 720px) {
+  .graduation-progress-details-summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .graduation-progress-details-summary > span {
+    width: 100%;
+    margin-left: 0;
+  }
+}
