@@ -5,7 +5,6 @@ import type {
 import type {
   Curriculum,
   CurriculumCompletionType,
-  CurriculumCourse,
 } from '../curriculum/types'
 import type {
   GeneralEducation,
@@ -14,6 +13,8 @@ import type {
 } from '../general-education/types'
 import {
   GRADUATION_TOTAL_CREDITS,
+  MAJOR_ELECTIVE_CREDITS,
+  MAJOR_REQUIRED_CREDITS,
 } from './types'
 import type {
   CourseCountProgress,
@@ -102,19 +103,63 @@ function createCreditProgress(
       'planned',
     )
 
-  const remainingCredits = Math.max(
-    requiredCredits - completedCredits,
-    0,
-  )
-
   return {
     completedCredits,
     inProgressCredits,
     plannedCredits,
     requiredCredits,
-    remainingCredits,
+    remainingCredits: Math.max(
+      requiredCredits - completedCredits,
+      0,
+    ),
     isSatisfied:
       completedCredits >= requiredCredits,
+  }
+}
+
+
+function combineCreditProgress(
+  progresses:
+    readonly CreditProgress[],
+): CreditProgress {
+  const completedCredits =
+    progresses.reduce(
+      (total, progress) =>
+        total +
+        progress.completedCredits,
+      0,
+    )
+
+  const inProgressCredits =
+    progresses.reduce(
+      (total, progress) =>
+        total +
+        progress.inProgressCredits,
+      0,
+    )
+
+  const plannedCredits =
+    progresses.reduce(
+      (total, progress) =>
+        total +
+        progress.plannedCredits,
+      0,
+    )
+
+  return {
+    completedCredits,
+    inProgressCredits,
+    plannedCredits,
+    requiredCredits:
+      GRADUATION_TOTAL_CREDITS,
+    remainingCredits: Math.max(
+      GRADUATION_TOTAL_CREDITS -
+        completedCredits,
+      0,
+    ),
+    isSatisfied:
+      completedCredits >=
+      GRADUATION_TOTAL_CREDITS,
   }
 }
 
@@ -141,34 +186,20 @@ function createCourseCountProgress(
       'planned',
     )
 
-  const remainingCourseCount = Math.max(
-    requiredCourseCount -
-      completedCourseCount,
-    0,
-  )
-
   return {
     completedCourseCount,
     inProgressCourseCount,
     plannedCourseCount,
     requiredCourseCount,
-    remainingCourseCount,
+    remainingCourseCount: Math.max(
+      requiredCourseCount -
+        completedCourseCount,
+      0,
+    ),
     isSatisfied:
       completedCourseCount >=
       requiredCourseCount,
   }
-}
-
-
-function getCurriculumCredits(
-  courses:
-    readonly CurriculumCourse[],
-): number {
-  return courses.reduce(
-    (total, course) =>
-      total + (course.credits ?? 0),
-    0,
-  )
 }
 
 
@@ -182,6 +213,18 @@ function getMajorRecords(
       record.completionType ===
       completionType,
   )
+}
+
+
+function getMajorRequiredCredits(
+  completionType:
+    CurriculumCompletionType,
+): number {
+  if (completionType === '전필') {
+    return MAJOR_REQUIRED_CREDITS
+  }
+
+  return MAJOR_ELECTIVE_CREDITS
 }
 
 
@@ -208,8 +251,8 @@ function createMajorProgress(
     completionType,
     credits: createCreditProgress(
       matchingRecords,
-      getCurriculumCredits(
-        officialCourses,
+      getMajorRequiredCredits(
+        completionType,
       ),
     ),
     courses: createCourseCountProgress(
@@ -400,34 +443,45 @@ export function calculateGraduationProgress(
     GeneralEducation,
   records: readonly CourseRecord[],
 ): GraduationProgress {
-  const totalCredits =
-    createCreditProgress(
+  const majorRequired =
+    createMajorProgress(
+      curriculum,
       records,
-      GRADUATION_TOTAL_CREDITS,
+      '전필',
     )
+
+  const majorElective =
+    createMajorProgress(
+      curriculum,
+      records,
+      '전선',
+    )
+
+  const generalEducationProgress =
+    generalEducation.requirements.map(
+      (requirement) =>
+        createGeneralEducationProgress(
+          requirement,
+          records,
+        ),
+    )
+
+  const totalCredits =
+    combineCreditProgress([
+      majorRequired.credits,
+      majorElective.credits,
+      ...generalEducationProgress.map(
+        (requirement) =>
+          requirement.credits,
+      ),
+    ])
 
   return {
     totalCredits,
-    majorRequired:
-      createMajorProgress(
-        curriculum,
-        records,
-        '전필',
-      ),
-    majorElective:
-      createMajorProgress(
-        curriculum,
-        records,
-        '전선',
-      ),
+    majorRequired,
+    majorElective,
     generalEducation:
-      generalEducation.requirements.map(
-        (requirement) =>
-          createGeneralEducationProgress(
-            requirement,
-            records,
-          ),
-      ),
+      generalEducationProgress,
     substitutedRecords:
       records.filter(
         (record) =>

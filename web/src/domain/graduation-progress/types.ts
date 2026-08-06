@@ -9,7 +9,20 @@ import type {
 } from '../general-education/types'
 
 
-export const GRADUATION_TOTAL_CREDITS = 116
+export const MAJOR_REQUIRED_CREDITS = 116
+export const MAJOR_ELECTIVE_CREDITS = 79
+
+export const BASIC_GENERAL_EDUCATION_CREDITS =
+  18
+
+export const BALANCED_GENERAL_EDUCATION_CREDITS =
+  18
+
+export const GRADUATION_TOTAL_CREDITS =
+  MAJOR_REQUIRED_CREDITS +
+  MAJOR_ELECTIVE_CREDITS +
+  BASIC_GENERAL_EDUCATION_CREDITS +
+  BALANCED_GENERAL_EDUCATION_CREDITS
 
 
 export type ProgressRecordState =
