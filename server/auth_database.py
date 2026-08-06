@@ -259,14 +259,6 @@ def create_auth_tables() -> None:
                 user_id,
                 curriculum_course_id
             );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_general_education
-            ON user_course_records(
-                user_id,
-                general_education_requirement_id,
-                general_education_area_id
-            );
             """
         )
 
