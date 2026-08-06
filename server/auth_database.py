@@ -84,9 +84,8 @@ def ensure_user_profile_columns() -> None:
                 """
             )
 
-
 def create_auth_tables() -> None:
-    """회원과 로그인 세션에 필요한 테이블을 생성한다."""
+    """회원, 로그인 세션, 개인 이수 기록 테이블을 생성한다."""
     with connect_auth_database() as connection:
         connection.executescript(
             """
@@ -113,6 +112,66 @@ def create_auth_tables() -> None:
                     ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS user_course_records (
+                id TEXT PRIMARY KEY,
+                user_id TEXT NOT NULL,
+
+                curriculum_course_id INTEGER,
+                lecture_id INTEGER,
+
+                academic_year INTEGER,
+                semester INTEGER,
+
+                course_name TEXT NOT NULL,
+                course_code TEXT,
+                completion_type TEXT NOT NULL,
+                credits REAL NOT NULL,
+
+                status TEXT NOT NULL,
+                letter_grade TEXT,
+                is_retake INTEGER NOT NULL DEFAULT 0,
+                note TEXT,
+
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+
+                FOREIGN KEY (user_id)
+                    REFERENCES users(id)
+                    ON DELETE CASCADE,
+
+                CHECK (
+                    academic_year IS NULL
+                    OR academic_year BETWEEN 2000 AND 2100
+                ),
+
+                CHECK (
+                    semester IS NULL
+                    OR semester IN (1, 2)
+                ),
+
+                CHECK (
+                    completion_type IN (
+                        '전필',
+                        '전선',
+                        '교양',
+                        '기타'
+                    )
+                ),
+
+                CHECK (
+                    status IN (
+                        'planned',
+                        'in_progress',
+                        'completed',
+                        'substituted'
+                    )
+                ),
+
+                CHECK (credits >= 0),
+
+                CHECK (is_retake IN (0, 1))
+            );
+
             CREATE INDEX IF NOT EXISTS
                 idx_sessions_user_id
             ON sessions(user_id);
@@ -120,6 +179,25 @@ def create_auth_tables() -> None:
             CREATE INDEX IF NOT EXISTS
                 idx_sessions_expires_at
             ON sessions(expires_at);
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_user_id
+            ON user_course_records(user_id);
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_user_semester
+            ON user_course_records(
+                user_id,
+                academic_year,
+                semester
+            );
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_curriculum_course
+            ON user_course_records(
+                user_id,
+                curriculum_course_id
+            );
             """
         )
 
@@ -183,7 +261,7 @@ def create_user(
         "id": user_id,
         "username": username.strip(),
         "profile_image_filename": None,
-        "entry_year" : None,
+        "entry_year": None,
         "student_type" : None,
         "created_at": current_time,
         "updated_at": current_time,
