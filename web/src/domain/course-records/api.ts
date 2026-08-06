@@ -1,6 +1,7 @@
 import type {
   CourseCompletionType,
   CourseRecord,
+  CourseRecordInput,
   CourseRecordStatus,
 } from './types'
 
@@ -133,5 +134,77 @@ export async function getCourseRecords():
 
   return data.records.map(
     mapCourseRecord,
+  )
+}
+
+function mapCourseRecordInput(
+  input: CourseRecordInput,
+) {
+  return {
+    curriculum_course_id:
+      input.curriculumCourseId,
+    lecture_id:
+      input.lectureId,
+    general_education_requirement_id:
+      input.generalEducationRequirementId,
+    general_education_area_id:
+      input.generalEducationAreaId,
+    academic_year:
+      input.academicYear,
+    semester:
+      input.semester,
+    course_name:
+      input.courseName,
+    course_code:
+      input.courseCode,
+    completion_type:
+      input.completionType,
+    credits:
+      input.credits,
+    status:
+      input.status,
+    letter_grade:
+      input.letterGrade,
+    is_retake:
+      input.isRetake,
+    note:
+      input.note,
+  }
+}
+
+export async function createCourseRecord(
+  input: CourseRecordInput,
+): Promise<CourseRecord> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/course-records`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type':
+          'application/json',
+      },
+      body: JSON.stringify(
+        mapCourseRecordInput(input),
+      ),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '과목 이수 기록을 저장하지 못했습니다.',
+      ),
+    )
+  }
+
+  const data =
+    (await response.json()) as {
+      record: CourseRecordApiItem
+    }
+
+  return mapCourseRecord(
+    data.record,
   )
 }
