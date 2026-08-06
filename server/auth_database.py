@@ -44,7 +44,45 @@ def get_current_time() -> str:
     ).isoformat()
 
 
-def ensure_profile_image_column() -> None:
+def ensure_user_profile_columns() -> None:
+    """
+    기존 users 테이블에 사용자 프로필 컬럼이 없으면 추가한다.
+
+    SQLite의 CREATE TABLE IF NOT EXISTS는 기존 테이블의
+    컬럼을 자동으로 변경하지 않으므로 별도 마이그레이션이 필요하다.
+    """
+    with connect_auth_database() as connection:
+        columns = connection.execute(
+            """
+            PRAGMA table_info(users)
+            """
+        ).fetchall()
+
+        column_names = {
+            column["name"]
+            for column in columns
+        }
+
+        columns_to_add = {
+            "profile_image_filename": "TEXT",
+            "entry_year": "INTEGER",
+            "student_type": "TEXT",
+        }
+
+        for (
+            column_name,
+            column_type,
+        ) in columns_to_add.items():
+            if column_name in column_names:
+                continue
+
+            connection.execute(
+                f"""
+                ALTER TABLE users
+                ADD COLUMN
+                    {column_name} {column_type}
+                """
+            )
     """
     기존 users 테이블에 프로필 이미지 컬럼이 없으면 추가한다.
 
@@ -87,6 +125,8 @@ def create_auth_tables() -> None:
                 username_normalized TEXT NOT NULL UNIQUE,
                 password_hash TEXT NOT NULL,
                 profile_image_filename TEXT,
+                entry_year INTEGER,
+                student_type TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
@@ -112,7 +152,7 @@ def create_auth_tables() -> None:
             """
         )
 
-    ensure_profile_image_column()
+    ensure_user_profile_columns()
 
 
 def normalize_username(
@@ -144,6 +184,8 @@ def create_user(
                     username_normalized,
                     password_hash,
                     profile_image_filename,
+                    entry_year,
+                    student_type,
                     created_at,
                     updated_at
                 )
@@ -154,6 +196,8 @@ def create_user(
                     username.strip(),
                     normalized_username,
                     password_hash,
+                    None,
+                    None,
                     None,
                     current_time,
                     current_time,
@@ -168,6 +212,8 @@ def create_user(
         "id": user_id,
         "username": username.strip(),
         "profile_image_filename": None,
+        "entry_year" : None,
+        "student_type" : None,
         "created_at": current_time,
         "updated_at": current_time,
     }
@@ -190,6 +236,8 @@ def get_user_by_username(
                 username_normalized,
                 password_hash,
                 profile_image_filename,
+                entry_year,
+                student_type,
                 created_at,
                 updated_at
             FROM users
@@ -217,6 +265,7 @@ def get_user_by_id(
                 username_normalized,
                 password_hash,
                 profile_image_filename,
+                entry_year,
                 created_at,
                 updated_at
             FROM users
@@ -277,6 +326,36 @@ def update_profile_image_filename(
             """,
             (
                 profile_image_filename,
+                current_time,
+                user_id,
+            ),
+        )
+
+    return cursor.rowcount > 0
+
+
+def update_user_academic_profile(
+    *,
+    user_id: str,
+    entry_year: int | None,
+    student_type: str | None,
+) -> bool:
+    """사용자의 입학 학번과 학생 유형을 변경한다."""
+    current_time = get_current_time()
+
+    with connect_auth_database() as connection:
+        cursor = connection.execute(
+            """
+            UPDATE users
+            SET
+                entry_year = ?,
+                student_type = ?,
+                updated_at = ?
+            WHERE id = ?
+            """,
+            (
+                entry_year,
+                student_type,
                 current_time,
                 user_id,
             ),

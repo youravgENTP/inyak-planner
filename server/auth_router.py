@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import (
+    Any, 
+    Literal, 
+    Optional,
+)
 
 from fastapi import (
     APIRouter,
@@ -14,7 +18,9 @@ from pydantic import BaseModel, Field
 from server.auth_database import (
     create_auth_tables,
     create_user,
+    get_user_by_id,
     get_user_by_username,
+    update_user_academic_profile,
     update_user_password,
 )
 from server.security import (
@@ -68,6 +74,15 @@ class ChangePasswordRequest(BaseModel):
         max_length=128,
     )
 
+class AcademicProfileRequest(BaseModel):
+    entry_year: int = Field(
+        ge=2000,
+        le=2100,
+    )
+    student_type: Literal[
+        "regular",
+        "transfer",
+    ]
 
 def set_session_cookie(
     response: Response,
@@ -101,6 +116,12 @@ def get_public_user(
             user.get(
                 "profile_image_filename"
             )
+        ),
+        "entry_year": user.get(
+            "entry_year"
+        ),
+        "student_type": user.get(
+            "student_type"
         ),
         "created_at": user["created_at"],
     }
@@ -237,6 +258,55 @@ def read_current_user(
         "user": get_public_user(user),
     }
 
+@router.patch("/profile")
+def update_academic_profile(
+    request: AcademicProfileRequest,
+    session_token: Optional[str] = Cookie(
+        default=None,
+        alias=SESSION_COOKIE_NAME,
+    ),
+) -> dict[str, Any]:
+    """현재 사용자의 입학 학번과 학생 유형을 변경한다."""
+    user = require_authenticated_user(
+        session_token
+    )
+
+    profile_was_updated = (
+        update_user_academic_profile(
+            user_id=user["id"],
+            entry_year=request.entry_year,
+            student_type=request.student_type,
+        )
+    )
+
+    if not profile_was_updated:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail="학업정보를 변경하지 못했습니다.",
+        )
+
+    updated_user = get_user_by_id(
+        user["id"]
+    )
+
+    if updated_user is None:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail=(
+                "변경된 사용자 정보를 "
+                "불러오지 못했습니다."
+            ),
+        )
+
+    return {
+        "user": get_public_user(
+            updated_user
+        ),
+    }
 
 @router.post("/password")
 def change_password(

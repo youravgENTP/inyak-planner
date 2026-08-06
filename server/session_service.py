@@ -96,6 +96,8 @@ def get_user_by_session_token(
                 users.username,
                 users.password_hash,
                 users.profile_image_filename,
+                users.entry_year,
+                users.student_type,
                 users.created_at,
                 users.updated_at
             FROM sessions
