@@ -224,10 +224,6 @@
 
 /* 각 네비게이션 메뉴의 버튼 */
 .nav-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-
   width: 100%;
   padding: 12px 13px;
 
@@ -237,6 +233,7 @@
   background: transparent;
 
   cursor: pointer;
+  line-height: 1.35;
   text-align: left;
 }
 
@@ -251,21 +248,6 @@
 .nav-item--active {
   color: #ffffff;
   background: rgba(33, 143, 139, 0.2);
-}
-
-/* 메뉴 왼쪽의 하얀 점 */
-.nav-dot {
-  width: 7px;
-  height: 7px;
-
-  border-radius: 999px;
-  background: currentColor;
-}
-
-/* 현재 보고 있는 메뉴의 상태 표시점 */
-.nav-item--active .nav-dot {
-  background: #52c6be;
-  box-shadow: 0 0 0 4px rgba(82, 198, 190, 0.12);
 }
 
 /* 구현되지 않은 메뉴 버튼 */
@@ -283,6 +265,19 @@
    졸업요건 하위 메뉴
    ========================================================= */
 
+/* 각 상위 메뉴 영역 */
+.nav-section {
+  min-width: 0;
+}
+
+/* 두 번째 상위 메뉴부터 위쪽에 구분선 표시 */
+.nav-section + .nav-section {
+  margin-top: 7px;
+  padding-top: 14px;
+  border-top:
+    1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* 졸업요건 상위 메뉴와 하위 메뉴 묶음 */
 .nav-group {
   display: grid;
@@ -292,25 +287,20 @@
 /* 졸업요건 상위 메뉴 제목 */
 .nav-group-title {
   width: 100%;
-  padding: 12px 13px;
+  padding: 12px 13px 8px;
 
-  border-radius: 10px;
-
-  color: #aebfca;
-  line-height: 1.35;
-}
-
-/* 졸업요건 하위 화면이 선택된 상태 */
-.nav-group-title--active {
   color: #ffffff;
-  background: rgba(33, 143, 139, 0.2);
+
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 /* 졸업요건 하위 메뉴 목록 */
 .nav-submenu {
   display: grid;
   gap: 3px;
-  padding-left: 31px;
+  padding-left: 18px;
 }
 
 /* 졸업요건 하위 메뉴 버튼 */

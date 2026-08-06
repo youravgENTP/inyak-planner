@@ -196,112 +196,92 @@ export function AppShell({
           className="sidebar-nav"
           aria-label="주요 메뉴"
         >
-          <button
-            className={
-              `nav-item${
-                activePage === 'timetable'
-                  ? ' nav-item--active'
-                  : ''
-              }`
-            }
-            type="button"
-            onClick={() =>
-              onNavigate('timetable')
-            }
-          >
-            <span
-              className="nav-dot"
-              aria-hidden="true"
-            />
-
-            시간표
-          </button>
-
-          <button
-            className="nav-item"
-            disabled
-            type="button"
-          >
-            <span
-              className="nav-dot"
-              aria-hidden="true"
-            />
-
-            수강편람
-          </button>
-
-          <div className="nav-group">
-            <div
+          <div className="nav-section">
+            <button
               className={
-                `nav-group-title${
-                  activePage === 'curriculum' ||
-                  activePage === 'progress' ||
-                  activePage === 'gpa'
-                    ? ' nav-group-title--active'
+                `nav-item${
+                  activePage === 'timetable'
+                    ? ' nav-item--active'
                     : ''
                 }`
               }
+              type="button"
+              onClick={() =>
+                onNavigate('timetable')
+              }
             >
-              {/* <span
-                className="nav-dot"
-                aria-hidden="true"
-              /> */}
+              시간표
+            </button>
+          </div>
 
-              졸업 요건 및 학점 계산기
-            </div>
+          <div className="nav-section">
+            <button
+              className="nav-item"
+              disabled
+              type="button"
+            >
+              수강편람
+            </button>
+          </div>
 
-            <div className="nav-submenu">
-              <button
-                className={
-                  `nav-subitem${
-                    activePage === 'curriculum'
-                      ? ' nav-subitem--active'
-                      : ''
-                  }`
-                }
-                type="button"
-                onClick={() =>
-                  onNavigate('curriculum')
-                }
-              >
-                학번별 졸업요건
-              </button>
+          <div className="nav-section">
+            <div className="nav-group">
+              <div className="nav-group-title">
+                졸업 요건 및 학점 계산기
+              </div>
 
-              <button
-                className={
-                  `nav-subitem${
-                    activePage === 'progress'
-                      ? ' nav-subitem--active'
-                      : ''
-                  }`
-                }
-                type="button"
-                onClick={() =>
-                  onNavigate('progress')
-                }
-              >
-                개인 이수 현황
-              </button>
+              <div className="nav-submenu">
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage === 'curriculum'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate('curriculum')
+                  }
+                >
+                  학번별 졸업요건
+                </button>
 
-              <button
-                className={
-                  `nav-subitem${
-                    activePage === 'gpa'
-                      ? ' nav-subitem--active'
-                      : ''
-                  }`
-                }
-                type="button"
-                onClick={() =>
-                  onNavigate('gpa')
-                }
-              >
-                GPA 계산기
-              </button>
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage === 'progress'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate('progress')
+                  }
+                >
+                  개인 이수 현황
+                </button>
+
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage === 'gpa'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate('gpa')
+                  }
+                >
+                  GPA 계산기
+                </button>
+              </div>
             </div>
           </div>
         </nav>
-
         <div className="sidebar-footer">
           <span>2026학년도 2학기</span>
 
