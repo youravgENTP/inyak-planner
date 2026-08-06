@@ -1,0 +1,241 @@
+/* =========================================================
+   수강 기록 및 GPA 페이지
+   ========================================================= */
+
+.gpa-records-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.gpa-records-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.gpa-records-header p {
+  margin: 0 0 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #66816f;
+}
+
+.gpa-records-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #203127;
+}
+
+.gpa-records-header span {
+  display: block;
+  max-width: 650px;
+  margin-top: 10px;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #6a756e;
+}
+
+.gpa-records-add-semester {
+  flex-shrink: 0;
+  padding: 10px 15px;
+  border: 1px solid #bfd2c4;
+  border-radius: 10px;
+  background: #f7fbf8;
+  font-weight: 700;
+  color: #365e45;
+}
+
+.gpa-records-add-semester:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* =========================================================
+   상단 요약
+   ========================================================= */
+
+.gpa-records-summary {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gpa-records-summary article {
+  padding: 17px 18px;
+  border: 1px solid #e0e8e2;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.gpa-records-summary span {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  color: #718078;
+}
+
+.gpa-records-summary strong {
+  font-size: 20px;
+  color: #26392d;
+}
+
+
+/* =========================================================
+   로딩·오류·빈 화면
+   ========================================================= */
+
+.gpa-records-message,
+.gpa-records-empty {
+  padding: 30px;
+  border: 1px solid #e1e8e3;
+  border-radius: 14px;
+  background: #fff;
+  text-align: center;
+  color: #69766e;
+}
+
+.gpa-records-message--error {
+  border-color: #ecd3d3;
+  background: #fff8f8;
+  color: #9b4646;
+}
+
+.gpa-records-empty strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #34483b;
+}
+
+.gpa-records-empty p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   학기별 카드
+   ========================================================= */
+
+.gpa-semester-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gpa-semester-card {
+  overflow: hidden;
+  border: 1px solid #dfe8e1;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.gpa-semester-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e8eee9;
+  background: #f8fbf9;
+}
+
+.gpa-semester-card-header > div:first-child > span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: #718077;
+}
+
+.gpa-semester-card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #273a2e;
+}
+
+.gpa-semester-card-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.gpa-semester-card-summary strong {
+  font-size: 14px;
+  color: #365e45;
+}
+
+.gpa-semester-card-summary span {
+  font-size: 12px;
+  color: #77837c;
+}
+
+
+/* =========================================================
+   학기별 과목 표
+   ========================================================= */
+
+.gpa-semester-table-header,
+.gpa-semester-record {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 1fr)
+    90px
+    80px
+    100px
+    80px;
+  align-items: center;
+  gap: 12px;
+}
+
+.gpa-semester-table-header {
+  padding: 10px 20px;
+  border-bottom: 1px solid #edf1ee;
+  background: #fcfdfc;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c8881;
+}
+
+.gpa-semester-record {
+  padding: 14px 20px;
+  border-bottom: 1px solid #f0f3f1;
+}
+
+.gpa-semester-record:last-child {
+  border-bottom: 0;
+}
+
+.gpa-semester-record strong {
+  overflow: hidden;
+  font-size: 13px;
+  color: #293b30;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpa-semester-record span {
+  font-size: 12px;
+  color: #68756d;
+}
+
+
+@media (max-width: 900px) {
+  .gpa-records-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .gpa-semester-table {
+    overflow-x: auto;
+  }
+
+  .gpa-semester-table-header,
+  .gpa-semester-record {
+    min-width: 680px;
+  }
+}
