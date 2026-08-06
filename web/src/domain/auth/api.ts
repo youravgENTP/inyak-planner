@@ -1,14 +1,22 @@
 const API_BASE_URL = 'http://localhost:8000'
 
+
+export type StudentType =
+  | 'regular'
+  | 'transfer'
 export interface AuthUser {
   id: string
   username: string
+  entryYear: number | null
+  studentType: StudentType | null
   createdAt: string
 }
 
 interface AuthUserApiItem {
   id: string
   username: string
+  entry_year: number | null
+  student_type: StudentType | null
   created_at: string
 }
 
@@ -26,6 +34,8 @@ function mapAuthUser(
   return {
     id: user.id,
     username: user.username,
+    entryYear: user.entry_year,
+    studentType: user.student_type,
     createdAt: user.created_at,
   }
 }
@@ -126,6 +136,40 @@ export async function getCurrentUser():
       await getErrorMessage(
         response,
         '로그인 상태를 확인하지 못했습니다.',
+      ),
+    )
+  }
+
+  const data =
+    (await response.json()) as AuthResponse
+
+  return mapAuthUser(data.user)
+}
+
+export async function updateAcademicProfile(
+  entryYear: number,
+  studentType: StudentType,
+): Promise<AuthUser> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/auth/profile`,
+    {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        entry_year: entryYear,
+        student_type: studentType,
+      }),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '학업정보를 변경하지 못했습니다.',
       ),
     )
   }
