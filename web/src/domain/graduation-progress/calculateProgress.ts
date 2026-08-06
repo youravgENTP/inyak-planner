@@ -1,0 +1,436 @@
+import type {
+  CourseRecord,
+  CourseRecordStatus,
+} from '../course-records/types'
+import type {
+  Curriculum,
+  CurriculumCompletionType,
+  CurriculumCourse,
+} from '../curriculum/types'
+import type {
+  GeneralEducation,
+  GeneralEducationArea,
+  GeneralEducationRequirement,
+} from '../general-education/types'
+import {
+  GRADUATION_TOTAL_CREDITS,
+} from './types'
+import type {
+  CourseCountProgress,
+  CreditProgress,
+  GeneralEducationAreaProgress,
+  GeneralEducationRequirementProgress,
+  GraduationProgress,
+  MajorCompletionProgress,
+  ProgressRecordState,
+} from './types'
+
+
+const COMPLETED_STATUSES:
+  readonly CourseRecordStatus[] = [
+    'completed',
+    'substituted',
+  ]
+
+
+function getRecordState(
+  record: CourseRecord,
+): ProgressRecordState {
+  if (
+    COMPLETED_STATUSES.includes(
+      record.status,
+    )
+  ) {
+    return 'completed'
+  }
+
+  if (record.status === 'in_progress') {
+    return 'inProgress'
+  }
+
+  return 'planned'
+}
+
+
+function sumRecordCredits(
+  records: readonly CourseRecord[],
+  state: ProgressRecordState,
+): number {
+  return records
+    .filter(
+      (record) =>
+        getRecordState(record) === state,
+    )
+    .reduce(
+      (total, record) =>
+        total + record.credits,
+      0,
+    )
+}
+
+
+function countRecords(
+  records: readonly CourseRecord[],
+  state: ProgressRecordState,
+): number {
+  return records.filter(
+    (record) =>
+      getRecordState(record) === state,
+  ).length
+}
+
+
+function createCreditProgress(
+  records: readonly CourseRecord[],
+  requiredCredits: number,
+): CreditProgress {
+  const completedCredits =
+    sumRecordCredits(
+      records,
+      'completed',
+    )
+
+  const inProgressCredits =
+    sumRecordCredits(
+      records,
+      'inProgress',
+    )
+
+  const plannedCredits =
+    sumRecordCredits(
+      records,
+      'planned',
+    )
+
+  const remainingCredits = Math.max(
+    requiredCredits - completedCredits,
+    0,
+  )
+
+  return {
+    completedCredits,
+    inProgressCredits,
+    plannedCredits,
+    requiredCredits,
+    remainingCredits,
+    isSatisfied:
+      completedCredits >= requiredCredits,
+  }
+}
+
+
+function createCourseCountProgress(
+  records: readonly CourseRecord[],
+  requiredCourseCount: number,
+): CourseCountProgress {
+  const completedCourseCount =
+    countRecords(
+      records,
+      'completed',
+    )
+
+  const inProgressCourseCount =
+    countRecords(
+      records,
+      'inProgress',
+    )
+
+  const plannedCourseCount =
+    countRecords(
+      records,
+      'planned',
+    )
+
+  const remainingCourseCount = Math.max(
+    requiredCourseCount -
+      completedCourseCount,
+    0,
+  )
+
+  return {
+    completedCourseCount,
+    inProgressCourseCount,
+    plannedCourseCount,
+    requiredCourseCount,
+    remainingCourseCount,
+    isSatisfied:
+      completedCourseCount >=
+      requiredCourseCount,
+  }
+}
+
+
+function getCurriculumCredits(
+  courses:
+    readonly CurriculumCourse[],
+): number {
+  return courses.reduce(
+    (total, course) =>
+      total + (course.credits ?? 0),
+    0,
+  )
+}
+
+
+function getMajorRecords(
+  records: readonly CourseRecord[],
+  completionType:
+    CurriculumCompletionType,
+): CourseRecord[] {
+  return records.filter(
+    (record) =>
+      record.completionType ===
+      completionType,
+  )
+}
+
+
+function createMajorProgress(
+  curriculum: Curriculum,
+  records: readonly CourseRecord[],
+  completionType:
+    CurriculumCompletionType,
+): MajorCompletionProgress {
+  const officialCourses =
+    curriculum.courses.filter(
+      (course) =>
+        course.completionType ===
+        completionType,
+    )
+
+  const matchingRecords =
+    getMajorRecords(
+      records,
+      completionType,
+    )
+
+  return {
+    completionType,
+    credits: createCreditProgress(
+      matchingRecords,
+      getCurriculumCredits(
+        officialCourses,
+      ),
+    ),
+    courses: createCourseCountProgress(
+      matchingRecords,
+      officialCourses.length,
+    ),
+  }
+}
+
+
+function getGeneralEducationRecords(
+  records: readonly CourseRecord[],
+  requirementId: number,
+): CourseRecord[] {
+  return records.filter(
+    (record) =>
+      record.completionType ===
+        '교양' &&
+      record
+        .generalEducationRequirementId ===
+        requirementId,
+  )
+}
+
+
+function getAreaRecords(
+  records: readonly CourseRecord[],
+  areaId: number,
+): CourseRecord[] {
+  return records.filter(
+    (record) =>
+      record.generalEducationAreaId ===
+      areaId,
+  )
+}
+
+
+function createAreaProgress(
+  requirement:
+    GeneralEducationRequirement,
+  area: GeneralEducationArea,
+  records: readonly CourseRecord[],
+): GeneralEducationAreaProgress {
+  const areaRecords =
+    getAreaRecords(
+      records,
+      area.id,
+    )
+
+  const completedCredits =
+    sumRecordCredits(
+      areaRecords,
+      'completed',
+    )
+
+  const inProgressCredits =
+    sumRecordCredits(
+      areaRecords,
+      'inProgress',
+    )
+
+  const plannedCredits =
+    sumRecordCredits(
+      areaRecords,
+      'planned',
+    )
+
+  const hasCompletedRecord =
+    areaRecords.some(
+      (record) =>
+        getRecordState(record) ===
+        'completed',
+    )
+
+  const remainingCredits =
+    area.minimumCredits === null
+      ? null
+      : Math.max(
+          area.minimumCredits -
+            completedCredits,
+          0,
+        )
+
+  const isSatisfied =
+    area.minimumCredits === null
+      ? hasCompletedRecord
+      : completedCredits >=
+        area.minimumCredits
+
+  return {
+    requirementId:
+      requirement.id,
+    areaId:
+      area.id,
+    category:
+      requirement.category,
+    areaName:
+      area.areaName,
+    minimumCredits:
+      area.minimumCredits,
+    completedCredits,
+    inProgressCredits,
+    plannedCredits,
+    remainingCredits,
+    hasCompletedRecord,
+    isSatisfied,
+  }
+}
+
+
+function createGeneralEducationProgress(
+  requirement:
+    GeneralEducationRequirement,
+  records: readonly CourseRecord[],
+): GeneralEducationRequirementProgress {
+  const requirementRecords =
+    getGeneralEducationRecords(
+      records,
+      requirement.id,
+    )
+
+  const areas =
+    requirement.areas.map(
+      (area) =>
+        createAreaProgress(
+          requirement,
+          area,
+          requirementRecords,
+        ),
+    )
+
+  const completedAreaCount =
+    areas.filter(
+      (area) => area.isSatisfied,
+    ).length
+
+  const remainingAreaCount =
+    requirement.minimumAreaCount === null
+      ? null
+      : Math.max(
+          requirement.minimumAreaCount -
+            completedAreaCount,
+          0,
+        )
+
+  const areasAreSatisfied =
+    requirement.minimumAreaCount === null
+      ? areas
+          .filter(
+            (area) => area.isRequired,
+          )
+          .every(
+            (area) => area.isSatisfied,
+          )
+      : completedAreaCount >=
+        requirement.minimumAreaCount
+
+  const credits =
+    createCreditProgress(
+      requirementRecords,
+      requirement.minimumCredits,
+    )
+
+  return {
+    requirementId:
+      requirement.id,
+    category:
+      requirement.category,
+    credits,
+    minimumAreaCount:
+      requirement.minimumAreaCount,
+    completedAreaCount,
+    remainingAreaCount,
+    areasAreSatisfied,
+    isSatisfied:
+      credits.isSatisfied &&
+      areasAreSatisfied,
+    areas,
+  }
+}
+
+
+export function calculateGraduationProgress(
+  curriculum: Curriculum,
+  generalEducation:
+    GeneralEducation,
+  records: readonly CourseRecord[],
+): GraduationProgress {
+  const totalCredits =
+    createCreditProgress(
+      records,
+      GRADUATION_TOTAL_CREDITS,
+    )
+
+  return {
+    totalCredits,
+    majorRequired:
+      createMajorProgress(
+        curriculum,
+        records,
+        '전필',
+      ),
+    majorElective:
+      createMajorProgress(
+        curriculum,
+        records,
+        '전선',
+      ),
+    generalEducation:
+      generalEducation.requirements.map(
+        (requirement) =>
+          createGeneralEducationProgress(
+            requirement,
+            records,
+          ),
+      ),
+    substitutedRecords:
+      records.filter(
+        (record) =>
+          record.status ===
+          'substituted',
+      ),
+  }
+}
