@@ -7,6 +7,9 @@ import {
 import type {
   AuthUser,
 } from '../../domain/auth/api'
+import {
+  deleteCourseRecord,
+} from '../../domain/course-records/api'
 import type {
   CourseRecord,
   CourseRecordStatus,
@@ -36,6 +39,9 @@ interface GraduationSemesterBoardProps {
   records: readonly CourseRecord[]
   onRecordCreated: (
     record: CourseRecord,
+  ) => void
+  onRecordDeleted: (
+    recordId: string,
   ) => void
 }
 
@@ -288,11 +294,15 @@ function TransferCreditCard({
   card,
   curriculum,
   onRecordCreated,
+  onRecordDeleted,
 }: {
   card: TransferCreditBoardCard
   curriculum: Curriculum
   onRecordCreated: (
     record: CourseRecord,
+  ) => void
+  onRecordDeleted: (
+    recordId: string,
   ) => void
 }) {
   const [
@@ -304,6 +314,11 @@ function TransferCreditCard({
     majorModalIsOpen,
     setMajorModalIsOpen,
   ] = useState(false)
+
+  const [
+    deletingRecordId,
+    setDeletingRecordId,
+  ] = useState<string | null>(null)
 
   const menuRef =
     useRef<HTMLDivElement | null>(null)
@@ -340,6 +355,42 @@ function TransferCreditCard({
       )
     }
   }, [menuIsOpen])
+  
+  async function handleDeleteRecord(
+    record: CourseRecord,
+  ) {
+    const recordLabel =
+      record.courseName.trim().length > 0
+        ? record.courseName
+        : '이 인정 과목'
+
+    const deleteWasConfirmed =
+      window.confirm(
+        `${recordLabel} 기록을 삭제하시겠습니까?`,
+      )
+
+    if (!deleteWasConfirmed) {
+      return
+    }
+
+    setDeletingRecordId(record.id)
+
+    try {
+      await deleteCourseRecord(
+        record.id,
+      )
+
+      onRecordDeleted(record.id)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '인정 과목을 삭제하지 못했습니다.',
+      )
+    } finally {
+      setDeletingRecordId(null)
+    }
+  }
 
   const totalCredits =
     card.records.reduce(
@@ -501,14 +552,16 @@ function TransferCreditCard({
                   )
 
               return (
+                // 
                 <li
                   className="
                     graduation-board-course
                     graduation-board-course--substituted
+                    graduation-board-transfer-course
                   "
                   key={record.id}
                 >
-                  <div>
+                  <div className="graduation-board-transfer-course-content">
                     <strong>
                       {curriculumCourse ===
                       null
@@ -535,7 +588,28 @@ function TransferCreditCard({
                       )}
                     </span>
                   </div>
+
+                  <button
+                    aria-label={`${record.courseName} 인정 기록 삭제`}
+                    className="graduation-board-transfer-delete"
+                    disabled={
+                      deletingRecordId ===
+                      record.id
+                    }
+                    type="button"
+                    onClick={() => {
+                      void handleDeleteRecord(
+                        record,
+                      )
+                    }}
+                  >
+                    {deletingRecordId ===
+                    record.id
+                      ? '삭제 중'
+                      : '삭제'}
+                  </button>
                 </li>
+                // 
               )
             },
           )}
@@ -563,11 +637,15 @@ function BoardCard({
   card,
   curriculum,
   onRecordCreated,
+  onRecordDeleted,
 }: {
   card: GraduationBoardCard
   curriculum: Curriculum
   onRecordCreated: (
     record: CourseRecord,
+  ) => void
+  onRecordDeleted: (
+    recordId: string,
   ) => void
 }) {
   if (card.kind === 'transferCredits') {
@@ -577,6 +655,9 @@ function BoardCard({
         curriculum={curriculum}
         onRecordCreated={
           onRecordCreated
+        }
+        onRecordDeleted={
+          onRecordDeleted
         }
       />
     )
@@ -593,6 +674,7 @@ export function GraduationSemesterBoard({
   curriculum,
   records,
   onRecordCreated,
+  onRecordDeleted,
 }: GraduationSemesterBoardProps) {
   const cards =
     createGraduationBoard(
@@ -641,6 +723,9 @@ export function GraduationSemesterBoard({
               curriculum={curriculum}
               onRecordCreated={
                 onRecordCreated
+              }
+              onRecordDeleted={
+                onRecordDeleted
               }
               key={
                 card.kind ===

@@ -433,6 +433,18 @@ export function ProgressTrackerPage({
                   ],
                 )
               }}
+              onRecordDeleted={(
+                deletedRecordId,
+              ) => {
+                setCourseRecords(
+                  (currentRecords) =>
+                    currentRecords.filter(
+                      (record) =>
+                        record.id !==
+                        deletedRecordId,
+                    ),
+                )
+              }}
             />
           ) : null}
 
