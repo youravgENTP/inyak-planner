@@ -25,6 +25,10 @@ from server.auth_router import (
     require_authenticated_user,
 )
 
+from server.database import (
+    get_curriculum_course_by_id,
+    get_general_education_link,
+)
 
 router = APIRouter(
     prefix="/api/course-records",
@@ -157,6 +161,188 @@ def get_request_values(
             ),
     }
 
+def validate_course_record_request(
+    *,
+    request: CourseRecordRequest,
+    user: dict[str, Any],
+) -> None:
+    """과목 종류와 공식 교육과정 연결값의 일관성을 확인한다."""
+    entry_year = user.get("entry_year")
+    student_type = user.get("student_type")
+
+    if entry_year is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "과목 기록을 저장하려면 "
+                "회원정보에서 입학 학번을 "
+                "먼저 설정해야 합니다."
+            ),
+        )
+
+    if (
+        request.status == "substituted"
+        and student_type != "transfer"
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "대체 인정 기록은 편입생만 "
+                "등록할 수 있습니다."
+            ),
+        )
+
+    if request.completion_type in (
+        "전필",
+        "전선",
+    ):
+        if (
+            request.general_education_requirement_id
+            is not None
+            or request.general_education_area_id
+            is not None
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "전공 과목에는 교양요건 또는 "
+                    "교양영역을 연결할 수 없습니다."
+                ),
+            )
+
+        if (
+            request.status == "substituted"
+            and request.curriculum_course_id
+            is None
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "전공 대체 인정 과목은 "
+                    "대응하는 공식 교육과정 과목을 "
+                    "선택해야 합니다."
+                ),
+            )
+
+        if request.curriculum_course_id is None:
+            return
+
+        curriculum_course = (
+            get_curriculum_course_by_id(
+                request.curriculum_course_id
+            )
+        )
+
+        if curriculum_course is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "선택한 공식 교육과정 과목을 "
+                    "찾을 수 없습니다."
+                ),
+            )
+
+        if (
+            curriculum_course["entry_year"]
+            != entry_year
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "선택한 과목은 현재 사용자의 "
+                    "학번 교육과정에 속하지 않습니다."
+                ),
+            )
+
+        if (
+            curriculum_course["completion_type"]
+            != request.completion_type
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "선택한 공식 과목의 이수구분과 "
+                    "저장하려는 이수구분이 다릅니다."
+                ),
+            )
+
+        return
+
+    if request.completion_type == "교양":
+        if request.curriculum_course_id is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "교양 과목에는 전공 교육과정 "
+                    "과목을 연결할 수 없습니다."
+                ),
+            )
+
+        if (
+            request.general_education_requirement_id
+            is None
+            or request.general_education_area_id
+            is None
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "교양 과목은 교양요건과 "
+                    "세부 영역을 모두 선택해야 합니다."
+                ),
+            )
+
+        general_education_link = (
+            get_general_education_link(
+                requirement_id=(
+                    request
+                    .general_education_requirement_id
+                ),
+                area_id=(
+                    request
+                    .general_education_area_id
+                ),
+            )
+        )
+
+        if general_education_link is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "선택한 교양영역이 해당 "
+                    "교양요건에 속하지 않습니다."
+                ),
+            )
+
+        if (
+            general_education_link["entry_year"]
+            != entry_year
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "선택한 교양요건은 현재 사용자의 "
+                    "학번 기준과 다릅니다."
+                ),
+            )
+
+        return
+
+    if (
+        request.curriculum_course_id is not None
+        or request
+        .general_education_requirement_id
+        is not None
+        or request.general_education_area_id
+        is not None
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "기타 과목에는 전공 또는 교양 "
+                "공식 요건을 연결할 수 없습니다."
+            ),
+        )
 
 @router.get("")
 def read_course_records(
@@ -196,6 +382,12 @@ def create_course_record(
         session_token
     )
 
+    validate_course_record_request(
+        request=request,
+        user=user,
+    )
+
+
     record = create_user_course_record(
         user_id=user["id"],
         **get_request_values(request),
@@ -218,6 +410,11 @@ def update_course_record(
     """현재 사용자 소유의 과목 이수 기록을 변경한다."""
     user = require_authenticated_user(
         session_token
+    )
+
+    validate_course_record_request(
+        request=request,
+        user=user,
     )
 
     record = update_user_course_record(
