@@ -1,0 +1,222 @@
+/* =========================================================
+   General education requirements
+   ========================================================= */
+
+.general-education {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* =========================================================
+   Overall summary
+   ========================================================= */
+
+.general-education-overview {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.general-education-overview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #e4e4e4;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.general-education-overview-item span {
+  font-size: 12px;
+  color: #737373;
+}
+
+.general-education-overview-item strong {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   Requirement cards
+   ========================================================= */
+
+.general-education-card-list {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.general-education-card {
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.general-education-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-bottom: 1px solid #ededed;
+}
+
+.general-education-card-header span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #777;
+}
+
+.general-education-card-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.general-education-card-header > strong {
+  font-size: 13px;
+  color: #666;
+}
+
+/* =========================================================
+   Requirement condition
+   ========================================================= */
+
+.general-education-condition {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #ededed;
+  background: #fafafa;
+}
+
+.general-education-condition span {
+  font-size: 11px;
+  color: #777;
+}
+
+.general-education-condition strong {
+  font-size: 15px;
+}
+
+.general-education-requirement-notes {
+  margin: 0;
+  padding: 12px 18px;
+  border-bottom: 1px solid #ededed;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #666;
+}
+
+/* =========================================================
+   Area list
+   ========================================================= */
+
+.general-education-area-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.general-education-area-item {
+  padding: 15px 18px;
+  border-bottom: 1px solid #ededed;
+}
+
+.general-education-area-item:last-child {
+  border-bottom: 0;
+}
+
+.general-education-area-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.general-education-area-heading strong {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.general-education-area-heading span {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+}
+
+.general-education-area-meta {
+  margin-top: 6px;
+}
+
+.general-education-area-meta span {
+  display: inline-flex;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+}
+
+.general-education-area-notes {
+  margin: 9px 0 0;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #666;
+}
+
+/* =========================================================
+   Empty state
+   ========================================================= */
+
+.general-education-empty {
+  display: flex;
+  min-height: 280px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+
+.general-education-empty h2,
+.general-education-empty p {
+  margin: 0;
+}
+
+.general-education-empty p {
+  color: #666;
+}
+
+/* =========================================================
+   Responsive adjustment
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .general-education-card-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .general-education-overview {
+    grid-template-columns: 1fr;
+  }
+}
