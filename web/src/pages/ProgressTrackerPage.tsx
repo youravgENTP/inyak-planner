@@ -5,6 +5,10 @@ import {
   useState,
 } from 'react'
 
+import {
+  GraduationSemesterBoard,
+} from '../components/GraduationSemesterBoard/GraduationSemesterBoard'
+
 import type {
   AuthUser,
 } from '../domain/auth/api'
@@ -413,6 +417,15 @@ export function ProgressTrackerPage({
                 />
               ))}
           </div>
+
+
+          {curriculum !== null ? (
+            <GraduationSemesterBoard
+              user={user}
+              curriculum={curriculum}
+              records={courseRecords}
+            />
+          ) : null}
 
           <details className="graduation-progress-details">
             <summary className="graduation-progress-details-summary">
