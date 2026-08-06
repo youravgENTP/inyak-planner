@@ -254,3 +254,57 @@
     width: 270px;
   }
 }
+
+/* =========================================================
+   전적대 인정 과목 추가 메뉴
+   ========================================================= */
+
+.graduation-board-transfer-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.graduation-board-transfer-menu-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  width: 220px;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid #d9e5dd;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 12px 30px rgb(0 0 0 / 12%);
+}
+
+.graduation-board-transfer-menu-list button {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border: 0;
+  background: #fff;
+  text-align: left;
+}
+
+.graduation-board-transfer-menu-list button + button {
+  border-top: 1px solid #ededed;
+}
+
+.graduation-board-transfer-menu-list button:hover {
+  background: #f1f8f3;
+}
+
+.graduation-board-transfer-menu-list strong {
+  font-size: 13px;
+}
+
+.graduation-board-transfer-menu-list span {
+  line-height: 1.4;
+  font-size: 11px;
+  color: #777;
+}

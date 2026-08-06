@@ -1,3 +1,9 @@
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+
 import type {
   AuthUser,
 } from '../../domain/auth/api'
@@ -276,6 +282,47 @@ function TransferCreditCard({
 }: {
   card: TransferCreditBoardCard
 }) {
+  const [
+    menuIsOpen,
+    setMenuIsOpen,
+  ] = useState(false)
+
+  const menuRef =
+    useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!menuIsOpen) {
+      return
+    }
+
+    function handlePointerDown(
+      event: PointerEvent,
+    ) {
+      if (
+        menuRef.current === null ||
+        menuRef.current.contains(
+          event.target as Node,
+        )
+      ) {
+        return
+      }
+
+      setMenuIsOpen(false)
+    }
+
+    document.addEventListener(
+      'pointerdown',
+      handlePointerDown,
+    )
+
+    return () => {
+      document.removeEventListener(
+        'pointerdown',
+        handlePointerDown,
+      )
+    }
+  }, [menuIsOpen])
+
   const totalCredits =
     card.records.reduce(
       (total, record) =>
@@ -291,15 +338,61 @@ function TransferCreditCard({
 
           <h3>전적대 학점 인정</h3>
         </div>
-
-        <button
-          className="graduation-board-transfer-add"
-          disabled
-          title="다음 단계에서 인정 과목 입력 기능을 추가합니다."
-          type="button"
+        <div
+          className="graduation-board-transfer-menu"
+          ref={menuRef}
         >
-          + 인정 과목 추가
-        </button>
+          <button
+            aria-expanded={menuIsOpen}
+            aria-haspopup="menu"
+            className="graduation-board-transfer-add"
+            type="button"
+            onClick={() => {
+              setMenuIsOpen(
+                (currentValue) =>
+                  !currentValue,
+              )
+            }}
+          >
+            + 인정 과목 추가
+          </button>
+          {menuIsOpen ? (
+            <div
+              className="graduation-board-transfer-menu-list"
+              role="menu"
+            >
+              <button
+                role="menuitem"
+                type="button"
+                onClick={() => {
+                  setMenuIsOpen(false)
+                }}
+              >
+                <strong>전공 인정</strong>
+
+                <span>
+                  공식 전필·전선 과목에
+                  대응하여 인정
+                </span>
+              </button>
+
+              <button
+                role="menuitem"
+                type="button"
+                onClick={() => {
+                  setMenuIsOpen(false)
+                }}
+              >
+                <strong>교양 인정</strong>
+
+                <span>
+                  교양 구분과 영역에
+                  학점을 인정
+                </span>
+              </button>
+            </div>
+          ) : null}
+        </div>
       </header>
 
       <div className="graduation-board-transfer-summary">
