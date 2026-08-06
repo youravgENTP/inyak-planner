@@ -741,7 +741,9 @@ function TransferCreditCard({
                         role="menu"
                       >
                         {curriculumCourse !==
-                        null ? (
+                          null ||
+                        generalEducationRequirement !==
+                          null ? (
                           <button
                             role="menuitem"
                             type="button"
@@ -813,9 +815,37 @@ function TransferCreditCard({
         />
       ) : null}
 
-      {editingRecord !== null ? (
+      {editingRecord !== null &&
+      editingRecord.curriculumCourseId !==
+        null ? (
         <MajorTransferCreditModal
           curriculum={curriculum}
+          record={editingRecord}
+          onClose={() => {
+            setEditingRecord(null)
+          }}
+          onCreated={
+            onRecordCreated
+          }
+          onUpdated={(
+            updatedRecord,
+          ) => {
+            onRecordUpdated(
+              updatedRecord,
+            )
+            setEditingRecord(null)
+          }}
+        />
+      ) : null}
+
+      {editingRecord !== null &&
+      editingRecord
+        .generalEducationRequirementId !==
+        null ? (
+        <GeneralEducationTransferCreditModal
+          generalEducation={
+            generalEducation
+          }
           record={editingRecord}
           onClose={() => {
             setEditingRecord(null)

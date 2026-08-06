@@ -7,9 +7,11 @@ import {
 
 import {
   createCourseRecord,
+  updateCourseRecord,
 } from '../../domain/course-records/api'
 import type {
   CourseRecord,
+  CourseRecordInput,
 } from '../../domain/course-records/types'
 import type {
   GeneralEducation,
@@ -20,8 +22,12 @@ import '../MajorTransferCreditModal/MajorTransferCreditModal.css'
 
 interface GeneralEducationTransferCreditModalProps {
   generalEducation: GeneralEducation
+  record?: CourseRecord | null
   onClose: () => void
   onCreated: (
+    record: CourseRecord,
+  ) => void
+  onUpdated?: (
     record: CourseRecord,
   ) => void
 }
@@ -29,33 +35,71 @@ interface GeneralEducationTransferCreditModalProps {
 
 export function GeneralEducationTransferCreditModal({
   generalEducation,
+  record= null,
   onClose,
   onCreated,
+  onUpdated,
 }: GeneralEducationTransferCreditModalProps) {
   const [
     sourceCourseName,
     setSourceCourseName,
-  ] = useState('')
+  ] = useState(
+    record?.courseName ?? '',
+  )
 
   const [
     selectedRequirementId,
     setSelectedRequirementId,
-  ] = useState('')
+  ] = useState(() => {
+    if (
+      record
+        ?.generalEducationRequirementId ===
+        null ||
+      record
+        ?.generalEducationRequirementId ===
+        undefined
+    ) {
+      return ''
+    }
+
+    return String(
+      record.generalEducationRequirementId,
+    )
+  })
 
   const [
     selectedAreaId,
     setSelectedAreaId,
-  ] = useState('')
+  ] = useState(() => {
+    if (
+      record?.generalEducationAreaId ===
+        null ||
+      record?.generalEducationAreaId ===
+        undefined
+    ) {
+      return ''
+    }
+
+    return String(
+      record.generalEducationAreaId,
+    )
+  })
 
   const [
     recognizedCredits,
     setRecognizedCredits,
-  ] = useState('')
+  ] = useState(
+    record === null
+      ? ''
+      : String(record.credits),
+  )
 
   const [
     note,
     setNote,
-  ] = useState('')
+  ] = useState(
+    record?.note ?? ''
+  )
 
   const [
     formError,
@@ -96,6 +140,9 @@ export function GeneralEducationTransferCreditModal({
         selectedRequirement,
       ],
     )
+
+  const isEditing =
+    record !== null
 
   useEffect(() => {
     function handleKeyDown(
@@ -176,37 +223,54 @@ export function GeneralEducationTransferCreditModal({
     setFormIsSubmitting(true)
 
     try {
-      const createdRecord =
-        await createCourseRecord({
-          curriculumCourseId: null,
-          lectureId: null,
-          generalEducationRequirementId:
-            selectedRequirement.id,
-          generalEducationAreaId:
-            selectedArea.id,
-          academicYear: null,
-          semester: null,
-          courseName:
-            sourceCourseName.trim(),
-          courseCode: null,
-          completionType: '교양',
-          credits,
-          status: 'substituted',
-          letterGrade: null,
-          isRetake: false,
-          note:
-            note.trim().length === 0
-              ? null
-              : note.trim(),
-        })
+      const input: CourseRecordInput = {
+        curriculumCourseId: null,
+        lectureId: null,
+        generalEducationRequirementId:
+          selectedRequirement.id,
+        generalEducationAreaId:
+          selectedArea.id,
+        academicYear: null,
+        semester: null,
+        courseName:
+          sourceCourseName.trim(),
+        courseCode: null,
+        completionType: '교양',
+        credits,
+        status: 'substituted',
+        letterGrade: null,
+        isRetake: false,
+        note:
+          note.trim().length === 0
+            ? null
+            : note.trim(),
+      }
 
-      onCreated(createdRecord)
+      if (record === null) {
+        const createdRecord =
+          await createCourseRecord(input)
+
+        onCreated(createdRecord)
+      } else {
+        const updatedRecord =
+          await updateCourseRecord(
+            record.id,
+            input,
+          )
+
+        onUpdated?.(updatedRecord)
+      }
+
       onClose()
     } catch (error) {
       setFormError(
         error instanceof Error
           ? error.message
-          : '교양 인정 과목을 저장하지 못했습니다.',
+          : (
+            isEditing
+              ? '교양 인정 과목을 수정하지 못했습니다.'
+              : '교양 인정 과목을 저장하지 못했습니다.'
+          ),
       )
     } finally {
       setFormIsSubmitting(false)
@@ -237,7 +301,8 @@ export function GeneralEducationTransferCreditModal({
             <p>전적대 학점 인정</p>
 
             <h2 id="general-education-transfer-modal-title">
-              교양 인정 과목 추가
+              ? '교양 인정 과목 수정'
+              : '교양 인정 과목 추가'
             </h2>
           </div>
 
@@ -433,7 +498,11 @@ export function GeneralEducationTransferCreditModal({
             >
               {formIsSubmitting
                 ? '저장 중...'
-                : '인정 과목 저장'}
+                : (
+                  isEditing
+                    ? '변경사항 저장'
+                    : '인정 과목 저장'
+                )}
             </button>
           </footer>
         </form>
