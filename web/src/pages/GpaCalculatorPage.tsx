@@ -5,46 +5,81 @@ import {
 } from 'react'
 
 import {
-  CourseRecordModal,
-} from '../components/CourseRecordModal/CourseRecordModal'
-import type {
-  CourseRecordSemesterSelection,
-} from '../components/CourseRecordModal/CourseRecordModal'
-
-import {
   getCourseRecords,
+  updateCourseRecord,
 } from '../domain/course-records/api'
 import type {
   CourseRecord,
-  CourseRecordStatus,
+  CourseRecordInput,
 } from '../domain/course-records/types'
 
 import './GpaCalculatorPage.css'
 
 
-interface SemesterRecordGroup {
-  academicYear: number
+interface SemesterDefinition {
+  grade: number
   semester: number
-  records: CourseRecord[]
 }
 
 
-function getStatusLabel(
-  status: CourseRecordStatus,
-): string {
-  if (status === 'planned') {
-    return '수강 예정'
+interface GpaSummary {
+  gpa: number | null
+  majorGpa: number | null
+  earnedCredits: number
+}
+
+
+const SEMESTERS: SemesterDefinition[] =
+  Array.from(
+    { length: 6 },
+    (_, gradeIndex) => {
+      const grade = gradeIndex + 1
+
+      return [
+        {
+          grade,
+          semester: 1,
+        },
+        {
+          grade,
+          semester: 2,
+        },
+      ]
+    },
+  ).flat()
+
+
+const GRADE_POINTS:
+  Record<string, number> = {
+    'A+': 4.5,
+    A0: 4,
+    'B+': 3.5,
+    B0: 3,
+    'C+': 2.5,
+    C0: 2,
+    'D+': 1.5,
+    D0: 1,
+    F: 0,
   }
 
-  if (status === 'in_progress') {
-    return '수강 중'
-  }
 
-  if (status === 'completed') {
-    return '이수 완료'
-  }
+function isActiveRecord(
+  record: CourseRecord,
+): boolean {
+  return (
+    record.status === 'planned' ||
+    record.status === 'in_progress'
+  )
+}
 
-  return '대체 인정'
+
+function isMajorRecord(
+  record: CourseRecord,
+): boolean {
+  return (
+    record.completionType === '전필' ||
+    record.completionType === '전선'
+  )
 }
 
 
@@ -57,73 +92,154 @@ function formatCredits(
 }
 
 
-function createSemesterGroups(
+function formatGpa(
+  gpa: number | null,
+): string {
+  if (gpa === null) {
+    return '—'
+  }
+
+  return gpa.toFixed(2)
+}
+
+
+function calculateGpaSummary(
   records: readonly CourseRecord[],
-): SemesterRecordGroup[] {
-  const groupMap =
-    new Map<string, SemesterRecordGroup>()
+  includeActiveRecords: boolean,
+): GpaSummary {
+  const includedRecords =
+    records.filter((record) => {
+      if (
+        record.status === 'substituted' ||
+        record.letterGrade === null
+      ) {
+        return false
+      }
 
-  records.forEach((record) => {
-    if (
-      record.academicYear === null ||
-      record.semester === null ||
-      record.status === 'substituted'
-    ) {
-      return
-    }
+      if (record.status === 'completed') {
+        return true
+      }
 
-    const key =
-      `${record.academicYear}-${record.semester}`
-
-    const existingGroup =
-      groupMap.get(key)
-
-    if (existingGroup !== undefined) {
-      existingGroup.records.push(record)
-      return
-    }
-
-    groupMap.set(key, {
-      academicYear:
-        record.academicYear,
-      semester:
-        record.semester,
-      records: [record],
+      return (
+        includeActiveRecords &&
+        isActiveRecord(record)
+      )
     })
-  })
 
-  return Array.from(
-    groupMap.values(),
-  )
-    .map((group) => ({
-      ...group,
-      records: [...group.records].sort(
-        (firstRecord, secondRecord) =>
-          firstRecord.courseName
-            .localeCompare(
-              secondRecord.courseName,
-              'ko-KR',
-            ),
-      ),
-    }))
-    .sort(
-      (firstGroup, secondGroup) => {
-        if (
-          firstGroup.academicYear !==
-          secondGroup.academicYear
-        ) {
-          return (
-            firstGroup.academicYear -
-            secondGroup.academicYear
-          )
+  const gradeRecords =
+    includedRecords.filter(
+      (record) =>
+        GRADE_POINTS[
+          record.letterGrade ?? ''
+        ] !== undefined,
+    )
+
+  const totalGradeCredits =
+    gradeRecords.reduce(
+      (total, record) =>
+        total + record.credits,
+      0,
+    )
+
+  const totalGradePoints =
+    gradeRecords.reduce(
+      (total, record) =>
+        total +
+        (
+          GRADE_POINTS[
+            record.letterGrade ?? ''
+          ] * record.credits
+        ),
+      0,
+    )
+
+  const majorRecords =
+    gradeRecords.filter(
+      isMajorRecord,
+    )
+
+  const majorGradeCredits =
+    majorRecords.reduce(
+      (total, record) =>
+        total + record.credits,
+      0,
+    )
+
+  const majorGradePoints =
+    majorRecords.reduce(
+      (total, record) =>
+        total +
+        (
+          GRADE_POINTS[
+            record.letterGrade ?? ''
+          ] * record.credits
+        ),
+      0,
+    )
+
+  const earnedCredits =
+    includedRecords.reduce(
+      (total, record) => {
+        if (record.letterGrade === 'F') {
+          return total
         }
 
-        return (
-          firstGroup.semester -
-          secondGroup.semester
-        )
+        return total + record.credits
       },
+      0,
     )
+
+  return {
+    gpa:
+      totalGradeCredits > 0
+        ? totalGradePoints /
+          totalGradeCredits
+        : null,
+    majorGpa:
+      majorGradeCredits > 0
+        ? majorGradePoints /
+          majorGradeCredits
+        : null,
+    earnedCredits,
+  }
+}
+
+
+function createRecordInput(
+  record: CourseRecord,
+  status: CourseRecord['status'],
+): CourseRecordInput {
+  return {
+    curriculumCourseId:
+      record.curriculumCourseId,
+    lectureId:
+      record.lectureId,
+    generalEducationRequirementId:
+      record.generalEducationRequirementId,
+    generalEducationAreaId:
+      record.generalEducationAreaId,
+    academicYear:
+      record.academicYear,
+    grade:
+      record.grade,
+    semester:
+      record.semester,
+    courseName:
+      record.courseName,
+    courseCode:
+      record.courseCode,
+    completionType:
+      record.completionType,
+    credits:
+      record.credits,
+    status,
+    letterGrade:
+      record.letterGrade,
+    isRetake:
+      record.isRetake,
+    note:
+      record.note,
+  }
 }
 
 
@@ -132,6 +248,13 @@ export function GpaCalculatorPage() {
     courseRecords,
     setCourseRecords,
   ] = useState<CourseRecord[]>([])
+
+  const [
+    selectedSemester,
+    setSelectedSemester,
+  ] = useState<SemesterDefinition>(
+    SEMESTERS[0],
+  )
 
   const [
     recordsAreLoading,
@@ -144,18 +267,9 @@ export function GpaCalculatorPage() {
   ] = useState<string | null>(null)
 
   const [
-    courseRecordModalIsOpen,
-    setCourseRecordModalIsOpen,
+    statusIsUpdating,
+    setStatusIsUpdating,
   ] = useState(false)
-
-  const [
-    selectedSemester,
-    setSelectedSemester,
-  ] = useState<
-    CourseRecordSemesterSelection | null
-  >(null)
-
-    void selectedSemester
 
   useEffect(() => {
     let requestIsActive = true
@@ -195,30 +309,196 @@ export function GpaCalculatorPage() {
     }
   }, [])
 
-  const semesterGroups =
+  const regularRecords =
     useMemo(
       () =>
-        createSemesterGroups(
-          courseRecords,
+        courseRecords.filter(
+          (record) =>
+            record.status !==
+              'substituted' &&
+            record.grade !== null &&
+            record.semester !== null,
         ),
       [courseRecords],
     )
 
-  const regularRecords =
+  const selectedRecords =
     useMemo(
       () =>
-        semesterGroups.flatMap(
-          (group) => group.records,
-        ),
-      [semesterGroups],
+        regularRecords
+          .filter(
+            (record) =>
+              record.grade ===
+                selectedSemester.grade &&
+              record.semester ===
+                selectedSemester.semester,
+          )
+          .sort(
+            (firstRecord, secondRecord) =>
+              firstRecord.courseName
+                .localeCompare(
+                  secondRecord.courseName,
+                  'ko-KR',
+                ),
+          ),
+      [
+        regularRecords,
+        selectedSemester,
+      ],
     )
 
-  const totalCredits =
-    regularRecords.reduce(
-      (total, record) =>
-        total + record.credits,
-      0,
+  const confirmedSummary =
+    useMemo(
+      () =>
+        calculateGpaSummary(
+          regularRecords,
+          false,
+        ),
+      [regularRecords],
     )
+
+  const projectedSummary =
+    useMemo(
+      () =>
+        calculateGpaSummary(
+          regularRecords,
+          true,
+        ),
+      [regularRecords],
+    )
+
+  const semesterConfirmedSummary =
+    useMemo(
+      () =>
+        calculateGpaSummary(
+          selectedRecords,
+          false,
+        ),
+      [selectedRecords],
+    )
+
+  const semesterProjectedSummary =
+    useMemo(
+      () =>
+        calculateGpaSummary(
+          selectedRecords,
+          true,
+        ),
+      [selectedRecords],
+    )
+
+  const allSelectedRecordsAreActive =
+    selectedRecords.length > 0 &&
+    selectedRecords.every(
+      isActiveRecord,
+    )
+
+  async function toggleRecordStatus(
+    record: CourseRecord,
+  ) {
+    if (statusIsUpdating) {
+      return
+    }
+
+    setStatusIsUpdating(true)
+    setRecordsError(null)
+
+    const nextStatus =
+      isActiveRecord(record)
+        ? 'completed'
+        : 'in_progress'
+
+    try {
+      const updatedRecord =
+        await updateCourseRecord(
+          record.id,
+          createRecordInput(
+            record,
+            nextStatus,
+          ),
+        )
+
+      setCourseRecords(
+        (currentRecords) =>
+          currentRecords.map(
+            (currentRecord) =>
+              currentRecord.id ===
+              updatedRecord.id
+                ? updatedRecord
+                : currentRecord,
+          ),
+      )
+    } catch (error) {
+      setRecordsError(
+        error instanceof Error
+          ? error.message
+          : '수강 상태를 변경하지 못했습니다.',
+      )
+    } finally {
+      setStatusIsUpdating(false)
+    }
+  }
+
+  async function toggleAllRecordStatuses() {
+    if (
+      statusIsUpdating ||
+      selectedRecords.length === 0
+    ) {
+      return
+    }
+
+    setStatusIsUpdating(true)
+    setRecordsError(null)
+
+    const nextStatus =
+      allSelectedRecordsAreActive
+        ? 'completed'
+        : 'in_progress'
+
+    try {
+      const updatedRecords =
+        await Promise.all(
+          selectedRecords.map(
+            (record) =>
+              updateCourseRecord(
+                record.id,
+                createRecordInput(
+                  record,
+                  nextStatus,
+                ),
+              ),
+          ),
+        )
+
+      const updatedRecordMap =
+        new Map(
+          updatedRecords.map(
+            (record) => [
+              record.id,
+              record,
+            ],
+          ),
+        )
+
+      setCourseRecords(
+        (currentRecords) =>
+          currentRecords.map(
+            (record) =>
+              updatedRecordMap.get(
+                record.id,
+              ) ?? record,
+          ),
+      )
+    } catch (error) {
+      setRecordsError(
+        error instanceof Error
+          ? error.message
+          : '전체 수강 상태를 변경하지 못했습니다.',
+      )
+    } finally {
+      setStatusIsUpdating(false)
+    }
+  }
 
   return (
     <section className="gpa-records-page">
@@ -232,57 +512,151 @@ export function GpaCalculatorPage() {
 
           <span>
             학기별 수강 과목과 성적을
-            등록하고, 입력한 기록을 바탕으로
-            GPA와 개인 이수현황을 계산합니다.
+            입력하고, 확정 성적과 예상
+            성적을 함께 비교합니다.
           </span>
         </div>
-
-        <button
-          className="gpa-records-add-semester"
-          type="button"
-          onClick={() => {
-            setCourseRecordModalIsOpen(
-              true,
-            )
-          }}
-        >
-          + 수강 기록 추가
-        </button>
       </header>
 
-      <div className="gpa-records-summary">
-        <article>
-          <span>등록 학기</span>
+      <section className="gpa-overview">
+        <div className="gpa-overview-metrics">
+          <article>
+            <span>전체 평점</span>
 
-          <strong>
-            {semesterGroups.length}개
-          </strong>
-        </article>
+            <strong>
+              {formatGpa(
+                confirmedSummary.gpa,
+              )}
+            </strong>
 
-        <article>
-          <span>등록 과목</span>
+            <small>
+              예상{' '}
+              {formatGpa(
+                projectedSummary.gpa,
+              )}
+            </small>
+          </article>
 
-          <strong>
-            {regularRecords.length}개
-          </strong>
-        </article>
+          <article>
+            <span>전공 평점</span>
 
-        <article>
-          <span>등록 학점</span>
+            <strong>
+              {formatGpa(
+                confirmedSummary.majorGpa,
+              )}
+            </strong>
 
-          <strong>
-            {formatCredits(
-              totalCredits,
-            )}
-          </strong>
-        </article>
+            <small>
+              예상{' '}
+              {formatGpa(
+                projectedSummary.majorGpa,
+              )}
+            </small>
+          </article>
 
-        <article>
-          <span>누적 GPA</span>
+          <article>
+            <span>취득 학점</span>
 
-          <strong>—</strong>
-        </article>
-      </div>
+            <strong>
+              {formatCredits(
+                confirmedSummary
+                  .earnedCredits,
+              )}
+            </strong>
+
+            <small>
+              예상{' '}
+              {formatCredits(
+                projectedSummary
+                  .earnedCredits,
+              )}
+            </small>
+          </article>
+        </div>
+
+        <div className="gpa-overview-visuals">
+          <article>
+            <header>
+              <h2>학기별 GPA</h2>
+
+              <div className="gpa-chart-legend">
+                <span>
+                  <i />
+                  확정
+                </span>
+
+                <span>
+                  <i className="gpa-chart-legend-projected" />
+                  예상 포함
+                </span>
+              </div>
+            </header>
+
+            <div className="gpa-chart-placeholder">
+              GPA 그래프는 다음 단계에서
+              연결합니다.
+            </div>
+          </article>
+
+          <article>
+            <header>
+              <h2>성적 분포</h2>
+            </header>
+
+            <div className="gpa-chart-placeholder">
+              성적 분포는 다음 단계에서
+              연결합니다.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <nav
+        aria-label="학기 선택"
+        className="gpa-semester-tabs"
+      >
+        {SEMESTERS.map(
+          (semesterDefinition) => {
+            const isSelected =
+              semesterDefinition.grade ===
+                selectedSemester.grade &&
+              semesterDefinition.semester ===
+                selectedSemester.semester
+
+            return (
+              <button
+                aria-current={
+                  isSelected
+                    ? 'page'
+                    : undefined
+                }
+                className={
+                  `gpa-semester-tab${
+                    isSelected
+                      ? ' gpa-semester-tab--active'
+                      : ''
+                  }`
+                }
+                key={
+                  `${semesterDefinition.grade}-` +
+                  semesterDefinition.semester
+                }
+                type="button"
+                onClick={() => {
+                  setSelectedSemester(
+                    semesterDefinition,
+                  )
+                }}
+              >
+                {semesterDefinition.grade}
+                학년{' '}
+                {semesterDefinition.semester}
+                학기
+              </button>
+            )
+          },
+        )}
+      </nav>
 
       {recordsAreLoading ? (
         <div className="gpa-records-message">
@@ -302,150 +676,213 @@ export function GpaCalculatorPage() {
         </div>
       ) : null}
 
-      {!recordsAreLoading &&
-      recordsError === null &&
-      semesterGroups.length === 0 ? (
-        <div className="gpa-records-empty">
-          <strong>
-            등록된 수강 기록이 없습니다.
-          </strong>
+      {!recordsAreLoading ? (
+        <section className="gpa-semester-detail">
+          <header className="gpa-semester-detail-header">
+            <div>
+              <p>선택 학기</p>
 
-          <p>
-            다음 단계에서 학기를 추가하고
-            수강한 과목과 성적을 입력할 수
-            있습니다.
-          </p>
-        </div>
-      ) : null}
+              <h2>
+                {selectedSemester.grade}
+                학년{' '}
+                {selectedSemester.semester}
+                학기
+              </h2>
+            </div>
 
-      {!recordsAreLoading &&
-      recordsError === null &&
-      semesterGroups.length > 0 ? (
-        <div className="gpa-semester-list">
-          {semesterGroups.map(
-            (group) => {
-              const semesterCredits =
-                group.records.reduce(
-                  (total, record) =>
-                    total +
-                    record.credits,
-                  0,
-                )
+            <button
+              disabled
+              title="다음 단계에서 과목 입력 기능을 연결합니다."
+              type="button"
+            >
+              + 과목 입력하기
+            </button>
+          </header>
 
-              return (
-                <article
-                  className="gpa-semester-card"
-                  key={
-                    `${group.academicYear}-` +
-                    group.semester
-                  }
+          <div className="gpa-semester-metrics">
+            <article>
+              <span>평점</span>
+
+              <strong>
+                {formatGpa(
+                  semesterConfirmedSummary.gpa,
+                )}
+              </strong>
+
+              <small>
+                예상{' '}
+                {formatGpa(
+                  semesterProjectedSummary.gpa,
+                )}
+              </small>
+            </article>
+
+            <article>
+              <span>전공 평점</span>
+
+              <strong>
+                {formatGpa(
+                  semesterConfirmedSummary
+                    .majorGpa,
+                )}
+              </strong>
+
+              <small>
+                예상{' '}
+                {formatGpa(
+                  semesterProjectedSummary
+                    .majorGpa,
+                )}
+              </small>
+            </article>
+
+            <article>
+              <span>취득 학점</span>
+
+              <strong>
+                {formatCredits(
+                  semesterConfirmedSummary
+                    .earnedCredits,
+                )}
+              </strong>
+
+              <small>
+                예상{' '}
+                {formatCredits(
+                  semesterProjectedSummary
+                    .earnedCredits,
+                )}
+              </small>
+            </article>
+          </div>
+
+          <div className="gpa-course-table">
+            <div className="gpa-course-table-header">
+              <div className="gpa-course-name-heading">
+                <span>과목명</span>
+
+                {selectedRecords.length > 0 ? (
+                  <button
+                    disabled={
+                      statusIsUpdating
+                    }
+                    type="button"
+                    onClick={() => {
+                      void toggleAllRecordStatuses()
+                    }}
+                  >
+                    {allSelectedRecordsAreActive
+                      ? '모든 과목 확정으로 전환'
+                      : '모든 과목 수강 (예정) 중 전환'}
+                  </button>
+                ) : null}
+              </div>
+
+              <span>학점</span>
+              <span>성적</span>
+              <span>이수구분</span>
+              <span />
+            </div>
+
+            {selectedRecords.length === 0 ? (
+              <div className="gpa-course-empty">
+                <strong>
+                  등록된 과목이 없습니다.
+                </strong>
+
+                <p>
+                  이 학기의 과목을 입력하면
+                  GPA와 개인 이수현황에
+                  자동으로 반영됩니다.
+                </p>
+
+                <button
+                  disabled
+                  type="button"
                 >
-                  <header className="gpa-semester-card-header">
-                    <div>
-                      <span>
-                        {group.academicYear}
-                        학년도
-                      </span>
+                  + 과목 입력하기
+                </button>
+              </div>
+            ) : (
+              selectedRecords.map(
+                (record) => {
+                  const recordIsActive =
+                    isActiveRecord(record)
 
-                      <h2>
-                        {group.academicYear}
-                        학년도{' '}
-                        {group.semester}
-                        학기
-                      </h2>
-                    </div>
+                  return (
+                    <div
+                      className={
+                        `gpa-course-row${
+                          recordIsActive
+                            ? ' gpa-course-row--active'
+                            : ''
+                        }`
+                      }
+                      key={record.id}
+                    >
+                      <div className="gpa-course-name-cell">
+                        <strong>
+                          {record.courseName}
+                        </strong>
 
-                    <div className="gpa-semester-card-summary">
-                      <strong>
-                        {
-                          group.records
-                            .length
-                        }
-                        과목
-                      </strong>
+                        <button
+                          className={
+                            `gpa-course-status-toggle${
+                              recordIsActive
+                                ? ' gpa-course-status-toggle--active'
+                                : ''
+                            }`
+                          }
+                          disabled={
+                            statusIsUpdating
+                          }
+                          type="button"
+                          onClick={() => {
+                            void toggleRecordStatus(
+                              record,
+                            )
+                          }}
+                        >
+                          {recordIsActive
+                            ? '수강 (예정) 중'
+                            : '수강 (예정) 중 전환'}
+                        </button>
+                      </div>
 
                       <span>
                         {formatCredits(
-                          semesterCredits,
+                          record.credits,
                         )}
                       </span>
+
+                      <span>
+                        {record.letterGrade ??
+                          '—'}
+                      </span>
+
+                      <span>
+                        {
+                          record
+                            .completionType
+                        }
+                      </span>
+
+                      <button
+                        aria-label={
+                          `${record.courseName} 메뉴`
+                        }
+                        className="gpa-course-menu"
+                        type="button"
+                      >
+                        ⋯
+                      </button>
                     </div>
-                  </header>
-
-                  <div className="gpa-semester-table">
-                    <div className="gpa-semester-table-header">
-                      <span>과목명</span>
-                      <span>이수구분</span>
-                      <span>학점</span>
-                      <span>상태</span>
-                      <span>성적</span>
-                    </div>
-
-                    {group.records.map(
-                      (record) => (
-                        <div
-                          className="gpa-semester-record"
-                          key={record.id}
-                        >
-                          <strong>
-                            {
-                              record
-                                .courseName
-                            }
-                          </strong>
-
-                          <span>
-                            {
-                              record
-                                .completionType
-                            }
-                          </span>
-
-                          <span>
-                            {formatCredits(
-                              record.credits,
-                            )}
-                          </span>
-
-                          <span>
-                            {getStatusLabel(
-                              record.status,
-                            )}
-                          </span>
-
-                          <span>
-                            {
-                              record
-                                .letterGrade ??
-                              '—'
-                            }
-                          </span>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </article>
+                  )
+                },
               )
-            },
-          )}
-        </div>
-      ) : null}
-      {courseRecordModalIsOpen ? (
-        <CourseRecordModal
-          onClose={() => {
-            setCourseRecordModalIsOpen(
-              false,
-            )
-          }}
-          onContinue={(selection) => {
-            setSelectedSemester(
-              selection,
-            )
-            setCourseRecordModalIsOpen(
-              false,
-            )
-          }}
-        />
+            )}
+          </div>
+        </section>
       ) : null}
     </section>
   )
