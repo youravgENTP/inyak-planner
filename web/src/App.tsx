@@ -4,18 +4,21 @@ import {
 } from 'react'
 
 import './App.css'
-import { AppShell } from './components/layout/AppShell'
+import { AppShell, 
+  type AppNavigationPage,
+ } from './components/layout/AppShell'
 import {
   getCurrentUser,
   logout,
   type AuthUser,
 } from './domain/auth/api'
 import { AccountPage } from './pages/AccountPage'
+import { CurriculumPage } from './pages/CurriculumPage'
 import { AuthPage } from './pages/AuthPage'
 import { TimetablePage } from './pages/TimetablePage'
 
 type AppPage =
-  | 'timetable'
+  | AppNavigationPage
   | 'account'
 
 function App() {
@@ -149,9 +152,19 @@ function App() {
     )
   }
 
+  const activeNavigationPage:
+    AppNavigationPage =
+      currentPage === 'curriculum'
+        ? 'curriculum'
+        : 'timetable'
+
   return (
     <AppShell
+      activePage={activeNavigationPage}
       username={currentUser.username}
+      onNavigate={(page) =>
+        setCurrentPage(page)
+      }
       onOpenAccount={() =>
         setCurrentPage('account')
       }
@@ -169,11 +182,15 @@ function App() {
             void handleLogout()
           }}
         />
+      ) : currentPage ===
+        'curriculum' ? (
+        <CurriculumPage />
       ) : (
         <TimetablePage />
       )}
     </AppShell>
   )
+
 }
 
 export default App

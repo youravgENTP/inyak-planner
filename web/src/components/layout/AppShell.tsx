@@ -5,18 +5,41 @@ import {
   useState,
 } from 'react'
 
+export type AppNavigationPage =
+  | 'timetable'
+  | 'curriculum'
+
 interface AppShellProps {
+  activePage: AppNavigationPage
   children: ReactNode
   username: string
+  onNavigate: (
+    page: AppNavigationPage,
+  ) => void
   onOpenAccount: () => void
   onLogout: () => void
 }
 
-const navigationItems = [
-  { label: '시간표', active: true },
-  { label: '수강편람', active: false },
-  { label: '졸업 요건', active: false },
-]
+interface NavigationItem {
+  label: string
+  page: AppNavigationPage | null
+}
+
+const navigationItems:
+  NavigationItem[] = [
+    {
+      label: '시간표',
+      page: 'timetable',
+    },
+    {
+      label: '수강편람',
+      page: null,
+    },
+    {
+      label: '졸업 요건',
+      page: 'curriculum',
+    },
+  ]
 
 function getProfileInitial(
   username: string,
@@ -34,8 +57,10 @@ function getProfileInitial(
 }
 
 export function AppShell({
+  activePage,
   children,
   username,
+  onNavigate,
   onOpenAccount,
   onLogout,
 }: AppShellProps) {
@@ -191,17 +216,28 @@ export function AppShell({
           className="sidebar-nav"
           aria-label="주요 메뉴"
         >
-          {navigationItems.map((item) => (
+        {navigationItems.map((item) => {
+          const isActive =
+            item.page !== null &&
+            item.page === activePage
+
+          return (
             <button
               className={
                 `nav-item${
-                  item.active
+                  isActive
                     ? ' nav-item--active'
                     : ''
                 }`
               }
+              disabled={item.page === null}
               key={item.label}
               type="button"
+              onClick={() => {
+                if (item.page !== null) {
+                  onNavigate(item.page)
+                }
+              }}
             >
               <span
                 className="nav-dot"
@@ -210,7 +246,8 @@ export function AppShell({
 
               {item.label}
             </button>
-          ))}
+          )
+        })}
         </nav>
 
         <div className="sidebar-footer">
