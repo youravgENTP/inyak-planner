@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 
@@ -12,8 +13,27 @@ import {
 } from '../domain/course-records/api'
 import type {
   CourseRecord,
-  CourseRecordStatus,
 } from '../domain/course-records/types'
+import {
+  fetchCurriculum,
+} from '../domain/curriculum/api'
+import type {
+  Curriculum,
+} from '../domain/curriculum/types'
+import {
+  fetchGeneralEducation,
+} from '../domain/general-education/api'
+import type {
+  GeneralEducation,
+} from '../domain/general-education/types'
+import {
+  calculateGraduationProgress,
+} from '../domain/graduation-progress/calculateProgress'
+import type {
+  CreditProgress,
+  GraduationProgress,
+  MajorCompletionProgress,
+} from '../domain/graduation-progress/types'
 
 import './GraduationPlaceholderPage.css'
 
@@ -39,38 +59,164 @@ function getStudentTypeLabel(
 }
 
 
-function getStatusLabel(
-  status: CourseRecordStatus,
+function formatCredits(
+  credits: number,
 ): string {
-  if (status === 'planned') {
-    return '수강 예정'
-  }
-
-  if (status === 'in_progress') {
-    return '수강 중'
-  }
-
-  if (status === 'completed') {
-    return '이수 완료'
-  }
-
-  return '대체 인정'
+  return `${credits}학점`
 }
 
 
-function getSemesterLabel(
-  record: CourseRecord,
-): string {
-  if (
-    record.academicYear === null ||
-    record.semester === null
-  ) {
-    return '학기 미지정'
+function getProgressPercent(
+  progress: CreditProgress,
+): number {
+  if (progress.requiredCredits === 0) {
+    return 100
   }
 
+  return Math.min(
+    (
+      progress.completedCredits /
+      progress.requiredCredits
+    ) * 100,
+    100,
+  )
+}
+
+
+function ProgressBar({
+  progress,
+}: {
+  progress: CreditProgress
+}) {
+  const progressPercent =
+    getProgressPercent(progress)
+
   return (
-    `${record.academicYear}학년도 ` +
-    `${record.semester}학기`
+    <div className="graduation-progress-bar">
+      <div
+        className="graduation-progress-bar-value"
+        style={{
+          width: `${progressPercent}%`,
+        }}
+      />
+    </div>
+  )
+}
+
+
+function CreditSummaryCard({
+  title,
+  progress,
+}: {
+  title: string
+  progress: CreditProgress
+}) {
+  return (
+    <article className="graduation-progress-summary-card">
+      <div className="graduation-progress-summary-heading">
+        <span>{title}</span>
+
+        <strong>
+          {formatCredits(
+            progress.completedCredits,
+          )}
+          {' / '}
+          {formatCredits(
+            progress.requiredCredits,
+          )}
+        </strong>
+      </div>
+
+      <ProgressBar progress={progress} />
+
+      <dl className="graduation-progress-summary-details">
+        <div>
+          <dt>수강 중</dt>
+          <dd>
+            {formatCredits(
+              progress.inProgressCredits,
+            )}
+          </dd>
+        </div>
+
+        <div>
+          <dt>수강 예정</dt>
+          <dd>
+            {formatCredits(
+              progress.plannedCredits,
+            )}
+          </dd>
+        </div>
+
+        <div>
+          <dt>남은 학점</dt>
+          <dd>
+            {formatCredits(
+              progress.remainingCredits,
+            )}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  )
+}
+
+
+function MajorSummaryCard({
+  title,
+  progress,
+}: {
+  title: string
+  progress: MajorCompletionProgress
+}) {
+  return (
+    <article className="graduation-progress-summary-card">
+      <div className="graduation-progress-summary-heading">
+        <span>{title}</span>
+
+        <strong>
+          {progress.courses.completedCourseCount}
+          {' / '}
+          {progress.courses.requiredCourseCount}
+          과목
+        </strong>
+      </div>
+
+      <ProgressBar
+        progress={progress.credits}
+      />
+
+      <dl className="graduation-progress-summary-details">
+        <div>
+          <dt>이수 학점</dt>
+          <dd>
+            {formatCredits(
+              progress.credits.completedCredits,
+            )}
+          </dd>
+        </div>
+
+        <div>
+          <dt>기준 학점</dt>
+          <dd>
+            {formatCredits(
+              progress.credits.requiredCredits,
+            )}
+          </dd>
+        </div>
+
+        <div>
+          <dt>남은 과목</dt>
+          <dd>
+            {
+              progress.courses
+                .remainingCourseCount
+            }
+            과목
+          </dd>
+        </div>
+      </dl>
+    </article>
   )
 }
 
@@ -85,53 +231,109 @@ export function ProgressTrackerPage({
   ] = useState<CourseRecord[]>([])
 
   const [
-    recordsAreLoading,
-    setRecordsAreLoading,
+    curriculum,
+    setCurriculum,
+  ] = useState<Curriculum | null>(null)
+
+  const [
+    generalEducation,
+    setGeneralEducation,
+  ] = useState<GeneralEducation | null>(
+    null,
+  )
+
+  const [
+    dataAreLoading,
+    setDataAreLoading,
   ] = useState(false)
 
   const [
-    recordsError,
-    setRecordsError,
+    dataError,
+    setDataError,
   ] = useState<string | null>(null)
 
   const academicProfileIsComplete =
     user.entryYear !== null &&
     user.studentType !== null
 
-  const loadCourseRecords =
+  const loadProgressData =
     useCallback(async () => {
-      setRecordsAreLoading(true)
-      setRecordsError(null)
+      if (user.entryYear === null) {
+        return
+      }
+
+      setDataAreLoading(true)
+      setDataError(null)
 
       try {
-        const records =
-          await getCourseRecords()
+        const [
+          records,
+          curriculumResult,
+          generalEducationResult,
+        ] = await Promise.all([
+          getCourseRecords(),
+          fetchCurriculum(
+            user.entryYear,
+          ),
+          fetchGeneralEducation(
+            user.entryYear,
+          ),
+        ])
 
         setCourseRecords(records)
+        setCurriculum(
+          curriculumResult,
+        )
+        setGeneralEducation(
+          generalEducationResult,
+        )
       } catch (error) {
-        setRecordsError(
+        setDataError(
           error instanceof Error
             ? error.message
             : (
-              '과목 이수 기록을 ' +
+              '개인 이수 현황을 ' +
               '불러오지 못했습니다.'
             ),
         )
       } finally {
-        setRecordsAreLoading(false)
+        setDataAreLoading(false)
       }
-    }, [])
+    }, [user.entryYear])
 
   useEffect(() => {
     if (!academicProfileIsComplete) {
       return
     }
 
-    void loadCourseRecords()
+    void loadProgressData()
   }, [
     academicProfileIsComplete,
-    loadCourseRecords,
+    loadProgressData,
   ])
+
+  const graduationProgress =
+    useMemo<GraduationProgress | null>(
+      () => {
+        if (
+          curriculum === null ||
+          generalEducation === null
+        ) {
+          return null
+        }
+
+        return calculateGraduationProgress(
+          curriculum,
+          generalEducation,
+          courseRecords,
+        )
+      },
+      [
+        courseRecords,
+        curriculum,
+        generalEducation,
+      ],
+    )
 
   if (!academicProfileIsComplete) {
     return (
@@ -191,30 +393,34 @@ export function ProgressTrackerPage({
         </span>
       </header>
 
-      {recordsAreLoading ? (
+      {dataAreLoading ? (
         <div className="graduation-placeholder-card">
-          <h2>이수 기록을 불러오는 중입니다.</h2>
+          <h2>
+            졸업요건을 계산하고 있습니다.
+          </h2>
 
           <p>
-            저장된 과목 정보를 확인하고 있습니다.
+            전공 교육과정, 교양 졸업요건,
+            개인 과목 기록을 확인하고 있습니다.
           </p>
         </div>
       ) : null}
 
-      {!recordsAreLoading &&
-      recordsError !== null ? (
+      {!dataAreLoading &&
+      dataError !== null ? (
         <div className="graduation-placeholder-card">
           <h2>
-            이수 기록을 불러오지 못했습니다.
+            개인 이수 현황을 불러오지
+            못했습니다.
           </h2>
 
-          <p>{recordsError}</p>
+          <p>{dataError}</p>
 
           <button
             className="secondary-button"
             type="button"
             onClick={() => {
-              void loadCourseRecords()
+              void loadProgressData()
             }}
           >
             다시 시도
@@ -222,61 +428,152 @@ export function ProgressTrackerPage({
         </div>
       ) : null}
 
-      {!recordsAreLoading &&
-      recordsError === null &&
-      courseRecords.length === 0 ? (
-        <div className="graduation-placeholder-card">
-          <h2>
-            아직 저장된 과목이 없습니다.
-          </h2>
+      {!dataAreLoading &&
+      dataError === null &&
+      graduationProgress !== null ? (
+        <>
+          <div className="graduation-progress-summary-grid">
+            <CreditSummaryCard
+              title="총 이수학점"
+              progress={
+                graduationProgress.totalCredits
+              }
+            />
 
-          <p>
-            다음 단계에서 직접 과목을 입력하거나
-            저장된 시간표에서 불러올 수 있습니다.
-          </p>
-        </div>
-      ) : null}
+            <MajorSummaryCard
+              title="전공필수"
+              progress={
+                graduationProgress.majorRequired
+              }
+            />
 
-      {!recordsAreLoading &&
-      recordsError === null &&
-      courseRecords.length > 0 ? (
-        <div className="graduation-placeholder-card">
-          <h2>
-            저장된 과목 {courseRecords.length}개
-          </h2>
+            <MajorSummaryCard
+              title="전공선택"
+              progress={
+                graduationProgress.majorElective
+              }
+            />
 
-          <ul>
-            {courseRecords.map((record) => (
-              <li key={record.id}>
-                <strong>
-                  {record.courseName}
-                </strong>
+            {graduationProgress
+              .generalEducation
+              .map((requirement) => (
+                <CreditSummaryCard
+                  key={
+                    requirement.requirementId
+                  }
+                  title={
+                    requirement.category
+                  }
+                  progress={
+                    requirement.credits
+                  }
+                />
+              ))}
+          </div>
 
-                {' · '}
+          <section className="graduation-progress-section">
+            <div className="graduation-progress-section-heading">
+              <div>
+                <p>교양 영역별 현황</p>
+                <h2>
+                  세부 이수영역
+                </h2>
+              </div>
 
-                {record.completionType}
+              <span>
+                저장된 과목{' '}
+                {courseRecords.length}개
+              </span>
+            </div>
 
-                {' · '}
+            <div className="graduation-progress-requirement-list">
+              {graduationProgress
+                .generalEducation
+                .map((requirement) => (
+                  <article
+                    className="graduation-progress-requirement-card"
+                    key={
+                      requirement.requirementId
+                    }
+                  >
+                    <header>
+                      <div>
+                        <span>
+                          {
+                            requirement.category
+                          }
+                        </span>
 
-                {record.credits}학점
+                        <strong>
+                          {
+                            requirement
+                              .completedAreaCount
+                          }
+                          개 영역 이수
+                        </strong>
+                      </div>
 
-                {' · '}
+                      <small>
+                        {requirement.isSatisfied
+                          ? '요건 충족'
+                          : '이수 필요'}
+                      </small>
+                    </header>
 
-                {getStatusLabel(
-                  record.status,
-                )}
+                    <ul>
+                      {requirement.areas.map(
+                        (area) => (
+                          <li
+                            key={area.areaId}
+                          >
+                            <div>
+                              <strong>
+                                {
+                                  area.areaName
+                                }
+                              </strong>
 
-                {' · '}
+                              <span>
+                                {area.isRequired
+                                  ? '필수 영역'
+                                  : '선택 영역'}
+                              </span>
+                            </div>
 
-                {getSemesterLabel(record)}
+                            <span>
+                              {
+                                area.completedCredits
+                              }
+                              학점
+                              {' · '}
+                              {area.isSatisfied
+                                ? '충족'
+                                : '미충족'}
+                            </span>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  </article>
+                ))}
+            </div>
+          </section>
 
-                {record.isRetake
-                  ? ' · 재수강'
-                  : ''}
-              </li>
-            ))}
-          </ul>
-        </div>
+          {courseRecords.length === 0 ? (
+            <div className="graduation-placeholder-card graduation-placeholder-card--compact">
+              <h2>
+                아직 저장된 과목이 없습니다.
+              </h2>
+
+              <p>
+                현재 진척도는 모두 0으로
+                표시됩니다. 다음 단계에서
+                과목 입력과 전적대 인정 기능을
+                추가합니다.
+              </p>
+            </div>
+          ) : null}
+        </>
       ) : null}
     </section>
   )
