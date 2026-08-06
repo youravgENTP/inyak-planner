@@ -344,3 +344,71 @@ def get_general_education_requirements(
         )
 
     return requirements
+
+def get_curriculum_course_by_id(
+    curriculum_course_id: int,
+) -> Optional[Dict[str, Any]]:
+    """ID가 일치하는 공식 교육과정 과목 하나를 조회한다."""
+    with connect_database() as connection:
+        row = connection.execute(
+            """
+            SELECT
+                id,
+                entry_year,
+                grade,
+                semester,
+                course_name,
+                course_code,
+                completion_type,
+                credits,
+                notes
+            FROM curriculum_courses
+            WHERE id = ?
+            """,
+            (curriculum_course_id,),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    return dict(row)
+
+
+def get_general_education_link(
+    *,
+    requirement_id: int,
+    area_id: int,
+) -> Optional[Dict[str, Any]]:
+    """
+    교양 영역과 상위 졸업요건의 연결 정보를 조회한다.
+    """
+    with connect_database() as connection:
+        row = connection.execute(
+            """
+            SELECT
+                requirement.id
+                    AS requirement_id,
+                requirement.entry_year,
+                requirement.category,
+                area.id AS area_id,
+                area.area_name
+            FROM general_education_areas
+            AS area
+            JOIN general_education_requirements
+            AS requirement
+                ON requirement.id =
+                   area.requirement_id
+            WHERE
+                requirement.id = ?
+                AND area.id = ?
+            """,
+            (
+                requirement_id,
+                area_id,
+            ),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    return dict(row)
