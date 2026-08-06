@@ -227,7 +227,7 @@ export function AppShell({
           <div className="nav-section">
             <div className="nav-group">
               <div className="nav-group-title">
-                졸업 요건 및 학점 계산기
+                졸업 요건
               </div>
 
               <div className="nav-submenu">
@@ -244,23 +244,7 @@ export function AppShell({
                     onNavigate('curriculum')
                   }
                 >
-                  학번별 졸업요건
-                </button>
-
-                <button
-                  className={
-                    `nav-subitem${
-                      activePage === 'progress'
-                        ? ' nav-subitem--active'
-                        : ''
-                    }`
-                  }
-                  type="button"
-                  onClick={() =>
-                    onNavigate('progress')
-                  }
-                >
-                  개인 이수 현황
+                  학번별 교육과정
                 </button>
 
                 <button
@@ -276,7 +260,23 @@ export function AppShell({
                     onNavigate('gpa')
                   }
                 >
-                  GPA 계산기
+                  수강 기록 &amp; GPA
+                </button>
+
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage === 'progress'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate('progress')
+                  }
+                >
+                  개인 이수현황 확인
                 </button>
               </div>
             </div>
