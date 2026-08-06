@@ -340,7 +340,7 @@
 
 .graduation-board-transfer-course {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
@@ -357,21 +357,21 @@
 
 .graduation-board-transfer-more {
   display: flex;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid rgb(48 89 65 / 16%);
-  border-radius: 10px;
-  background: rgb(255 255 255 / 46%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
   font-size: 22px;
   line-height: 1;
   color: #365e45;
 }
 
 .graduation-board-transfer-more:hover {
-  background: rgb(255 255 255 / 78%);
+  background: rgb(255 255 255 / 32%);
 }
 
 .graduation-board-transfer-more:disabled {
