@@ -25,6 +25,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from server.auth_router import router as auth_router
+from server.course_records_router import (
+    router as course_records_router,
+)
 
 from server.database import (
     get_lecture_by_id,
@@ -51,7 +54,9 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
-
+app.include_router(
+    course_records_router
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -63,7 +68,9 @@ app.add_middleware(
     allow_methods=[
         "GET", 
         "POST",
+        "PUT",
         "PATCH",
+        "DELETE",
     ],
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],
