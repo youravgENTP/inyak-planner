@@ -184,3 +184,42 @@ def get_lectures_by_ids(
         for lecture_id in unique_lecture_ids
         if lecture_id in lecture_map
     ]
+
+def get_curriculum_courses(
+    *,
+    entry_year: int,
+) -> List[Dict[str, Any]]:
+    """입학연도에 해당하는 교육과정 과목을 조회한다."""
+    with connect_database() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                id,
+                entry_year,
+                grade,
+                semester,
+                course_name,
+                course_code,
+                completion_type,
+                credits,
+                notes
+            FROM curriculum_courses
+            WHERE entry_year = ?
+            ORDER BY
+                grade,
+                semester,
+                CASE completion_type
+                    WHEN '전필' THEN 1
+                    WHEN '전선' THEN 2
+                    ELSE 3
+                END,
+                course_name
+            """,
+            (entry_year,),
+        ).fetchall()
+
+    return [
+        dict(row)
+        for row in rows
+    ]
+

@@ -30,12 +30,7 @@ from server.database import (
     get_lecture_by_id,
     get_lectures,
     get_lectures_by_ids,
-)
-
-from server.database import (
-    get_lecture_by_id,
-    get_lectures,
-    get_lectures_by_ids,
+    get_curriculum_courses,
 )
 
 PROJECT_ROOT = Path(
@@ -111,6 +106,20 @@ def read_lectures(
     return {
         "count": len(lectures),
         "lectures": lectures,
+    }
+
+@app.get("/api/curriculum")
+def read_curriculum(
+    entry_year: int = Query(ge=2000, le=2100),
+) -> Dict[str, Any]:
+    courses = get_curriculum_courses(
+        entry_year=entry_year,
+    )
+
+    return {
+        "entry_year": entry_year,
+        "count": len(courses),
+        "courses": courses,
     }
 
 
@@ -312,3 +321,4 @@ def download_syllabi(
             ),
         },
     )
+
