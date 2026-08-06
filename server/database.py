@@ -223,3 +223,124 @@ def get_curriculum_courses(
         for row in rows
     ]
 
+def get_general_education_requirements(
+    *,
+    entry_year: int,
+) -> List[Dict[str, Any]]:
+    """입학연도에 해당하는 교양 졸업요건을 조회한다."""
+    with connect_database() as connection:
+        requirement_rows = connection.execute(
+            """
+            SELECT
+                id,
+                entry_year,
+                category,
+                minimum_credits,
+                minimum_area_count,
+                notes,
+                display_order
+            FROM general_education_requirements
+            WHERE entry_year = ?
+            ORDER BY display_order
+            """,
+            (entry_year,),
+        ).fetchall()
+
+        area_rows = connection.execute(
+            """
+            SELECT
+                area.id,
+                area.requirement_id,
+                area.area_name,
+                area.minimum_credits,
+                area.is_required,
+                area.notes,
+                area.display_order
+            FROM general_education_areas
+            AS area
+            JOIN general_education_requirements
+            AS requirement
+                ON requirement.id =
+                   area.requirement_id
+            WHERE requirement.entry_year = ?
+            ORDER BY
+                requirement.display_order,
+                area.display_order
+            """,
+            (entry_year,),
+        ).fetchall()
+
+    areas_by_requirement_id: Dict[
+        int,
+        List[Dict[str, Any]],
+    ] = {}
+
+    for area_row in area_rows:
+        requirement_id = int(
+            area_row["requirement_id"]
+        )
+
+        area = {
+            "id": area_row["id"],
+            "area_name": area_row["area_name"],
+            "minimum_credits": (
+                area_row["minimum_credits"]
+            ),
+            "is_required": bool(
+                area_row["is_required"]
+            ),
+            "notes": area_row["notes"],
+            "display_order": (
+                area_row["display_order"]
+            ),
+        }
+
+        areas_by_requirement_id.setdefault(
+            requirement_id,
+            [],
+        ).append(area)
+
+    requirements: List[
+        Dict[str, Any]
+    ] = []
+
+    for requirement_row in requirement_rows:
+        requirement_id = int(
+            requirement_row["id"]
+        )
+
+        requirements.append(
+            {
+                "id": requirement_id,
+                "entry_year": (
+                    requirement_row["entry_year"]
+                ),
+                "category": (
+                    requirement_row["category"]
+                ),
+                "minimum_credits": (
+                    requirement_row[
+                        "minimum_credits"
+                    ]
+                ),
+                "minimum_area_count": (
+                    requirement_row[
+                        "minimum_area_count"
+                    ]
+                ),
+                "notes": requirement_row["notes"],
+                "display_order": (
+                    requirement_row[
+                        "display_order"
+                    ]
+                ),
+                "areas": (
+                    areas_by_requirement_id.get(
+                        requirement_id,
+                        [],
+                    )
+                ),
+            }
+        )
+
+    return requirements
