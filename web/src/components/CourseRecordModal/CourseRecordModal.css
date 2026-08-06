@@ -1,0 +1,144 @@
+/* =========================================================
+   수강 기록 입력 모달
+   ========================================================= */
+
+.course-record-modal-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(24 35 28 / 42%);
+}
+
+.course-record-modal {
+  width: min(100%, 460px);
+  overflow: hidden;
+  border: 1px solid #dce6df;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow:
+    0 24px 70px rgb(26 42 31 / 24%);
+}
+
+.course-record-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid #e9eeea;
+}
+
+.course-record-modal-header p {
+  margin: 0 0 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6e8475;
+}
+
+.course-record-modal-header h2 {
+  margin: 0;
+  font-size: 21px;
+  color: #26382d;
+}
+
+.course-record-modal-close {
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  color: #718078;
+}
+
+.course-record-modal-close:hover {
+  opacity: 0.65;
+}
+
+.course-record-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  padding: 22px 24px 24px;
+}
+
+.course-record-modal-description {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 13px;
+  color: #6d7971;
+}
+
+.course-record-modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.course-record-modal-form label > span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #415248;
+}
+
+.course-record-modal-form input,
+.course-record-modal-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #d5e0d8;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  color: #293a30;
+}
+
+.course-record-modal-form input:focus,
+.course-record-modal-form select:focus {
+  border-color: #79a087;
+  outline: 3px solid rgb(80 135 98 / 12%);
+}
+
+.course-record-modal-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #fff4f4;
+  font-size: 12px;
+  color: #a04444;
+}
+
+.course-record-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+.course-record-modal-actions button {
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-weight: 700;
+}
+
+.course-record-modal-cancel {
+  border: 1px solid #d9e1db;
+  background: #fff;
+  color: #627068;
+}
+
+.course-record-modal-submit {
+  border: 1px solid #426f51;
+  background: #426f51;
+  color: #fff;
+}
+
+.course-record-modal-submit:hover {
+  background: #355e43;
+}

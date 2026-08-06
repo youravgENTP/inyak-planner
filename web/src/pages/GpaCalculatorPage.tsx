@@ -5,6 +5,13 @@ import {
 } from 'react'
 
 import {
+  CourseRecordModal,
+} from '../components/CourseRecordModal/CourseRecordModal'
+import type {
+  CourseRecordSemesterSelection,
+} from '../components/CourseRecordModal/CourseRecordModal'
+
+import {
   getCourseRecords,
 } from '../domain/course-records/api'
 import type {
@@ -136,6 +143,20 @@ export function GpaCalculatorPage() {
     setRecordsError,
   ] = useState<string | null>(null)
 
+  const [
+    courseRecordModalIsOpen,
+    setCourseRecordModalIsOpen,
+  ] = useState(false)
+
+  const [
+    selectedSemester,
+    setSelectedSemester,
+  ] = useState<
+    CourseRecordSemesterSelection | null
+  >(null)
+
+    void selectedSemester
+
   useEffect(() => {
     let requestIsActive = true
 
@@ -218,11 +239,14 @@ export function GpaCalculatorPage() {
 
         <button
           className="gpa-records-add-semester"
-          disabled
-          title="다음 단계에서 학기 추가 기능을 연결합니다."
           type="button"
+          onClick={() => {
+            setCourseRecordModalIsOpen(
+              true,
+            )
+          }}
         >
-          + 학기 추가
+          + 수강 기록 추가
         </button>
       </header>
 
@@ -405,6 +429,23 @@ export function GpaCalculatorPage() {
             },
           )}
         </div>
+      ) : null}
+      {courseRecordModalIsOpen ? (
+        <CourseRecordModal
+          onClose={() => {
+            setCourseRecordModalIsOpen(
+              false,
+            )
+          }}
+          onContinue={(selection) => {
+            setSelectedSemester(
+              selection,
+            )
+            setCourseRecordModalIsOpen(
+              false,
+            )
+          }}
+        />
       ) : null}
     </section>
   )
