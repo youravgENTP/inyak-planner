@@ -50,6 +50,7 @@ export interface GeneralEducationAreaProgress {
     GeneralEducationCategory
   areaName: string
   minimumCredits: number | null
+  isRequired: boolean
   completedCredits: number
   inProgressCredits: number
   plannedCredits: number

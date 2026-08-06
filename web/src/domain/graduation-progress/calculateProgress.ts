@@ -310,6 +310,8 @@ function createAreaProgress(
       area.areaName,
     minimumCredits:
       area.minimumCredits,
+    isRequired:
+      area.isRequired,
     completedCredits,
     inProgressCredits,
     plannedCredits,
