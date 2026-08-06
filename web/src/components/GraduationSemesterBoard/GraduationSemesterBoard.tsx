@@ -40,6 +40,9 @@ interface GraduationSemesterBoardProps {
   onRecordCreated: (
     record: CourseRecord,
   ) => void
+  onRecordUpdated: (
+    record: CourseRecord,
+  ) => void
   onRecordDeleted: (
     recordId: string,
   ) => void
@@ -294,11 +297,15 @@ function TransferCreditCard({
   card,
   curriculum,
   onRecordCreated,
+  onRecordUpdated,
   onRecordDeleted,
 }: {
   card: TransferCreditBoardCard
   curriculum: Curriculum
   onRecordCreated: (
+    record: CourseRecord,
+  ) => void
+  onRecordUpdated: (
     record: CourseRecord,
   ) => void
   onRecordDeleted: (
@@ -319,6 +326,11 @@ function TransferCreditCard({
     deletingRecordId,
     setDeletingRecordId,
   ] = useState<string | null>(null)
+
+  const [
+    editingRecord,
+    setEditingRecord,
+  ] = useState<CourseRecord | null>(null)
 
   const menuRef =
     useRef<HTMLDivElement | null>(null)
@@ -589,25 +601,44 @@ function TransferCreditCard({
                     </span>
                   </div>
 
-                  <button
-                    aria-label={`${record.courseName} 인정 기록 삭제`}
-                    className="graduation-board-transfer-delete"
-                    disabled={
-                      deletingRecordId ===
+                  <div className="graduation-board-transfer-actions">
+                    <button
+                      aria-label={`${record.courseName} 인정 기록 수정`}
+                      className="graduation-board-transfer-edit"
+                      disabled={
+                        deletingRecordId ===
+                        record.id
+                      }
+                      type="button"
+                      onClick={() => {
+                        setEditingRecord(
+                          record,
+                        )
+                      }}
+                    >
+                      수정
+                    </button>
+
+                    <button
+                      aria-label={`${record.courseName} 인정 기록 삭제`}
+                      className="graduation-board-transfer-delete"
+                      disabled={
+                        deletingRecordId ===
+                        record.id
+                      }
+                      type="button"
+                      onClick={() => {
+                        void handleDeleteRecord(
+                          record,
+                        )
+                      }}
+                    >
+                      {deletingRecordId ===
                       record.id
-                    }
-                    type="button"
-                    onClick={() => {
-                      void handleDeleteRecord(
-                        record,
-                      )
-                    }}
-                  >
-                    {deletingRecordId ===
-                    record.id
-                      ? '삭제 중'
-                      : '삭제'}
-                  </button>
+                        ? '삭제 중'
+                        : '삭제'}
+                    </button>
+                  </div>
                 </li>
                 // 
               )
@@ -628,6 +659,27 @@ function TransferCreditCard({
           }
         />
       ) : null}
+
+      {editingRecord !== null ? (
+        <MajorTransferCreditModal
+          curriculum={curriculum}
+          record={editingRecord}
+          onClose={() => {
+            setEditingRecord(null)
+          }}
+          onCreated={
+            onRecordCreated
+          }
+          onUpdated={(
+            updatedRecord,
+          ) => {
+            onRecordUpdated(
+              updatedRecord,
+            )
+            setEditingRecord(null)
+          }}
+        />
+      ) : null}
     </>
   )
 }
@@ -637,11 +689,15 @@ function BoardCard({
   card,
   curriculum,
   onRecordCreated,
+  onRecordUpdated,
   onRecordDeleted,
 }: {
   card: GraduationBoardCard
   curriculum: Curriculum
   onRecordCreated: (
+    record: CourseRecord,
+  ) => void
+  onRecordUpdated: (
     record: CourseRecord,
   ) => void
   onRecordDeleted: (
@@ -655,6 +711,9 @@ function BoardCard({
         curriculum={curriculum}
         onRecordCreated={
           onRecordCreated
+        }
+        onRecordUpdated={
+          onRecordUpdated
         }
         onRecordDeleted={
           onRecordDeleted
@@ -674,6 +733,7 @@ export function GraduationSemesterBoard({
   curriculum,
   records,
   onRecordCreated,
+  onRecordUpdated,
   onRecordDeleted,
 }: GraduationSemesterBoardProps) {
   const cards =
@@ -723,6 +783,9 @@ export function GraduationSemesterBoard({
               curriculum={curriculum}
               onRecordCreated={
                 onRecordCreated
+              }
+              onRecordUpdated={
+                onRecordUpdated
               }
               onRecordDeleted={
                 onRecordDeleted

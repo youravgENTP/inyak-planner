@@ -433,6 +433,20 @@ export function ProgressTrackerPage({
                   ],
                 )
               }}
+              onRecordUpdated={(
+                updatedRecord,
+              ) => {
+                setCourseRecords(
+                  (currentRecords) =>
+                    currentRecords.map(
+                      (record) =>
+                        record.id ===
+                        updatedRecord.id
+                          ? updatedRecord
+                          : record,
+                    ),
+                )
+              }}
               onRecordDeleted={(
                 deletedRecordId,
               ) => {
