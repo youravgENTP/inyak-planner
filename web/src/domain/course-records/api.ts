@@ -208,3 +208,62 @@ export async function createCourseRecord(
     data.record,
   )
 }
+
+export async function updateCourseRecord(
+  recordId: string,
+  input: CourseRecordInput,
+): Promise<CourseRecord> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/course-records/${recordId}`,
+    {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type':
+          'application/json',
+      },
+      body: JSON.stringify(
+        mapCourseRecordInput(input),
+      ),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '과목 이수 기록을 수정하지 못했습니다.',
+      ),
+    )
+  }
+
+  const data =
+    (await response.json()) as {
+      record: CourseRecordApiItem
+    }
+
+  return mapCourseRecord(
+    data.record,
+  )
+}
+
+export async function deleteCourseRecord(
+  recordId: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/course-records/${recordId}`,
+    {
+      method: 'DELETE',
+      credentials: 'include',
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '과목 이수 기록을 삭제하지 못했습니다.',
+      ),
+    )
+  }
+}
