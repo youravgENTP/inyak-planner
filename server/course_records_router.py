@@ -75,6 +75,11 @@ class CourseRecordRequest(BaseModel):
         ge=2000,
         le=2100,
     )
+    grade: Optional[int] = Field(
+    default=None,
+    ge=1,
+    le=6,
+    )
     semester: Optional[int] = Field(
         default=None,
         ge=1,
@@ -135,6 +140,8 @@ def get_request_values(
             request.general_education_area_id,
         "academic_year":
             request.academic_year,
+        "grade":
+            request.grade,
         "semester":
             request.semester,
         "course_name":

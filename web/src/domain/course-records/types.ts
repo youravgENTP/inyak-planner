@@ -20,6 +20,7 @@ export interface CourseRecord {
   generalEducationAreaId:
     number | null
   academicYear: number | null
+  grade: number | null
   semester: number | null
   courseName: string
   courseCode: string | null
@@ -41,6 +42,7 @@ export interface CourseRecordInput {
   generalEducationAreaId:
     number | null
   academicYear: number | null
+  grade?: number | null
   semester: number | null
   courseName: string
   courseCode: string | null

@@ -20,6 +20,7 @@ interface CourseRecordApiItem {
   general_education_area_id:
     number | null
   academic_year: number | null
+  grade: number | null
   semester: number | null
   course_name: string
   course_code: string | null
@@ -60,6 +61,8 @@ function mapCourseRecord(
       record.general_education_area_id,
     academicYear:
       record.academic_year,
+    grade:
+      record.grade,
     semester:
       record.semester,
     courseName:
@@ -151,6 +154,8 @@ function mapCourseRecordInput(
       input.generalEducationAreaId,
     academic_year:
       input.academicYear,
+    grade:
+      input.grade ?? null,
     semester:
       input.semester,
     course_name:

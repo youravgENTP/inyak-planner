@@ -113,6 +113,7 @@ def ensure_user_course_record_columns() -> None:
                 "general_education_"
                 "area_id"
             ): "INTEGER",
+            "grade": "INTEGER",
         }
 
         for (
@@ -139,8 +140,20 @@ def ensure_user_course_record_columns() -> None:
                 general_education_requirement_id,
                 general_education_area_id
             )
-            """
+            """ 
         )
+
+        connection.execute(
+    """
+    CREATE INDEX IF NOT EXISTS
+        idx_user_course_records_user_grade_semester
+    ON user_course_records(
+        user_id,
+        grade,
+        semester
+    )
+    """
+)
 
 def create_auth_tables() -> None:
     """회원, 로그인 세션, 개인 이수 기록 테이블을 생성한다."""
@@ -181,6 +194,7 @@ def create_auth_tables() -> None:
                 general_education_area_id INTEGER,
 
                 academic_year INTEGER,
+                grade INTEGER,
                 semester INTEGER,
 
                 course_name TEXT NOT NULL,
@@ -203,6 +217,11 @@ def create_auth_tables() -> None:
                 CHECK (
                     academic_year IS NULL
                     OR academic_year BETWEEN 2000 AND 2100
+                ),
+
+                CHECK (
+                    grade IS NULL
+                    OR grade BETWEEN 1 AND 6
                 ),
 
                 CHECK (
@@ -250,6 +269,14 @@ def create_auth_tables() -> None:
             ON user_course_records(
                 user_id,
                 academic_year,
+                semester
+            );
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_user_grade_semester
+            ON user_course_records(
+                user_id,
+                grade,
                 semester
             );
 
@@ -484,6 +511,7 @@ def create_user_course_record(
     general_education_requirement_id: int | None,
     general_education_area_id: int | None,
     academic_year: int | None,
+    grade: int | None,
     semester: int | None,
     course_name: str,
     course_code: str | None,
@@ -509,6 +537,7 @@ def create_user_course_record(
                 general_education_requirement_id,
                 general_education_area_id,
                 academic_year,
+                grade,
                 semester,
                 course_name,
                 course_code,
@@ -522,7 +551,7 @@ def create_user_course_record(
                 updated_at
             )
             VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
             """,
@@ -534,6 +563,7 @@ def create_user_course_record(
                 general_education_requirement_id,
                 general_education_area_id,
                 academic_year,
+                grade,
                 semester,
                 course_name.strip(),
                 (
@@ -569,6 +599,8 @@ def create_user_course_record(
             general_education_area_id,
         "academic_year":
             academic_year,
+        "grade":
+            grade,
         "semester":
             semester,
         "course_name":
@@ -616,6 +648,7 @@ def get_user_course_records(
                 general_education_requirement_id,
                 general_education_area_id,
                 academic_year,
+                grade,
                 semester,
                 course_name,
                 course_code,
@@ -631,11 +664,11 @@ def get_user_course_records(
             WHERE user_id = ?
             ORDER BY
                 CASE
-                    WHEN academic_year IS NULL
+                    WHEN grade IS NULL
                     THEN 1
                     ELSE 0
                 END,
-                academic_year,
+                grade,
                 semester,
                 course_name
             """,
@@ -663,6 +696,7 @@ def update_user_course_record(
     general_education_requirement_id: int | None,
     general_education_area_id: int | None,
     academic_year: int | None,
+    grade: int | None,
     semester: int | None,
     course_name: str,
     course_code: str | None,
@@ -686,6 +720,7 @@ def update_user_course_record(
                 general_education_requirement_id = ?,
                 general_education_area_id = ?,
                 academic_year = ?,
+                grade = ?,
                 semester = ?,
                 course_name = ?,
                 course_code = ?,
@@ -705,6 +740,7 @@ def update_user_course_record(
                 general_education_requirement_id,
                 general_education_area_id,
                 academic_year,
+                grade,
                 semester,
                 course_name.strip(),
                 (
@@ -741,6 +777,7 @@ def update_user_course_record(
                 general_education_requirement_id,
                 general_education_area_id,
                 academic_year,
+                grade,
                 semester,
                 course_name,
                 course_code,
