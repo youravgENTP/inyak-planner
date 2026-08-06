@@ -105,3 +105,141 @@ CREATE INDEX IF NOT EXISTS idx_curriculum_courses_code
 ON curriculum_courses (
     course_code
 );
+
+/* =========================================================
+   학번별 교양 졸업요건
+   ========================================================= */
+
+/*
+ * 기초교양·균형교양처럼 교양의 큰 이수구분과
+ * 해당 이수구분의 전체 졸업요건을 저장합니다.
+ */
+CREATE TABLE IF NOT EXISTS general_education_requirements (
+    id INTEGER PRIMARY KEY,
+
+    /* 입학 학년도: 예) 2024학번 */
+    entry_year INTEGER NOT NULL,
+
+    /* 교양의 큰 이수구분 */
+    category TEXT NOT NULL
+        CHECK (
+            category IN (
+                '기초교양',
+                '균형교양'
+            )
+        ),
+
+    /* 해당 이수구분에서 요구하는 최소 총학점 */
+    minimum_credits REAL NOT NULL
+        CHECK (minimum_credits >= 0),
+
+    /*
+     * 일정 개수 이상의 세부 영역을 이수해야 하는 경우 사용합니다.
+     * 예: 균형교양 3개 영역 이상
+     */
+    minimum_area_count INTEGER
+        CHECK (
+            minimum_area_count IS NULL
+            OR minimum_area_count >= 0
+        ),
+
+    /* 복잡한 이수조건이나 원자료 설명 */
+    notes TEXT,
+
+    /* 화면 표시 순서 */
+    display_order INTEGER NOT NULL
+        CHECK (display_order >= 0),
+
+    created_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE (
+        entry_year,
+        category
+    )
+);
+
+
+/*
+ * 각 교양 이수구분에 포함되는 세부 영역을 저장합니다.
+ *
+ * 기초교양:
+ * 사고, 언어와 표현, 외국어, 코딩 등
+ *
+ * 균형교양:
+ * 인간과 예술, 사회와 문화, 과학과 기술,
+ * 융합과 창의 등
+ */
+CREATE TABLE IF NOT EXISTS general_education_areas (
+    id INTEGER PRIMARY KEY,
+
+    requirement_id INTEGER NOT NULL,
+
+    /* 세부 영역명 */
+    area_name TEXT NOT NULL,
+
+    /*
+     * 해당 영역 자체에 최소 이수학점이 있는 경우 저장합니다.
+     * 균형교양처럼 영역별 최소학점이 없으면 NULL입니다.
+     */
+    minimum_credits REAL
+        CHECK (
+            minimum_credits IS NULL
+            OR minimum_credits >= 0
+        ),
+
+    /*
+     * 이 영역 자체가 필수인지 표시합니다.
+     *
+     * 기초교양의 세부 영역은 일반적으로 1,
+     * 균형교양 선택 영역은 0으로 저장합니다.
+     */
+    is_required INTEGER NOT NULL
+        DEFAULT 0
+        CHECK (is_required IN (0, 1)),
+
+    /* 세부 조건이나 원자료 설명 */
+    notes TEXT,
+
+    /* 화면 표시 순서 */
+    display_order INTEGER NOT NULL
+        CHECK (display_order >= 0),
+
+    created_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (
+        requirement_id
+    )
+    REFERENCES general_education_requirements (id)
+    ON DELETE CASCADE,
+
+    UNIQUE (
+        requirement_id,
+        area_name
+    )
+);
+
+
+/* 학번별 교양 대분류 조회 */
+CREATE INDEX IF NOT EXISTS
+idx_general_education_requirements_entry_year
+ON general_education_requirements (
+    entry_year,
+    display_order
+);
+
+
+/* 교양 대분류별 세부 영역 조회 */
+CREATE INDEX IF NOT EXISTS
+idx_general_education_areas_requirement
+ON general_education_areas (
+    requirement_id,
+    display_order
+);
