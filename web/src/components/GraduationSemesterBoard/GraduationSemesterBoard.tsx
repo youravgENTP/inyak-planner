@@ -368,12 +368,7 @@ function TransferCreditCard({
                   setMenuIsOpen(false)
                 }}
               >
-                <strong>전공 인정</strong>
-
-                <span>
-                  공식 전필·전선 과목에
-                  대응하여 인정
-                </span>
+                <strong>전공</strong>
               </button>
 
               <button
@@ -383,12 +378,7 @@ function TransferCreditCard({
                   setMenuIsOpen(false)
                 }}
               >
-                <strong>교양 인정</strong>
-
-                <span>
-                  교양 구분과 영역에
-                  학점을 인정
-                </span>
+                <strong>교양</strong>
               </button>
             </div>
           ) : null}
