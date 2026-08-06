@@ -38,6 +38,16 @@ export function MajorTransferCreditModal({
   ] = useState('')
 
   const [
+    courseSearchQuery,
+    setCourseSearchQuery,
+  ] = useState('')
+
+  const [
+    searchIsOpen,
+    setSearchIsOpen,
+  ] = useState(false)
+
+  const [
     sourceCourseName,
     setSourceCourseName,
   ] = useState('')
@@ -70,6 +80,48 @@ export function MajorTransferCreditModal({
         selectedCourseId,
       ],
     )
+
+  const filteredCourses =
+    useMemo(() => {
+      const normalizedQuery =
+        courseSearchQuery
+          .trim()
+          .toLocaleLowerCase('ko-KR')
+
+      const availableCourses =
+        curriculum.courses.filter(
+          (course) =>
+            course.completionType ===
+              '전필' ||
+            course.completionType ===
+              '전선',
+        )
+
+      if (normalizedQuery.length === 0) {
+        return availableCourses
+      }
+
+      return availableCourses.filter(
+        (course) => {
+          const searchableText = [
+            course.courseName,
+            course.courseCode ?? '',
+            `${course.grade}학년`,
+            `${course.semester}학기`,
+            course.completionType,
+          ]
+            .join(' ')
+            .toLocaleLowerCase('ko-KR')
+
+          return searchableText.includes(
+            normalizedQuery,
+          )
+        },
+      )
+    }, [
+      courseSearchQuery,
+      curriculum.courses,
+    ])
 
   useEffect(() => {
     function handleKeyDown(
@@ -226,44 +278,118 @@ export function MajorTransferCreditModal({
               }}
             />
           </label>
-
-          <label>
-            <span>
+          <div className="major-transfer-course-field">
+            <label htmlFor="major-transfer-course-search">
               대응할 전공 과목
-            </span>
+            </label>
 
-            <select
-              value={selectedCourseId}
-              onChange={(event) => {
-                setSelectedCourseId(
-                  event.target.value,
-                )
-              }}
-            >
-              <option value="">
-                과목을 선택하세요
-              </option>
+            <div className="major-transfer-course-search">
+              <input
+                aria-autocomplete="list"
+                aria-controls="major-transfer-course-results"
+                aria-expanded={searchIsOpen}
+                autoComplete="off"
+                id="major-transfer-course-search"
+                placeholder="과목명 또는 과목코드 검색"
+                role="combobox"
+                type="search"
+                value={courseSearchQuery}
+                onFocus={() => {
+                  setSearchIsOpen(true)
+                }}
+                onChange={(event) => {
+                  setCourseSearchQuery(
+                    event.target.value,
+                  )
+                  setSelectedCourseId('')
+                  setSearchIsOpen(true)
+                }}
+              />
 
-              {curriculum.courses.map(
-                (course) => (
-                  <option
-                    key={course.id}
-                    value={course.id}
-                    disabled={
-                      course.credits ===
-                      null
-                    }
-                  >
-                    {course.grade}학년{' '}
-                    {course.semester}학기 ·{' '}
-                    {course.completionType}{' '}
-                    · {course.courseName}
-                  </option>
-                ),
-              )}
-            </select>
-          </label>
+              {selectedCourse !== null ? (
+                <button
+                  aria-label="선택한 과목 지우기"
+                  className="major-transfer-course-clear"
+                  type="button"
+                  onClick={() => {
+                    setSelectedCourseId('')
+                    setCourseSearchQuery('')
+                    setSearchIsOpen(true)
+                  }}
+                >
+                  ×
+                </button>
+              ) : null}
+            </div>
 
+            {searchIsOpen ? (
+              <div
+                className="major-transfer-course-results"
+                id="major-transfer-course-results"
+                role="listbox"
+              >
+                {filteredCourses.length === 0 ? (
+                  <p className="major-transfer-course-empty">
+                    검색 결과가 없습니다.
+                  </p>
+                ) : (
+                  filteredCourses.map(
+                    (course) => (
+                      <button
+                        aria-selected={
+                          course.id ===
+                          selectedCourse?.id
+                        }
+                        className={
+                          course.id ===
+                          selectedCourse?.id
+                            ? (
+                              'major-transfer-course-result ' +
+                              'major-transfer-course-result--selected'
+                            )
+                            : 'major-transfer-course-result'
+                        }
+                        disabled={
+                          course.credits ===
+                          null
+                        }
+                        key={course.id}
+                        role="option"
+                        type="button"
+                        onClick={() => {
+                          setSelectedCourseId(
+                            String(course.id),
+                          )
+                          setCourseSearchQuery(
+                            course.courseName,
+                          )
+                          setSearchIsOpen(false)
+                        }}
+                      >
+                        <strong>
+                          {course.courseName}
+                        </strong>
+
+                        <span>
+                          {course.courseCode ??
+                            '과목코드 없음'}
+                          {' · '}
+                          {course.grade}학년{' '}
+                          {course.semester}학기
+                          {' · '}
+                          {course.completionType}
+                          {' · '}
+                          {course.credits === null
+                            ? '학점 미정'
+                            : `${course.credits}학점`}
+                        </span>
+                      </button>
+                    ),
+                  )
+                )}
+              </div>
+            ) : null}
+          </div>
           {selectedCourse !== null ? (
             <div className="major-transfer-modal-preview">
               <div>
