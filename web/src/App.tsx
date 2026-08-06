@@ -4,17 +4,21 @@ import {
 } from 'react'
 
 import './App.css'
-import { AppShell, 
+import {
+  AppShell,
   type AppNavigationPage,
- } from './components/layout/AppShell'
+} from './components/layout/AppShell'
+
 import {
   getCurrentUser,
   logout,
   type AuthUser,
 } from './domain/auth/api'
 import { AccountPage } from './pages/AccountPage'
-import { CurriculumPage } from './pages/CurriculumPage'
 import { AuthPage } from './pages/AuthPage'
+import { CurriculumPage } from './pages/CurriculumPage'
+import { GpaCalculatorPage } from './pages/GpaCalculatorPage'
+import { ProgressTrackerPage } from './pages/ProgressTrackerPage'
 import { TimetablePage } from './pages/TimetablePage'
 
 type AppPage =
@@ -154,9 +158,9 @@ function App() {
 
   const activeNavigationPage:
     AppNavigationPage =
-      currentPage === 'curriculum'
+      currentPage === 'account'
         ? 'curriculum'
-        : 'timetable'
+        : currentPage
 
   return (
     <AppShell
@@ -172,22 +176,27 @@ function App() {
         void handleLogout()
       }}
     >
-      {currentPage === 'account' ? (
-        <AccountPage
-          username={currentUser.username}
-          onBack={() =>
-            setCurrentPage('timetable')
-          }
-          onLogout={() => {
-            void handleLogout()
-          }}
-        />
-      ) : currentPage ===
-        'curriculum' ? (
-        <CurriculumPage />
-      ) : (
-        <TimetablePage />
-      )}
+
+    {currentPage === 'account' ? (
+      <AccountPage
+        username={currentUser.username}
+        onBack={() =>
+          setCurrentPage('timetable')
+        }
+        onLogout={() => {
+          void handleLogout()
+        }}
+      />
+    ) : currentPage === 'curriculum' ? (
+      <CurriculumPage />
+    ) : currentPage === 'progress' ? (
+      <ProgressTrackerPage />
+    ) : currentPage === 'gpa' ? (
+      <GpaCalculatorPage />
+    ) : (
+      <TimetablePage />
+    )}
+
     </AppShell>
   )
 
