@@ -199,7 +199,9 @@ function App() {
         }
       />
     ) : currentPage === 'gpa' ? (
-      <GpaCalculatorPage />
+      <GpaCalculatorPage 
+        user={currentUser}
+      />
     ) : (
       <TimetablePage />
     )}

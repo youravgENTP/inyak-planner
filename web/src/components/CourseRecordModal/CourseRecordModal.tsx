@@ -1,6 +1,7 @@
 import {
   type FormEvent,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 
@@ -8,9 +9,16 @@ import {
   createCourseRecord,
 } from '../../domain/course-records/api'
 import type {
+  CourseCompletionType,
   CourseRecord,
   CourseRecordInput,
 } from '../../domain/course-records/types'
+import {
+  fetchCurriculum,
+} from '../../domain/curriculum/api'
+import type {
+  CurriculumCourse,
+} from '../../domain/curriculum/types'
 
 import './CourseRecordModal.css'
 
@@ -28,7 +36,16 @@ const LETTER_GRADES = [
 ] as const
 
 
+const AVAILABLE_COMPLETION_TYPES:
+  CourseCompletionType[] = [
+    '전필',
+    '전선',
+    '기타',
+  ]
+
+
 interface CourseRecordModalProps {
+  entryYear: number | null
   grade: number
   semester: number
   onClose: () => void
@@ -38,12 +55,47 @@ interface CourseRecordModalProps {
 }
 
 
+function formatCourseOption(
+  course: CurriculumCourse,
+): string {
+  const creditsText =
+    course.credits === null
+      ? '학점 미정'
+      : `${course.credits}학점`
+
+  return (
+    `${course.grade}학년 ` +
+    `${course.semester}학기 · ` +
+    `${course.courseName} · ` +
+    creditsText
+  )
+}
+
+
 export function CourseRecordModal({
+  entryYear,
   grade,
   semester,
   onClose,
   onCreated,
 }: CourseRecordModalProps) {
+  const [
+    completionType,
+    setCompletionType,
+  ] = useState<CourseCompletionType>(
+    '기타',
+  )
+
+  const [
+    curriculumCourses,
+    setCurriculumCourses,
+  ] = useState<CurriculumCourse[]>([])
+
+  const [
+    selectedCurriculumCourseId,
+    setSelectedCurriculumCourseId,
+  ] = useState('')
+
   const [
     courseName,
     setCourseName,
@@ -70,6 +122,16 @@ export function CourseRecordModal({
   ] = useState('')
 
   const [
+    curriculumIsLoading,
+    setCurriculumIsLoading,
+  ] = useState(false)
+
+  const [
+    curriculumError,
+    setCurriculumError,
+  ] = useState<string | null>(null)
+
+  const [
     formError,
     setFormError,
   ] = useState<string | null>(null)
@@ -78,6 +140,137 @@ export function CourseRecordModal({
     formIsSubmitting,
     setFormIsSubmitting,
   ] = useState(false)
+
+  const isMajorCourse =
+    completionType === '전필' ||
+    completionType === '전선'
+
+  const matchingCurriculumCourses =
+    useMemo(() => {
+      if (!isMajorCourse) {
+        return []
+      }
+
+      return curriculumCourses
+        .filter(
+          (course) =>
+            course.completionType ===
+            completionType,
+        )
+        .sort((firstCourse, secondCourse) => {
+          const firstMatchesSemester =
+            firstCourse.grade === grade &&
+            firstCourse.semester === semester
+
+          const secondMatchesSemester =
+            secondCourse.grade === grade &&
+            secondCourse.semester === semester
+
+          if (
+            firstMatchesSemester !==
+            secondMatchesSemester
+          ) {
+            return firstMatchesSemester
+              ? -1
+              : 1
+          }
+
+          if (
+            firstCourse.grade !==
+            secondCourse.grade
+          ) {
+            return (
+              firstCourse.grade -
+              secondCourse.grade
+            )
+          }
+
+          if (
+            firstCourse.semester !==
+            secondCourse.semester
+          ) {
+            return (
+              firstCourse.semester -
+              secondCourse.semester
+            )
+          }
+
+          return firstCourse.courseName
+            .localeCompare(
+              secondCourse.courseName,
+              'ko',
+            )
+        })
+    }, [
+      completionType,
+      curriculumCourses,
+      grade,
+      isMajorCourse,
+      semester,
+    ])
+
+  const selectedCurriculumCourse =
+    useMemo(
+      () =>
+        curriculumCourses.find(
+          (course) =>
+            String(course.id) ===
+            selectedCurriculumCourseId,
+        ) ?? null,
+      [
+        curriculumCourses,
+        selectedCurriculumCourseId,
+      ],
+    )
+
+  useEffect(() => {
+    if (entryYear === null) {
+      return
+    }
+
+    const resolvedEntryYear =
+      entryYear
+
+    let requestIsActive = true
+
+    async function loadCurriculum() {
+      setCurriculumIsLoading(true)
+      setCurriculumError(null)
+
+      try {
+        const curriculum =
+          await fetchCurriculum(
+            resolvedEntryYear,
+          )
+
+        if (requestIsActive) {
+          setCurriculumCourses(
+            curriculum.courses,
+          )
+        }
+      } catch (error) {
+        if (!requestIsActive) {
+          return
+        }
+
+        setCurriculumError(
+          error instanceof Error
+            ? error.message
+            : '교육과정을 불러오지 못했습니다.',
+        )
+      } finally {
+        if (requestIsActive) {
+          setCurriculumIsLoading(false)
+        }
+      }
+    }
+
+    void loadCurriculum()
+
+    return () => {
+      requestIsActive = false
+    }
+  }, [entryYear])
 
   useEffect(() => {
     function handleKeyDown(
@@ -107,11 +300,65 @@ export function CourseRecordModal({
     onClose,
   ])
 
+  function handleCompletionTypeChange(
+    nextCompletionType:
+      CourseCompletionType,
+  ) {
+    setCompletionType(
+      nextCompletionType,
+    )
+
+    setSelectedCurriculumCourseId('')
+    setCourseName('')
+    setCredits('')
+    setFormError(null)
+  }
+
+  function handleCurriculumCourseChange(
+    courseId: string,
+  ) {
+    setSelectedCurriculumCourseId(
+      courseId,
+    )
+
+    const selectedCourse =
+      curriculumCourses.find(
+        (course) =>
+          String(course.id) === courseId,
+      )
+
+    if (selectedCourse === undefined) {
+      setCourseName('')
+      setCredits('')
+      return
+    }
+
+    setCourseName(
+      selectedCourse.courseName,
+    )
+
+    setCredits(
+      selectedCourse.credits === null
+        ? ''
+        : String(selectedCourse.credits),
+    )
+  }
+
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault()
     setFormError(null)
+
+    if (
+      isMajorCourse &&
+      selectedCurriculumCourse === null
+    ) {
+      setFormError(
+        '공식 교육과정 과목을 선택해 주세요.',
+      )
+      return
+    }
 
     const normalizedCourseName =
       courseName.trim()
@@ -144,7 +391,9 @@ export function CourseRecordModal({
 
     try {
       const input: CourseRecordInput = {
-        curriculumCourseId: null,
+        curriculumCourseId:
+          selectedCurriculumCourse?.id ??
+          null,
         lectureId: null,
         generalEducationRequirementId:
           null,
@@ -154,8 +403,10 @@ export function CourseRecordModal({
         semester,
         courseName:
           normalizedCourseName,
-        courseCode: null,
-        completionType: '기타',
+        courseCode:
+          selectedCurriculumCourse
+            ?.courseCode ?? null,
+        completionType,
         credits: parsedCredits,
         status: 'completed',
         letterGrade:
@@ -231,13 +482,127 @@ export function CourseRecordModal({
           className="course-record-modal-form"
           onSubmit={handleSubmit}
         >
+          <fieldset className="course-record-modal-type-fieldset">
+            <legend>이수구분</legend>
+
+            <div className="course-record-modal-type-options">
+              {AVAILABLE_COMPLETION_TYPES.map(
+                (typeOption) => (
+                  <label
+                    key={typeOption}
+                    className={
+                      `course-record-modal-type-option${
+                        completionType ===
+                        typeOption
+                          ? ' course-record-modal-type-option--selected'
+                          : ''
+                      }`
+                    }
+                  >
+                    <input
+                      checked={
+                        completionType ===
+                        typeOption
+                      }
+                      name="completion-type"
+                      type="radio"
+                      value={typeOption}
+                      onChange={() => {
+                        handleCompletionTypeChange(
+                          typeOption,
+                        )
+                      }}
+                    />
+
+                    <span>{typeOption}</span>
+                  </label>
+                ),
+              )}
+
+              <span className="course-record-modal-type-option course-record-modal-type-option--disabled">
+                교양
+                <small>다음 단계</small>
+              </span>
+            </div>
+          </fieldset>
+
+          {isMajorCourse ? (
+            <label className="course-record-modal-field">
+              <span>
+                공식 교육과정 과목
+              </span>
+
+              <select
+                disabled={
+                  entryYear === null ||
+                  curriculumIsLoading
+                }
+                value={
+                  selectedCurriculumCourseId
+                }
+                onChange={(event) => {
+                  handleCurriculumCourseChange(
+                    event.target.value,
+                  )
+                }}
+              >
+                <option value="">
+                  {curriculumIsLoading
+                    ? '교육과정 불러오는 중...'
+                    : '과목을 선택해 주세요'}
+                </option>
+
+                {matchingCurriculumCourses.map(
+                  (course) => (
+                    <option
+                      key={course.id}
+                      value={course.id}
+                    >
+                      {formatCourseOption(
+                        course,
+                      )}
+                    </option>
+                  ),
+                )}
+              </select>
+
+              {entryYear === null ? (
+                <small>
+                  전공 과목을 선택하려면
+                  회원정보에서 입학 학번을
+                  설정해야 합니다.
+                </small>
+              ) : (
+                <small>
+                  현재 선택 학기의 과목을
+                  위쪽에 먼저 표시합니다.
+                </small>
+              )}
+            </label>
+          ) : null}
+
+          {curriculumError !== null &&
+          isMajorCourse ? (
+            <p
+              className="course-record-modal-error"
+              role="alert"
+            >
+              {curriculumError}
+            </p>
+          ) : null}
+
           <label className="course-record-modal-field">
             <span>과목명</span>
 
             <input
-              autoFocus
+              autoFocus={!isMajorCourse}
+              disabled={isMajorCourse}
               maxLength={100}
-              placeholder="예: 연구실 안전교육"
+              placeholder={
+                isMajorCourse
+                  ? '공식 과목을 선택해 주세요'
+                  : '예: 연구실 안전교육'
+              }
               type="text"
               value={courseName}
               onChange={(event) => {
@@ -248,11 +613,16 @@ export function CourseRecordModal({
             />
           </label>
 
-          <div className="course-record-modal-field-grid">
+          <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
             <label className="course-record-modal-field">
               <span>학점</span>
 
               <input
+                disabled={
+                  isMajorCourse &&
+                  selectedCurriculumCourse
+                    ?.credits !== null
+                }
                 max="30"
                 min="0.5"
                 placeholder="예: 2"
@@ -265,6 +635,13 @@ export function CourseRecordModal({
                   )
                 }}
               />
+
+              {isMajorCourse ? (
+                <small>
+                  공식 교육과정 학점을
+                  사용합니다.
+                </small>
+              ) : null}
             </label>
 
             <label className="course-record-modal-field">
@@ -293,24 +670,6 @@ export function CourseRecordModal({
                   ),
                 )}
               </select>
-            </label>
-
-            <label className="course-record-modal-field">
-              <span>이수구분</span>
-
-              <select
-                defaultValue="기타"
-                disabled
-              >
-                <option value="기타">
-                  기타
-                </option>
-              </select>
-
-              <small>
-                이번 단계에서는 기타
-                과목부터 입력합니다.
-              </small>
             </label>
           </div>
 
@@ -368,7 +727,17 @@ export function CourseRecordModal({
 
             <button
               className="course-record-modal-submit"
-              disabled={formIsSubmitting}
+              disabled={
+                formIsSubmitting ||
+                (
+                  isMajorCourse &&
+                  (
+                    entryYear === null ||
+                    curriculumIsLoading ||
+                    curriculumError !== null
+                  )
+                )
+              }
               type="submit"
             >
               {formIsSubmitting

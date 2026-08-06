@@ -12,6 +12,11 @@ import {
   getCourseRecords,
   updateCourseRecord,
 } from '../domain/course-records/api'
+
+import type {
+  AuthUser,
+} from '../domain/auth/api'
+
 import type {
   CourseRecord,
   CourseRecordInput,
@@ -246,8 +251,13 @@ function createRecordInput(
   }
 }
 
+interface GpaCalculatorPageProps {
+  user: AuthUser
+}
 
-export function GpaCalculatorPage() {
+export function GpaCalculatorPage({
+  user,
+}: GpaCalculatorPageProps) {
   const [
     courseRecords,
     setCourseRecords,
@@ -899,6 +909,7 @@ export function GpaCalculatorPage() {
 
       {recordModalIsOpen ? (
         <CourseRecordModal
+          entryYear={user.entryYear}
           grade={selectedSemester.grade}
           semester={
             selectedSemester.semester

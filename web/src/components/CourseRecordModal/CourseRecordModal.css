@@ -220,6 +220,77 @@
   opacity: 0.55;
 }
 
+/* =========================================================
+   이수구분 선택
+   ========================================================= */
+
+.course-record-modal-type-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.course-record-modal-type-fieldset legend {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #34483b;
+}
+
+.course-record-modal-type-options {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.course-record-modal-type-option {
+  display: flex;
+  min-height: 42px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  color: #59645d;
+  cursor: pointer;
+}
+
+.course-record-modal-type-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.course-record-modal-type-option--selected {
+  border-color: #79aa8b;
+  background: #e4f2e9;
+  color: #315b40;
+}
+
+.course-record-modal-type-option--disabled {
+  flex-direction: column;
+  background: #f5f5f5;
+  color: #a0a6a2;
+  cursor: not-allowed;
+}
+
+.course-record-modal-type-option--disabled small {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.course-record-modal-field-grid--two {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
 
 /* =========================================================
    반응형
@@ -238,4 +309,13 @@
   .course-record-modal-field-grid {
     grid-template-columns: 1fr;
   }
+  .course-record-modal-type-options {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .course-record-modal-field-grid--two {
+    grid-template-columns: 1fr;
+  }
+
 }
