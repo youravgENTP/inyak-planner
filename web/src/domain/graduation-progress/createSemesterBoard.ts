@@ -89,10 +89,17 @@ function getSemesterRecords(
   grade: number,
   semester: number,
 ): CourseRecord[] {
+
   return records.filter(
     (record) =>
       record.status !==
         'substituted' &&
+      (
+        record.completionType ===
+          '전필' ||
+        record.completionType ===
+          '전선'
+      ) &&
       record.semester === semester &&
       calculateRecordGrade(
         record,
@@ -100,7 +107,6 @@ function getSemesterRecords(
       ) === grade,
   )
 }
-
 
 function createSemesterCard(
   curriculum: Curriculum,
