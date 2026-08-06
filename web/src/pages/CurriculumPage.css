@@ -1,0 +1,299 @@
+/* =========================================================
+   Curriculum page
+   ========================================================= */
+
+.curriculum-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.curriculum-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.curriculum-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #737373;
+}
+
+.curriculum-header h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.curriculum-description {
+  max-width: 560px;
+  margin: 12px 0 0;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* =========================================================
+   Overall summary
+   ========================================================= */
+
+.curriculum-overview {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(130px, 1fr));
+  gap: 10px;
+  min-width: 460px;
+}
+
+.curriculum-overview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #e4e4e4;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.curriculum-overview-item span {
+  font-size: 12px;
+  color: #737373;
+}
+
+.curriculum-overview-item strong {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   Loading, error and empty states
+   ========================================================= */
+
+.curriculum-state {
+  display: flex;
+  min-height: 320px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+
+.curriculum-state h1,
+.curriculum-state p {
+  margin: 0;
+}
+
+.curriculum-state p {
+  color: #666;
+}
+
+.curriculum-state--error {
+  border-color: #e8b8b8;
+}
+
+/* =========================================================
+   Horizontal semester layout
+   ========================================================= */
+
+.curriculum-semester-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 14px;
+}
+
+.curriculum-semester-list {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: max-content;
+}
+
+.curriculum-semester-card {
+  width: 330px;
+  flex: 0 0 330px;
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.curriculum-semester-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #ededed;
+}
+
+.curriculum-semester-header span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #777;
+}
+
+.curriculum-semester-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.curriculum-semester-header > strong {
+  font-size: 13px;
+  color: #666;
+}
+
+/* =========================================================
+   Semester summary
+   ========================================================= */
+
+.curriculum-semester-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #ededed;
+  background: #fafafa;
+}
+
+.curriculum-semester-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.curriculum-semester-summary span {
+  font-size: 11px;
+  color: #777;
+}
+
+.curriculum-semester-summary strong {
+  font-size: 14px;
+}
+
+.curriculum-semester-summary small {
+  font-size: 11px;
+  color: #777;
+}
+
+/* =========================================================
+   Course list
+   ========================================================= */
+
+.curriculum-course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.curriculum-course-item {
+  padding: 15px 18px;
+  border-bottom: 1px solid #ededed;
+}
+
+.curriculum-course-item:last-child {
+  border-bottom: 0;
+}
+
+.curriculum-course-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.curriculum-course-heading > strong {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.curriculum-course-type {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.curriculum-course-type--required {
+  background: #eaf0ff;
+  color: #365fb7;
+}
+
+.curriculum-course-type--elective {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.curriculum-course-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #777;
+}
+
+.curriculum-course-notes {
+  margin-top: 10px;
+}
+
+.curriculum-course-notes summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: #666;
+}
+
+.curriculum-course-notes p {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #666;
+}
+
+.curriculum-semester-empty {
+  margin: 0;
+  padding: 24px 18px;
+  font-size: 13px;
+  color: #777;
+  text-align: center;
+}
+
+/* =========================================================
+   Responsive adjustment
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .curriculum-header {
+    flex-direction: column;
+  }
+
+  .curriculum-overview {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .curriculum-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .curriculum-semester-card {
+    width: 290px;
+    flex-basis: 290px;
+  }
+}
