@@ -183,6 +183,96 @@
   line-height: 1.5;
 }
 
+/* =========================================================
+   학업정보 설정 폼
+   ========================================================= */
+
+/* 학업정보 입력 폼 전체 */
+.account-academic-form {
+  display: grid;
+  gap: 20px;
+
+  padding: 24px;
+}
+
+
+/* 입학 학번과 학생 유형 입력 영역 */
+.account-academic-fields {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+
+/* 개별 학업정보 입력 항목 */
+.account-academic-field {
+  display: grid;
+  gap: 8px;
+}
+
+
+/* 학업정보 입력 라벨 */
+.account-academic-field label {
+  color: var(--navy-950);
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+
+/* 학업정보 선택 상자 */
+.account-academic-field select {
+  width: 100%;
+  padding: 11px 12px;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+
+  color: var(--ink-900);
+  background: var(--surface);
+
+  font: inherit;
+  font-size: 14px;
+}
+
+
+/* 학업정보 선택 상자 포커스 */
+.account-academic-field select:focus {
+  border-color: var(--teal-600);
+  outline: 3px solid rgba(33, 143, 139, 0.14);
+}
+
+
+/* 저장 버튼과 처리 결과 메시지 영역 */
+.account-academic-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+
+/* 저장 성공 또는 오류 메시지 공통 */
+.account-academic-message {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* 저장 성공 메시지 */
+.account-academic-message--success {
+  color: #25735f;
+}
+
+
+/* 저장 오류 메시지 */
+.account-academic-message--error {
+  color: #a63d3d;
+}
+
 
 /* =========================================================
    위험 작업 버튼
@@ -248,8 +338,18 @@
     flex-direction: column;
   }
 
+  .account-academic-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .account-academic-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .account-profile-card .secondary-button,
   .account-setting-row .secondary-button,
+  .account-academic-actions .secondary-button,
   .account-danger-button {
     width: 100%;
   }

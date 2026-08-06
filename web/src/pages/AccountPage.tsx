@@ -1,9 +1,23 @@
+import {
+  type FormEvent,
+  useState,
+} from 'react'
+
+import {
+  updateAcademicProfile,
+  type AuthUser,
+  type StudentType,
+} from '../domain/auth/api'
+
 import './AccountPage.css'
 
 interface AccountPageProps {
-  username: string
+  user: AuthUser
   onBack: () => void
   onLogout: () => void
+  onUserUpdated: (
+    user: AuthUser,
+  ) => void
 }
 
 function getProfileInitial(
@@ -22,12 +36,89 @@ function getProfileInitial(
 }
 
 export function AccountPage({
-  username,
+  user,
   onBack,
   onLogout,
+  onUserUpdated,
 }: AccountPageProps) {
   const profileInitial =
-    getProfileInitial(username)
+    getProfileInitial(user.username)
+
+  const [
+    entryYear,
+    setEntryYear,
+  ] = useState(
+    user.entryYear?.toString() ?? '',
+  )
+
+  const [
+    studentType,
+    setStudentType,
+  ] = useState<StudentType | ''>(
+    user.studentType ?? '',
+  )
+
+  const [
+    isSavingAcademicProfile,
+    setIsSavingAcademicProfile,
+  ] = useState(false)
+
+  const [
+    academicProfileError,
+    setAcademicProfileError,
+  ] = useState<string | null>(null)
+
+  const [
+    academicProfileSuccess,
+    setAcademicProfileSuccess,
+  ] = useState<string | null>(null)
+
+  async function handleAcademicProfileSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault()
+
+    if (
+      entryYear === '' ||
+      studentType === ''
+    ) {
+      setAcademicProfileError(
+        '입학 학번과 학생 유형을 모두 선택해 주세요.',
+      )
+      setAcademicProfileSuccess(null)
+      return
+    }
+
+    setIsSavingAcademicProfile(true)
+    setAcademicProfileError(null)
+    setAcademicProfileSuccess(null)
+
+    try {
+      const updatedUser =
+        await updateAcademicProfile(
+          Number(entryYear),
+          studentType,
+        )
+
+      onUserUpdated(updatedUser)
+
+      setAcademicProfileSuccess(
+        '학업정보가 저장되었습니다.',
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        setAcademicProfileError(
+          error.message,
+        )
+      } else {
+        setAcademicProfileError(
+          '학업정보를 저장하지 못했습니다.',
+        )
+      }
+    } finally {
+      setIsSavingAcademicProfile(false)
+    }
+  }
 
   return (
     <section className="account-page">
@@ -73,7 +164,7 @@ export function AccountPage({
 
           <div className="account-profile-info">
             <span>사용자 ID</span>
-            <strong>{username}</strong>
+            <strong>{user.username}</strong>
           </div>
 
           <button
@@ -84,6 +175,128 @@ export function AccountPage({
             프로필 이미지 변경
           </button>
         </div>
+      </div>
+
+      <div className="account-section">
+        <div className="account-section-heading">
+          <h2>학업정보</h2>
+
+          <p>
+            졸업요건과 개인 이수 현황을
+            계산하는 기준을 설정합니다.
+          </p>
+        </div>
+
+        <form
+          className="account-academic-form"
+          onSubmit={
+            handleAcademicProfileSubmit
+          }
+        >
+          <div className="account-academic-fields">
+            <div className="account-academic-field">
+              <label htmlFor="entry-year">
+                입학 학번
+              </label>
+
+              <select
+                id="entry-year"
+                value={entryYear}
+                disabled={
+                  isSavingAcademicProfile
+                }
+                onChange={(event) => {
+                  setEntryYear(
+                    event.target.value,
+                  )
+                  setAcademicProfileError(null)
+                  setAcademicProfileSuccess(null)
+                }}
+              >
+                <option value="">
+                  학번 선택
+                </option>
+
+                <option value="2024">
+                  2024학번
+                </option>
+              </select>
+            </div>
+
+            <div className="account-academic-field">
+              <label htmlFor="student-type">
+                학생 유형
+              </label>
+
+              <select
+                id="student-type"
+                value={studentType}
+                disabled={
+                  isSavingAcademicProfile
+                }
+                onChange={(event) => {
+                  setStudentType(
+                    event.target.value as StudentType | '',
+                  )
+                  setAcademicProfileError(null)
+                  setAcademicProfileSuccess(null)
+                }}
+              >
+                <option value="">
+                  학생 유형 선택
+                </option>
+
+                <option value="regular">
+                  일반 입학생
+                </option>
+
+                <option value="transfer">
+                  편입생
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div className="account-academic-actions">
+            <div>
+              {academicProfileError !== null && (
+                <p
+                  className="
+                    account-academic-message
+                    account-academic-message--error
+                  "
+                  role="alert"
+                >
+                  {academicProfileError}
+                </p>
+              )}
+
+              {academicProfileSuccess !== null && (
+                <p
+                  className="
+                    account-academic-message
+                    account-academic-message--success
+                  "
+                  role="status"
+                >
+                  {academicProfileSuccess}
+                </p>
+              )}
+            </div>
+
+            <button
+              className="secondary-button"
+              type="submit"
+              disabled={
+                isSavingAcademicProfile
+              }
+            >
+              {isSavingAcademicProfile
+                ? '저장 중...'
+                : '학업정보 저장'}
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="account-section">
@@ -127,7 +340,9 @@ export function AccountPage({
 
         <div className="account-setting-row">
           <div>
-            <strong>현재 계정에서 로그아웃</strong>
+            <strong>
+              현재 계정에서 로그아웃
+            </strong>
 
             <span>
               이 브라우저의 로그인 세션을

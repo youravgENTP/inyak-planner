@@ -176,12 +176,14 @@ function App() {
         void handleLogout()
       }}
     >
-
     {currentPage === 'account' ? (
       <AccountPage
-        username={currentUser.username}
+        user={currentUser}
         onBack={() =>
           setCurrentPage('timetable')
+        }
+        onUserUpdated={(updatedUser) =>
+          setCurrentUser(updatedUser)
         }
         onLogout={() => {
           void handleLogout()
