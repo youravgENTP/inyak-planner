@@ -29,12 +29,11 @@ import type {
   TransferCreditBoardCard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import {
-  MajorTransferCreditModal,
-} from '../MajorTransferCreditModal/MajorTransferCreditModal'
+  GeneralEducationTransferCreditModal,
+} from '../GeneralEducationTransferCreditModal/GeneralEducationTransferCreditModal'
 import {
   MajorTransferCreditModal,
 } from '../MajorTransferCreditModal/MajorTransferCreditModal'
-
 import './GraduationSemesterBoard.css'
 
 

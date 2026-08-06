@@ -426,8 +426,6 @@ export function ProgressTrackerPage({
               generalEducation={
                 generalEducation
               }
-              user={user}
-              curriculum={curriculum}
               records={courseRecords}
               onRecordCreated={(
                 createdRecord,
