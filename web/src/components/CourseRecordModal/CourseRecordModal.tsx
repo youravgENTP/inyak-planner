@@ -19,6 +19,12 @@ import {
 import type {
   CurriculumCourse,
 } from '../../domain/curriculum/types'
+import {
+  fetchGeneralEducation,
+} from '../../domain/general-education/api'
+import type {
+  GeneralEducationRequirement,
+} from '../../domain/general-education/types'
 
 import './CourseRecordModal.css'
 
@@ -40,6 +46,7 @@ const AVAILABLE_COMPLETION_TYPES:
   CourseCompletionType[] = [
     '전필',
     '전선',
+    '교양',
     '기타',
   ]
 
@@ -97,6 +104,23 @@ export function CourseRecordModal({
   ] = useState('')
 
   const [
+    generalEducationRequirements,
+    setGeneralEducationRequirements,
+  ] = useState<
+    GeneralEducationRequirement[]
+  >([])
+
+  const [
+    selectedGeneralEducationRequirementId,
+    setSelectedGeneralEducationRequirementId,
+  ] = useState('')
+
+  const [
+    selectedGeneralEducationAreaId,
+    setSelectedGeneralEducationAreaId,
+  ] = useState('')
+
+  const [
     courseName,
     setCourseName,
   ] = useState('')
@@ -132,6 +156,16 @@ export function CourseRecordModal({
   ] = useState<string | null>(null)
 
   const [
+    generalEducationIsLoading,
+    setGeneralEducationIsLoading,
+  ] = useState(false)
+
+  const [
+    generalEducationError,
+    setGeneralEducationError,
+  ] = useState<string | null>(null)
+
+  const [
     formError,
     setFormError,
   ] = useState<string | null>(null)
@@ -144,6 +178,9 @@ export function CourseRecordModal({
   const isMajorCourse =
     completionType === '전필' ||
     completionType === '전선'
+
+  const isGeneralEducation =
+    completionType === '교양'
 
   const matchingCurriculumCourses =
     useMemo(() => {
@@ -223,6 +260,35 @@ export function CourseRecordModal({
       ],
     )
 
+  const selectedGeneralEducationRequirement =
+    useMemo(
+      () =>
+        generalEducationRequirements.find(
+          (requirement) =>
+            String(requirement.id) ===
+            selectedGeneralEducationRequirementId,
+        ) ?? null,
+      [
+        generalEducationRequirements,
+        selectedGeneralEducationRequirementId,
+      ],
+    )
+
+  const selectedGeneralEducationArea =
+    useMemo(
+      () =>
+        selectedGeneralEducationRequirement
+          ?.areas.find(
+            (area) =>
+              String(area.id) ===
+              selectedGeneralEducationAreaId,
+          ) ?? null,
+      [
+        selectedGeneralEducationAreaId,
+        selectedGeneralEducationRequirement,
+      ],
+    )
+
   useEffect(() => {
     if (entryYear === null) {
       return
@@ -273,6 +339,57 @@ export function CourseRecordModal({
   }, [entryYear])
 
   useEffect(() => {
+    if (entryYear === null) {
+      return
+    }
+
+    const resolvedEntryYear =
+      entryYear
+
+    let requestIsActive = true
+
+    async function loadGeneralEducation() {
+      setGeneralEducationIsLoading(true)
+      setGeneralEducationError(null)
+
+      try {
+        const generalEducation =
+          await fetchGeneralEducation(
+            resolvedEntryYear,
+          )
+
+        if (requestIsActive) {
+          setGeneralEducationRequirements(
+            generalEducation.requirements,
+          )
+        }
+      } catch (error) {
+        if (!requestIsActive) {
+          return
+        }
+
+        setGeneralEducationError(
+          error instanceof Error
+            ? error.message
+            : '교양요건을 불러오지 못했습니다.',
+        )
+      } finally {
+        if (requestIsActive) {
+          setGeneralEducationIsLoading(
+            false,
+          )
+        }
+      }
+    }
+
+    void loadGeneralEducation()
+
+    return () => {
+      requestIsActive = false
+    }
+  }, [entryYear])
+
+  useEffect(() => {
     function handleKeyDown(
       event: KeyboardEvent,
     ) {
@@ -309,6 +426,13 @@ export function CourseRecordModal({
     )
 
     setSelectedCurriculumCourseId('')
+
+    setSelectedGeneralEducationRequirementId(
+      '',
+    )
+
+    setSelectedGeneralEducationAreaId('')
+
     setCourseName('')
     setCredits('')
     setFormError(null)
@@ -342,9 +466,20 @@ export function CourseRecordModal({
         ? ''
         : String(selectedCourse.credits),
     )
-  }
+    }
 
-  async function handleSubmit(
+    function handleGeneralEducationRequirementChange(
+      requirementId: string,
+    ) {
+      setSelectedGeneralEducationRequirementId(
+        requirementId,
+      )
+
+      setSelectedGeneralEducationAreaId('')
+      setFormError(null)
+    }
+
+    async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault()
@@ -356,6 +491,27 @@ export function CourseRecordModal({
     ) {
       setFormError(
         '공식 교육과정 과목을 선택해 주세요.',
+      )
+      return
+    }
+
+    if (
+      isGeneralEducation &&
+      selectedGeneralEducationRequirement ===
+        null
+    ) {
+      setFormError(
+        '교양 구분을 선택해 주세요.',
+      )
+      return
+    }
+
+    if (
+      isGeneralEducation &&
+      selectedGeneralEducationArea === null
+    ) {
+      setFormError(
+        '교양 세부 영역을 선택해 주세요.',
       )
       return
     }
@@ -396,8 +552,11 @@ export function CourseRecordModal({
           null,
         lectureId: null,
         generalEducationRequirementId:
-          null,
-        generalEducationAreaId: null,
+          selectedGeneralEducationRequirement
+            ?.id ?? null,
+        generalEducationAreaId:
+          selectedGeneralEducationArea
+            ?.id ?? null,
         academicYear: null,
         grade,
         semester,
@@ -518,11 +677,6 @@ export function CourseRecordModal({
                   </label>
                 ),
               )}
-
-              <span className="course-record-modal-type-option course-record-modal-type-option--disabled">
-                교양
-                <small>다음 단계</small>
-              </span>
             </div>
           </fieldset>
 
@@ -579,6 +733,91 @@ export function CourseRecordModal({
                 </small>
               )}
             </label>
+          ) : null}
+
+          {isGeneralEducation ? (
+            <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
+              <label className="course-record-modal-field">
+                <span>교양 구분</span>
+
+                <select
+                  disabled={
+                    entryYear === null ||
+                    generalEducationIsLoading
+                  }
+                  value={
+                    selectedGeneralEducationRequirementId
+                  }
+                  onChange={(event) => {
+                    handleGeneralEducationRequirementChange(
+                      event.target.value,
+                    )
+                  }}
+                >
+                  <option value="">
+                    {generalEducationIsLoading
+                      ? '교양요건 불러오는 중...'
+                      : '교양 구분을 선택해 주세요'}
+                  </option>
+
+                  {generalEducationRequirements.map(
+                    (requirement) => (
+                      <option
+                        key={requirement.id}
+                        value={requirement.id}
+                      >
+                        {requirement.category}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
+
+              <label className="course-record-modal-field">
+                <span>세부 영역</span>
+
+                <select
+                  disabled={
+                    selectedGeneralEducationRequirement ===
+                    null
+                  }
+                  value={
+                    selectedGeneralEducationAreaId
+                  }
+                  onChange={(event) => {
+                    setSelectedGeneralEducationAreaId(
+                      event.target.value,
+                    )
+                  }}
+                >
+                  <option value="">
+                    세부 영역을 선택해 주세요
+                  </option>
+
+                  {selectedGeneralEducationRequirement
+                    ?.areas.map(
+                      (area) => (
+                        <option
+                          key={area.id}
+                          value={area.id}
+                        >
+                          {area.areaName}
+                        </option>
+                      ),
+                    )}
+                </select>
+              </label>
+            </div>
+          ) : null}
+
+          {generalEducationError !== null &&
+          isGeneralEducation ? (
+            <p
+              className="course-record-modal-error"
+              role="alert"
+            >
+              {generalEducationError}
+            </p>
           ) : null}
 
           {curriculumError !== null &&
@@ -735,6 +974,14 @@ export function CourseRecordModal({
                     entryYear === null ||
                     curriculumIsLoading ||
                     curriculumError !== null
+                  )
+                ) ||
+                (
+                  isGeneralEducation &&
+                  (
+                    entryYear === null ||
+                    generalEducationIsLoading ||
+                    generalEducationError !== null
                   )
                 )
               }
