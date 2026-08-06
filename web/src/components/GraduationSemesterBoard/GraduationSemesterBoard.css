@@ -1,0 +1,256 @@
+/* =========================================================
+   학기별 이수 현황 보드
+   ========================================================= */
+
+.graduation-board-section {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.graduation-board-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.graduation-board-section-header p {
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #777;
+}
+
+.graduation-board-section-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.graduation-board-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.graduation-board-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #666;
+}
+
+.graduation-board-legend i {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 4px;
+}
+
+.graduation-board-legend-completed {
+  background: #e2f1e7;
+}
+
+.graduation-board-legend-scheduled {
+  background: #e3eef9;
+}
+
+.graduation-board-legend-substituted {
+  background: #b8ddc5;
+}
+
+.graduation-board-scroll {
+  min-width: 0;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+}
+
+.graduation-board-list {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: max-content;
+}
+
+.graduation-board-card {
+  width: 292px;
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid #e1e1e1;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.graduation-board-card--transfer {
+  border-color: #a9cbb5;
+}
+
+.graduation-board-card-header {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #ededed;
+}
+
+.graduation-board-card-header div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.graduation-board-card-header span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #777;
+}
+
+.graduation-board-card-header h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.graduation-board-add-button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 20px;
+}
+
+.graduation-board-transfer-add {
+  padding: 7px 9px;
+  border: 1px solid #a9cbb5;
+  border-radius: 9px;
+  background: #f1f8f3;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.graduation-board-add-button:disabled,
+.graduation-board-transfer-add:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.graduation-board-card-summary {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid #ededed;
+  background: #fafafa;
+}
+
+.graduation-board-card-summary div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 16px;
+}
+
+.graduation-board-card-summary div + div {
+  border-left: 1px solid #ededed;
+}
+
+.graduation-board-card-summary span,
+.graduation-board-card-summary small {
+  font-size: 11px;
+  color: #777;
+}
+
+.graduation-board-card-summary strong {
+  font-size: 13px;
+}
+
+.graduation-board-transfer-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #dceae1;
+  background: #f1f8f3;
+  font-size: 12px;
+}
+
+.graduation-board-course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  list-style: none;
+}
+
+.graduation-board-course {
+  padding: 11px 12px;
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.graduation-board-course--completed {
+  border-color: #cfe5d6;
+  background: #e2f1e7;
+}
+
+.graduation-board-course--scheduled {
+  border-color: #cbdeef;
+  background: #e3eef9;
+}
+
+.graduation-board-course--substituted {
+  border-color: #91c4a2;
+  background: #b8ddc5;
+}
+
+.graduation-board-course div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graduation-board-course strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graduation-board-course span {
+  font-size: 11px;
+  color: #666;
+}
+
+.graduation-board-empty {
+  margin: 0;
+  padding: 32px 20px;
+  line-height: 1.6;
+  text-align: center;
+  color: #777;
+}
+
+@media (max-width: 720px) {
+  .graduation-board-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .graduation-board-legend {
+    justify-content: flex-start;
+  }
+
+  .graduation-board-card {
+    width: 270px;
+  }
+}
