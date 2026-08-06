@@ -301,8 +301,9 @@ export function GeneralEducationTransferCreditModal({
             <p>전적대 학점 인정</p>
 
             <h2 id="general-education-transfer-modal-title">
+              {isEditing
               ? '교양 인정 과목 수정'
-              : '교양 인정 과목 추가'
+              : '교양 인정 과목 추가'}
             </h2>
           </div>
 
