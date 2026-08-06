@@ -134,6 +134,18 @@ def ensure_user_course_record_columns() -> None:
         connection.execute(
             """
             CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_user_grade_semester
+            ON user_course_records(
+                user_id,
+                grade,
+                semester
+            )
+            """
+        )
+
+        connection.execute(
+            """
+            CREATE INDEX IF NOT EXISTS
                 idx_user_course_records_general_education
             ON user_course_records(
                 user_id,
@@ -143,17 +155,6 @@ def ensure_user_course_record_columns() -> None:
             """ 
         )
 
-        connection.execute(
-    """
-    CREATE INDEX IF NOT EXISTS
-        idx_user_course_records_user_grade_semester
-    ON user_course_records(
-        user_id,
-        grade,
-        semester
-    )
-    """
-)
 
 def create_auth_tables() -> None:
     """회원, 로그인 세션, 개인 이수 기록 테이블을 생성한다."""
@@ -269,14 +270,6 @@ def create_auth_tables() -> None:
             ON user_course_records(
                 user_id,
                 academic_year,
-                semester
-            );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_user_grade_semester
-            ON user_course_records(
-                user_id,
-                grade,
                 semester
             );
 
