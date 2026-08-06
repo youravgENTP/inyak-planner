@@ -56,6 +56,16 @@ class CourseRecordRequest(BaseModel):
         default=None,
         ge=1,
     )
+    general_education_requirement_id: Optional[int] = (
+        Field(
+            default=None,
+            ge=1,
+        )
+    )
+    general_education_area_id: Optional[int] = Field(
+        default=None,
+        ge=1,
+    )
     academic_year: Optional[int] = Field(
         default=None,
         ge=2000,
@@ -90,9 +100,10 @@ class CourseRecordRequest(BaseModel):
         max_length=500,
     )
 
+
 def normalize_optional_text(
-    value: str | None,
-) -> str | None:
+    value: Optional[str],
+) -> Optional[str]:
     """선택 입력 문자열의 양끝 공백과 빈 문자열을 정리한다."""
     if value is None:
         return None
@@ -112,24 +123,38 @@ def get_request_values(
     return {
         "curriculum_course_id":
             request.curriculum_course_id,
-        "lecture_id": request.lecture_id,
-        "academic_year": request.academic_year,
-        "semester": request.semester,
-        "course_name": request.course_name.strip(),
-        "course_code": normalize_optional_text(
-            request.course_code
-        ),
+        "lecture_id":
+            request.lecture_id,
+        "general_education_requirement_id":
+            request.general_education_requirement_id,
+        "general_education_area_id":
+            request.general_education_area_id,
+        "academic_year":
+            request.academic_year,
+        "semester":
+            request.semester,
+        "course_name":
+            request.course_name.strip(),
+        "course_code":
+            normalize_optional_text(
+                request.course_code
+            ),
         "completion_type":
             request.completion_type,
-        "credits": request.credits,
-        "status": request.status,
-        "letter_grade": normalize_optional_text(
-            request.letter_grade
-        ),
-        "is_retake": request.is_retake,
-        "note": normalize_optional_text(
-            request.note
-        ),
+        "credits":
+            request.credits,
+        "status":
+            request.status,
+        "letter_grade":
+            normalize_optional_text(
+                request.letter_grade
+            ),
+        "is_retake":
+            request.is_retake,
+        "note":
+            normalize_optional_text(
+                request.note
+            ),
     }
 
 
