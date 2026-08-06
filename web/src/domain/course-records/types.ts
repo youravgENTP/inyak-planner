@@ -15,6 +15,10 @@ export interface CourseRecord {
   userId: string
   curriculumCourseId: number | null
   lectureId: number | null
+  generalEducationRequirementId:
+    number | null
+  generalEducationAreaId:
+    number | null
   academicYear: number | null
   semester: number | null
   courseName: string
@@ -32,6 +36,10 @@ export interface CourseRecord {
 export interface CourseRecordInput {
   curriculumCourseId: number | null
   lectureId: number | null
+  generalEducationRequirementId:
+    number | null
+  generalEducationAreaId:
+    number | null
   academicYear: number | null
   semester: number | null
   courseName: string
