@@ -30,10 +30,11 @@ from server.course_records_router import (
 )
 
 from server.database import (
+    get_curriculum_courses,
+    get_general_education_requirements,
     get_lecture_by_id,
     get_lectures,
     get_lectures_by_ids,
-    get_curriculum_courses,
 )
 
 PROJECT_ROOT = Path(
@@ -131,6 +132,22 @@ def read_curriculum(
         "entry_year": entry_year,
         "count": len(courses),
         "courses": courses,
+    }
+
+@app.get("/api/general-education")
+def read_general_education(
+    entry_year: int = Query(ge=2000, le=2100),
+) -> Dict[str, Any]:
+    requirements = (
+        get_general_education_requirements(
+            entry_year=entry_year,
+        )
+    )
+
+    return {
+        "entry_year": entry_year,
+        "count": len(requirements),
+        "requirements": requirements,
     }
 
 
