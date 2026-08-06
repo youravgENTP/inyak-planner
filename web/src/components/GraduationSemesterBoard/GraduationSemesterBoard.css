@@ -172,14 +172,34 @@
 }
 
 .graduation-board-transfer-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 18px;
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
   border-bottom: 1px solid #dceae1;
   background: #f1f8f3;
+}
+
+.graduation-board-transfer-summary div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.graduation-board-transfer-summary div + div {
+  border-left: 1px solid #dceae1;
+}
+
+.graduation-board-transfer-summary span {
+  font-size: 10px;
+  color: #728078;
+}
+
+.graduation-board-transfer-summary strong {
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .graduation-board-course-list {
@@ -230,6 +250,13 @@
 .graduation-board-course span {
   font-size: 11px;
   color: #666;
+}
+
+.graduation-board-transfer-source {
+  overflow: hidden;
+  color: #52665a;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .graduation-board-empty {

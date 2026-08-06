@@ -348,6 +348,45 @@ function TransferCreditCard({
       0,
     )
 
+  const requiredCredits =
+    card.records
+      .filter(
+        (record) =>
+          record.completionType ===
+          '전필',
+      )
+      .reduce(
+        (total, record) =>
+          total + record.credits,
+        0,
+      )
+
+  const electiveCredits =
+    card.records
+      .filter(
+        (record) =>
+          record.completionType ===
+          '전선',
+      )
+      .reduce(
+        (total, record) =>
+          total + record.credits,
+        0,
+      )
+
+  const generalEducationCredits =
+    card.records
+      .filter(
+        (record) =>
+          record.completionType ===
+          '교양',
+      )
+      .reduce(
+        (total, record) =>
+          total + record.credits,
+        0,
+      )
+
   return (
     <>
       <article className="graduation-board-card graduation-board-card--transfer">
@@ -406,13 +445,37 @@ function TransferCreditCard({
       </header>
 
       <div className="graduation-board-transfer-summary">
-        <span>
-          인정 과목 {card.records.length}개
-        </span>
+        <div>
+          <span>전필</span>
 
-        <strong>
-          총 {totalCredits}학점
-        </strong>
+          <strong>
+            {requiredCredits}학점
+          </strong>
+        </div>
+
+        <div>
+          <span>전선</span>
+
+          <strong>
+            {electiveCredits}학점
+          </strong>
+        </div>
+
+        <div>
+          <span>교양</span>
+
+          <strong>
+            {generalEducationCredits}학점
+          </strong>
+        </div>
+
+        <div>
+          <span>총</span>
+
+          <strong>
+            {totalCredits}학점
+          </strong>
+        </div>
       </div>
 
       {card.records.length === 0 ? (
@@ -423,29 +486,58 @@ function TransferCreditCard({
       ) : (
         <ul className="graduation-board-course-list">
           {card.records.map(
-            (record) => (
-              <li
-                className="
-                  graduation-board-course
-                  graduation-board-course--substituted
-                "
-                key={record.id}
-              >
-                <div>
-                  <strong>
-                    {record.courseName}
-                  </strong>
+            (record) => {
+              const curriculumCourse =
+                record.curriculumCourseId ===
+                null
+                  ? null
+                  : (
+                    curriculum.courses.find(
+                      (course) =>
+                        course.id ===
+                        record
+                          .curriculumCourseId,
+                    ) ?? null
+                  )
 
-                  <span>
-                    {record.completionType}
-                    {' · '}
-                    {formatCredits(
-                      record.credits,
-                    )}
-                  </span>
-                </div>
-              </li>
-            ),
+              return (
+                <li
+                  className="
+                    graduation-board-course
+                    graduation-board-course--substituted
+                  "
+                  key={record.id}
+                >
+                  <div>
+                    <strong>
+                      {curriculumCourse ===
+                      null
+                        ? record.courseName
+                        : (
+                          curriculumCourse
+                            .courseName
+                        )}
+                    </strong>
+
+                    {curriculumCourse !==
+                    null ? (
+                      <span className="graduation-board-transfer-source">
+                        대체인정:{' '}
+                        {record.courseName}
+                      </span>
+                    ) : null}
+
+                    <span>
+                      {record.completionType}
+                      {' · '}
+                      {formatCredits(
+                        record.credits,
+                      )}
+                    </span>
+                  </div>
+                </li>
+              )
+            },
           )}
         </ul>
         )}
