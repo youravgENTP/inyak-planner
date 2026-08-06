@@ -8,13 +8,6 @@
   gap: 22px;
 }
 
-.gpa-records-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-}
-
 .gpa-records-header p {
   margin: 0 0 7px;
   font-size: 12px;
@@ -30,67 +23,174 @@
 
 .gpa-records-header span {
   display: block;
-  max-width: 650px;
+  max-width: 680px;
   margin-top: 10px;
   line-height: 1.6;
   font-size: 14px;
   color: #6a756e;
 }
 
-.gpa-records-add-semester {
-  flex-shrink: 0;
-  padding: 10px 15px;
-  border: 1px solid #bfd2c4;
-  border-radius: 10px;
-  background: #f7fbf8;
-  font-weight: 700;
-  color: #365e45;
-}
-
-.gpa-records-add-semester:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
 
 /* =========================================================
-   상단 요약
+   전체 GPA 요약
    ========================================================= */
 
-.gpa-records-summary {
-  display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.gpa-records-summary article {
-  padding: 17px 18px;
-  border: 1px solid #e0e8e2;
-  border-radius: 14px;
+.gpa-overview {
+  overflow: hidden;
+  border: 1px solid #dfe8e1;
+  border-radius: 16px;
   background: #fff;
 }
 
-.gpa-records-summary span {
+.gpa-overview-metrics,
+.gpa-semester-metrics {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+.gpa-overview-metrics {
+  border-bottom: 1px solid #e7ede8;
+}
+
+.gpa-overview-metrics article,
+.gpa-semester-metrics article {
+  padding: 18px 20px;
+  border-right: 1px solid #e7ede8;
+}
+
+.gpa-overview-metrics article:last-child,
+.gpa-semester-metrics article:last-child {
+  border-right: 0;
+}
+
+.gpa-overview-metrics span,
+.gpa-semester-metrics span {
   display: block;
   margin-bottom: 7px;
   font-size: 12px;
   color: #718078;
 }
 
-.gpa-records-summary strong {
-  font-size: 20px;
+.gpa-overview-metrics strong,
+.gpa-semester-metrics strong {
+  display: block;
+  font-size: 22px;
   color: #26392d;
+}
+
+.gpa-overview-metrics small,
+.gpa-semester-metrics small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #7992a2;
+}
+
+.gpa-overview-visuals {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.7fr)
+    minmax(280px, 1fr);
+}
+
+.gpa-overview-visuals > article {
+  padding: 18px 20px 20px;
+}
+
+.gpa-overview-visuals > article:first-child {
+  border-right: 1px solid #e7ede8;
+}
+
+.gpa-overview-visuals header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.gpa-overview-visuals h2 {
+  margin: 0;
+  font-size: 15px;
+  color: #34483b;
+}
+
+.gpa-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gpa-chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #77837c;
+}
+
+.gpa-chart-legend i {
+  display: block;
+  width: 18px;
+  border-top: 2px solid #527a60;
+}
+
+.gpa-chart-legend .gpa-chart-legend-projected {
+  border-top-style: dashed;
+  border-top-color: #9db3c0;
+}
+
+.gpa-chart-placeholder {
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  border-radius: 10px;
+  background: #fafcfb;
+  font-size: 12px;
+  color: #919c95;
 }
 
 
 /* =========================================================
-   로딩·오류·빈 화면
+   학기 탭
    ========================================================= */
 
-.gpa-records-message,
-.gpa-records-empty {
-  padding: 30px;
+.gpa-semester-tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid #dfe7e1;
+  scrollbar-width: thin;
+}
+
+.gpa-semester-tab {
+  flex: 0 0 auto;
+  padding: 11px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7a857e;
+}
+
+.gpa-semester-tab:hover {
+  color: #41614b;
+}
+
+.gpa-semester-tab--active {
+  border-bottom-color: #426f51;
+  color: #31533d;
+}
+
+
+/* =========================================================
+   메시지
+   ========================================================= */
+
+.gpa-records-message {
+  padding: 24px;
   border: 1px solid #e1e8e3;
   border-radius: 14px;
   background: #fff;
@@ -104,96 +204,81 @@
   color: #9b4646;
 }
 
-.gpa-records-empty strong {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: #34483b;
-}
-
-.gpa-records-empty p {
-  margin: 0;
-  line-height: 1.6;
-  font-size: 13px;
-}
-
 
 /* =========================================================
-   학기별 카드
+   선택 학기 상세
    ========================================================= */
 
-.gpa-semester-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.gpa-semester-card {
+.gpa-semester-detail {
   overflow: hidden;
   border: 1px solid #dfe8e1;
-  border-radius: 15px;
+  border-radius: 16px;
   background: #fff;
 }
 
-.gpa-semester-card-header {
+.gpa-semester-detail-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 18px 20px;
-  border-bottom: 1px solid #e8eee9;
+  padding: 20px;
+  border-bottom: 1px solid #e7ede8;
   background: #f8fbf9;
 }
 
-.gpa-semester-card-header > div:first-child > span {
-  display: block;
-  margin-bottom: 4px;
+.gpa-semester-detail-header p {
+  margin: 0 0 4px;
   font-size: 11px;
   color: #718077;
 }
 
-.gpa-semester-card-header h2 {
+.gpa-semester-detail-header h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
   color: #273a2e;
 }
 
-.gpa-semester-card-summary {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-}
-
-.gpa-semester-card-summary strong {
-  font-size: 14px;
+.gpa-semester-detail-header > button,
+.gpa-course-empty button {
+  padding: 10px 14px;
+  border: 1px solid #bfd2c4;
+  border-radius: 9px;
+  background: #f7fbf8;
+  font-weight: 700;
   color: #365e45;
 }
 
-.gpa-semester-card-summary span {
-  font-size: 12px;
-  color: #77837c;
+.gpa-semester-detail-header > button:disabled,
+.gpa-course-empty button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.gpa-semester-metrics {
+  border-bottom: 1px solid #e7ede8;
 }
 
 
 /* =========================================================
-   학기별 과목 표
+   과목 표
    ========================================================= */
 
-.gpa-semester-table-header,
-.gpa-semester-record {
+.gpa-course-table-header,
+.gpa-course-row {
   display: grid;
   grid-template-columns:
-    minmax(220px, 1fr)
+    minmax(260px, 1fr)
     90px
-    80px
-    100px
-    80px;
+    90px
+    90px
+    38px;
   align-items: center;
   gap: 12px;
 }
 
-.gpa-semester-table-header {
-  padding: 10px 20px;
+.gpa-course-table-header {
+  min-height: 42px;
+  padding: 0 20px;
   border-bottom: 1px solid #edf1ee;
   background: #fcfdfc;
   font-size: 11px;
@@ -201,16 +286,54 @@
   color: #7c8881;
 }
 
-.gpa-semester-record {
-  padding: 14px 20px;
+.gpa-course-name-heading,
+.gpa-course-name-cell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.gpa-course-name-heading > button,
+.gpa-course-status-toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.gpa-course-name-heading > button {
+  visibility: hidden;
+  font-size: 10px;
+  font-weight: 500;
+  color: #9aa39d;
+}
+
+.gpa-course-table-header:hover
+  .gpa-course-name-heading > button,
+.gpa-course-name-heading > button:focus-visible {
+  visibility: visible;
+}
+
+.gpa-course-name-heading > button:hover {
+  color: #69766e;
+}
+
+.gpa-course-row {
+  min-height: 54px;
+  padding: 0 20px;
   border-bottom: 1px solid #f0f3f1;
 }
 
-.gpa-semester-record:last-child {
+.gpa-course-row:last-child {
   border-bottom: 0;
 }
 
-.gpa-semester-record strong {
+.gpa-course-row--active {
+  background: #f7fbfd;
+}
+
+.gpa-course-name-cell strong {
   overflow: hidden;
   font-size: 13px;
   color: #293b30;
@@ -218,24 +341,114 @@
   white-space: nowrap;
 }
 
-.gpa-semester-record span {
+.gpa-course-row > span {
   font-size: 12px;
   color: #68756d;
 }
 
+.gpa-course-status-toggle {
+  flex: 0 0 auto;
+  visibility: hidden;
+  font-size: 10px;
+  color: #9aa39d;
+}
+
+.gpa-course-row:hover
+  .gpa-course-status-toggle,
+.gpa-course-status-toggle:focus-visible,
+.gpa-course-status-toggle--active {
+  visibility: visible;
+}
+
+.gpa-course-status-toggle:hover {
+  color: #69766e;
+}
+
+.gpa-course-status-toggle--active {
+  color: #5f8fac;
+}
+
+.gpa-course-status-toggle--active:hover {
+  color: #477b9a;
+}
+
+.gpa-course-menu {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 18px;
+  color: #7d8881;
+}
+
+.gpa-course-menu:hover {
+  background: #f0f4f1;
+}
+
+.gpa-course-empty {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+}
+
+.gpa-course-empty strong {
+  font-size: 15px;
+  color: #34483b;
+}
+
+.gpa-course-empty p {
+  max-width: 360px;
+  margin: 8px 0 17px;
+  line-height: 1.6;
+  font-size: 12px;
+  color: #7b867f;
+}
+
+
+/* =========================================================
+   반응형
+   ========================================================= */
 
 @media (max-width: 900px) {
-  .gpa-records-summary {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+  .gpa-overview-visuals {
+    grid-template-columns: 1fr;
   }
 
-  .gpa-semester-table {
+  .gpa-overview-visuals > article:first-child {
+    border-right: 0;
+    border-bottom: 1px solid #e7ede8;
+  }
+
+  .gpa-course-table {
     overflow-x: auto;
   }
 
-  .gpa-semester-table-header,
-  .gpa-semester-record {
-    min-width: 680px;
+  .gpa-course-table-header,
+  .gpa-course-row {
+    min-width: 720px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gpa-overview-metrics,
+  .gpa-semester-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .gpa-overview-metrics article,
+  .gpa-semester-metrics article {
+    border-right: 0;
+    border-bottom: 1px solid #e7ede8;
+  }
+
+  .gpa-overview-metrics article:last-child,
+  .gpa-semester-metrics article:last-child {
+    border-bottom: 0;
   }
 }
