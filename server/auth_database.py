@@ -475,11 +475,14 @@ def update_user_academic_profile(
 
     return cursor.rowcount > 0
 
+##
 def create_user_course_record(
     *,
     user_id: str,
     curriculum_course_id: int | None,
     lecture_id: int | None,
+    general_education_requirement_id: int | None,
+    general_education_area_id: int | None,
     academic_year: int | None,
     semester: int | None,
     course_name: str,
@@ -503,6 +506,8 @@ def create_user_course_record(
                 user_id,
                 curriculum_course_id,
                 lecture_id,
+                general_education_requirement_id,
+                general_education_area_id,
                 academic_year,
                 semester,
                 course_name,
@@ -517,8 +522,8 @@ def create_user_course_record(
                 updated_at
             )
             VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
             """,
             (
@@ -526,6 +531,8 @@ def create_user_course_record(
                 user_id,
                 curriculum_course_id,
                 lecture_id,
+                general_education_requirement_id,
+                general_education_area_id,
                 academic_year,
                 semester,
                 course_name.strip(),
@@ -554,27 +561,42 @@ def create_user_course_record(
         "user_id": user_id,
         "curriculum_course_id":
             curriculum_course_id,
-        "lecture_id": lecture_id,
-        "academic_year": academic_year,
-        "semester": semester,
-        "course_name": course_name.strip(),
+        "lecture_id":
+            lecture_id,
+        "general_education_requirement_id":
+            general_education_requirement_id,
+        "general_education_area_id":
+            general_education_area_id,
+        "academic_year":
+            academic_year,
+        "semester":
+            semester,
+        "course_name":
+            course_name.strip(),
         "course_code": (
             course_code.strip()
             if course_code is not None
             else None
         ),
-        "completion_type": completion_type,
-        "credits": credits,
-        "status": status,
-        "letter_grade": letter_grade,
-        "is_retake": is_retake,
+        "completion_type":
+            completion_type,
+        "credits":
+            credits,
+        "status":
+            status,
+        "letter_grade":
+            letter_grade,
+        "is_retake":
+            is_retake,
         "note": (
             note.strip()
             if note is not None
             else None
         ),
-        "created_at": current_time,
-        "updated_at": current_time,
+        "created_at":
+            current_time,
+        "updated_at":
+            current_time,
     }
 
 
@@ -591,6 +613,8 @@ def get_user_course_records(
                 user_id,
                 curriculum_course_id,
                 lecture_id,
+                general_education_requirement_id,
+                general_education_area_id,
                 academic_year,
                 semester,
                 course_name,
@@ -636,6 +660,8 @@ def update_user_course_record(
     user_id: str,
     curriculum_course_id: int | None,
     lecture_id: int | None,
+    general_education_requirement_id: int | None,
+    general_education_area_id: int | None,
     academic_year: int | None,
     semester: int | None,
     course_name: str,
@@ -657,6 +683,8 @@ def update_user_course_record(
             SET
                 curriculum_course_id = ?,
                 lecture_id = ?,
+                general_education_requirement_id = ?,
+                general_education_area_id = ?,
                 academic_year = ?,
                 semester = ?,
                 course_name = ?,
@@ -674,6 +702,8 @@ def update_user_course_record(
             (
                 curriculum_course_id,
                 lecture_id,
+                general_education_requirement_id,
+                general_education_area_id,
                 academic_year,
                 semester,
                 course_name.strip(),
@@ -708,6 +738,8 @@ def update_user_course_record(
                 user_id,
                 curriculum_course_id,
                 lecture_id,
+                general_education_requirement_id,
+                general_education_area_id,
                 academic_year,
                 semester,
                 course_name,
@@ -739,7 +771,7 @@ def update_user_course_record(
     )
 
     return record
-
+##
 
 def delete_user_course_record(
     *,
