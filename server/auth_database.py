@@ -84,6 +84,64 @@ def ensure_user_profile_columns() -> None:
                 """
             )
 
+def ensure_user_course_record_columns() -> None:
+    """
+    기존 개인 이수 기록 테이블에 교양요건 연결 컬럼이
+    없으면 추가한다.
+
+    교양요건 원본은 inyak.db에 있으므로 auth.db에서는
+    외래키가 아닌 논리 ID로 저장한다.
+    """
+    with connect_auth_database() as connection:
+        columns = connection.execute(
+            """
+            PRAGMA table_info(user_course_records)
+            """
+        ).fetchall()
+
+        column_names = {
+            column["name"]
+            for column in columns
+        }
+
+        columns_to_add = {
+            (
+                "general_education_"
+                "requirement_id"
+            ): "INTEGER",
+            (
+                "general_education_"
+                "area_id"
+            ): "INTEGER",
+        }
+
+        for (
+            column_name,
+            column_type,
+        ) in columns_to_add.items():
+            if column_name in column_names:
+                continue
+
+            connection.execute(
+                f"""
+                ALTER TABLE user_course_records
+                ADD COLUMN
+                    {column_name} {column_type}
+                """
+            )
+
+        connection.execute(
+            """
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_general_education
+            ON user_course_records(
+                user_id,
+                general_education_requirement_id,
+                general_education_area_id
+            )
+            """
+        )
+
 def create_auth_tables() -> None:
     """회원, 로그인 세션, 개인 이수 기록 테이블을 생성한다."""
     with connect_auth_database() as connection:
@@ -118,6 +176,9 @@ def create_auth_tables() -> None:
 
                 curriculum_course_id INTEGER,
                 lecture_id INTEGER,
+
+                general_education_requirement_id INTEGER,
+                general_education_area_id INTEGER,
 
                 academic_year INTEGER,
                 semester INTEGER,
@@ -198,10 +259,19 @@ def create_auth_tables() -> None:
                 user_id,
                 curriculum_course_id
             );
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_course_records_general_education
+            ON user_course_records(
+                user_id,
+                general_education_requirement_id,
+                general_education_area_id
+            );
             """
         )
 
     ensure_user_profile_columns()
+    ensure_user_course_record_columns()
 
 
 def normalize_username(
