@@ -23,6 +23,10 @@ import type {
   TransferCreditBoardCard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 
+import {
+  MajorTransferCreditModal,
+} from '../MajorTransferCreditModal/MajorTransferCreditModal'
+
 import './GraduationSemesterBoard.css'
 
 
@@ -30,6 +34,9 @@ interface GraduationSemesterBoardProps {
   user: AuthUser
   curriculum: Curriculum
   records: readonly CourseRecord[]
+  onRecordCreated: (
+    record: CourseRecord,
+  ) => void
 }
 
 
@@ -279,12 +286,23 @@ function SemesterCard({
 
 function TransferCreditCard({
   card,
+  curriculum,
+  onRecordCreated,
 }: {
   card: TransferCreditBoardCard
+  curriculum: Curriculum
+  onRecordCreated: (
+    record: CourseRecord,
+  ) => void
 }) {
   const [
     menuIsOpen,
     setMenuIsOpen,
+  ] = useState(false)
+
+  const [
+    majorModalIsOpen,
+    setMajorModalIsOpen,
   ] = useState(false)
 
   const menuRef =
@@ -331,7 +349,8 @@ function TransferCreditCard({
     )
 
   return (
-    <article className="graduation-board-card graduation-board-card--transfer">
+    <>
+      <article className="graduation-board-card graduation-board-card--transfer">
       <header className="graduation-board-card-header">
         <div>
           <span>편입생</span>
@@ -366,6 +385,7 @@ function TransferCreditCard({
                 type="button"
                 onClick={() => {
                   setMenuIsOpen(false)
+                  setMajorModalIsOpen(true)
                 }}
               >
                 <strong>전공</strong>
@@ -428,21 +448,44 @@ function TransferCreditCard({
             ),
           )}
         </ul>
-      )}
-    </article>
+        )}
+      </article>
+
+      {majorModalIsOpen ? (
+        <MajorTransferCreditModal
+          curriculum={curriculum}
+          onClose={() => {
+            setMajorModalIsOpen(false)
+          }}
+          onCreated={
+            onRecordCreated
+          }
+        />
+      ) : null}
+    </>
   )
 }
 
 
 function BoardCard({
   card,
+  curriculum,
+  onRecordCreated,
 }: {
   card: GraduationBoardCard
+  curriculum: Curriculum
+  onRecordCreated: (
+    record: CourseRecord,
+  ) => void
 }) {
   if (card.kind === 'transferCredits') {
     return (
       <TransferCreditCard
         card={card}
+        curriculum={curriculum}
+        onRecordCreated={
+          onRecordCreated
+        }
       />
     )
   }
@@ -457,6 +500,7 @@ export function GraduationSemesterBoard({
   user,
   curriculum,
   records,
+  onRecordCreated,
 }: GraduationSemesterBoardProps) {
   const cards =
     createGraduationBoard(
@@ -502,6 +546,10 @@ export function GraduationSemesterBoard({
           {cards.map((card) => (
             <BoardCard
               card={card}
+              curriculum={curriculum}
+              onRecordCreated={
+                onRecordCreated
+              }
               key={
                 card.kind ===
                   'transferCredits'

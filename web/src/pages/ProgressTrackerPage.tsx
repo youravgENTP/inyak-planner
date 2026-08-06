@@ -418,12 +418,21 @@ export function ProgressTrackerPage({
               ))}
           </div>
 
-
           {curriculum !== null ? (
             <GraduationSemesterBoard
               user={user}
               curriculum={curriculum}
               records={courseRecords}
+              onRecordCreated={(
+                createdRecord,
+              ) => {
+                setCourseRecords(
+                  (currentRecords) => [
+                    ...currentRecords,
+                    createdRecord,
+                  ],
+                )
+              }}
             />
           ) : null}
 
