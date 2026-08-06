@@ -344,27 +344,44 @@ function TransferCreditCard({
     setEditingRecord,
   ] = useState<CourseRecord | null>(null)
 
+  const [
+    activeRecordMenuId,
+    setActiveRecordMenuId,
+  ] = useState<string | null>(null)
+
   const menuRef =
     useRef<HTMLDivElement | null>(null)
 
+  const actionMenuRef =
+    useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
-    if (!menuIsOpen) {
+    if (
+      !menuIsOpen &&
+      activeRecordMenuId === null
+    ) {
       return
     }
 
     function handlePointerDown(
       event: PointerEvent,
     ) {
+      const target =
+        event.target as Node
+
       if (
-        menuRef.current === null ||
-        menuRef.current.contains(
-          event.target as Node,
+        menuRef.current?.contains(
+          target,
+        ) ||
+        actionMenuRef.current?.contains(
+          target,
         )
       ) {
         return
       }
 
       setMenuIsOpen(false)
+      setActiveRecordMenuId(null)
     }
 
     document.addEventListener(
@@ -378,7 +395,10 @@ function TransferCreditCard({
         handlePointerDown,
       )
     }
-  }, [menuIsOpen])
+  }, [
+    activeRecordMenuId,
+    menuIsOpen,
+  ])
   
   async function handleDeleteRecord(
     record: CourseRecord,
@@ -397,6 +417,7 @@ function TransferCreditCard({
       return
     }
 
+    setActiveRecordMenuId(null)
     setDeletingRecordId(record.id)
 
     try {
@@ -481,6 +502,8 @@ function TransferCreditCard({
             className="graduation-board-transfer-add"
             type="button"
             onClick={() => {
+              setActiveRecordMenuId(null)
+
               setMenuIsOpen(
                 (currentValue) =>
                   !currentValue,
@@ -611,7 +634,6 @@ function TransferCreditCard({
                   )
 
               return (
-                // 
                 <li
                   className="
                     graduation-board-course
@@ -675,50 +697,87 @@ function TransferCreditCard({
                     </span>
                   </div>
 
-                  <div className="graduation-board-transfer-actions">
-                    {curriculumCourse !==
-                    null ? (
-                      <button
-                        aria-label={`${record.courseName} 인정 기록 수정`}
-                        className="graduation-board-transfer-edit"
-                        disabled={
-                          deletingRecordId ===
-                          record.id
-                        }
-                        type="button"
-                        onClick={() => {
-                          setEditingRecord(
-                            record,
-                          )
-                        }}
-                      >
-                        수정
-                      </button>
-                    ) : null}
-
+                  <div
+                    className="graduation-board-transfer-actions"
+                    ref={
+                      activeRecordMenuId ===
+                      record.id
+                        ? actionMenuRef
+                        : null
+                    }
+                  >
                     <button
-                      aria-label={`${record.courseName} 인정 기록 삭제`}
-                      className="graduation-board-transfer-delete"
+                      aria-expanded={
+                        activeRecordMenuId ===
+                        record.id
+                      }
+                      aria-haspopup="menu"
+                      aria-label={`${record.courseName} 인정 기록 메뉴`}
+                      className="graduation-board-transfer-more"
                       disabled={
                         deletingRecordId ===
                         record.id
                       }
                       type="button"
                       onClick={() => {
-                        void handleDeleteRecord(
-                          record,
+                        setMenuIsOpen(false)
+
+                        setActiveRecordMenuId(
+                          (currentRecordId) =>
+                            currentRecordId ===
+                            record.id
+                              ? null
+                              : record.id,
                         )
                       }}
                     >
-                      {deletingRecordId ===
-                      record.id
-                        ? '삭제 중'
-                        : '삭제'}
+                      ⋯
                     </button>
+
+                    {activeRecordMenuId ===
+                    record.id ? (
+                      <div
+                        className="graduation-board-transfer-action-menu"
+                        role="menu"
+                      >
+                        {curriculumCourse !==
+                        null ? (
+                          <button
+                            role="menuitem"
+                            type="button"
+                            onClick={() => {
+                              setActiveRecordMenuId(
+                                null,
+                              )
+                              setEditingRecord(
+                                record,
+                              )
+                            }}
+                          >
+                            수정
+                          </button>
+                        ) : null}
+
+                        <button
+                          className="graduation-board-transfer-action-delete"
+                          role="menuitem"
+                          type="button"
+                          onClick={() => {
+                            setActiveRecordMenuId(
+                              null,
+                            )
+
+                            void handleDeleteRecord(
+                              record,
+                            )
+                          }}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 </li>
-                
-                // 
               )
             },
           )}
