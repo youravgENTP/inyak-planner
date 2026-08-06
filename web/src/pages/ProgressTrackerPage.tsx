@@ -13,7 +13,7 @@ function getStudentTypeLabel(
   studentType: AuthUser['studentType'],
 ): string {
   if (studentType === 'regular') {
-    return '일반 입학생'
+    return '당초 입학생'
   }
 
   if (studentType === 'transfer') {

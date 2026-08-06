@@ -225,7 +225,7 @@ export function AccountPage({
 
             <div className="account-academic-field">
               <label htmlFor="student-type">
-                학생 유형
+                입학 구분
               </label>
 
               <select
@@ -243,11 +243,11 @@ export function AccountPage({
                 }}
               >
                 <option value="">
-                  학생 유형 선택
+                  입학 유형 선택
                 </option>
 
                 <option value="regular">
-                  일반 입학생
+                  당초 입학생
                 </option>
 
                 <option value="transfer">
