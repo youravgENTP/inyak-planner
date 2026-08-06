@@ -418,8 +418,14 @@ export function ProgressTrackerPage({
               ))}
           </div>
 
-          {curriculum !== null ? (
+          {curriculum !== null &&
+          generalEducation !== null ? (
             <GraduationSemesterBoard
+              user={user}
+              curriculum={curriculum}
+              generalEducation={
+                generalEducation
+              }
               user={user}
               curriculum={curriculum}
               records={courseRecords}

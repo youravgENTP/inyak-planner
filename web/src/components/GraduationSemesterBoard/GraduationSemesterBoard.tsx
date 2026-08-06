@@ -17,6 +17,9 @@ import type {
 import type {
   Curriculum,
 } from '../../domain/curriculum/types'
+import type {
+  GeneralEducation,
+} from '../../domain/general-education/types'
 import {
   createGraduationBoard,
 } from '../../domain/graduation-progress/createSemesterBoard'
@@ -25,7 +28,9 @@ import type {
   SemesterBoardCard,
   TransferCreditBoardCard,
 } from '../../domain/graduation-progress/createSemesterBoard'
-
+import {
+  MajorTransferCreditModal,
+} from '../MajorTransferCreditModal/MajorTransferCreditModal'
 import {
   MajorTransferCreditModal,
 } from '../MajorTransferCreditModal/MajorTransferCreditModal'
@@ -36,6 +41,7 @@ import './GraduationSemesterBoard.css'
 interface GraduationSemesterBoardProps {
   user: AuthUser
   curriculum: Curriculum
+  generalEducation: GeneralEducation
   records: readonly CourseRecord[]
   onRecordCreated: (
     record: CourseRecord,
@@ -296,12 +302,14 @@ function SemesterCard({
 function TransferCreditCard({
   card,
   curriculum,
+  generalEducation,
   onRecordCreated,
   onRecordUpdated,
   onRecordDeleted,
 }: {
   card: TransferCreditBoardCard
   curriculum: Curriculum
+  generalEducation: GeneralEducation
   onRecordCreated: (
     record: CourseRecord,
   ) => void
@@ -320,6 +328,11 @@ function TransferCreditCard({
   const [
     majorModalIsOpen,
     setMajorModalIsOpen,
+  ] = useState(false)
+
+  const [
+    generalEducationModalIsOpen,
+    setGeneralEducationModalIsOpen,
   ] = useState(false)
 
   const [
@@ -498,6 +511,9 @@ function TransferCreditCard({
                 type="button"
                 onClick={() => {
                   setMenuIsOpen(false)
+                  setGeneralEducationModalIsOpen(
+                    true,
+                  )
                 }}
               >
                 <strong>교양</strong>
@@ -563,6 +579,38 @@ function TransferCreditCard({
                     ) ?? null
                   )
 
+              const generalEducationRequirement =
+                record
+                  .generalEducationRequirementId ===
+                null
+                  ? null
+                  : (
+                    generalEducation
+                      .requirements
+                      .find(
+                        (requirement) =>
+                          requirement.id ===
+                          record
+                            .generalEducationRequirementId,
+                      ) ?? null
+                  )
+
+              const generalEducationArea =
+                record
+                  .generalEducationAreaId ===
+                null
+                  ? null
+                  : (
+                    generalEducationRequirement
+                      ?.areas
+                      .find(
+                        (area) =>
+                          area.id ===
+                          record
+                            .generalEducationAreaId,
+                      ) ?? null
+                  )
+
               return (
                 // 
                 <li
@@ -592,9 +640,36 @@ function TransferCreditCard({
                       </span>
                     ) : null}
 
+                    {generalEducationRequirement !==
+                    null ? (
+                      <span className="graduation-board-transfer-source">
+                        {
+                          generalEducationRequirement
+                            .category
+                        }
+                        {generalEducationArea ===
+                        null
+                          ? ''
+                          : (
+                            ` · ${generalEducationArea.areaName}`
+                          )}
+                      </span>
+                    ) : null}
+
                     <span>
-                      {record.completionType}
-                      {' · '}
+                      {curriculumCourse !==
+                        null
+                        ? (
+                          <>
+                            {
+                              record
+                                .completionType
+                            }
+                            {' · '}
+                          </>
+                        )
+                        : null}
+
                       {formatCredits(
                         record.credits,
                       )}
@@ -602,22 +677,25 @@ function TransferCreditCard({
                   </div>
 
                   <div className="graduation-board-transfer-actions">
-                    <button
-                      aria-label={`${record.courseName} 인정 기록 수정`}
-                      className="graduation-board-transfer-edit"
-                      disabled={
-                        deletingRecordId ===
-                        record.id
-                      }
-                      type="button"
-                      onClick={() => {
-                        setEditingRecord(
-                          record,
-                        )
-                      }}
-                    >
-                      수정
-                    </button>
+                    {curriculumCourse !==
+                    null ? (
+                      <button
+                        aria-label={`${record.courseName} 인정 기록 수정`}
+                        className="graduation-board-transfer-edit"
+                        disabled={
+                          deletingRecordId ===
+                          record.id
+                        }
+                        type="button"
+                        onClick={() => {
+                          setEditingRecord(
+                            record,
+                          )
+                        }}
+                      >
+                        수정
+                      </button>
+                    ) : null}
 
                     <button
                       aria-label={`${record.courseName} 인정 기록 삭제`}
@@ -640,6 +718,7 @@ function TransferCreditCard({
                     </button>
                   </div>
                 </li>
+                
                 // 
               )
             },
@@ -653,6 +732,22 @@ function TransferCreditCard({
           curriculum={curriculum}
           onClose={() => {
             setMajorModalIsOpen(false)
+          }}
+          onCreated={
+            onRecordCreated
+          }
+        />
+      ) : null}
+
+      {generalEducationModalIsOpen ? (
+        <GeneralEducationTransferCreditModal
+          generalEducation={
+            generalEducation
+          }
+          onClose={() => {
+            setGeneralEducationModalIsOpen(
+              false,
+            )
           }}
           onCreated={
             onRecordCreated
@@ -688,12 +783,14 @@ function TransferCreditCard({
 function BoardCard({
   card,
   curriculum,
+  generalEducation,
   onRecordCreated,
   onRecordUpdated,
   onRecordDeleted,
 }: {
   card: GraduationBoardCard
   curriculum: Curriculum
+  generalEducation: GeneralEducation
   onRecordCreated: (
     record: CourseRecord,
   ) => void
@@ -709,6 +806,9 @@ function BoardCard({
       <TransferCreditCard
         card={card}
         curriculum={curriculum}
+        generalEducation={
+          generalEducation
+        }
         onRecordCreated={
           onRecordCreated
         }
@@ -731,6 +831,7 @@ function BoardCard({
 export function GraduationSemesterBoard({
   user,
   curriculum,
+  generalEducation,
   records,
   onRecordCreated,
   onRecordUpdated,
@@ -781,6 +882,9 @@ export function GraduationSemesterBoard({
             <BoardCard
               card={card}
               curriculum={curriculum}
+              generalEducation={
+                generalEducation
+              }
               onRecordCreated={
                 onRecordCreated
               }
