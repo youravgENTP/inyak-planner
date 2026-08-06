@@ -1,0 +1,206 @@
+/* =========================================================
+   전공 대체 인정 과목 입력 모달
+   ========================================================= */
+
+.major-transfer-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  overflow-y: auto;
+  place-items: center;
+  padding: 24px;
+  background: rgb(15 23 42 / 45%);
+}
+
+.major-transfer-modal {
+  width: min(560px, 100%);
+  overflow: hidden;
+  border: 1px solid #dfe5e1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow:
+    0 24px 70px rgb(0 0 0 / 22%);
+}
+
+.major-transfer-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #ededed;
+}
+
+.major-transfer-modal-header p {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6f7c73;
+}
+
+.major-transfer-modal-header h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.major-transfer-modal-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: #f4f4f4;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.major-transfer-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+}
+
+.major-transfer-modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.major-transfer-modal-form label > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.major-transfer-modal-form label small {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+}
+
+.major-transfer-modal-form input,
+.major-transfer-modal-form select,
+.major-transfer-modal-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+}
+
+.major-transfer-modal-form input,
+.major-transfer-modal-form select {
+  height: 44px;
+  padding: 0 12px;
+}
+
+.major-transfer-modal-form textarea {
+  min-height: 88px;
+  padding: 11px 12px;
+  resize: vertical;
+}
+
+.major-transfer-modal-form input:focus,
+.major-transfer-modal-form select:focus,
+.major-transfer-modal-form textarea:focus {
+  border-color: #83b696;
+  outline: 3px solid rgb(131 182 150 / 18%);
+}
+
+.major-transfer-modal-preview {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid #dce9e0;
+  border-radius: 12px;
+  background: #f3f8f5;
+}
+
+.major-transfer-modal-preview div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  padding: 13px;
+}
+
+.major-transfer-modal-preview div + div {
+  border-left: 1px solid #dce9e0;
+}
+
+.major-transfer-modal-preview span {
+  font-size: 11px;
+  color: #748078;
+}
+
+.major-transfer-modal-preview strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.major-transfer-modal-error {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid #efcccc;
+  border-radius: 10px;
+  background: #fff1f1;
+  line-height: 1.5;
+  font-size: 12px;
+  color: #a53333;
+}
+
+.major-transfer-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+.major-transfer-modal-actions button {
+  min-width: 92px;
+  height: 40px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.major-transfer-modal-cancel {
+  border: 1px solid #d7d7d7;
+  background: #fff;
+}
+
+.major-transfer-modal-submit {
+  border: 1px solid #79aa8b;
+  background: #e4f2e9;
+}
+
+.major-transfer-modal-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (max-width: 600px) {
+  .major-transfer-modal-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .major-transfer-modal {
+    border-radius: 18px 18px 0 0;
+  }
+
+  .major-transfer-modal-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .major-transfer-modal-preview div + div {
+    border-top: 1px solid #dce9e0;
+    border-left: 0;
+  }
+}
