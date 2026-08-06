@@ -32,7 +32,6 @@ import {
 import type {
   CreditProgress,
   GraduationProgress,
-  MajorCompletionProgress,
 } from '../domain/graduation-progress/types'
 
 import './GraduationPlaceholderPage.css'
@@ -160,66 +159,6 @@ function CreditSummaryCard({
     </article>
   )
 }
-
-
-function MajorSummaryCard({
-  title,
-  progress,
-}: {
-  title: string
-  progress: MajorCompletionProgress
-}) {
-  return (
-    <article className="graduation-progress-summary-card">
-      <div className="graduation-progress-summary-heading">
-        <span>{title}</span>
-
-        <strong>
-          {progress.courses.completedCourseCount}
-          {' / '}
-          {progress.courses.requiredCourseCount}
-          과목
-        </strong>
-      </div>
-
-      <ProgressBar
-        progress={progress.credits}
-      />
-
-      <dl className="graduation-progress-summary-details">
-        <div>
-          <dt>이수 학점</dt>
-          <dd>
-            {formatCredits(
-              progress.credits.completedCredits,
-            )}
-          </dd>
-        </div>
-
-        <div>
-          <dt>기준 학점</dt>
-          <dd>
-            {formatCredits(
-              progress.credits.requiredCredits,
-            )}
-          </dd>
-        </div>
-
-        <div>
-          <dt>남은 과목</dt>
-          <dd>
-            {
-              progress.courses
-                .remainingCourseCount
-            }
-            과목
-          </dd>
-        </div>
-      </dl>
-    </article>
-  )
-}
-
 
 export function ProgressTrackerPage({
   user,
@@ -440,17 +379,21 @@ export function ProgressTrackerPage({
               }
             />
 
-            <MajorSummaryCard
+            <CreditSummaryCard
               title="전공필수"
               progress={
-                graduationProgress.majorRequired
+                graduationProgress
+                  .majorRequired
+                  .credits
               }
             />
 
-            <MajorSummaryCard
+            <CreditSummaryCard
               title="전공선택"
               progress={
-                graduationProgress.majorElective
+                graduationProgress
+                  .majorElective
+                  .credits
               }
             />
 
@@ -471,93 +414,96 @@ export function ProgressTrackerPage({
               ))}
           </div>
 
-          <section className="graduation-progress-section">
-            <div className="graduation-progress-section-heading">
+          <details className="graduation-progress-details">
+            <summary className="graduation-progress-details-summary">
               <div>
                 <p>교양 영역별 현황</p>
-                <h2>
-                  세부 이수영역
-                </h2>
+
+                <strong>
+                  세부 이수영역 보기
+                </strong>
               </div>
 
               <span>
                 저장된 과목{' '}
                 {courseRecords.length}개
               </span>
-            </div>
+            </summary>
 
-            <div className="graduation-progress-requirement-list">
-              {graduationProgress
-                .generalEducation
-                .map((requirement) => (
-                  <article
-                    className="graduation-progress-requirement-card"
-                    key={
-                      requirement.requirementId
-                    }
-                  >
-                    <header>
-                      <div>
-                        <span>
-                          {
-                            requirement.category
-                          }
-                        </span>
+            <div className="graduation-progress-details-content">
+              <div className="graduation-progress-requirement-list">
+                {graduationProgress
+                  .generalEducation
+                  .map((requirement) => (
+                    <article
+                      className="graduation-progress-requirement-card"
+                      key={
+                        requirement.requirementId
+                      }
+                    >
+                      <header>
+                        <div>
+                          <span>
+                            {
+                              requirement.category
+                            }
+                          </span>
 
-                        <strong>
-                          {
-                            requirement
-                              .completedAreaCount
-                          }
-                          개 영역 이수
-                        </strong>
-                      </div>
+                          <strong>
+                            {
+                              requirement
+                                .completedAreaCount
+                            }
+                            개 영역 이수
+                          </strong>
+                        </div>
 
-                      <small>
-                        {requirement.isSatisfied
-                          ? '요건 충족'
-                          : '이수 필요'}
-                      </small>
-                    </header>
+                        <small>
+                          {requirement.isSatisfied
+                            ? '요건 충족'
+                            : '이수 필요'}
+                        </small>
+                      </header>
 
-                    <ul>
-                      {requirement.areas.map(
-                        (area) => (
-                          <li
-                            key={area.areaId}
-                          >
-                            <div>
-                              <strong>
-                                {
-                                  area.areaName
-                                }
-                              </strong>
+                      <ul>
+                        {requirement.areas.map(
+                          (area) => (
+                            <li
+                              key={area.areaId}
+                            >
+                              <div>
+                                <strong>
+                                  {
+                                    area.areaName
+                                  }
+                                </strong>
+
+                                <span>
+                                  {area.isRequired
+                                    ? '필수 영역'
+                                    : '선택 영역'}
+                                </span>
+                              </div>
 
                               <span>
-                                {area.isRequired
-                                  ? '필수 영역'
-                                  : '선택 영역'}
+                                {
+                                  area.completedCredits
+                                }
+                                학점
+                                {' · '}
+                                {area.isSatisfied
+                                  ? '충족'
+                                  : '미충족'}
                               </span>
-                            </div>
-
-                            <span>
-                              {
-                                area.completedCredits
-                              }
-                              학점
-                              {' · '}
-                              {area.isSatisfied
-                                ? '충족'
-                                : '미충족'}
-                            </span>
-                          </li>
-                        ),
-                      )}
-                    </ul>
-                  </article>
-                ))}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </article>
+                  ))}
+              </div>
             </div>
-          </section>
+          </details>
 
           {courseRecords.length === 0 ? (
             <div className="graduation-placeholder-card graduation-placeholder-card--compact">
