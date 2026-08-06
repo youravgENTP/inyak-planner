@@ -10,6 +10,12 @@ import type {
   CurriculumCompletionType,
   CurriculumCourse,
 } from '../domain/curriculum/types'
+import {
+  fetchGeneralEducation,
+} from '../domain/general-education/api'
+import type {
+  GeneralEducation,
+} from '../domain/general-education/types'
 import './CurriculumPage.css'
 
 const DEFAULT_ENTRY_YEAR = 2024
@@ -104,6 +110,13 @@ export function CurriculumPage() {
   ] = useState<Curriculum | null>(null)
 
   const [
+    generalEducation,
+    setGeneralEducation,
+  ] = useState<GeneralEducation | null>(
+    null,
+  )
+
+  const [
     isLoading,
     setIsLoading,
   ] = useState(true)
@@ -116,18 +129,31 @@ export function CurriculumPage() {
   useEffect(() => {
     let isCancelled = false
 
-    async function loadCurriculum() {
+    async function loadRequirements() {
       setIsLoading(true)
       setLoadError(null)
 
       try {
-        const result =
-          await fetchCurriculum(
+        const [
+          curriculumResult,
+          generalEducationResult,
+        ] = await Promise.all([
+          fetchCurriculum(
             DEFAULT_ENTRY_YEAR,
-          )
+          ),
+          fetchGeneralEducation(
+            DEFAULT_ENTRY_YEAR,
+          ),
+        ])
 
         if (!isCancelled) {
-          setCurriculum(result)
+          setCurriculum(
+            curriculumResult,
+          )
+
+          setGeneralEducation(
+            generalEducationResult,
+          )
         }
       } catch (error) {
         if (isCancelled) {
@@ -138,7 +164,7 @@ export function CurriculumPage() {
           setLoadError(error.message)
         } else {
           setLoadError(
-            '교육과정을 불러오지 못했습니다.',
+            '졸업요건을 불러오지 못했습니다.',
           )
         }
       } finally {
@@ -148,7 +174,7 @@ export function CurriculumPage() {
       }
     }
 
-    void loadCurriculum()
+    void loadRequirements()
 
     return () => {
       isCancelled = true
