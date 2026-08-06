@@ -1,117 +1,183 @@
 /* =========================================================
-   수강 기록 입력 모달
+   일반 수강 기록 입력 모달
    ========================================================= */
 
 .course-record-modal-backdrop {
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  overflow-y: auto;
+  place-items: center;
   padding: 24px;
-  background: rgb(24 35 28 / 42%);
+  background: rgb(15 23 42 / 45%);
 }
 
 .course-record-modal {
-  width: min(100%, 460px);
+  width: min(620px, 100%);
   overflow: hidden;
-  border: 1px solid #dce6df;
-  border-radius: 17px;
+  border: 1px solid #dfe5e1;
+  border-radius: 18px;
   background: #fff;
   box-shadow:
-    0 24px 70px rgb(26 42 31 / 24%);
+    0 24px 70px rgb(0 0 0 / 22%);
 }
+
+
+/* =========================================================
+   모달 제목 영역
+   ========================================================= */
 
 .course-record-modal-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px 24px 18px;
-  border-bottom: 1px solid #e9eeea;
+  padding: 22px 24px;
+  border-bottom: 1px solid #ededed;
 }
 
 .course-record-modal-header p {
-  margin: 0 0 5px;
-  font-size: 11px;
+  margin: 0 0 4px;
+  font-size: 12px;
   font-weight: 700;
-  color: #6e8475;
+  color: #6f7c73;
 }
 
 .course-record-modal-header h2 {
   margin: 0;
   font-size: 21px;
-  color: #26382d;
+  color: #273a2e;
 }
 
 .course-record-modal-close {
-  width: 31px;
-  height: 31px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: 0;
-  background: transparent;
-  font-size: 24px;
+  border-radius: 9px;
+  background: #f4f4f4;
+  font-size: 23px;
   line-height: 1;
-  color: #718078;
 }
 
 .course-record-modal-close:hover {
-  opacity: 0.65;
+  background: #eaeaea;
 }
+
+
+/* =========================================================
+   입력 폼
+   ========================================================= */
 
 .course-record-modal-form {
   display: flex;
   flex-direction: column;
-  gap: 17px;
-  padding: 22px 24px 24px;
+  gap: 18px;
+  padding: 24px;
 }
 
-.course-record-modal-description {
-  margin: 0;
-  line-height: 1.55;
-  font-size: 13px;
-  color: #6d7971;
-}
-
-.course-record-modal-form label {
+.course-record-modal-field {
   display: flex;
+  min-width: 0;
   flex-direction: column;
+  gap: 8px;
+}
+
+.course-record-modal-field > span {
+  display: flex;
+  align-items: center;
   gap: 7px;
-}
-
-.course-record-modal-form label > span {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: #415248;
+  color: #34483b;
 }
 
-.course-record-modal-form input,
-.course-record-modal-form select {
+.course-record-modal-field small {
+  line-height: 1.4;
+  font-size: 11px;
+  font-weight: 500;
+  color: #87918b;
+}
+
+.course-record-modal-field input,
+.course-record-modal-field select,
+.course-record-modal-field textarea {
   width: 100%;
   box-sizing: border-box;
-  padding: 11px 12px;
-  border: 1px solid #d5e0d8;
+  border: 1px solid #d8d8d8;
   border-radius: 10px;
   background: #fff;
   font: inherit;
-  font-size: 13px;
-  color: #293a30;
 }
 
-.course-record-modal-form input:focus,
-.course-record-modal-form select:focus {
-  border-color: #79a087;
-  outline: 3px solid rgb(80 135 98 / 12%);
+.course-record-modal-field input,
+.course-record-modal-field select {
+  height: 44px;
+  padding: 0 12px;
 }
+
+.course-record-modal-field textarea {
+  min-height: 88px;
+  padding: 11px 12px;
+  resize: vertical;
+}
+
+.course-record-modal-field input:focus,
+.course-record-modal-field select:focus,
+.course-record-modal-field textarea:focus {
+  border-color: #83b696;
+  outline: 3px solid rgb(131 182 150 / 18%);
+}
+
+.course-record-modal-field select:disabled {
+  background: #f4f6f4;
+  color: #667169;
+  opacity: 1;
+}
+
+.course-record-modal-field-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+
+/* =========================================================
+   재수강 체크박스
+   ========================================================= */
+
+.course-record-modal-checkbox {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: #46564c;
+}
+
+.course-record-modal-checkbox input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #527a60;
+}
+
+
+/* =========================================================
+   오류 및 버튼
+   ========================================================= */
 
 .course-record-modal-error {
   margin: 0;
-  padding: 10px 12px;
-  border-radius: 9px;
-  background: #fff4f4;
+  padding: 11px 13px;
+  border: 1px solid #efcccc;
+  border-radius: 10px;
+  background: #fff1f1;
+  line-height: 1.5;
   font-size: 12px;
-  color: #a04444;
+  color: #a53333;
 }
 
 .course-record-modal-actions {
@@ -122,23 +188,54 @@
 }
 
 .course-record-modal-actions button {
-  padding: 10px 14px;
-  border-radius: 9px;
+  min-width: 92px;
+  height: 40px;
+  border-radius: 10px;
   font-weight: 700;
 }
 
 .course-record-modal-cancel {
-  border: 1px solid #d9e1db;
+  border: 1px solid #d7d7d7;
   background: #fff;
-  color: #627068;
+  color: #4f5a53;
 }
 
 .course-record-modal-submit {
-  border: 1px solid #426f51;
-  background: #426f51;
-  color: #fff;
+  border: 1px solid #79aa8b;
+  background: #e4f2e9;
+  color: #315b40;
+}
+
+.course-record-modal-cancel:hover {
+  background: #f7f7f7;
 }
 
 .course-record-modal-submit:hover {
-  background: #355e43;
+  background: #d8ecdf;
+}
+
+.course-record-modal-actions button:disabled,
+.course-record-modal-close:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* =========================================================
+   반응형
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .course-record-modal-backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .course-record-modal {
+    border-radius: 18px 18px 0 0;
+  }
+
+  .course-record-modal-field-grid {
+    grid-template-columns: 1fr;
+  }
 }

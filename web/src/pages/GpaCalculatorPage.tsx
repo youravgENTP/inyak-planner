@@ -5,6 +5,10 @@ import {
 } from 'react'
 
 import {
+  CourseRecordModal,
+} from '../components/CourseRecordModal/CourseRecordModal'
+
+import {
   getCourseRecords,
   updateCourseRecord,
 } from '../domain/course-records/api'
@@ -269,6 +273,11 @@ export function GpaCalculatorPage() {
   const [
     statusIsUpdating,
     setStatusIsUpdating,
+  ] = useState(false)
+
+  const [
+    recordModalIsOpen,
+    setRecordModalIsOpen,
   ] = useState(false)
 
   useEffect(() => {
@@ -691,9 +700,10 @@ export function GpaCalculatorPage() {
             </div>
 
             <button
-              disabled
-              title="다음 단계에서 과목 입력 기능을 연결합니다."
               type="button"
+              onClick={() => {
+                setRecordModalIsOpen(true)
+              }}
             >
               + 과목 입력하기
             </button>
@@ -797,8 +807,10 @@ export function GpaCalculatorPage() {
                 </p>
 
                 <button
-                  disabled
                   type="button"
+                  onClick={() => {
+                    setRecordModalIsOpen(true)
+                  }}
                 >
                   + 과목 입력하기
                 </button>
@@ -883,6 +895,26 @@ export function GpaCalculatorPage() {
             )}
           </div>
         </section>
+      ) : null}
+
+      {recordModalIsOpen ? (
+        <CourseRecordModal
+          grade={selectedSemester.grade}
+          semester={
+            selectedSemester.semester
+          }
+          onClose={() => {
+            setRecordModalIsOpen(false)
+          }}
+          onCreated={(createdRecord) => {
+            setCourseRecords(
+              (currentRecords) => [
+                ...currentRecords,
+                createdRecord,
+              ],
+            )
+          }}
+        />
       ) : null}
     </section>
   )
