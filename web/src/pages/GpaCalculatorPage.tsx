@@ -9,6 +9,10 @@ import {
 } from '../components/CourseRecordModal/CourseRecordModal'
 
 import {
+  GradeDistributionChart,
+} from '../components/gpa/GradeDistributionChart'
+
+import {
   SemesterGpaChart,
 } from '../components/gpa/SemesterGpaChart'
 
@@ -503,6 +507,27 @@ export function GpaCalculatorPage({
       [regularRecords],
     )
 
+  const gradeDistributionPoints =
+    useMemo(
+      () =>
+        GRADE_OPTIONS.map(
+          (gradeOption) => ({
+            grade: gradeOption,
+
+            count:
+              regularRecords.filter(
+                (record) =>
+                  !record.isRetake &&
+                  record.status ===
+                    'completed' &&
+                  record.letterGrade ===
+                    gradeOption,
+              ).length,
+          }),
+        ),
+      [regularRecords],
+    )
+
   const allSelectedRecordsAreActive =
     selectedRecords.length > 0 &&
     selectedRecords.every(
@@ -835,10 +860,11 @@ export function GpaCalculatorPage({
               <h2>성적 분포</h2>
             </header>
 
-            <div className="gpa-chart-placeholder">
-              성적 분포는 다음 단계에서
-              연결합니다.
-            </div>
+            <GradeDistributionChart
+              points={
+                gradeDistributionPoints
+              }
+            />
           </article>
         </div>
       </section>
