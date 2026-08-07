@@ -186,6 +186,28 @@ export async function fetchLectures(
   )
 }
 
+export async function fetchLecture(
+  lectureId: number,
+): Promise<Lecture> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/lectures/${lectureId}`,
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getApiErrorMessage(
+        response,
+        '강의 정보를 불러오지 못했습니다.',
+      ),
+    )
+  }
+
+  const data =
+    (await response.json()) as
+      LectureApiItem
+
+  return mapLectureApiItem(data)
+}
 
 export async function downloadSyllabiZip(
   lectureIds: readonly number[],
