@@ -443,17 +443,23 @@ export function calculateGraduationProgress(
     GeneralEducation,
   records: readonly CourseRecord[],
 ): GraduationProgress {
+  const effectiveRecords =
+    records.filter(
+      (record) =>
+        !record.isRetake,
+    )
+
   const majorRequired =
     createMajorProgress(
       curriculum,
-      records,
+      effectiveRecords,
       '전필',
     )
 
   const majorElective =
     createMajorProgress(
       curriculum,
-      records,
+      effectiveRecords,
       '전선',
     )
 
@@ -462,7 +468,7 @@ export function calculateGraduationProgress(
       (requirement) =>
         createGeneralEducationProgress(
           requirement,
-          records,
+          effectiveRecords,
         ),
     )
 
@@ -483,7 +489,7 @@ export function calculateGraduationProgress(
     generalEducation:
       generalEducationProgress,
     substitutedRecords:
-      records.filter(
+      effectiveRecords.filter(
         (record) =>
           record.status ===
           'substituted',
