@@ -292,6 +292,13 @@ export function GpaCalculatorPage({
   ] = useState(false)
 
   const [
+    editingRecord,
+    setEditingRecord,
+  ] = useState<CourseRecord | null>(
+    null,
+  )
+
+  const [
     openMenuRecordId,
     setOpenMenuRecordId,
   ] = useState<string | null>(null)
@@ -970,12 +977,23 @@ export function GpaCalculatorPage({
                             ? '…'
                             : '⋯'}
                         </button>
-
                         {openMenuRecordId === record.id ? (
                           <div
                             className="gpa-course-menu-popover"
                             role="menu"
                           >
+                            <button
+                              role="menuitem"
+                              type="button"
+                              onClick={() => {
+                                setEditingRecord(record)
+                                setOpenMenuRecordId(null)
+                                setRecordModalIsOpen(true)
+                              }}
+                            >
+                              수정
+                            </button>
+
                             <button
                               className="gpa-course-menu-delete"
                               role="menuitem"
@@ -1002,6 +1020,7 @@ export function GpaCalculatorPage({
 
       {recordModalIsOpen ? (
         <CourseRecordModal
+          editingRecord={editingRecord}
           entryYear={user.entryYear}
           grade={selectedSemester.grade}
           semester={
@@ -1009,13 +1028,32 @@ export function GpaCalculatorPage({
           }
           onClose={() => {
             setRecordModalIsOpen(false)
+            setEditingRecord(null)
           }}
-          onCreated={(createdRecord) => {
+          onSaved={(savedRecord) => {
             setCourseRecords(
-              (currentRecords) => [
-                ...currentRecords,
-                createdRecord,
-              ],
+              (currentRecords) => {
+                const recordAlreadyExists =
+                  currentRecords.some(
+                    (record) =>
+                      record.id ===
+                      savedRecord.id,
+                  )
+
+                if (!recordAlreadyExists) {
+                  return [
+                    ...currentRecords,
+                    savedRecord,
+                  ]
+                }
+
+                return currentRecords.map(
+                  (record) =>
+                    record.id === savedRecord.id
+                      ? savedRecord
+                      : record,
+                )
+              },
             )
           }}
         />

@@ -7,6 +7,7 @@ import {
 
 import {
   createCourseRecord,
+  updateCourseRecord,
 } from '../../domain/course-records/api'
 import type {
   CourseCompletionType,
@@ -52,11 +53,12 @@ const AVAILABLE_COMPLETION_TYPES:
 
 
 interface CourseRecordModalProps {
+  editingRecord: CourseRecord | null
   entryYear: number | null
   grade: number
   semester: number
   onClose: () => void
-  onCreated: (
+  onSaved: (
     record: CourseRecord,
   ) => void
 }
@@ -80,17 +82,19 @@ function formatCourseOption(
 
 
 export function CourseRecordModal({
+  editingRecord,
   entryYear,
   grade,
   semester,
   onClose,
-  onCreated,
+  onSaved,
 }: CourseRecordModalProps) {
   const [
     completionType,
     setCompletionType,
   ] = useState<CourseCompletionType>(
-    '기타',
+    editingRecord?.completionType ??
+      '기타',
   )
 
   const [
@@ -101,7 +105,16 @@ export function CourseRecordModal({
   const [
     selectedCurriculumCourseId,
     setSelectedCurriculumCourseId,
-  ] = useState('')
+  ] = useState(
+    editingRecord?.curriculumCourseId ===
+      null ||
+    editingRecord?.curriculumCourseId ===
+      undefined
+      ? ''
+      : String(
+          editingRecord.curriculumCourseId,
+        ),
+  )
 
   const [
     generalEducationRequirements,
@@ -113,37 +126,72 @@ export function CourseRecordModal({
   const [
     selectedGeneralEducationRequirementId,
     setSelectedGeneralEducationRequirementId,
-  ] = useState('')
+  ] = useState(
+    editingRecord
+      ?.generalEducationRequirementId ===
+      null ||
+    editingRecord
+      ?.generalEducationRequirementId ===
+      undefined
+      ? ''
+      : String(
+          editingRecord
+            .generalEducationRequirementId,
+        ),
+  )
 
   const [
     selectedGeneralEducationAreaId,
     setSelectedGeneralEducationAreaId,
-  ] = useState('')
+  ] = useState(
+    editingRecord
+      ?.generalEducationAreaId === null ||
+    editingRecord
+      ?.generalEducationAreaId ===
+      undefined
+      ? ''
+      : String(
+          editingRecord
+            .generalEducationAreaId,
+        ),
+  )
 
   const [
     courseName,
     setCourseName,
-  ] = useState('')
+  ] = useState(
+    editingRecord?.courseName ?? '',
+  )
 
   const [
     credits,
     setCredits,
-  ] = useState('')
+  ] = useState(
+    editingRecord === null
+      ? ''
+      : String(editingRecord.credits),
+  )
 
   const [
     letterGrade,
     setLetterGrade,
-  ] = useState('')
+  ] = useState(
+    editingRecord?.letterGrade ?? '',
+  )
 
   const [
     isRetake,
     setIsRetake,
-  ] = useState(false)
+  ] = useState(
+    editingRecord?.isRetake ?? false,
+  )
 
   const [
     note,
     setNote,
-  ] = useState('')
+  ] = useState(
+    editingRecord?.note ?? '',
+  )
 
   const [
     curriculumIsLoading,
@@ -544,30 +592,37 @@ export function CourseRecordModal({
     }
 
     setFormIsSubmitting(true)
-
     try {
       const input: CourseRecordInput = {
         curriculumCourseId:
           selectedCurriculumCourse?.id ??
           null,
-        lectureId: null,
+        lectureId:
+          editingRecord?.lectureId ??
+          null,
         generalEducationRequirementId:
           selectedGeneralEducationRequirement
             ?.id ?? null,
         generalEducationAreaId:
           selectedGeneralEducationArea
             ?.id ?? null,
-        academicYear: null,
+        academicYear:
+          editingRecord?.academicYear ??
+          null,
         grade,
         semester,
         courseName:
           normalizedCourseName,
         courseCode:
           selectedCurriculumCourse
-            ?.courseCode ?? null,
+            ?.courseCode ??
+          editingRecord?.courseCode ??
+          null,
         completionType,
         credits: parsedCredits,
-        status: 'completed',
+        status:
+          editingRecord?.status ??
+          'completed',
         letterGrade:
           letterGrade.length === 0
             ? null
@@ -579,10 +634,15 @@ export function CourseRecordModal({
             : note.trim(),
       }
 
-      const createdRecord =
-        await createCourseRecord(input)
+      const savedRecord =
+        editingRecord === null
+          ? await createCourseRecord(input)
+          : await updateCourseRecord(
+              editingRecord.id,
+              input,
+            )
 
-      onCreated(createdRecord)
+      onSaved(savedRecord)
       onClose()
     } catch (error) {
       setFormError(
@@ -622,9 +682,11 @@ export function CourseRecordModal({
             </p>
 
             <h2 id="course-record-modal-title">
-              과목 입력
+              {editingRecord === null
+                ? '과목 입력'
+                : '과목 수정'}
             </h2>
-          </div>
+            </div>
 
           <button
             aria-label="닫기"
@@ -989,7 +1051,9 @@ export function CourseRecordModal({
             >
               {formIsSubmitting
                 ? '저장 중...'
-                : '과목 저장'}
+                : editingRecord === null
+                  ? '과목 저장'
+                  : '수정 저장'}
             </button>
           </footer>
         </form>
