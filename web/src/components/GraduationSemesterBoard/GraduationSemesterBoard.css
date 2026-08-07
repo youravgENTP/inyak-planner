@@ -135,6 +135,7 @@
 }
 
 .graduation-board-card--transfer {
+  min-height: 0;
   border-color: #a9cbb5;
 }
 

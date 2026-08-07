@@ -127,12 +127,14 @@ function GraduationBoardCourse({
   courseName,
   completionType,
   credits,
+  semester,
   record,
 }: {
   courseName: string
   completionType:
     CourseRecord['completionType']
   credits: number | null
+  semester: number | null
   record: CourseRecord | null
 }) {
   const statusClassName =
@@ -159,6 +161,13 @@ function GraduationBoardCourse({
           {completionType}
           {' · '}
           {formatCredits(credits)}
+
+          {semester !== null ? (
+            <>
+              {' · '}
+              {semester}학기
+            </>
+          ) : null}
         </span>
       </div>
     </li>
@@ -169,10 +178,12 @@ function GraduationBoardCourse({
 
 function SemesterCard({
   card,
+  grade,
   curriculum,
   onRecordUpdated,
 }: {
   card: YearSemesterBoard
+  grade: number
   curriculum: Curriculum
   onRecordUpdated: (
     record: CourseRecord,
@@ -254,8 +265,11 @@ function SemesterCard({
     card.generalEducationRecords.length >
     0
 
-  const hasUnmatchedSection =
-    card.unmatchedRecords.length > 0
+  /*
+   * 졸업요건 미연결 UI는
+   * 후속 단계에서 다시 구현합니다.
+   */
+  const hasUnmatchedSection = false
 
   const hasVisibleSection =
     hasRequiredSection ||
@@ -409,10 +423,10 @@ function SemesterCard({
     <article className="graduation-board-card">
       <header className="graduation-board-card-header">
         <div>
-          <span>학기</span>
+          <span>학년별 이수 현황</span>
 
           <h3>
-            {card.semester}학기
+            {grade}학년
           </h3>
         </div>
       </header>
@@ -489,6 +503,10 @@ function SemesterCard({
                         curriculumCourse
                           .credits
                       }
+                      semester={
+                        curriculumCourse
+                          .semester
+                      }
                       key={
                         curriculumCourse.id
                       }
@@ -558,6 +576,9 @@ function SemesterCard({
                       }
                       credits={
                         record.credits
+                      }
+                      semester={
+                        record.semester
                       }
                       key={record.id}
                       record={record}
@@ -632,6 +653,9 @@ function SemesterCard({
                       }
                       credits={
                         record.credits
+                      }
+                      semester={
+                        record.semester
                       }
                       key={record.id}
                       record={record}
@@ -1416,34 +1440,57 @@ function YearCard({
     record: CourseRecord,
   ) => void
 }) {
+  /*
+   * 학년 카드는 1학기와 2학기를
+   * 하나의 accordion 카드로 합칩니다.
+   *
+   * 원래 semester 정보는 각 공식 과목 또는
+   * CourseRecord에 그대로 남아 있으므로
+   * 과목 상세에서 다시 표시할 수 있습니다.
+   */
+  const combinedCard:
+    YearSemesterBoard = {
+      semester: 0,
+
+      requiredCourses:
+        card.semesters.flatMap(
+          (semesterBoard) =>
+            semesterBoard
+              .requiredCourses,
+        ),
+
+      electiveRecords:
+        card.semesters.flatMap(
+          (semesterBoard) =>
+            semesterBoard
+              .electiveRecords,
+        ),
+
+      generalEducationRecords:
+        card.semesters.flatMap(
+          (semesterBoard) =>
+            semesterBoard
+              .generalEducationRecords,
+        ),
+
+      unmatchedRecords:
+        card.semesters.flatMap(
+          (semesterBoard) =>
+            semesterBoard
+              .unmatchedRecords,
+        ),
+    }
+
   return (
     <section className="graduation-board-year-group">
-      <header className="graduation-board-year-header">
-        <span>
-          학년별 이수 현황
-        </span>
-
-        <h3>
-          {card.grade}학년
-        </h3>
-      </header>
-
-      <div className="graduation-board-year-semesters">
-        {card.semesters.map(
-          (semesterBoard) => (
-            <SemesterCard
-              card={semesterBoard}
-              curriculum={curriculum}
-              onRecordUpdated={
-                onRecordUpdated
-              }
-              key={
-                semesterBoard.semester
-              }
-            />
-          ),
-        )}
-      </div>
+      <SemesterCard
+        card={combinedCard}
+        grade={card.grade}
+        curriculum={curriculum}
+        onRecordUpdated={
+          onRecordUpdated
+        }
+      />
     </section>
   )
 }
