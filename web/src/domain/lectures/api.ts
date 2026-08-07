@@ -16,6 +16,12 @@ export interface SyllabiZipDownload {
   filename: string
 }
 
+export interface LectureSearchFilters {
+  academicYear?: number
+  semester?: number
+  query?: string
+}
+
 function mapLectureApiItem(
   item: LectureApiItem,
 ): Lecture {
@@ -113,10 +119,53 @@ function createFallbackZipFilename(
   }-강의계획서.zip`
 }
 
-export async function fetchLectures():
-  Promise<Lecture[]> {
+export async function fetchLectures(
+  filters: LectureSearchFilters = {},
+): Promise<Lecture[]> {
+  const searchParameters =
+    new URLSearchParams()
+
+  if (
+    filters.academicYear !== undefined
+  ) {
+    searchParameters.set(
+      'academic_year',
+      String(filters.academicYear),
+    )
+  }
+
+  if (
+    filters.semester !== undefined
+  ) {
+    searchParameters.set(
+      'semester',
+      String(filters.semester),
+    )
+  }
+
+  const normalizedQuery =
+    filters.query?.trim() ?? ''
+
+  if (normalizedQuery.length > 0) {
+    searchParameters.set(
+      'query',
+      normalizedQuery,
+    )
+  }
+
+  const queryString =
+    searchParameters.toString()
+
+  const endpoint =
+    queryString.length === 0
+      ? `${API_BASE_URL}/api/lectures`
+      : (
+          `${API_BASE_URL}/api/lectures?` +
+          queryString
+        )
+
   const response = await fetch(
-    `${API_BASE_URL}/api/lectures`,
+    endpoint,
   )
 
   if (!response.ok) {
@@ -136,6 +185,7 @@ export async function fetchLectures():
     mapLectureApiItem,
   )
 }
+
 
 export async function downloadSyllabiZip(
   lectureIds: readonly number[],

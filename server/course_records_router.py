@@ -173,26 +173,34 @@ def validate_course_record_request(
     request: CourseRecordRequest,
     user: dict[str, Any],
 ) -> None:
-    """과목 종류와 공식 교육과정 연결값의 일관성을 확인한다."""
-    entry_year = user.get("entry_year")
-    student_type = user.get("student_type")
+    """
+    개인 수강기록과 공식 졸업요건 연결값의
+    일관성을 확인한다.
 
-    if entry_year is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=(
-                "과목 기록을 저장하려면 "
-                "회원정보에서 입학 학번을 "
-                "먼저 설정해야 합니다."
-            ),
-        )
+    일반 수강기록은 공식 교육과정 또는
+    교양요건과 직접 연결하지 않는다. 
+    "사용자의 수강기록-공식 교육과정 연결"은
+    개인이수현황확인 페이지에서 하는 것이지,
+    수강 기록을 입력하는 기능에서는 
+    어떤 학년도의 어떤 학기에 무슨 과목을 들었는지를
+    정확하게 기록하는 것에 중점을 둔다.
+
+    공식 요건 ID는 대체 인정 등 명시적인
+    연결이 필요한 경우에만 사용한다.
+    """
+    entry_year = user.get("entry_year")
+    student_type = user.get(
+        "student_type"
+    )
 
     if (
         request.status == "substituted"
         and student_type != "transfer"
     ):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=(
+                status.HTTP_400_BAD_REQUEST
+            ),
             detail=(
                 "대체 인정 기록은 편입생만 "
                 "등록할 수 있습니다."
@@ -204,13 +212,17 @@ def validate_course_record_request(
         "전선",
     ):
         if (
-            request.general_education_requirement_id
+            request
+            .general_education_requirement_id
             is not None
-            or request.general_education_area_id
+            or request
+            .general_education_area_id
             is not None
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "전공 과목에는 교양요건 또는 "
                     "교양영역을 연결할 수 없습니다."
@@ -223,7 +235,9 @@ def validate_course_record_request(
             is None
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "전공 대체 인정 과목은 "
                     "대응하는 공식 교육과정 과목을 "
@@ -231,8 +245,23 @@ def validate_course_record_request(
                 ),
             )
 
-        if request.curriculum_course_id is None:
+        if (
+            request.curriculum_course_id
+            is None
+        ):
             return
+
+        if entry_year is None:
+            raise HTTPException(
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
+                detail=(
+                    "공식 교육과정 과목을 "
+                    "연결하려면 입학 학번이 "
+                    "설정되어 있어야 합니다."
+                ),
+            )
 
         curriculum_course = (
             get_curriculum_course_by_id(
@@ -242,7 +271,9 @@ def validate_course_record_request(
 
         if curriculum_course is None:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "선택한 공식 교육과정 과목을 "
                     "찾을 수 없습니다."
@@ -254,7 +285,9 @@ def validate_course_record_request(
             != entry_year
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "선택한 과목은 현재 사용자의 "
                     "학번 교육과정에 속하지 않습니다."
@@ -262,59 +295,102 @@ def validate_course_record_request(
             )
 
         if (
-            curriculum_course["completion_type"]
+            curriculum_course[
+                "completion_type"
+            ]
             != request.completion_type
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
-                    "선택한 공식 과목의 이수구분과 "
-                    "저장하려는 이수구분이 다릅니다."
+                    "선택한 공식 과목의 "
+                    "이수구분과 저장하려는 "
+                    "이수구분이 다릅니다."
                 ),
             )
 
         return
 
-    if request.completion_type == "교양":
-        if request.curriculum_course_id is not None:
+    if (
+        request.completion_type
+        == "교양"
+    ):
+        if (
+            request.curriculum_course_id
+            is not None
+        ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "교양 과목에는 전공 교육과정 "
                     "과목을 연결할 수 없습니다."
                 ),
             )
 
+        requirement_id = (
+            request
+            .general_education_requirement_id
+        )
+
+        area_id = (
+            request
+            .general_education_area_id
+        )
+
         if (
-            request.general_education_requirement_id
-            is None
-            or request.general_education_area_id
-            is None
+            requirement_id is None
+            and area_id is None
+        ):
+            return
+
+        if (
+            requirement_id is None
+            or area_id is None
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
-                    "교양 과목은 교양요건과 "
-                    "세부 영역을 모두 선택해야 합니다."
+                    "교양요건을 직접 연결하는 경우 "
+                    "교양요건과 세부 영역을 "
+                    "모두 지정해야 합니다."
+                ),
+            )
+
+        if entry_year is None:
+            raise HTTPException(
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
+                detail=(
+                    "교양 졸업요건을 직접 "
+                    "연결하려면 입학 학번이 "
+                    "설정되어 있어야 합니다."
                 ),
             )
 
         general_education_link = (
             get_general_education_link(
                 requirement_id=(
-                    request
-                    .general_education_requirement_id
+                    requirement_id
                 ),
-                area_id=(
-                    request
-                    .general_education_area_id
-                ),
+                area_id=area_id,
             )
         )
 
-        if general_education_link is None:
+        if (
+            general_education_link
+            is None
+        ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
                     "선택한 교양영역이 해당 "
                     "교양요건에 속하지 않습니다."
@@ -322,29 +398,38 @@ def validate_course_record_request(
             )
 
         if (
-            general_education_link["entry_year"]
+            general_education_link[
+                "entry_year"
+            ]
             != entry_year
         ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=(
+                    status.HTTP_400_BAD_REQUEST
+                ),
                 detail=(
-                    "선택한 교양요건은 현재 사용자의 "
-                    "학번 기준과 다릅니다."
+                    "선택한 교양요건은 "
+                    "현재 사용자의 학번 기준과 "
+                    "다릅니다."
                 ),
             )
 
         return
 
     if (
-        request.curriculum_course_id is not None
+        request.curriculum_course_id
+        is not None
         or request
         .general_education_requirement_id
         is not None
-        or request.general_education_area_id
+        or request
+        .general_education_area_id
         is not None
     ):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=(
+                status.HTTP_400_BAD_REQUEST
+            ),
             detail=(
                 "기타 과목에는 전공 또는 교양 "
                 "공식 요건을 연결할 수 없습니다."
