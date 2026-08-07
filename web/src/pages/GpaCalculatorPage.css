@@ -346,6 +346,33 @@
   color: #68756d;
 }
 
+.gpa-course-grade-select {
+  width: 104px;
+  height: 32px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: #68756d;
+}
+
+.gpa-course-grade-select:hover {
+  border-color: #dfe5e1;
+  background: #f7f9f8;
+}
+
+.gpa-course-grade-select:focus {
+  border-color: #83b696;
+  outline: 2px solid rgb(131 182 150 / 18%);
+}
+
+.gpa-course-grade-select:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .gpa-course-status-toggle {
   flex: 0 0 auto;
   visibility: hidden;
