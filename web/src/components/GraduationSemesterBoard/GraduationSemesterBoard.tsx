@@ -9,9 +9,11 @@ import type {
 } from '../../domain/auth/api'
 import {
   deleteCourseRecord,
+  updateCourseRecord,
 } from '../../domain/course-records/api'
 import type {
   CourseRecord,
+  CourseRecordInput,
   CourseRecordStatus,
 } from '../../domain/course-records/types'
 import type {
@@ -164,11 +166,168 @@ function getSemesterSummary(
 
 function SemesterCard({
   card,
+  curriculum,
+  onRecordUpdated,
 }: {
   card: SemesterBoardCard
+  curriculum: Curriculum
+  onRecordUpdated: (
+    record: CourseRecord,
+  ) => void
 }) {
+  const [
+    linkingRecordId,
+    setLinkingRecordId,
+  ] = useState<string | null>(null)
+
+  const [
+    selectedCurriculumCourseId,
+    setSelectedCurriculumCourseId,
+  ] = useState('')
+
+  const [
+    linkIsSaving,
+    setLinkIsSaving,
+  ] = useState(false)
+
+  const [
+    linkError,
+    setLinkError,
+  ] = useState<string | null>(null)
+
   const summary =
     getSemesterSummary(card)
+
+  function openLinkPanel(
+    recordId: string,
+  ) {
+    setLinkingRecordId(recordId)
+    setSelectedCurriculumCourseId('')
+    setLinkError(null)
+  }
+
+  function closeLinkPanel() {
+    setLinkingRecordId(null)
+    setSelectedCurriculumCourseId('')
+    setLinkError(null)
+  }
+
+  async function handleLinkRecord(
+    record: CourseRecord,
+  ) {
+    if (linkIsSaving) {
+      return
+    }
+
+    const curriculumCourseId =
+      Number(
+        selectedCurriculumCourseId,
+      )
+
+    if (
+      !Number.isInteger(
+        curriculumCourseId,
+      )
+    ) {
+      setLinkError(
+        '연결할 공식 과목을 선택해 주세요.',
+      )
+      return
+    }
+
+    const curriculumCourse =
+      curriculum.courses.find(
+        (course) =>
+          course.id ===
+          curriculumCourseId,
+      )
+
+    if (
+      curriculumCourse === undefined
+    ) {
+      setLinkError(
+        '선택한 공식 과목을 찾을 수 없습니다.',
+      )
+      return
+    }
+
+    setLinkIsSaving(true)
+    setLinkError(null)
+
+    try {
+      const input: CourseRecordInput = {
+        curriculumCourseId:
+          curriculumCourse.id,
+
+        lectureId:
+          record.lectureId,
+
+        generalEducationRequirementId:
+          null,
+
+        generalEducationAreaId:
+          null,
+
+        academicYear:
+          record.academicYear,
+
+        grade:
+          record.grade,
+
+        semester:
+          record.semester,
+
+        courseName:
+          record.courseName,
+
+        courseCode:
+          record.courseCode,
+
+        /*
+         * 수동으로 공식 과목을 연결했으므로
+         * 전필/전선 판정도 공식 교육과정의
+         * 값을 사용합니다.
+         */
+        completionType:
+          curriculumCourse.completionType,
+
+        credits:
+          record.credits,
+
+        status:
+          record.status,
+
+        letterGrade:
+          record.letterGrade,
+
+        isRetake:
+          record.isRetake,
+
+        note:
+          record.note,
+      }
+
+      const updatedRecord =
+        await updateCourseRecord(
+          record.id,
+          input,
+        )
+
+      onRecordUpdated(
+        updatedRecord,
+      )
+
+      closeLinkPanel()
+    } catch (error) {
+      setLinkError(
+        error instanceof Error
+          ? error.message
+          : '공식 과목에 연결하지 못했습니다.',
+      )
+    } finally {
+      setLinkIsSaving(false)
+    }
+  }
 
   return (
     <article className="graduation-board-card">
@@ -295,6 +454,99 @@ function SemesterCard({
                 <span className="graduation-board-course-unmatched-label">
                   졸업요건 미연결
                 </span>
+
+                {linkingRecordId !==
+                record.id ? (
+                  <button
+                    className="graduation-board-course-link-button"
+                    type="button"
+                    onClick={() => {
+                      openLinkPanel(
+                        record.id,
+                      )
+                    }}
+                  >
+                    공식 과목에 연결
+                  </button>
+                ) : (
+                  <div className="graduation-board-course-link-panel">
+                    <select
+                      disabled={
+                        linkIsSaving
+                      }
+                      value={
+                        selectedCurriculumCourseId
+                      }
+                      onChange={(event) => {
+                        setSelectedCurriculumCourseId(
+                          event.target.value,
+                        )
+
+                        setLinkError(null)
+                      }}
+                    >
+                      <option value="">
+                        공식 과목 선택
+                      </option>
+
+                      {curriculum.courses.map(
+                        (course) => (
+                          <option
+                            key={course.id}
+                            value={course.id}
+                          >
+                            {course.grade}학년{' '}
+                            {course.semester}학기
+                            {' · '}
+                            {
+                              course.completionType
+                            }
+                            {' · '}
+                            {
+                              course.courseName
+                            }
+                          </option>
+                        ),
+                      )}
+                    </select>
+
+                    <div className="graduation-board-course-link-actions">
+                      <button
+                        disabled={
+                          linkIsSaving
+                        }
+                        type="button"
+                        onClick={() => {
+                          void handleLinkRecord(
+                            record,
+                          )
+                        }}
+                      >
+                        {linkIsSaving
+                          ? '연결 중...'
+                          : '연결'}
+                      </button>
+
+                      <button
+                        disabled={
+                          linkIsSaving
+                        }
+                        type="button"
+                        onClick={
+                          closeLinkPanel
+                        }
+                      >
+                        취소
+                      </button>
+                    </div>
+
+                    {linkError !== null ? (
+                      <small className="graduation-board-course-link-error">
+                        {linkError}
+                      </small>
+                    ) : null}
+                  </div>
+                )}
               </div>
             </li>
           ),
@@ -303,6 +555,7 @@ function SemesterCard({
     </article>
   )
 }
+
 
 
 function TransferCreditCard({
@@ -918,7 +1171,13 @@ function BoardCard({
   }
 
   return (
-    <SemesterCard card={card} />
+    <SemesterCard
+      card={card}
+      curriculum={curriculum}
+      onRecordUpdated={
+        onRecordUpdated
+      }
+    />
   )
 }
 

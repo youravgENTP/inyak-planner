@@ -190,7 +190,42 @@ export function matchCurriculumRecords(
   const matchedCurriculumCourseIds =
     new Set<number>()
 
-  for (const record of records) {
+  /*
+   * 사용자가 curriculumCourseId를
+   * 명시적으로 지정한 기록을
+   * 자동 매칭 기록보다 먼저 처리합니다.
+   *
+   * 따라서 자동 매칭과 충돌하는 경우에도
+   * 사용자의 수동 연결이 우선합니다.
+   */
+  const prioritizedRecords =
+    [...records].sort(
+      (
+        firstRecord,
+        secondRecord,
+      ) => {
+        const firstIsExplicit =
+          firstRecord
+            .curriculumCourseId !== null
+            ? 1
+            : 0
+
+        const secondIsExplicit =
+          secondRecord
+            .curriculumCourseId !== null
+            ? 1
+            : 0
+
+        return (
+          secondIsExplicit -
+          firstIsExplicit
+        )
+      },
+    )
+
+  for (
+    const record of prioritizedRecords
+  ) {
     if (record.isRetake) {
       continue
     }

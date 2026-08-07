@@ -229,12 +229,71 @@
   background: #e2f1e7;
 }
 
-.graduation-board-course--scheduled {
-  border-color: #cbdeef;
-  background: #e3eef9;
+.graduation-board-course-unmatched-label {
+  font-weight: 700;
+  color: #8a691c;
 }
 
-.graduation-board-course--substituted {
+.graduation-board-course-link-button {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 5px 8px;
+  border: 1px solid #d2b66f;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #705617;
+}
+
+.graduation-board-course-link-button:hover {
+  background: #fff3cf;
+}
+
+.graduation-board-course-link-panel {
+  gap: 7px !important;
+  margin-top: 4px;
+}
+
+.graduation-board-course-link-panel select {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid #dcc98f;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 11px;
+}
+
+.graduation-board-course
+  .graduation-board-course-link-actions {
+  flex-direction: row;
+  gap: 6px;
+}
+
+.graduation-board-course-link-actions button {
+  padding: 5px 9px;
+  border: 1px solid #d2b66f;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 11px;
+}
+
+.graduation-board-course-link-actions button:first-child {
+  font-weight: 700;
+}
+
+.graduation-board-course-link-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.graduation-board-course-link-error {
+  line-height: 1.4;
+  color: #a04444 !important;
+}
+
+.graduation-board-course div {
   border-color: #91c4a2;
   background: #b8ddc5;
 }
