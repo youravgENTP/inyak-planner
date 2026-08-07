@@ -25,9 +25,9 @@ import {
   createGraduationYearBoard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import type {
-  SemesterBoardCard,
   TransferCreditBoardCard,
   YearBoardCard,
+  YearSemesterBoard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import {
   GeneralEducationTransferCreditModal,
@@ -103,77 +103,66 @@ function getStatusClassName(
 }
 
 
-function getSemesterSummary(
-  card: SemesterBoardCard,
-) {
-  const requiredCourses =
-    card.courses.filter(
-      (course) =>
-        course.curriculumCourse
-          .completionType === '전필',
-    )
+type SemesterSectionKey =
+  | 'required'
+  | 'elective'
+  | 'generalEducation'
+  | 'unmatched'
 
-  const electiveCourses =
-    card.courses.filter(
-      (course) =>
-        course.curriculumCourse
-          .completionType === '전선',
-    )
 
-  const requiredMatchedRecords =
-    requiredCourses
-      .map((course) => course.record)
-      .filter(
-        (
+function recordFulfillsRequirement(
+  record: CourseRecord,
+): boolean {
+  return (
+    record.letterGrade !== 'F' &&
+    (
+      record.status === 'completed' ||
+      record.status === 'substituted'
+    )
+  )
+}
+
+
+function GraduationBoardCourse({
+  courseName,
+  completionType,
+  credits,
+  record,
+}: {
+  courseName: string
+  completionType:
+    CourseRecord['completionType']
+  credits: number | null
+  record: CourseRecord | null
+}) {
+  const statusClassName =
+    record === null
+      ? ''
+      : (
+        ` ${getStatusClassName(
           record,
-        ): record is CourseRecord =>
-          record !== null &&
-          record.letterGrade !== 'F',
+        )}`
       )
 
-  const electiveMatchedRecords =
-    electiveCourses
-      .map((course) => course.record)
-      .filter(
-        (
-          record,
-        ): record is CourseRecord =>
-          record !== null &&
-          record.letterGrade !== 'F',
-      )
+  return (
+    <li
+      className={
+        `graduation-board-course${statusClassName}`
+      }
+    >
+      <div>
+        <strong>
+          {courseName}
+        </strong>
 
-  /*
-   * 자동 매칭에 실패한 기록은 아직
-   * curriculum상의 전필/전선을 확정할 수
-   * 없으므로 요약 수치에는 포함하지 않습니다.
-   */
-  return {
-    requiredRecorded:
-      requiredMatchedRecords.length,
-
-    requiredTotal:
-      requiredCourses.length,
-
-    requiredCredits:
-      requiredMatchedRecords.reduce(
-        (total, record) =>
-          total + record.credits,
-        0,
-      ),
-
-    electiveRecorded:
-      electiveMatchedRecords.length,
-
-    electiveTotal:
-      electiveCourses.length,
-
-    electiveCredits:
-      electiveMatchedRecords.reduce(
-        (total, record) =>
-          total + record.credits,
-        0,
-      ),
-  }
+        <span>
+          {completionType}
+          {' · '}
+          {formatCredits(credits)}
+        </span>
+      </div>
+    </li>
+  )
 }
 
 
@@ -183,12 +172,19 @@ function SemesterCard({
   curriculum,
   onRecordUpdated,
 }: {
-  card: SemesterBoardCard
+  card: YearSemesterBoard
   curriculum: Curriculum
   onRecordUpdated: (
     record: CourseRecord,
   ) => void
 }) {
+  const [
+    openSection,
+    setOpenSection,
+  ] = useState<SemesterSectionKey | null>(
+    null,
+  )
+
   const [
     linkingRecordId,
     setLinkingRecordId,
@@ -209,8 +205,74 @@ function SemesterCard({
     setLinkError,
   ] = useState<string | null>(null)
 
-  const summary =
-    getSemesterSummary(card)
+  const fulfilledRequiredCourses =
+    card.requiredCourses.filter(
+      ({ record }) =>
+        record !== null &&
+        recordFulfillsRequirement(
+          record,
+        ),
+    )
+
+  const fulfilledRequiredCredits =
+    fulfilledRequiredCourses.reduce(
+      (total, { curriculumCourse }) =>
+        total +
+        (curriculumCourse.credits ?? 0),
+      0,
+    )
+
+  const requiredTotalCredits =
+    card.requiredCourses.reduce(
+      (total, { curriculumCourse }) =>
+        total +
+        (curriculumCourse.credits ?? 0),
+      0,
+    )
+
+  const electiveCredits =
+    card.electiveRecords.reduce(
+      (total, { record }) =>
+        total + record.credits,
+      0,
+    )
+
+  const generalEducationCredits =
+    card.generalEducationRecords.reduce(
+      (total, record) =>
+        total + record.credits,
+      0,
+    )
+
+  const hasRequiredSection =
+    card.requiredCourses.length > 0
+
+  const hasElectiveSection =
+    card.electiveRecords.length > 0
+
+  const hasGeneralEducationSection =
+    card.generalEducationRecords.length >
+    0
+
+  const hasUnmatchedSection =
+    card.unmatchedRecords.length > 0
+
+  const hasVisibleSection =
+    hasRequiredSection ||
+    hasElectiveSection ||
+    hasGeneralEducationSection ||
+    hasUnmatchedSection
+
+  function toggleSection(
+    section: SemesterSectionKey,
+  ) {
+    setOpenSection(
+      (currentSection) =>
+        currentSection === section
+          ? null
+          : section,
+    )
+  }
 
   function openLinkPanel(
     recordId: string,
@@ -347,9 +409,7 @@ function SemesterCard({
     <article className="graduation-board-card">
       <header className="graduation-board-card-header">
         <div>
-          <span>
-            학기
-          </span>
+          <span>학기</span>
 
           <h3>
             {card.semester}학기
@@ -357,201 +417,419 @@ function SemesterCard({
         </div>
       </header>
 
-      <div className="graduation-board-card-summary">
-        <div>
-          <span>전필</span>
+      {!hasVisibleSection ? (
+        <p className="graduation-board-empty graduation-board-empty--semester">
+          표시할 이수 항목이 없습니다.
+        </p>
+      ) : null}
 
-          <strong>
-            {summary.requiredRecorded}
-            {' / '}
-            {summary.requiredTotal}과목
-          </strong>
-
-          <small>
-            {summary.requiredCredits}학점
-          </small>
-        </div>
-
-        <div>
-          <span>전선</span>
-
-          <strong>
-            {summary.electiveRecorded}
-            {' / '}
-            {summary.electiveTotal}과목
-          </strong>
-
-          <small>
-            {summary.electiveCredits}학점
-          </small>
-        </div>
-      </div>
-
-      <ul className="graduation-board-course-list">
-        {card.courses.map(
-          ({
-            curriculumCourse,
-            record,
-          }) => (
-            <li
-              className={
-                'graduation-board-course ' +
-                (
-                  record === null
-                    ? ''
-                    : getStatusClassName(
-                        record,
-                      )
-                )
+      <div className="graduation-board-accordion">
+        {hasRequiredSection ? (
+          <div className="graduation-board-accordion-section">
+            <button
+              aria-expanded={
+                openSection === 'required'
               }
-              key={curriculumCourse.id}
+              className="graduation-board-accordion-toggle"
+              type="button"
+              onClick={() => {
+                toggleSection('required')
+              }}
             >
-              <div>
-                <strong>
-                  {
-                    curriculumCourse
-                      .courseName
-                  }
-                </strong>
-
-                <span>
-                  {
-                    curriculumCourse
-                      .completionType
-                  }
-                  {' · '}
-                  {formatCredits(
-                    curriculumCourse.credits,
-                  )}
-                </span>
-              </div>
-            </li>
-          ),
-        )}
-
-        {card.unmatchedRecords.map(
-          (record) => (
-            <li
-              className="
-                graduation-board-course
-                graduation-board-course--unmatched
-              "
-              key={record.id}
-            >
-              <div>
-                <strong>
-                  {record.courseName}
-                </strong>
-
-                <span>
-                  {record.completionType}
-                  {' · '}
-                  {formatCredits(
-                    record.credits,
-                  )}
+              <span className="graduation-board-accordion-summary">
+                <span className="graduation-board-accordion-label">
+                  전필
                 </span>
 
-                <span className="graduation-board-course-unmatched-label">
+                <strong>
+                  {
+                    fulfilledRequiredCourses
+                      .length
+                  }
+                  {' / '}
+                  {card.requiredCourses.length}
+                  과목
+                  {' · '}
+                  {fulfilledRequiredCredits}
+                  {' / '}
+                  {requiredTotalCredits}
+                  학점
+                </strong>
+              </span>
+
+              <span
+                aria-hidden="true"
+                className={
+                  'graduation-board-accordion-chevron' +
+                  (
+                    openSection === 'required'
+                      ? ' graduation-board-accordion-chevron--open'
+                      : ''
+                  )
+                }
+              >
+                ▾
+              </span>
+            </button>
+
+            {openSection === 'required' ? (
+              <ul className="graduation-board-course-list">
+                {card.requiredCourses.map(
+                  ({
+                    curriculumCourse,
+                    record,
+                  }) => (
+                    <GraduationBoardCourse
+                      completionType="전필"
+                      courseName={
+                        curriculumCourse
+                          .courseName
+                      }
+                      credits={
+                        curriculumCourse
+                          .credits
+                      }
+                      key={
+                        curriculumCourse.id
+                      }
+                      record={record}
+                    />
+                  ),
+                )}
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+
+        {hasElectiveSection ? (
+          <div className="graduation-board-accordion-section">
+            <button
+              aria-expanded={
+                openSection === 'elective'
+              }
+              className="graduation-board-accordion-toggle"
+              type="button"
+              onClick={() => {
+                toggleSection('elective')
+              }}
+            >
+              <span className="graduation-board-accordion-summary">
+                <span className="graduation-board-accordion-label">
+                  전선
+                </span>
+
+                <strong>
+                  {card.electiveRecords.length}
+                  과목
+                  {' · '}
+                  {electiveCredits}학점
+                </strong>
+              </span>
+
+              <span
+                aria-hidden="true"
+                className={
+                  'graduation-board-accordion-chevron' +
+                  (
+                    openSection === 'elective'
+                      ? ' graduation-board-accordion-chevron--open'
+                      : ''
+                  )
+                }
+              >
+                ▾
+              </span>
+            </button>
+
+            {openSection === 'elective' ? (
+              <ul className="graduation-board-course-list">
+                {card.electiveRecords.map(
+                  ({
+                    curriculumCourse,
+                    record,
+                  }) => (
+                    <GraduationBoardCourse
+                      completionType={
+                        curriculumCourse
+                          .completionType
+                      }
+                      courseName={
+                        record.courseName
+                      }
+                      credits={
+                        record.credits
+                      }
+                      key={record.id}
+                      record={record}
+                    />
+                  ),
+                )}
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+
+        {hasGeneralEducationSection ? (
+          <div className="graduation-board-accordion-section">
+            <button
+              aria-expanded={
+                openSection ===
+                'generalEducation'
+              }
+              className="graduation-board-accordion-toggle"
+              type="button"
+              onClick={() => {
+                toggleSection(
+                  'generalEducation',
+                )
+              }}
+            >
+              <span className="graduation-board-accordion-summary">
+                <span className="graduation-board-accordion-label">
+                  교양
+                </span>
+
+                <strong>
+                  {
+                    card
+                      .generalEducationRecords
+                      .length
+                  }
+                  과목
+                  {' · '}
+                  {generalEducationCredits}
+                  학점
+                </strong>
+              </span>
+
+              <span
+                aria-hidden="true"
+                className={
+                  'graduation-board-accordion-chevron' +
+                  (
+                    openSection ===
+                    'generalEducation'
+                      ? ' graduation-board-accordion-chevron--open'
+                      : ''
+                  )
+                }
+              >
+                ▾
+              </span>
+            </button>
+
+            {openSection ===
+            'generalEducation' ? (
+              <ul className="graduation-board-course-list">
+                {card.generalEducationRecords.map(
+                  (record) => (
+                    <GraduationBoardCourse
+                      completionType={
+                        record.completionType
+                      }
+                      courseName={
+                        record.courseName
+                      }
+                      credits={
+                        record.credits
+                      }
+                      key={record.id}
+                      record={record}
+                    />
+                  ),
+                )}
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+
+        {hasUnmatchedSection ? (
+          <div className="graduation-board-accordion-section graduation-board-accordion-section--unmatched">
+            <button
+              aria-expanded={
+                openSection === 'unmatched'
+              }
+              className="graduation-board-accordion-toggle graduation-board-accordion-toggle--unmatched"
+              type="button"
+              onClick={() => {
+                toggleSection('unmatched')
+              }}
+            >
+              <span className="graduation-board-accordion-summary">
+                <span className="graduation-board-accordion-label">
                   졸업요건 미연결
                 </span>
 
-                {linkingRecordId !==
-                record.id ? (
-                  <button
-                    className="graduation-board-course-link-button"
-                    type="button"
-                    onClick={() => {
-                      openLinkPanel(
-                        record.id,
-                      )
-                    }}
-                  >
-                    공식 과목에 연결
-                  </button>
-                ) : (
-                  <div className="graduation-board-course-link-panel">
-                    <select
-                      disabled={
-                        linkIsSaving
-                      }
-                      value={
-                        selectedCurriculumCourseId
-                      }
-                      onChange={(event) => {
-                        setSelectedCurriculumCourseId(
-                          event.target.value,
-                        )
+                <strong>
+                  {
+                    card.unmatchedRecords
+                      .length
+                  }
+                  과목 · 연결 필요
+                </strong>
+              </span>
 
-                        setLinkError(null)
-                      }}
+              <span
+                aria-hidden="true"
+                className={
+                  'graduation-board-accordion-chevron' +
+                  (
+                    openSection === 'unmatched'
+                      ? ' graduation-board-accordion-chevron--open'
+                      : ''
+                  )
+                }
+              >
+                ▾
+              </span>
+            </button>
+
+            {openSection === 'unmatched' ? (
+              <ul className="graduation-board-course-list">
+                {card.unmatchedRecords.map(
+                  (record) => (
+                    <li
+                      className="
+                        graduation-board-course
+                        graduation-board-course--unmatched
+                      "
+                      key={record.id}
                     >
-                      <option value="">
-                        공식 과목 선택
-                      </option>
+                      <div>
+                        <strong>
+                          {record.courseName}
+                        </strong>
 
-                      {curriculum.courses.map(
-                        (course) => (
-                          <option
-                            key={course.id}
-                            value={course.id}
+                        <span>
+                          {
+                            record
+                              .completionType
+                          }
+                          {' · '}
+                          {formatCredits(
+                            record.credits,
+                          )}
+                        </span>
+
+                        {linkingRecordId !==
+                        record.id ? (
+                          <button
+                            className="graduation-board-course-link-button"
+                            type="button"
+                            onClick={() => {
+                              openLinkPanel(
+                                record.id,
+                              )
+                            }}
                           >
-                            {course.grade}학년{' '}
-                            {course.semester}학기
-                            {' · '}
-                            {
-                              course.completionType
-                            }
-                            {' · '}
-                            {
-                              course.courseName
-                            }
-                          </option>
-                        ),
-                      )}
-                    </select>
+                            공식 과목에 연결
+                          </button>
+                        ) : (
+                          <div className="graduation-board-course-link-panel">
+                            <select
+                              disabled={
+                                linkIsSaving
+                              }
+                              value={
+                                selectedCurriculumCourseId
+                              }
+                              onChange={(
+                                event,
+                              ) => {
+                                setSelectedCurriculumCourseId(
+                                  event.target
+                                    .value,
+                                )
 
-                    <div className="graduation-board-course-link-actions">
-                      <button
-                        disabled={
-                          linkIsSaving
-                        }
-                        type="button"
-                        onClick={() => {
-                          void handleLinkRecord(
-                            record,
-                          )
-                        }}
-                      >
-                        {linkIsSaving
-                          ? '연결 중...'
-                          : '연결'}
-                      </button>
+                                setLinkError(
+                                  null,
+                                )
+                              }}
+                            >
+                              <option value="">
+                                공식 과목 선택
+                              </option>
 
-                      <button
-                        disabled={
-                          linkIsSaving
-                        }
-                        type="button"
-                        onClick={
-                          closeLinkPanel
-                        }
-                      >
-                        취소
-                      </button>
-                    </div>
+                              {curriculum.courses.map(
+                                (course) => (
+                                  <option
+                                    key={
+                                      course.id
+                                    }
+                                    value={
+                                      course.id
+                                    }
+                                  >
+                                    {
+                                      course.grade
+                                    }
+                                    학년{' '}
+                                    {
+                                      course.semester
+                                    }
+                                    학기
+                                    {' · '}
+                                    {
+                                      course
+                                        .completionType
+                                    }
+                                    {' · '}
+                                    {
+                                      course
+                                        .courseName
+                                    }
+                                  </option>
+                                ),
+                              )}
+                            </select>
 
-                    {linkError !== null ? (
-                      <small className="graduation-board-course-link-error">
-                        {linkError}
-                      </small>
-                    ) : null}
-                  </div>
+                            <div className="graduation-board-course-link-actions">
+                              <button
+                                disabled={
+                                  linkIsSaving
+                                }
+                                type="button"
+                                onClick={() => {
+                                  void handleLinkRecord(
+                                    record,
+                                  )
+                                }}
+                              >
+                                {linkIsSaving
+                                  ? '연결 중...'
+                                  : '연결'}
+                              </button>
+
+                              <button
+                                disabled={
+                                  linkIsSaving
+                                }
+                                type="button"
+                                onClick={
+                                  closeLinkPanel
+                                }
+                              >
+                                취소
+                              </button>
+                            </div>
+
+                            {linkError !==
+                            null ? (
+                              <small className="graduation-board-course-link-error">
+                                {linkError}
+                              </small>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  ),
                 )}
-              </div>
-            </li>
-          ),
-        )}
-      </ul>
+              </ul>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </article>
   )
 }
@@ -1127,7 +1405,6 @@ function TransferCreditCard({
   )
 }
 
-
 function YearCard({
   card,
   curriculum,
@@ -1153,45 +1430,18 @@ function YearCard({
 
       <div className="graduation-board-year-semesters">
         {card.semesters.map(
-          (semesterBoard) => {
-            /*
-             * 기존 SemesterCard를 한 단계 더
-             * 재사용합니다.
-             *
-             * 전필은 공식 curriculum 전체,
-             * 전선은 실제로 matcher가 연결한
-             * 사용자 기록만 전달합니다.
-             */
-            const semesterCard:
-              SemesterBoardCard = {
-                kind: 'semester',
-                grade: card.grade,
-                semester:
-                  semesterBoard.semester,
-                courses: [
-                  ...semesterBoard
-                    .requiredCourses,
-                  ...semesterBoard
-                    .electiveRecords,
-                ],
-                unmatchedRecords:
-                  semesterBoard
-                    .unmatchedRecords,
+          (semesterBoard) => (
+            <SemesterCard
+              card={semesterBoard}
+              curriculum={curriculum}
+              onRecordUpdated={
+                onRecordUpdated
               }
-
-            return (
-              <SemesterCard
-                card={semesterCard}
-                curriculum={curriculum}
-                onRecordUpdated={
-                  onRecordUpdated
-                }
-                key={
-                  semesterBoard.semester
-                }
-              />
-            )
-          },
+              key={
+                semesterBoard.semester
+              }
+            />
+          ),
         )}
       </div>
     </section>

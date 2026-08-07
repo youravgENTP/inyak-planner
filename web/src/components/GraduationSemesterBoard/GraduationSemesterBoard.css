@@ -220,6 +220,90 @@
   font-size: 13px;
 }
 
+
+/* =========================================================
+   학기별 전필·전선·교양 Accordion
+   ========================================================= */
+
+.graduation-board-accordion {
+  display: flex;
+  flex-direction: column;
+}
+
+.graduation-board-accordion-section +
+.graduation-board-accordion-section {
+  border-top: 1px solid #ededed;
+}
+
+.graduation-board-accordion-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border: 0;
+  background: #fafafa;
+  text-align: left;
+  cursor: pointer;
+}
+
+.graduation-board-accordion-toggle:hover {
+  background: #f5f5f5;
+}
+
+.graduation-board-accordion-summary {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.graduation-board-accordion-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #777;
+}
+
+.graduation-board-accordion-summary strong {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.graduation-board-accordion-chevron {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #777;
+  transition: transform 160ms ease;
+}
+
+.graduation-board-accordion-chevron--open {
+  transform: rotate(180deg);
+}
+
+.graduation-board-accordion-toggle--unmatched {
+  background: #fff8e8;
+}
+
+.graduation-board-accordion-toggle--unmatched:hover {
+  background: #fff3d7;
+}
+
+.graduation-board-accordion-section
+  .graduation-board-course-list {
+  border-top: 1px solid #ededed;
+}
+
+.graduation-board-accordion-section--unmatched
+  .graduation-board-course-list {
+  border-top-color: #ead9aa;
+}
+
+.graduation-board-empty--semester {
+  padding: 20px 16px;
+  font-size: 12px;
+}
+
 .graduation-board-transfer-summary {
   display: grid;
   grid-template-columns:
