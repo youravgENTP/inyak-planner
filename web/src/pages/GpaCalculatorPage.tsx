@@ -9,6 +9,7 @@ import {
 } from '../components/CourseRecordModal/CourseRecordModal'
 
 import {
+  deleteCourseRecord,
   getCourseRecords,
   updateCourseRecord,
 } from '../domain/course-records/api'
@@ -290,6 +291,16 @@ export function GpaCalculatorPage({
     setRecordModalIsOpen,
   ] = useState(false)
 
+  const [
+    openMenuRecordId,
+    setOpenMenuRecordId,
+  ] = useState<string | null>(null)
+
+  const [
+    deletingRecordId,
+    setDeletingRecordId,
+  ] = useState<string | null>(null)
+
   useEffect(() => {
     let requestIsActive = true
 
@@ -516,6 +527,50 @@ export function GpaCalculatorPage({
       )
     } finally {
       setStatusIsUpdating(false)
+    }
+  }
+
+  async function handleDeleteRecord(
+    record: CourseRecord,
+  ) {
+    if (deletingRecordId !== null) {
+      return
+    }
+
+    const deletionWasConfirmed =
+      window.confirm(
+        `"${record.courseName}" 과목 기록을 삭제하시겠습니까?`,
+      )
+
+    if (!deletionWasConfirmed) {
+      return
+    }
+
+    setDeletingRecordId(record.id)
+    setOpenMenuRecordId(null)
+    setRecordsError(null)
+
+    try {
+      await deleteCourseRecord(
+        record.id,
+      )
+
+      setCourseRecords(
+        (currentRecords) =>
+          currentRecords.filter(
+            (currentRecord) =>
+              currentRecord.id !==
+              record.id,
+          ),
+      )
+    } catch (error) {
+      setRecordsError(
+        error instanceof Error
+          ? error.message
+          : '과목 기록을 삭제하지 못했습니다.',
+      )
+    } finally {
+      setDeletingRecordId(null)
     }
   }
 
@@ -888,16 +943,54 @@ export function GpaCalculatorPage({
                             .completionType
                         }
                       </span>
+                      <div className="gpa-course-menu-container">
+                        <button
+                          aria-expanded={
+                            openMenuRecordId === record.id
+                          }
+                          aria-haspopup="menu"
+                          aria-label={
+                            `${record.courseName} 메뉴`
+                          }
+                          className="gpa-course-menu"
+                          disabled={
+                            deletingRecordId === record.id
+                          }
+                          type="button"
+                          onClick={() => {
+                            setOpenMenuRecordId(
+                              (currentRecordId) =>
+                                currentRecordId === record.id
+                                  ? null
+                                  : record.id,
+                            )
+                          }}
+                        >
+                          {deletingRecordId === record.id
+                            ? '…'
+                            : '⋯'}
+                        </button>
 
-                      <button
-                        aria-label={
-                          `${record.courseName} 메뉴`
-                        }
-                        className="gpa-course-menu"
-                        type="button"
-                      >
-                        ⋯
-                      </button>
+                        {openMenuRecordId === record.id ? (
+                          <div
+                            className="gpa-course-menu-popover"
+                            role="menu"
+                          >
+                            <button
+                              className="gpa-course-menu-delete"
+                              role="menuitem"
+                              type="button"
+                              onClick={() => {
+                                void handleDeleteRecord(
+                                  record,
+                                )
+                              }}
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   )
                 },
