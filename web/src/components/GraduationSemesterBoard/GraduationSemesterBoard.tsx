@@ -273,12 +273,10 @@ function SemesterCard({
         {card.unmatchedRecords.map(
           (record) => (
             <li
-              className={
-                'graduation-board-course ' +
-                getStatusClassName(
-                  record.status,
-                )
-              }
+              className="
+                graduation-board-course
+                graduation-board-course--unmatched
+              "
               key={record.id}
             >
               <div>
@@ -292,6 +290,10 @@ function SemesterCard({
                   {formatCredits(
                     record.credits,
                   )}
+                </span>
+
+                <span className="graduation-board-course-unmatched-label">
+                  졸업요건 미연결
                 </span>
               </div>
             </li>
@@ -963,7 +965,13 @@ export function GraduationSemesterBoard({
             <i className="graduation-board-legend-substituted" />
             대체 인정
           </span>
+
+          <span>
+            <i className="graduation-board-legend-unmatched" />
+            졸업요건 미연결
+          </span>
         </div>
+
       </header>
 
       <div

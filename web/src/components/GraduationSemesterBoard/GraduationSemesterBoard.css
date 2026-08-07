@@ -62,6 +62,12 @@
   background: #b8ddc5;
 }
 
+.graduation-board-legend-unmatched {
+  border-style: dashed !important;
+  border-color: #e0c58a !important;
+  background: #fff8e8;
+}
+
 .graduation-board-scroll {
   min-width: 0;
   overflow-x: auto;
@@ -231,6 +237,17 @@
 .graduation-board-course--substituted {
   border-color: #91c4a2;
   background: #b8ddc5;
+}
+
+.graduation-board-course--unmatched {
+  border-color: #e0c58a;
+  border-style: dashed;
+  background: #fff8e8;
+}
+
+.graduation-board-course-unmatched-label {
+  font-weight: 700;
+  color: #8a691c;
 }
 
 .graduation-board-course div {
