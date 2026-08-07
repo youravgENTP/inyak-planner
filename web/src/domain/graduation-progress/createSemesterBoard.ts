@@ -172,3 +172,294 @@ export function createGraduationBoard(
 
   return cards
 }
+
+
+/*
+ * 아래부터는 새 개인 이수현황 UI에서 사용할
+ * 학년 단위 board model입니다.
+ *
+ * 기존 SemesterBoardCard 기반 UI를 한 번에
+ * 깨뜨리지 않기 위해 기존 model과
+ * createGraduationBoard()는 당분간 유지합니다.
+ */
+
+
+export interface SemesterBoardMatchedRecord {
+  curriculumCourse:
+    CurriculumCourse
+  record:
+    CourseRecord
+}
+
+
+export interface YearSemesterBoard {
+  semester: number
+
+  /*
+   * 전필은 공식 교육과정 전체가 기준입니다.
+   * 따라서 아직 이수하지 않은 공식 전필도
+   * record: null 상태로 포함합니다.
+   */
+  requiredCourses:
+    SemesterBoardCourse[]
+
+  /*
+   * 전선은 사용자가 실제로 기록한 과목 중
+   * matcher가 공식 전선으로 판정한 기록만
+   * 표시합니다.
+   *
+   * 공식 curriculum의 모든 선택 가능한
+   * 전선 과목을 노출하지 않습니다.
+   */
+  electiveRecords:
+    SemesterBoardMatchedRecord[]
+
+  /*
+   * 교양은 자동 matcher를 사용하지 않고
+   * 사용자가 CourseRecord에 저장한
+   * 교양 기록 자체를 사용합니다.
+   */
+  generalEducationRecords:
+    CourseRecord[]
+
+  /*
+   * 전공 matcher가 자동 연결하지 못한
+   * 기록입니다.
+   *
+   * 다음 UI 단계에서 졸업요건 미연결
+   * 영역으로 표시하고 수동 연결 기능을
+   * 그대로 제공할 예정입니다.
+   */
+  unmatchedRecords:
+    CourseRecord[]
+}
+
+
+export interface YearBoardCard {
+  kind: 'year'
+  grade: number
+  semesters:
+    YearSemesterBoard[]
+}
+
+
+export interface GraduationYearBoard {
+  transferCredits:
+    TransferCreditBoardCard | null
+  years:
+    YearBoardCard[]
+}
+
+
+function recordBelongsToSemester(
+  record: CourseRecord,
+  grade: number,
+  semester: number,
+): boolean {
+  return (
+    record.grade === grade &&
+    record.semester === semester
+  )
+}
+
+
+function createYearSemesterBoard(
+  curriculum: Curriculum,
+  matchedRecordMap:
+    ReadonlyMap<number, CourseRecord>,
+  matchedRecords:
+    readonly SemesterBoardMatchedRecord[],
+  effectiveRecords:
+    readonly CourseRecord[],
+  unmatchedRecords:
+    readonly CourseRecord[],
+  grade: number,
+  semester: number,
+): YearSemesterBoard {
+  /*
+   * 전필은 공식 curriculum의 학년-학기
+   * 위치를 기준으로 배치합니다.
+   *
+   * 사용자가 다른 학기에 실제 수강했더라도
+   * matcher가 이 공식 전필과 연결했다면
+   * 해당 공식 전필의 record로 표시됩니다.
+   */
+  const requiredCourses =
+    curriculum.courses
+      .filter(
+        (course) =>
+          course.grade === grade &&
+          course.semester === semester &&
+          course.completionType ===
+            '전필',
+      )
+      .map(
+        (curriculumCourse) => ({
+          curriculumCourse,
+          record:
+            matchedRecordMap.get(
+              curriculumCourse.id,
+            ) ?? null,
+        }),
+      )
+
+  /*
+   * 전선은 공식 curriculum상의 권장 학기가
+   * 아니라 사용자가 실제로 기록한
+   * grade + semester 위치에 표시합니다.
+   *
+   * 단, 졸업요건 판정은 사용자가 입력한
+   * completionType이 아니라 matcher가 연결한
+   * 공식 curriculum의 전선 여부를 따릅니다.
+   */
+  const electiveRecords =
+    matchedRecords.filter(
+      ({
+        curriculumCourse,
+        record,
+      }) =>
+        curriculumCourse
+          .completionType === '전선' &&
+        record.status !== 'substituted' &&
+        recordBelongsToSemester(
+          record,
+          grade,
+          semester,
+        ),
+    )
+
+  /*
+   * 교양 역시 사용자가 실제로 기록한
+   * 학년-학기 위치를 사용합니다.
+   *
+   * 대체 인정 교양은 전적대 인정 영역에서
+   * 별도로 관리하므로 일반 학기에서는
+   * 제외합니다.
+   */
+  const generalEducationRecords =
+    effectiveRecords.filter(
+      (record) =>
+        record.completionType ===
+          '교양' &&
+        record.status !==
+          'substituted' &&
+        recordBelongsToSemester(
+          record,
+          grade,
+          semester,
+        ),
+    )
+
+  /*
+   * matcher 실패 기록 역시 사용자가 기록한
+   * 학년-학기 위치를 유지합니다.
+   */
+  const semesterUnmatchedRecords =
+    unmatchedRecords.filter(
+      (record) =>
+        recordBelongsToSemester(
+          record,
+          grade,
+          semester,
+        ),
+    )
+
+  return {
+    semester,
+    requiredCourses,
+    electiveRecords,
+    generalEducationRecords,
+    unmatchedRecords:
+      semesterUnmatchedRecords,
+  }
+}
+
+
+export function createGraduationYearBoard(
+  user: AuthUser,
+  curriculum: Curriculum,
+  records: readonly CourseRecord[],
+): GraduationYearBoard {
+  /*
+   * 재수강으로 말소된 기록은
+   * 졸업요건 board의 근거로 사용하지 않습니다.
+   */
+  const effectiveRecords =
+    records.filter(
+      (record) =>
+        !record.isRetake,
+    )
+
+  const matchResult =
+    matchCurriculumRecords(
+      curriculum,
+      effectiveRecords,
+    )
+
+  const matchedRecordMap =
+    new Map<number, CourseRecord>(
+      matchResult.matches.map(
+        ({
+          curriculumCourse,
+          record,
+        }) => [
+          curriculumCourse.id,
+          record,
+        ],
+      ),
+    )
+
+  const matchedRecords:
+    SemesterBoardMatchedRecord[] =
+      matchResult.matches.map(
+        ({
+          curriculumCourse,
+          record,
+        }) => ({
+          curriculumCourse,
+          record,
+        }),
+      )
+
+  const years =
+    Array.from(
+      { length: 6 },
+      (_, gradeIndex): YearBoardCard => {
+        const grade =
+          gradeIndex + 1
+
+        return {
+          kind: 'year',
+          grade,
+          semesters: [1, 2].map(
+            (semester) =>
+              createYearSemesterBoard(
+                curriculum,
+                matchedRecordMap,
+                matchedRecords,
+                effectiveRecords,
+                matchResult
+                  .unmatchedRecords,
+                grade,
+                semester,
+              ),
+          ),
+        }
+      },
+    )
+
+  return {
+    transferCredits:
+      user.studentType === 'transfer'
+        ? {
+            kind: 'transferCredits',
+            records:
+              getTransferCreditRecords(
+                records,
+              ),
+          }
+        : null,
+
+    years,
+  }
+}
