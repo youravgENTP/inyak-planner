@@ -1,0 +1,65 @@
+/* =========================================================
+   학기별 GPA 그래프
+   ========================================================= */
+
+.semester-gpa-chart {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.semester-gpa-chart svg {
+  display: block;
+  width: 100%;
+  height: 190px;
+  overflow: visible;
+}
+
+.semester-gpa-chart__guide {
+  stroke: #e8eeea;
+  stroke-width: 1;
+}
+
+.semester-gpa-chart__y-label,
+.semester-gpa-chart__x-label {
+  fill: #87928b;
+  font-size: 9px;
+}
+
+.semester-gpa-chart__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+}
+
+.semester-gpa-chart__line--confirmed {
+  stroke: #527a60;
+}
+
+.semester-gpa-chart__line--projected {
+  stroke: #9db3c0;
+  stroke-dasharray: 5 5;
+}
+
+.semester-gpa-chart__point--confirmed {
+  fill: #527a60;
+}
+
+.semester-gpa-chart__point--projected {
+  fill: #9db3c0;
+}
+
+.semester-gpa-chart-empty {
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 15px;
+  border-radius: 10px;
+
+  background: #fafcfb;
+
+  color: #919c95;
+  font-size: 12px;
+}

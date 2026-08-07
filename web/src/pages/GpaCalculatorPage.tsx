@@ -9,6 +9,10 @@ import {
 } from '../components/CourseRecordModal/CourseRecordModal'
 
 import {
+  SemesterGpaChart,
+} from '../components/gpa/SemesterGpaChart'
+
+import {
   TimetableImportModal,
 } from '../components/gpa/TimetableImportModal'
 
@@ -457,6 +461,48 @@ export function GpaCalculatorPage({
       [selectedRecords],
     )
 
+  const semesterGpaChartPoints =
+    useMemo(
+      () =>
+        SEMESTERS.map(
+          (semesterDefinition) => {
+            const semesterRecords =
+              regularRecords.filter(
+                (record) =>
+                  record.grade ===
+                    semesterDefinition.grade &&
+                  record.semester ===
+                    semesterDefinition.semester,
+              )
+
+            const confirmed =
+              calculateGpaSummary(
+                semesterRecords,
+                false,
+              )
+
+            const projected =
+              calculateGpaSummary(
+                semesterRecords,
+                true,
+              )
+
+            return {
+              label:
+                `${semesterDefinition.grade}-` +
+                semesterDefinition.semester,
+
+              confirmedGpa:
+                confirmed.gpa,
+
+              projectedGpa:
+                projected.gpa,
+            }
+          },
+        ),
+      [regularRecords],
+    )
+
   const allSelectedRecordsAreActive =
     selectedRecords.length > 0 &&
     selectedRecords.every(
@@ -777,10 +823,11 @@ export function GpaCalculatorPage({
               </div>
             </header>
 
-            <div className="gpa-chart-placeholder">
-              GPA 그래프는 다음 단계에서
-              연결합니다.
-            </div>
+            <SemesterGpaChart
+              points={
+                semesterGpaChartPoints
+              }
+            />
           </article>
 
           <article>
