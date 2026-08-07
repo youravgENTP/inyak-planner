@@ -317,6 +317,18 @@ interface GpaCalculatorPageProps {
 export function GpaCalculatorPage({
   user,
 }: GpaCalculatorPageProps) {
+  const availableSemesters =
+    useMemo(
+      () =>
+        user.studentType === 'transfer'
+          ? SEMESTERS.filter(
+              (semesterDefinition) =>
+                semesterDefinition.grade >= 3,
+            )
+          : SEMESTERS,
+      [user.studentType],
+    )
+
   const [
     courseRecords,
     setCourseRecords,
@@ -326,7 +338,13 @@ export function GpaCalculatorPage({
     selectedSemester,
     setSelectedSemester,
   ] = useState<SemesterDefinition>(
-    SEMESTERS[0],
+    () =>
+      user.studentType === 'transfer'
+        ? {
+            grade: 3,
+            semester: 1,
+          }
+        : SEMESTERS[0],
   )
 
   const [
@@ -500,7 +518,7 @@ export function GpaCalculatorPage({
   const semesterGpaChartPoints =
     useMemo(
       () =>
-        SEMESTERS.map(
+        availableSemesters.map(
           (semesterDefinition) => {
             const semesterRecords =
               regularRecords.filter(
@@ -536,7 +554,10 @@ export function GpaCalculatorPage({
             }
           },
         ),
-      [regularRecords],
+      [
+        availableSemesters,
+        regularRecords,
+      ],
     )
 
   const gradeDistributionPoints =
@@ -905,7 +926,7 @@ export function GpaCalculatorPage({
         aria-label="학기 선택"
         className="gpa-semester-tabs"
       >
-        {SEMESTERS.map(
+        {availableSemesters.map(
           (semesterDefinition) => {
             const isSelected =
               semesterDefinition.grade ===
