@@ -306,6 +306,11 @@ export function GpaCalculatorPage({
   ] = useState(false)
 
   const [
+    addMenuIsOpen,
+    setAddMenuIsOpen,
+  ] = useState(false)
+
+  const [
     editingRecord,
     setEditingRecord,
   ] = useState<CourseRecord | null>(
@@ -861,14 +866,52 @@ export function GpaCalculatorPage({
               </h2>
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                setRecordModalIsOpen(true)
-              }}
-            >
-              + 과목 입력하기
-            </button>
+            <div className="gpa-add-course-container">
+              <button
+                aria-expanded={
+                  addMenuIsOpen
+                }
+                aria-haspopup="menu"
+                aria-label="과목 추가"
+                className="gpa-add-course-button"
+                type="button"
+                onClick={() => {
+                  setAddMenuIsOpen(
+                    (isOpen) => !isOpen,
+                  )
+                }}
+              >
+                +
+              </button>
+
+              {addMenuIsOpen ? (
+                <div
+                  className="gpa-add-course-menu"
+                  role="menu"
+                >
+                  <button
+                    disabled
+                    role="menuitem"
+                    title="다음 단계에서 연결합니다."
+                    type="button"
+                  >
+                    시간표에서 가져오기
+                  </button>
+
+                  <button
+                    role="menuitem"
+                    type="button"
+                    onClick={() => {
+                      setAddMenuIsOpen(false)
+                      setEditingRecord(null)
+                      setRecordModalIsOpen(true)
+                    }}
+                  >
+                    과목 직접 입력하기
+                  </button>
+                </div>
+              ) : null}
+            </div>
           </header>
 
           <div className="gpa-semester-metrics">
@@ -971,10 +1014,10 @@ export function GpaCalculatorPage({
                 <button
                   type="button"
                   onClick={() => {
-                    setRecordModalIsOpen(true)
+                    setAddMenuIsOpen(true)
                   }}
                 >
-                  + 과목 입력하기
+                  + 과목 추가하기
                 </button>
               </div>
             ) : (
