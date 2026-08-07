@@ -92,32 +92,6 @@ function getStatusClassName(
 function getSemesterSummary(
   card: SemesterBoardCard,
 ) {
-  const allRecords = [
-    ...card.courses
-      .map((course) => course.record)
-      .filter(
-        (
-          record,
-        ): record is CourseRecord =>
-          record !== null,
-      ),
-    ...card.unmatchedRecords,
-  ]
-
-  const requiredRecords =
-    allRecords.filter(
-      (record) =>
-        record.completionType ===
-        '전필',
-    )
-
-  const electiveRecords =
-    allRecords.filter(
-      (record) =>
-        record.completionType ===
-        '전선',
-    )
-
   const requiredCourses =
     card.courses.filter(
       (course) =>
@@ -132,29 +106,60 @@ function getSemesterSummary(
           .completionType === '전선',
     )
 
+  const requiredMatchedRecords =
+    requiredCourses
+      .map((course) => course.record)
+      .filter(
+        (
+          record,
+        ): record is CourseRecord =>
+          record !== null,
+      )
+
+  const electiveMatchedRecords =
+    electiveCourses
+      .map((course) => course.record)
+      .filter(
+        (
+          record,
+        ): record is CourseRecord =>
+          record !== null,
+      )
+
+  /*
+   * 자동 매칭에 실패한 기록은 아직
+   * curriculum상의 전필/전선을 확정할 수
+   * 없으므로 요약 수치에는 포함하지 않습니다.
+   */
   return {
     requiredRecorded:
-      requiredRecords.length,
+      requiredMatchedRecords.length,
+
     requiredTotal:
       requiredCourses.length,
+
     requiredCredits:
-      requiredRecords.reduce(
+      requiredMatchedRecords.reduce(
         (total, record) =>
           total + record.credits,
         0,
       ),
+
     electiveRecorded:
-      electiveRecords.length,
+      electiveMatchedRecords.length,
+
     electiveTotal:
       electiveCourses.length,
+
     electiveCredits:
-      electiveRecords.reduce(
+      electiveMatchedRecords.reduce(
         (total, record) =>
           total + record.credits,
         0,
       ),
   }
 }
+
 
 
 function SemesterCard({

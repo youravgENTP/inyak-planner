@@ -8,6 +8,9 @@ import type {
   Curriculum,
   CurriculumCourse,
 } from '../curriculum/types'
+import {
+  matchCurriculumRecords,
+} from './matchCurriculumRecords'
 
 
 export interface SemesterBoardCourse {
@@ -37,82 +40,12 @@ export type GraduationBoardCard =
   | SemesterBoardCard
   | TransferCreditBoardCard
 
-
-function createCurriculumRecordMap(
-  records: readonly CourseRecord[],
-): Map<number, CourseRecord> {
-  const recordMap =
-    new Map<number, CourseRecord>()
-
-  for (const record of records) {
-    if (
-      record.curriculumCourseId ===
-      null
-    ) {
-      continue
-    }
-
-    recordMap.set(
-      record.curriculumCourseId,
-      record,
-    )
-  }
-
-  return recordMap
-}
-
-
-function calculateRecordGrade(
-  record: CourseRecord,
-  entryYear: number,
-): number | null {
-  if (record.academicYear === null) {
-    return null
-  }
-
-  const grade =
-    record.academicYear -
-    entryYear +
-    1
-
-  if (grade < 1 || grade > 6) {
-    return null
-  }
-
-  return grade
-}
-
-
-function getSemesterRecords(
-  records: readonly CourseRecord[],
-  entryYear: number,
-  grade: number,
-  semester: number,
-): CourseRecord[] {
-
-  return records.filter(
-    (record) =>
-      record.status !==
-        'substituted' &&
-      (
-        record.completionType ===
-          '전필' ||
-        record.completionType ===
-          '전선'
-      ) &&
-      record.semester === semester &&
-      calculateRecordGrade(
-        record,
-        entryYear,
-      ) === grade,
-  )
-}
-
 function createSemesterCard(
   curriculum: Curriculum,
-  records: readonly CourseRecord[],
-  curriculumRecordMap:
+  matchedRecordMap:
     ReadonlyMap<number, CourseRecord>,
+  unmatchedRecords:
+    readonly CourseRecord[],
   grade: number,
   semester: number,
 ): SemesterBoardCard {
@@ -123,53 +56,30 @@ function createSemesterCard(
         course.semester === semester,
     )
 
-  const semesterRecords =
-    getSemesterRecords(
-      records,
-      curriculum.entryYear,
-      grade,
-      semester,
-    )
-
-  const matchedRecordIds =
-    new Set<string>()
-
   const courses =
     officialCourses.map(
-      (curriculumCourse) => {
-        const record =
-          curriculumRecordMap.get(
+      (curriculumCourse) => ({
+        curriculumCourse,
+        record:
+          matchedRecordMap.get(
             curriculumCourse.id,
-          ) ?? null
-
-        if (
-          record !== null &&
-          record.status !==
-            'substituted'
-        ) {
-          matchedRecordIds.add(
-            record.id,
-          )
-        }
-
-        return {
-          curriculumCourse,
-          record:
-            record !== null &&
-            record.status !==
-              'substituted'
-              ? record
-              : null,
-        }
-      },
+          ) ?? null,
+      }),
     )
 
-  const unmatchedRecords =
-    semesterRecords.filter(
+  /*
+   * 매칭에 실패한 전공 기록은 사용자가
+   * 실제로 기록해 둔 grade + semester
+   * 위치에 표시합니다.
+   *
+   * academicYear를 이용해 사용자의 학년을
+   * 역산하지 않습니다.
+   */
+  const semesterUnmatchedRecords =
+    unmatchedRecords.filter(
       (record) =>
-        !matchedRecordIds.has(
-          record.id,
-        ),
+        record.grade === grade &&
+        record.semester === semester,
     )
 
   return {
@@ -177,7 +87,8 @@ function createSemesterCard(
     grade,
     semester,
     courses,
-    unmatchedRecords,
+    unmatchedRecords:
+      semesterUnmatchedRecords,
   }
 }
 
@@ -188,7 +99,8 @@ function getTransferCreditRecords(
   return records.filter(
     (record) =>
       record.status ===
-      'substituted',
+        'substituted' &&
+      !record.isRetake,
   )
 }
 
@@ -211,9 +123,29 @@ export function createGraduationBoard(
     })
   }
 
-  const curriculumRecordMap =
-    createCurriculumRecordMap(
-      records,
+  const effectiveRecords =
+    records.filter(
+      (record) =>
+        !record.isRetake,
+    )
+
+  const matchResult =
+    matchCurriculumRecords(
+      curriculum,
+      effectiveRecords,
+    )
+
+  const matchedRecordMap =
+    new Map<number, CourseRecord>(
+      matchResult.matches.map(
+        ({
+          curriculumCourse,
+          record,
+        }) => [
+          curriculumCourse.id,
+          record,
+        ],
+      ),
     )
 
   for (
@@ -229,8 +161,8 @@ export function createGraduationBoard(
       cards.push(
         createSemesterCard(
           curriculum,
-          records,
-          curriculumRecordMap,
+          matchedRecordMap,
+          matchResult.unmatchedRecords,
           grade,
           semester,
         ),
