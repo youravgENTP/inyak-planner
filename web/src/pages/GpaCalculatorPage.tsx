@@ -142,7 +142,11 @@ function calculateGpaSummary(
   records: readonly CourseRecord[],
   includeActiveRecords: boolean,
 ): GpaSummary {
-  const includedRecords =
+  /*
+   * GPA 계산 대상:
+   * 성적이 입력된 과목만 사용합니다.
+   */
+  const gradeRecords =
     records.filter((record) => {
       if (
         record.isRetake ||
@@ -160,10 +164,7 @@ function calculateGpaSummary(
         includeActiveRecords &&
         isActiveRecord(record)
       )
-    })
-
-  const gradeRecords =
-    includedRecords.filter(
+    }).filter(
       (record) =>
         GRADE_POINTS[
           record.letterGrade ?? ''
@@ -213,10 +214,41 @@ function calculateGpaSummary(
       0,
     )
 
+  /*
+   * 이수학점 계산 대상:
+   * 성적 입력 여부와 무관하게
+   * 완료 또는 수강 예정/중인 과목을 셉니다.
+   */
+  const creditRecords =
+    records.filter((record) => {
+      if (
+        record.isRetake ||
+        record.status === 'substituted'
+      ) {
+        return false
+      }
+
+      if (record.status === 'completed') {
+        return true
+      }
+
+      return (
+        includeActiveRecords &&
+        isActiveRecord(record)
+      )
+    })
+
   const earnedCredits =
-    includedRecords.reduce(
+    creditRecords.reduce(
       (total, record) => {
-        if (record.letterGrade === 'F') {
+        /*
+         * 이미 F가 확정된 과목은
+         * 취득학점으로 계산하지 않습니다.
+         */
+        if (
+          record.status === 'completed' &&
+          record.letterGrade === 'F'
+        ) {
           return total
         }
 
