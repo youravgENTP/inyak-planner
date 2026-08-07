@@ -41,7 +41,7 @@ interface SavedTimetablesModalProps {
   onComparisonTimetableIdsChange: (
     timetableIds: string[],
   ) => void
-  onCreateEmptyTimetable: () => void
+  onCreateTimetable: () => void
   onDuplicateActiveTimetable: () => void
   onDeleteTimetable?: (
     timetableId: string,
@@ -60,7 +60,7 @@ export function SavedTimetablesModal({
   onClose,
   onSelectTimetable,
   onComparisonTimetableIdsChange,
-  onCreateEmptyTimetable,
+  onCreateTimetable,
   onDuplicateActiveTimetable,
   onDeleteTimetable,
   onCompare,
@@ -284,9 +284,9 @@ export function SavedTimetablesModal({
     )
   }
 
-  function handleCreateEmptyTimetable() {
+  function handleCreateTimetable() {
     setIsCreateMenuOpen(false)
-    onCreateEmptyTimetable()
+    onCreateTimetable()
   }
 
   function handleDuplicateTimetable() {
@@ -400,7 +400,7 @@ export function SavedTimetablesModal({
                       type="button"
                       role="menuitem"
                       onClick={
-                        handleCreateEmptyTimetable
+                        handleCreateTimetable
                       }
                     >
                       새 시간표 생성

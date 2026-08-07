@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react'
 
+import { CreateTimetableModal } from '../components/saved-timetables/CreateTimetableModal'
 import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
 import { RenameTimetableModal } from '../components/saved-timetables/RenameTimetableModal'
 import { TimetableComparisonPage } from '../components/saved-timetables/TimetableComparisonPage'
@@ -21,7 +22,7 @@ import {
 } from '../domain/lectures/timetable'
 import type { Lecture } from '../domain/lectures/types'
 import {
-  createEmptyTimetable,
+  createDefaultTimetableName,
   createSavedTimetable,
   duplicateTimetable,
   getActiveTimetable,
@@ -33,6 +34,8 @@ import {
   saveActiveTimetableId,
   saveSavedTimetables,
   updateSavedTimetable,
+  type AcademicSemester,
+  type CreateTimetableValues,
   type SavedTimetable,
 } from '../domain/saved-timetables'
 import type { TimetableCourse } from '../domain/timetable/types'
@@ -166,6 +169,11 @@ export function TimetablePage() {
   ] = useState(false)
 
   const [
+    isCreateTimetableModalOpen,
+    setIsCreateTimetableModalOpen,
+  ] = useState(false)
+
+  const [
     isComparisonPageOpen,
     setIsComparisonPageOpen,
   ] = useState(false)
@@ -230,6 +238,62 @@ export function TimetablePage() {
       timetableState.timetables,
     ],
   )
+
+  /*
+   * 새 시간표 생성 시 사용할 학기 목록입니다.
+   *
+   * 코드에 연도와 학기를 하드코딩하지 않고,
+   * inyak.db에서 실제로 불러온 lecture들의
+   * academicYear + semester 조합만 사용합니다.
+   */
+  const availableTimetableSemesters =
+    useMemo(() => {
+      const semesterMap =
+        new Map<
+          string,
+          {
+            academicYear: number
+            semester: AcademicSemester
+          }
+        >()
+
+      lectures.forEach((lecture) => {
+        if (
+          lecture.semester !== 1 &&
+          lecture.semester !== 2
+        ) {
+          return
+        }
+
+        const semester =
+          lecture.semester as
+            AcademicSemester
+
+        const key =
+          `${lecture.academicYear}-` +
+          semester
+
+        semesterMap.set(key, {
+          academicYear:
+            lecture.academicYear,
+          semester,
+        })
+      })
+
+      return [
+        ...semesterMap.values(),
+      ].sort(
+        (firstSemester, secondSemester) =>
+          (
+            secondSemester.academicYear -
+            firstSemester.academicYear
+          ) ||
+          (
+            secondSemester.semester -
+            firstSemester.semester
+          ),
+      )
+    }, [lectures])
 
   /*
    * 전체 lectures는 저장된 과거 시간표의
@@ -748,17 +812,18 @@ function handleRenameTimetable(
     )
   }
 
-  function handleCreateEmptyTimetable() {
-    if (activeTimetable === undefined) {
-      return
-    }
+  function handleOpenCreateTimetableModal() {
+    setIsSavedTimetablesModalOpen(false)
+    setIsDownloadModalOpen(false)
 
+    setIsCreateTimetableModalOpen(true)
+  }
+
+  function handleCreateTimetable(
+    values: CreateTimetableValues,
+  ) {
     const newTimetable =
-      createEmptyTimetable(
-        timetableState.timetables,
-        activeTimetable.academicYear,
-        activeTimetable.semester,
-      )
+      createSavedTimetable(values)
 
     setTimetableState(
       (currentState) => ({
@@ -773,8 +838,16 @@ function handleRenameTimetable(
 
     setDraftLectureIds([])
     setPreviewLecture(null)
+
+    setIsCreateTimetableModalOpen(false)
     setIsDownloadModalOpen(false)
     setIsSavedTimetablesModalOpen(false)
+
+    /*
+     * 새 빈 시간표를 만들면 바로
+     * 과목을 추가할 수 있도록
+     * 편집 모드로 진입합니다.
+     */
     setIsEditing(true)
   }
 
@@ -1344,8 +1417,8 @@ async function handleDownloadSyllabi() {
         onComparisonTimetableIdsChange={
           handleComparisonTimetableIdsChange
         }
-        onCreateEmptyTimetable={
-          handleCreateEmptyTimetable
+        onCreateTimetable={
+          handleOpenCreateTimetableModal
         }
         onDuplicateActiveTimetable={
           handleDuplicateActiveTimetable
@@ -1355,6 +1428,33 @@ async function handleDownloadSyllabi() {
         }
         onCompare={
           handleCompareTimetables
+        }
+      />
+      <CreateTimetableModal
+        isOpen={
+          isCreateTimetableModalOpen
+        }
+        defaultName={
+          createDefaultTimetableName(
+            timetableState.timetables,
+          )
+        }
+        semesterOptions={
+          availableTimetableSemesters
+        }
+        initialAcademicYear={
+          activeTimetable.academicYear
+        }
+        initialSemester={
+          activeTimetable.semester
+        }
+        onClose={() => {
+          setIsCreateTimetableModalOpen(
+            false,
+          )
+        }}
+        onCreate={
+          handleCreateTimetable
         }
       />
 

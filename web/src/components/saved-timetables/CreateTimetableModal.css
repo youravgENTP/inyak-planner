@@ -1,0 +1,208 @@
+/* =========================================================
+   새 시간표 생성 모달
+   ========================================================= */
+
+.create-timetable-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(8, 23, 38, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+.create-timetable-modal {
+  width: min(100%, 480px);
+  overflow: hidden;
+
+  background: #fff;
+  border: 1px solid #dce7ea;
+  border-radius: 20px;
+
+  box-shadow:
+    0 24px 64px rgba(8, 31, 46, 0.2);
+}
+
+
+/* =========================================================
+   헤더
+   ========================================================= */
+
+.create-timetable-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 24px 24px 20px;
+
+  background: #f8fbfb;
+  border-bottom: 1px solid #e3ebed;
+}
+
+.create-timetable-modal__header h2 {
+  margin: 0;
+
+  color: #173247;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.create-timetable-modal__header p {
+  margin: 8px 0 0;
+
+  color: #748793;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.create-timetable-modal__header > button {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  color: #6d808d;
+  font: inherit;
+  font-size: 23px;
+
+  background: #fff;
+  border: 1px solid #dce5e8;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   입력 폼
+   ========================================================= */
+
+.create-timetable-modal__form {
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px;
+}
+
+.create-timetable-modal__form > label {
+  margin-bottom: 8px;
+
+  color: #2d485a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.create-timetable-modal__form > input,
+.create-timetable-modal__form > select {
+  width: 100%;
+  height: 46px;
+
+  padding: 0 13px;
+
+  color: #183247;
+  font: inherit;
+  font-size: 15px;
+
+  background: #fff;
+  border: 1px solid #cfdcdf;
+  border-radius: 12px;
+
+  outline: none;
+}
+
+.create-timetable-modal__form > input:focus,
+.create-timetable-modal__form > select:focus {
+  border-color: #3a918b;
+
+  box-shadow:
+    0 0 0 4px rgba(30, 130, 126, 0.11);
+}
+
+.create-timetable-modal__semester-label {
+  margin-top: 22px;
+}
+
+.create-timetable-modal__input-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 8px;
+}
+
+.create-timetable-modal__input-footer span,
+.create-timetable-modal__semester-help {
+  color: #85949f;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.create-timetable-modal__semester-help {
+  margin: 8px 0 0;
+}
+
+.create-timetable-modal__error {
+  margin: 8px 0 0;
+
+  color: #b44949;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   하단 버튼
+   ========================================================= */
+
+.create-timetable-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 24px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e5ecee;
+}
+
+.create-timetable-modal__actions
+  .primary-button:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 520px) {
+  .create-timetable-modal-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .create-timetable-modal {
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .create-timetable-modal__header {
+    padding: 20px 18px 17px;
+  }
+
+  .create-timetable-modal__form {
+    padding: 20px 18px;
+  }
+}
