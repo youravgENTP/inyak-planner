@@ -205,6 +205,9 @@ export function CourseRecordModal({
       return
     }
 
+    const resolvedLectureId =
+      lectureId
+
     let requestIsActive = true
 
     async function loadEditingLecture() {
@@ -213,7 +216,9 @@ export function CourseRecordModal({
 
       try {
         const lecture =
-          await fetchLecture(lectureId)
+          await fetchLecture(
+            resolvedLectureId,
+          )
 
         if (!requestIsActive) {
           return
