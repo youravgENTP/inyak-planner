@@ -573,6 +573,13 @@ export function GpaCalculatorPage({
       ? null
       : selectedValue
 
+  const nextStatus =
+    nextIsRetake
+      ? record.status
+      : selectedValue.length === 0
+        ? 'in_progress'
+        : 'completed'
+
   setUpdatingGradeRecordId(
     record.id,
   )
@@ -583,7 +590,7 @@ export function GpaCalculatorPage({
     const input: CourseRecordInput = {
       ...createRecordInput(
         record,
-        record.status,
+        nextStatus,
       ),
       letterGrade:
         nextLetterGrade,

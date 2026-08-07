@@ -774,7 +774,7 @@ export function CourseRecordModal({
          */
         status:
           editingRecord?.status ??
-          'completed',
+          'in_progress',
 
         letterGrade:
           editingRecord?.letterGrade ??
