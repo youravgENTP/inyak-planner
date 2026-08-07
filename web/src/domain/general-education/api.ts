@@ -10,6 +10,7 @@ import type {
 const API_BASE_URL =
   'http://127.0.0.1:8000'
 
+
 function mapGeneralEducationAreaApiItem(
   item: GeneralEducationAreaApiItem,
 ): GeneralEducationArea {
@@ -21,8 +22,22 @@ function mapGeneralEducationAreaApiItem(
     isRequired: item.is_required,
     notes: item.notes,
     displayOrder: item.display_order,
+
+    courseMappings:
+      item.course_mappings.map(
+        (mapping) => ({
+          id: mapping.id,
+          courseCode:
+            mapping.course_code,
+          courseName:
+            mapping.course_name,
+          notes:
+            mapping.notes,
+        }),
+      ),
   }
 }
+  
 
 function mapGeneralEducationRequirementApiItem(
   item:
