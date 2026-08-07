@@ -9,6 +9,10 @@ import {
 } from '../components/CourseRecordModal/CourseRecordModal'
 
 import {
+  TimetableImportModal,
+} from '../components/gpa/TimetableImportModal'
+
+import {
   deleteCourseRecord,
   getCourseRecords,
   updateCourseRecord,
@@ -308,6 +312,11 @@ export function GpaCalculatorPage({
   const [
     addMenuIsOpen,
     setAddMenuIsOpen,
+  ] = useState(false)
+
+  const [
+    timetableImportModalIsOpen,
+    setTimetableImportModalIsOpen,
   ] = useState(false)
 
   const [
@@ -890,10 +899,15 @@ export function GpaCalculatorPage({
                   role="menu"
                 >
                   <button
-                    disabled
                     role="menuitem"
-                    title="다음 단계에서 연결합니다."
                     type="button"
+                    onClick={() => {
+                      setAddMenuIsOpen(false)
+
+                      setTimetableImportModalIsOpen(
+                        true,
+                      )
+                    }}
                   >
                     시간표에서 가져오기
                   </button>
@@ -1183,6 +1197,35 @@ export function GpaCalculatorPage({
           </div>
         </section>
       ) : null}
+
+      <TimetableImportModal
+        isOpen={
+          timetableImportModalIsOpen
+        }
+        grade={
+          selectedSemester.grade
+        }
+        semester={
+          selectedSemester.semester
+        }
+        existingRecords={
+          courseRecords
+        }
+        onClose={() => {
+          setTimetableImportModalIsOpen(
+            false,
+          )
+        }}
+        onImported={(importedRecords) => {
+          setCourseRecords(
+            (currentRecords) => [
+              ...currentRecords,
+              ...importedRecords,
+            ],
+          )
+        }}
+      />
+
 
       {recordModalIsOpen ? (
         <CourseRecordModal

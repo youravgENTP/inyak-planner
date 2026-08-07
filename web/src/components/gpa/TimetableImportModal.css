@@ -1,0 +1,268 @@
+/* =========================================================
+   GPA 시간표 가져오기 모달
+   ========================================================= */
+
+.timetable-import-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgb(8 23 38 / 50%);
+  backdrop-filter: blur(6px);
+}
+
+.timetable-import-modal {
+  display: flex;
+  width: min(100%, 560px);
+  max-height: min(760px, calc(100vh - 48px));
+  flex-direction: column;
+  overflow: hidden;
+
+  background: #fff;
+  border: 1px solid #dce7df;
+  border-radius: 18px;
+
+  box-shadow:
+    0 24px 64px rgb(8 31 46 / 20%);
+}
+
+
+/* =========================================================
+   헤더
+   ========================================================= */
+
+.timetable-import-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 22px 24px 19px;
+
+  background: #f8fbf9;
+  border-bottom: 1px solid #e3ebe5;
+}
+
+.timetable-import-modal__header h2 {
+  margin: 0;
+  color: #20382a;
+  font-size: 21px;
+}
+
+.timetable-import-modal__header p {
+  margin: 7px 0 0;
+  color: #718078;
+  font-size: 13px;
+}
+
+.timetable-import-modal__header > button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  border: 1px solid #dce5df;
+  border-radius: 9px;
+  background: #fff;
+
+  color: #718078;
+  font: inherit;
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   본문
+   ========================================================= */
+
+.timetable-import-modal__body {
+  overflow-y: auto;
+  padding: 22px 24px;
+}
+
+.timetable-import-modal__body > label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #34483b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.timetable-import-modal__body > select {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+
+  border: 1px solid #cfddd3;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #314239;
+  font: inherit;
+  font-size: 14px;
+}
+
+.timetable-import-modal__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 16px;
+  padding: 13px 14px;
+
+  border: 1px solid #e2e9e4;
+  border-radius: 10px;
+  background: #fafcfb;
+}
+
+.timetable-import-modal__summary strong {
+  color: #2d4435;
+  font-size: 13px;
+}
+
+.timetable-import-modal__summary span {
+  color: #7b8980;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   과목 목록
+   ========================================================= */
+
+.timetable-import-modal__courses {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  margin-top: 16px;
+}
+
+.timetable-import-modal__course {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 12px 13px;
+
+  border: 1px solid #e2e9e4;
+  border-radius: 9px;
+
+  background: #fff;
+}
+
+.timetable-import-modal__course > div {
+  min-width: 0;
+}
+
+.timetable-import-modal__course strong {
+  display: block;
+
+  overflow: hidden;
+
+  color: #304338;
+  font-size: 13px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timetable-import-modal__course span {
+  display: block;
+  margin-top: 4px;
+
+  color: #7c8981;
+  font-size: 11px;
+}
+
+.timetable-import-modal__course small {
+  flex: 0 0 auto;
+
+  color: #50805d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.timetable-import-modal__course--disabled {
+  background: #f7f8f7;
+  opacity: 0.65;
+}
+
+.timetable-import-modal__course--disabled small {
+  color: #8d9791;
+}
+
+
+/* =========================================================
+   요약 / 상태
+   ========================================================= */
+
+.timetable-import-modal__result-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 16px;
+  padding-top: 15px;
+
+  border-top: 1px solid #e7ede8;
+}
+
+.timetable-import-modal__result-summary strong {
+  color: #31543d;
+  font-size: 13px;
+}
+
+.timetable-import-modal__result-summary span,
+.timetable-import-modal__message,
+.timetable-import-modal__empty {
+  color: #7d8981;
+  font-size: 12px;
+}
+
+.timetable-import-modal__message,
+.timetable-import-modal__empty {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.timetable-import-modal__error {
+  margin: 14px 0 0;
+
+  color: #ad4b4b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   하단 버튼
+   ========================================================= */
+
+.timetable-import-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  padding: 18px 24px;
+
+  border-top: 1px solid #e5ece7;
+  background: #fbfcfb;
+}
+
+.timetable-import-modal__actions
+  button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
