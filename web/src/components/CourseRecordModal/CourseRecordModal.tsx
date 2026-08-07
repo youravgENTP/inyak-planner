@@ -722,10 +722,16 @@ export function CourseRecordModal({
     try {
       const input: CourseRecordInput = {
         /*
-         * 일반 수강기록에서는 졸업요건을
+         * 새 수강기록에서는 졸업요건을
          * 직접 연결하지 않습니다.
+         *
+         * 기존 기록 수정 시에는
+         * 개인 이수현황에서 지정한
+         * 수동 연결을 그대로 보존합니다.
          */
-        curriculumCourseId: null,
+        curriculumCourseId:
+          editingRecord?.curriculumCourseId ??
+          null,
 
         lectureId:
           selectedLecture.id,
