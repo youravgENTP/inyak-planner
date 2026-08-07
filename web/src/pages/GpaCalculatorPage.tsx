@@ -73,6 +73,19 @@ const GRADE_POINTS:
   }
 
 
+const GRADE_OPTIONS = [
+  'A+',
+  'A0',
+  'B+',
+  'B0',
+  'C+',
+  'C0',
+  'D+',
+  'D0',
+  'F',
+] as const
+
+
 function isActiveRecord(
   record: CourseRecord,
 ): boolean {
@@ -120,6 +133,7 @@ function calculateGpaSummary(
   const includedRecords =
     records.filter((record) => {
       if (
+        record.isRetake ||
         record.status === 'substituted' ||
         record.letterGrade === null
       ) {
@@ -306,6 +320,11 @@ export function GpaCalculatorPage({
   const [
     deletingRecordId,
     setDeletingRecordId,
+  ] = useState<string | null>(null)
+
+  const [
+    updatingGradeRecordId,
+    setUpdatingGradeRecordId,
   ] = useState<string | null>(null)
 
   useEffect(() => {
@@ -536,6 +555,70 @@ export function GpaCalculatorPage({
       setStatusIsUpdating(false)
     }
   }
+
+  async function handleGradeChange(
+  record: CourseRecord,
+  selectedValue: string,
+) {
+  if (updatingGradeRecordId !== null) {
+    return
+  }
+
+  const nextIsRetake =
+    selectedValue === 'retake'
+
+  const nextLetterGrade =
+    nextIsRetake ||
+    selectedValue.length === 0
+      ? null
+      : selectedValue
+
+  setUpdatingGradeRecordId(
+    record.id,
+  )
+
+  setRecordsError(null)
+
+  try {
+    const input: CourseRecordInput = {
+      ...createRecordInput(
+        record,
+        record.status,
+      ),
+      letterGrade:
+        nextLetterGrade,
+      isRetake:
+        nextIsRetake,
+    }
+
+    const updatedRecord =
+      await updateCourseRecord(
+        record.id,
+        input,
+      )
+
+    setCourseRecords(
+      (currentRecords) =>
+        currentRecords.map(
+          (currentRecord) =>
+            currentRecord.id ===
+            updatedRecord.id
+              ? updatedRecord
+              : currentRecord,
+        ),
+    )
+  } catch (error) {
+    setRecordsError(
+      error instanceof Error
+        ? error.message
+        : '성적을 변경하지 못했습니다.',
+    )
+  } finally {
+    setUpdatingGradeRecordId(
+      null,
+    )
+  }
+}
 
   async function handleDeleteRecord(
     record: CourseRecord,
@@ -938,12 +1021,45 @@ export function GpaCalculatorPage({
                           record.credits,
                         )}
                       </span>
+                      <select
+                        aria-label={
+                          `${record.courseName} 성적`
+                        }
+                        className="gpa-course-grade-select"
+                        disabled={
+                          updatingGradeRecordId !== null
+                        }
+                        value={
+                          record.isRetake
+                            ? 'retake'
+                            : record.letterGrade ?? ''
+                        }
+                        onChange={(event) => {
+                          void handleGradeChange(
+                            record,
+                            event.target.value,
+                          )
+                        }}
+                      >
+                        <option value="">
+                          성적 미입력
+                        </option>
 
-                      <span>
-                        {record.letterGrade ??
-                          '—'}
-                      </span>
+                        {GRADE_OPTIONS.map(
+                          (gradeOption) => (
+                            <option
+                              key={gradeOption}
+                              value={gradeOption}
+                            >
+                              {gradeOption}
+                            </option>
+                          ),
+                        )}
 
+                        <option value="retake">
+                          재수강
+                        </option>
+                      </select>
                       <span>
                         {
                           record
