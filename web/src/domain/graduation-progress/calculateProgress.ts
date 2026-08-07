@@ -59,6 +59,21 @@ function getRecordState(
 }
 
 
+function recordCountsTowardGraduation(
+  record: CourseRecord,
+): boolean {
+  /*
+   * F는 성적 기록과 GPA 계산에는 남지만
+   * 학점을 취득한 과목은 아닙니다.
+   *
+   * 따라서 졸업요건의 취득학점,
+   * 이수 과목 수, 영역 충족에는
+   * 반영하지 않습니다.
+   */
+  return record.letterGrade !== 'F'
+}
+
+
 function sumRecordCredits(
   records: readonly CourseRecord[],
   state: ProgressRecordState,
@@ -66,6 +81,9 @@ function sumRecordCredits(
   return records
     .filter(
       (record) =>
+        recordCountsTowardGraduation(
+          record,
+        ) &&
         getRecordState(record) === state,
     )
     .reduce(
@@ -82,6 +100,9 @@ function countRecords(
 ): number {
   return records.filter(
     (record) =>
+      recordCountsTowardGraduation(
+        record,
+      ) &&
       getRecordState(record) === state,
   ).length
 }
@@ -334,8 +355,11 @@ function createAreaProgress(
   const hasCompletedRecord =
     areaRecords.some(
       (record) =>
+        recordCountsTowardGraduation(
+          record,
+        ) &&
         getRecordState(record) ===
-        'completed',
+          'completed',
     )
 
   const remainingCredits =

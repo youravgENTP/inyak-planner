@@ -115,7 +115,8 @@ function getSemesterSummary(
         (
           record,
         ): record is CourseRecord =>
-          record !== null,
+          record !== null &&
+          record.letterGrade !== 'F',
       )
 
   const electiveMatchedRecords =
@@ -125,7 +126,8 @@ function getSemesterSummary(
         (
           record,
         ): record is CourseRecord =>
-          record !== null,
+          record !== null &&
+          record.letterGrade !== 'F',
       )
 
   /*
