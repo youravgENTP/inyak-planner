@@ -17,55 +17,6 @@ def connect_database() -> sqlite3.Connection:
 
     return connection
 
-def ensure_general_education_course_mapping_table(
-) -> None:
-    """
-    교양 세부영역과 실제 과목을 연결하는
-    매핑 테이블을 생성한다.
-
-    영역은 이미 학번별 교양요건에 연결되어
-    있으므로 entry_year는 중복 저장하지 않는다.
-    """
-    with connect_database() as connection:
-        connection.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS
-                general_education_course_mappings (
-                    id INTEGER PRIMARY KEY
-                        AUTOINCREMENT,
-
-                    area_id INTEGER NOT NULL,
-
-                    course_code TEXT,
-                    course_name TEXT NOT NULL,
-                    notes TEXT,
-
-                    FOREIGN KEY (area_id)
-                        REFERENCES
-                            general_education_areas(id)
-                        ON DELETE CASCADE,
-
-                    UNIQUE (
-                        area_id,
-                        course_code,
-                        course_name
-                    )
-                );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_general_education_course_mappings_area
-            ON general_education_course_mappings(
-                area_id
-            );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_general_education_course_mappings_code
-            ON general_education_course_mappings(
-                course_code
-            );
-            """
-        )
-
 def get_lectures(
     *,
     academic_year: Optional[int] = None,
@@ -276,7 +227,6 @@ def get_general_education_requirements(
     entry_year: int,
 ) -> List[Dict[str, Any]]:
     """입학연도에 해당하는 교양 졸업요건을 조회한다."""
-    ensure_general_education_course_mapping_table()
     with connect_database() as connection:
         requirement_rows = connection.execute(
             """
@@ -319,62 +269,6 @@ def get_general_education_requirements(
             (entry_year,),
         ).fetchall()
 
-        course_mapping_rows = (
-            connection.execute(
-                """
-                SELECT
-                    mapping.id,
-                    mapping.area_id,
-                    mapping.course_code,
-                    mapping.course_name,
-                    mapping.notes
-                FROM
-                    general_education_course_mappings
-                    AS mapping
-                JOIN general_education_areas
-                    AS area
-                    ON area.id =
-                       mapping.area_id
-                JOIN general_education_requirements
-                    AS requirement
-                    ON requirement.id =
-                       area.requirement_id
-                WHERE
-                    requirement.entry_year = ?
-                ORDER BY
-                    requirement.display_order,
-                    area.display_order,
-                    mapping.course_name
-                """,
-                (entry_year,),
-            ).fetchall()
-        )
-
-    course_mappings_by_area_id: Dict[
-        int,
-        List[Dict[str, Any]],
-    ] = {}
-
-    for mapping_row in course_mapping_rows:
-        area_id = int(
-            mapping_row["area_id"]
-        )
-
-        mapping = {
-            "id": mapping_row["id"],
-            "course_code": (
-                mapping_row["course_code"]
-            ),
-            "course_name": (
-                mapping_row["course_name"]
-            ),
-            "notes": mapping_row["notes"],
-        }
-
-        course_mappings_by_area_id.setdefault(
-            area_id,
-            [],
-        ).append(mapping)
 
     areas_by_requirement_id: Dict[
         int,
@@ -386,12 +280,8 @@ def get_general_education_requirements(
             area_row["requirement_id"]
         )
 
-        area_id = int(
-            area_row["id"]
-        )
-
         area = {
-            "id": area_id,
+            "id": area_row["id"],
             "area_name": area_row["area_name"],
             "minimum_credits": (
                 area_row["minimum_credits"]
@@ -402,12 +292,6 @@ def get_general_education_requirements(
             "notes": area_row["notes"],
             "display_order": (
                 area_row["display_order"]
-            ),
-            "course_mappings": (
-                course_mappings_by_area_id.get(
-                    area_id,
-                    [],
-                )
             ),
         }
 

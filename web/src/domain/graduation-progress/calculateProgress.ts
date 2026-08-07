@@ -18,12 +18,6 @@ import type {
   CurriculumRecordMatch,
 } from './matchCurriculumRecords'
 import {
-  matchGeneralEducationRecords,
-} from './matchGeneralEducationRecords'
-import type {
-  GeneralEducationRecordMatch,
-} from './matchGeneralEducationRecords'
-import {
   GRADUATION_TOTAL_CREDITS,
   MAJOR_ELECTIVE_CREDITS,
   MAJOR_REQUIRED_CREDITS,
@@ -278,24 +272,46 @@ function createMajorProgress(
 }
 
 
+function getGeneralEducationRecords(
+  records: readonly CourseRecord[],
+  requirementId: number,
+): CourseRecord[] {
+  return records.filter(
+    (record) =>
+      record.completionType ===
+        '교양' &&
+      record
+        .generalEducationRequirementId ===
+        requirementId,
+  )
+}
+
+
+function getAreaRecords(
+  records: readonly CourseRecord[],
+  areaId: number,
+): CourseRecord[] {
+  return records.filter(
+    (record) =>
+      record.completionType ===
+        '교양' &&
+      record.generalEducationAreaId ===
+        areaId,
+  )
+}
+
+
 function createAreaProgress(
   requirement:
     GeneralEducationRequirement,
   area: GeneralEducationArea,
-  matches:
-    readonly GeneralEducationRecordMatch[],
+  records: readonly CourseRecord[],
 ): GeneralEducationAreaProgress {
   const areaRecords =
-    matches
-      .filter(
-        (match) =>
-          match.area.id ===
-          area.id,
-      )
-      .map(
-        (match) =>
-          match.record,
-      )
+    getAreaRecords(
+      records,
+      area.id,
+    )
 
   const completedCredits =
     sumRecordCredits(
@@ -363,20 +379,12 @@ function createAreaProgress(
 function createGeneralEducationProgress(
   requirement:
     GeneralEducationRequirement,
-  matches:
-    readonly GeneralEducationRecordMatch[],
+  records: readonly CourseRecord[],
 ): GeneralEducationRequirementProgress {
-  const requirementMatches =
-    matches.filter(
-      (match) =>
-        match.requirement.id ===
-        requirement.id,
-    )
-
   const requirementRecords =
-    requirementMatches.map(
-      (match) =>
-        match.record,
+    getGeneralEducationRecords(
+      records,
+      requirement.id,
     )
 
   const areas =
@@ -385,7 +393,7 @@ function createGeneralEducationProgress(
         createAreaProgress(
           requirement,
           area,
-          requirementMatches,
+          requirementRecords,
         ),
     )
 
@@ -443,7 +451,6 @@ function createGeneralEducationProgress(
 }
 
 
-
 export function calculateGraduationProgress(
   curriculum: Curriculum,
   generalEducation:
@@ -459,12 +466,6 @@ export function calculateGraduationProgress(
   const curriculumMatchResult =
     matchCurriculumRecords(
       curriculum,
-      effectiveRecords,
-    )
-
-  const generalEducationMatchResult =
-    matchGeneralEducationRecords(
-      generalEducation,
       effectiveRecords,
     )
 
@@ -487,8 +488,7 @@ export function calculateGraduationProgress(
       (requirement) =>
         createGeneralEducationProgress(
           requirement,
-          generalEducationMatchResult
-            .matches,
+          effectiveRecords,
         ),
     )
 

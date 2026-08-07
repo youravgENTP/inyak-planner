@@ -2,19 +2,6 @@ export type GeneralEducationCategory =
   | '기초교양'
   | '균형교양'
 
-export interface GeneralEducationCourseMapping {
-  id: number
-  courseCode: string | null
-  courseName: string
-  notes: string | null
-}
-
-export interface GeneralEducationCourseMappingApiItem {
-  id: number
-  course_code: string | null
-  course_name: string
-  notes: string | null
-}
 
 export interface GeneralEducationArea {
   id: number
@@ -23,9 +10,8 @@ export interface GeneralEducationArea {
   isRequired: boolean
   notes: string | null
   displayOrder: number
-  courseMappings:
-    GeneralEducationCourseMapping[]
 }
+
 
 export interface GeneralEducationRequirement {
   id: number
@@ -38,6 +24,7 @@ export interface GeneralEducationRequirement {
   areas: GeneralEducationArea[]
 }
 
+
 export interface GeneralEducationAreaApiItem {
   id: number
   area_name: string
@@ -45,9 +32,8 @@ export interface GeneralEducationAreaApiItem {
   is_required: boolean
   notes: string | null
   display_order: number
-  course_mappings:
-    GeneralEducationCourseMappingApiItem[]
 }
+
 
 export interface GeneralEducationRequirementApiItem {
   id: number
@@ -60,6 +46,7 @@ export interface GeneralEducationRequirementApiItem {
   areas: GeneralEducationAreaApiItem[]
 }
 
+
 export interface GeneralEducationApiResponse {
   entry_year: number
   count: number
@@ -67,8 +54,10 @@ export interface GeneralEducationApiResponse {
     GeneralEducationRequirementApiItem[]
 }
 
+
 export interface GeneralEducation {
   entryYear: number
   count: number
-  requirements: GeneralEducationRequirement[]
+  requirements:
+    GeneralEducationRequirement[]
 }
