@@ -293,6 +293,125 @@
 }
 
 /* =========================================================
+   개설과목 검색
+   ========================================================= */
+
+.course-record-modal-course-search {
+  position: relative;
+}
+
+.course-record-modal-search-input-wrap {
+  position: relative;
+}
+
+.course-record-modal-search-input-wrap input {
+  padding-right: 78px;
+}
+
+.course-record-modal-search-loading {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #87918b;
+}
+
+.course-record-modal-search-results {
+  position: absolute;
+  z-index: 30;
+  top: 72px;
+  right: 0;
+  left: 0;
+  overflow-y: auto;
+  max-height: 260px;
+  padding: 5px;
+  border: 1px solid #d8e1da;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow:
+    0 12px 30px rgb(0 0 0 / 14%);
+}
+
+.course-record-modal-search-result {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  text-align: left;
+}
+
+.course-record-modal-search-result:hover,
+.course-record-modal-search-result:focus-visible {
+  background: #f1f7f3;
+}
+
+.course-record-modal-search-result strong {
+  font-size: 13px;
+  color: #293b30;
+}
+
+.course-record-modal-search-result span {
+  line-height: 1.45;
+  font-size: 11px;
+  color: #7a867e;
+}
+
+.course-record-modal-selected-lecture {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid #bfd8c7;
+  border-radius: 10px;
+  background: #f3f9f5;
+}
+
+.course-record-modal-selected-lecture > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.course-record-modal-selected-lecture strong {
+  overflow: hidden;
+  font-size: 13px;
+  color: #315b40;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.course-record-modal-selected-lecture span {
+  line-height: 1.4;
+  font-size: 11px;
+  color: #6f7d74;
+}
+
+.course-record-modal-selected-lecture button {
+  flex: 0 0 auto;
+  padding: 5px 7px;
+  border: 0;
+  background: transparent;
+  font-size: 11px;
+  color: #6f7d74;
+}
+
+.course-record-modal-selected-lecture button:hover {
+  color: #315b40;
+}
+
+.course-record-modal-search-error {
+  color: #a53333 !important;
+}
+
+/* =========================================================
    반응형
    ========================================================= */
 

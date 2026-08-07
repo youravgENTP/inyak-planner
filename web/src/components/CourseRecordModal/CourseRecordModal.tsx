@@ -1,7 +1,6 @@
 import {
   type FormEvent,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 
@@ -15,32 +14,14 @@ import type {
   CourseRecordInput,
 } from '../../domain/course-records/types'
 import {
-  fetchCurriculum,
-} from '../../domain/curriculum/api'
+  fetchLecture,
+  fetchLectures,
+} from '../../domain/lectures/api'
 import type {
-  CurriculumCourse,
-} from '../../domain/curriculum/types'
-import {
-  fetchGeneralEducation,
-} from '../../domain/general-education/api'
-import type {
-  GeneralEducationRequirement,
-} from '../../domain/general-education/types'
+  Lecture,
+} from '../../domain/lectures/types'
 
 import './CourseRecordModal.css'
-
-
-const LETTER_GRADES = [
-  'A+',
-  'A0',
-  'B+',
-  'B0',
-  'C+',
-  'C0',
-  'D+',
-  'D0',
-  'F',
-] as const
 
 
 const AVAILABLE_COMPLETION_TYPES:
@@ -52,11 +33,43 @@ const AVAILABLE_COMPLETION_TYPES:
   ]
 
 
+const FIRST_LECTURE_YEAR = 2019
+
+const CURRENT_ACADEMIC_YEAR =
+  new Date().getFullYear()
+
+const ACADEMIC_YEARS =
+  Array.from(
+    {
+      length:
+        CURRENT_ACADEMIC_YEAR -
+        FIRST_LECTURE_YEAR +
+        1,
+    },
+    (_, index) =>
+      CURRENT_ACADEMIC_YEAR - index,
+  )
+
+
 interface CourseRecordModalProps {
   editingRecord: CourseRecord | null
+
+  /*
+   * 현재 GpaCalculatorPage와의 연결을
+   * 유지하기 위해 당장은 prop에 남겨둡니다.
+   *
+   * 수강기록 입력 자체에서는 사용자의
+   * 학번 교육과정을 참조하지 않습니다.
+   */
   entryYear: number | null
+
+  /*
+   * grade + semester는 실제 개설정보가 아니라
+   * 사용자의 어느 학년-학기 기록인지 나타냅니다.
+   */
   grade: number
   semester: number
+
   onClose: () => void
   onSaved: (
     record: CourseRecord,
@@ -64,26 +77,41 @@ interface CourseRecordModalProps {
 }
 
 
-function formatCourseOption(
-  course: CurriculumCourse,
+function formatCredits(
+  credits: number | null,
 ): string {
-  const creditsText =
-    course.credits === null
-      ? '학점 미정'
-      : `${course.credits}학점`
+  if (credits === null) {
+    return '학점 정보 없음'
+  }
 
-  return (
-    `${course.grade}학년 ` +
-    `${course.semester}학기 · ` +
-    `${course.courseName} · ` +
-    creditsText
-  )
+  return Number.isInteger(credits)
+    ? `${credits}학점`
+    : `${credits.toFixed(1)}학점`
+}
+
+
+function formatLectureMeta(
+  lecture: Lecture,
+): string {
+  const details = [
+    lecture.courseCode,
+    formatCredits(lecture.credits),
+    `${lecture.section}분반`,
+  ]
+
+  if (
+    lecture.professor !== null &&
+    lecture.professor.trim().length > 0
+  ) {
+    details.push(lecture.professor)
+  }
+
+  return details.join(' · ')
 }
 
 
 export function CourseRecordModal({
   editingRecord,
-  entryYear,
   grade,
   semester,
   onClose,
@@ -98,93 +126,51 @@ export function CourseRecordModal({
   )
 
   const [
-    curriculumCourses,
-    setCurriculumCourses,
-  ] = useState<CurriculumCourse[]>([])
-
-  const [
-    selectedCurriculumCourseId,
-    setSelectedCurriculumCourseId,
+    academicYear,
+    setAcademicYear,
   ] = useState(
-    editingRecord?.curriculumCourseId ===
-      null ||
-    editingRecord?.curriculumCourseId ===
+    editingRecord?.academicYear === null ||
+    editingRecord?.academicYear ===
       undefined
-      ? ''
+      ? String(CURRENT_ACADEMIC_YEAR)
       : String(
-          editingRecord.curriculumCourseId,
+          editingRecord.academicYear,
         ),
   )
 
   const [
-    generalEducationRequirements,
-    setGeneralEducationRequirements,
-  ] = useState<
-    GeneralEducationRequirement[]
-  >([])
-
-  const [
-    selectedGeneralEducationRequirementId,
-    setSelectedGeneralEducationRequirementId,
+    academicSemester,
+    setAcademicSemester,
   ] = useState(
-    editingRecord
-      ?.generalEducationRequirementId ===
-      null ||
-    editingRecord
-      ?.generalEducationRequirementId ===
-      undefined
-      ? ''
-      : String(
-          editingRecord
-            .generalEducationRequirementId,
-        ),
+    String(semester),
   )
 
   const [
-    selectedGeneralEducationAreaId,
-    setSelectedGeneralEducationAreaId,
-  ] = useState(
-    editingRecord
-      ?.generalEducationAreaId === null ||
-    editingRecord
-      ?.generalEducationAreaId ===
-      undefined
-      ? ''
-      : String(
-          editingRecord
-            .generalEducationAreaId,
-        ),
-  )
-
-  const [
-    courseName,
-    setCourseName,
+    courseQuery,
+    setCourseQuery,
   ] = useState(
     editingRecord?.courseName ?? '',
   )
 
   const [
-    credits,
-    setCredits,
-  ] = useState(
-    editingRecord === null
-      ? ''
-      : String(editingRecord.credits),
-  )
+    selectedLecture,
+    setSelectedLecture,
+  ] = useState<Lecture | null>(null)
 
   const [
-    letterGrade,
-    setLetterGrade,
-  ] = useState(
-    editingRecord?.letterGrade ?? '',
-  )
+    lectureSearchResults,
+    setLectureSearchResults,
+  ] = useState<Lecture[]>([])
 
   const [
-    isRetake,
-    setIsRetake,
-  ] = useState(
-    editingRecord?.isRetake ?? false,
-  )
+    lectureIsLoading,
+    setLectureIsLoading,
+  ] = useState(false)
+
+  const [
+    lectureSearchError,
+    setLectureSearchError,
+  ] = useState<string | null>(null)
 
   const [
     note,
@@ -192,26 +178,6 @@ export function CourseRecordModal({
   ] = useState(
     editingRecord?.note ?? '',
   )
-
-  const [
-    curriculumIsLoading,
-    setCurriculumIsLoading,
-  ] = useState(false)
-
-  const [
-    curriculumError,
-    setCurriculumError,
-  ] = useState<string | null>(null)
-
-  const [
-    generalEducationIsLoading,
-    setGeneralEducationIsLoading,
-  ] = useState(false)
-
-  const [
-    generalEducationError,
-    setGeneralEducationError,
-  ] = useState<string | null>(null)
 
   const [
     formError,
@@ -223,219 +189,269 @@ export function CourseRecordModal({
     setFormIsSubmitting,
   ] = useState(false)
 
-  const isMajorCourse =
-    completionType === '전필' ||
-    completionType === '전선'
-
-  const isGeneralEducation =
-    completionType === '교양'
-
-  const matchingCurriculumCourses =
-    useMemo(() => {
-      if (!isMajorCourse) {
-        return []
-      }
-
-      return curriculumCourses
-        .filter(
-          (course) =>
-            course.completionType ===
-            completionType,
-        )
-        .sort((firstCourse, secondCourse) => {
-          const firstMatchesSemester =
-            firstCourse.grade === grade &&
-            firstCourse.semester === semester
-
-          const secondMatchesSemester =
-            secondCourse.grade === grade &&
-            secondCourse.semester === semester
-
-          if (
-            firstMatchesSemester !==
-            secondMatchesSemester
-          ) {
-            return firstMatchesSemester
-              ? -1
-              : 1
-          }
-
-          if (
-            firstCourse.grade !==
-            secondCourse.grade
-          ) {
-            return (
-              firstCourse.grade -
-              secondCourse.grade
-            )
-          }
-
-          if (
-            firstCourse.semester !==
-            secondCourse.semester
-          ) {
-            return (
-              firstCourse.semester -
-              secondCourse.semester
-            )
-          }
-
-          return firstCourse.courseName
-            .localeCompare(
-              secondCourse.courseName,
-              'ko',
-            )
-        })
-    }, [
-      completionType,
-      curriculumCourses,
-      grade,
-      isMajorCourse,
-      semester,
-    ])
-
-  const selectedCurriculumCourse =
-    useMemo(
-      () =>
-        curriculumCourses.find(
-          (course) =>
-            String(course.id) ===
-            selectedCurriculumCourseId,
-        ) ?? null,
-      [
-        curriculumCourses,
-        selectedCurriculumCourseId,
-      ],
-    )
-
-  const selectedGeneralEducationRequirement =
-    useMemo(
-      () =>
-        generalEducationRequirements.find(
-          (requirement) =>
-            String(requirement.id) ===
-            selectedGeneralEducationRequirementId,
-        ) ?? null,
-      [
-        generalEducationRequirements,
-        selectedGeneralEducationRequirementId,
-      ],
-    )
-
-  const selectedGeneralEducationArea =
-    useMemo(
-      () =>
-        selectedGeneralEducationRequirement
-          ?.areas.find(
-            (area) =>
-              String(area.id) ===
-              selectedGeneralEducationAreaId,
-          ) ?? null,
-      [
-        selectedGeneralEducationAreaId,
-        selectedGeneralEducationRequirement,
-      ],
-    )
-
+  /*
+   * 수정 모드에서 기존 lectureId가 있으면
+   * 해당 개설강좌를 불러와 개설학년도와
+   * 개설학기를 복원합니다.
+   */
   useEffect(() => {
-    if (entryYear === null) {
+    const lectureId =
+      editingRecord?.lectureId
+
+    if (
+      lectureId === null ||
+      lectureId === undefined
+    ) {
       return
     }
 
-    const resolvedEntryYear =
-      entryYear
-
     let requestIsActive = true
 
-    async function loadCurriculum() {
-      setCurriculumIsLoading(true)
-      setCurriculumError(null)
+    async function loadEditingLecture() {
+      setLectureIsLoading(true)
+      setLectureSearchError(null)
 
       try {
-        const curriculum =
-          await fetchCurriculum(
-            resolvedEntryYear,
-          )
+        const lecture =
+          await fetchLecture(lectureId)
 
-        if (requestIsActive) {
-          setCurriculumCourses(
-            curriculum.courses,
-          )
+        if (!requestIsActive) {
+          return
         }
+
+        setSelectedLecture(lecture)
+
+        setAcademicYear(
+          String(lecture.academicYear),
+        )
+
+        setAcademicSemester(
+          String(lecture.semester),
+        )
+
+        setCourseQuery(
+          lecture.courseName,
+        )
       } catch (error) {
         if (!requestIsActive) {
           return
         }
 
-        setCurriculumError(
+        setLectureSearchError(
           error instanceof Error
             ? error.message
-            : '교육과정을 불러오지 못했습니다.',
+            : '기존 강의 정보를 불러오지 못했습니다.',
         )
       } finally {
         if (requestIsActive) {
-          setCurriculumIsLoading(false)
+          setLectureIsLoading(false)
         }
       }
     }
 
-    void loadCurriculum()
+    void loadEditingLecture()
 
     return () => {
       requestIsActive = false
     }
-  }, [entryYear])
+  }, [
+    editingRecord?.lectureId,
+  ])
 
+  /*
+   * 과목명을 입력하면 선택한 개설학년도와
+   * 개설학기의 실제 강의를 검색합니다.
+   *
+   * 짧은 입력마다 요청이 발생하지 않도록
+   * 250ms debounce를 적용합니다.
+   */
   useEffect(() => {
-    if (entryYear === null) {
+    const normalizedQuery =
+      courseQuery.trim()
+
+    if (
+      normalizedQuery.length === 0 ||
+      selectedLecture !== null
+    ) {
+      setLectureSearchResults([])
+      setLectureSearchError(null)
       return
     }
 
-    const resolvedEntryYear =
-      entryYear
+    const parsedAcademicYear =
+      Number(academicYear)
+
+    const parsedSemester =
+      Number(academicSemester)
+
+    if (
+      !Number.isInteger(
+        parsedAcademicYear,
+      ) ||
+      (
+        parsedSemester !== 1 &&
+        parsedSemester !== 2
+      )
+    ) {
+      setLectureSearchResults([])
+      return
+    }
 
     let requestIsActive = true
 
-    async function loadGeneralEducation() {
-      setGeneralEducationIsLoading(true)
-      setGeneralEducationError(null)
+    const timeoutId =
+      window.setTimeout(() => {
+        async function searchLectures() {
+          setLectureIsLoading(true)
+          setLectureSearchError(null)
 
-      try {
-        const generalEducation =
-          await fetchGeneralEducation(
-            resolvedEntryYear,
-          )
+          try {
+            const lectures =
+              await fetchLectures({
+                academicYear:
+                  parsedAcademicYear,
+                semester:
+                  parsedSemester,
+                query:
+                  normalizedQuery,
+              })
 
-        if (requestIsActive) {
-          setGeneralEducationRequirements(
-            generalEducation.requirements,
-          )
+            if (!requestIsActive) {
+              return
+            }
+
+            const normalizedLowerQuery =
+              normalizedQuery
+                .toLocaleLowerCase(
+                  'ko-KR',
+                )
+
+            const relevantLectures =
+              lectures
+                .filter((lecture) => {
+                  const courseName =
+                    lecture.courseName
+                      .toLocaleLowerCase(
+                        'ko-KR',
+                      )
+
+                  const courseCode =
+                    lecture.courseCode
+                      .toLocaleLowerCase(
+                        'ko-KR',
+                      )
+
+                  return (
+                    courseName.includes(
+                      normalizedLowerQuery,
+                    ) ||
+                    courseCode.includes(
+                      normalizedLowerQuery,
+                    )
+                  )
+                })
+                .sort(
+                  (
+                    firstLecture,
+                    secondLecture,
+                  ) => {
+                    const firstName =
+                      firstLecture.courseName
+                        .toLocaleLowerCase(
+                          'ko-KR',
+                        )
+
+                    const secondName =
+                      secondLecture.courseName
+                        .toLocaleLowerCase(
+                          'ko-KR',
+                        )
+
+                    const firstIsExact =
+                      firstName ===
+                      normalizedLowerQuery
+
+                    const secondIsExact =
+                      secondName ===
+                      normalizedLowerQuery
+
+                    if (
+                      firstIsExact !==
+                      secondIsExact
+                    ) {
+                      return firstIsExact
+                        ? -1
+                        : 1
+                    }
+
+                    const firstStartsWith =
+                      firstName.startsWith(
+                        normalizedLowerQuery,
+                      )
+
+                    const secondStartsWith =
+                      secondName.startsWith(
+                        normalizedLowerQuery,
+                      )
+
+                    if (
+                      firstStartsWith !==
+                      secondStartsWith
+                    ) {
+                      return firstStartsWith
+                        ? -1
+                        : 1
+                    }
+
+                    return firstLecture
+                      .courseName
+                      .localeCompare(
+                        secondLecture
+                          .courseName,
+                        'ko-KR',
+                      )
+                  },
+                )
+                .slice(0, 8)
+
+            setLectureSearchResults(
+              relevantLectures,
+            )
+          } catch (error) {
+            if (!requestIsActive) {
+              return
+            }
+
+            setLectureSearchResults([])
+
+            setLectureSearchError(
+              error instanceof Error
+                ? error.message
+                : '개설과목을 검색하지 못했습니다.',
+            )
+          } finally {
+            if (requestIsActive) {
+              setLectureIsLoading(false)
+            }
+          }
         }
-      } catch (error) {
-        if (!requestIsActive) {
-          return
-        }
 
-        setGeneralEducationError(
-          error instanceof Error
-            ? error.message
-            : '교양요건을 불러오지 못했습니다.',
-        )
-      } finally {
-        if (requestIsActive) {
-          setGeneralEducationIsLoading(
-            false,
-          )
-        }
-      }
-    }
-
-    void loadGeneralEducation()
+        void searchLectures()
+      }, 250)
 
     return () => {
       requestIsActive = false
+
+      window.clearTimeout(
+        timeoutId,
+      )
     }
-  }, [entryYear])
+  }, [
+    academicSemester,
+    academicYear,
+    courseQuery,
+    selectedLecture,
+  ])
 
   useEffect(() => {
     function handleKeyDown(
@@ -465,169 +481,143 @@ export function CourseRecordModal({
     onClose,
   ])
 
-  function handleCompletionTypeChange(
-    nextCompletionType:
-      CourseCompletionType,
-  ) {
-    setCompletionType(
-      nextCompletionType,
-    )
-
-    setSelectedCurriculumCourseId('')
-
-    setSelectedGeneralEducationRequirementId(
-      '',
-    )
-
-    setSelectedGeneralEducationAreaId('')
-
-    setCourseName('')
-    setCredits('')
+  function clearSelectedLecture() {
+    setSelectedLecture(null)
+    setLectureSearchResults([])
+    setLectureSearchError(null)
     setFormError(null)
   }
 
-  function handleCurriculumCourseChange(
-    courseId: string,
+  function handleAcademicYearChange(
+    nextAcademicYear: string,
   ) {
-    setSelectedCurriculumCourseId(
-      courseId,
+    setAcademicYear(
+      nextAcademicYear,
     )
 
-    const selectedCourse =
-      curriculumCourses.find(
-        (course) =>
-          String(course.id) === courseId,
-      )
+    clearSelectedLecture()
+  }
 
-    if (selectedCourse === undefined) {
-      setCourseName('')
-      setCredits('')
-      return
-    }
-
-    setCourseName(
-      selectedCourse.courseName,
+  function handleAcademicSemesterChange(
+    nextAcademicSemester: string,
+  ) {
+    setAcademicSemester(
+      nextAcademicSemester,
     )
 
-    setCredits(
-      selectedCourse.credits === null
-        ? ''
-        : String(selectedCourse.credits),
+    clearSelectedLecture()
+  }
+
+  function handleCourseQueryChange(
+    nextQuery: string,
+  ) {
+    setCourseQuery(nextQuery)
+
+    if (selectedLecture !== null) {
+      clearSelectedLecture()
+    }
+
+    setFormError(null)
+  }
+
+  function handleLectureSelect(
+    lecture: Lecture,
+  ) {
+    setSelectedLecture(lecture)
+
+    setCourseQuery(
+      lecture.courseName,
     )
-    }
 
-    function handleGeneralEducationRequirementChange(
-      requirementId: string,
-    ) {
-      setSelectedGeneralEducationRequirementId(
-        requirementId,
-      )
+    setLectureSearchResults([])
+    setLectureSearchError(null)
+    setFormError(null)
+  }
 
-      setSelectedGeneralEducationAreaId('')
-      setFormError(null)
-    }
-
-    async function handleSubmit(
+  async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault()
     setFormError(null)
 
-    if (
-      isMajorCourse &&
-      selectedCurriculumCourse === null
-    ) {
+    if (selectedLecture === null) {
       setFormError(
-        '공식 교육과정 과목을 선택해 주세요.',
+        '검색 결과에서 개설과목을 선택해 주세요.',
       )
       return
     }
 
     if (
-      isGeneralEducation &&
-      selectedGeneralEducationRequirement ===
-        null
+      selectedLecture.credits === null
     ) {
       setFormError(
-        '교양 구분을 선택해 주세요.',
-      )
-      return
-    }
-
-    if (
-      isGeneralEducation &&
-      selectedGeneralEducationArea === null
-    ) {
-      setFormError(
-        '교양 세부 영역을 선택해 주세요.',
-      )
-      return
-    }
-
-    const normalizedCourseName =
-      courseName.trim()
-
-    const parsedCredits =
-      Number(credits)
-
-    if (
-      normalizedCourseName.length === 0
-    ) {
-      setFormError(
-        '과목명을 입력해 주세요.',
-      )
-      return
-    }
-
-    if (
-      credits.trim().length === 0 ||
-      !Number.isFinite(parsedCredits) ||
-      parsedCredits <= 0 ||
-      parsedCredits > 30
-    ) {
-      setFormError(
-        '학점을 0보다 크고 30 이하인 숫자로 입력해 주세요.',
+        '선택한 개설과목에 학점 정보가 없어 저장할 수 없습니다.',
       )
       return
     }
 
     setFormIsSubmitting(true)
+
     try {
       const input: CourseRecordInput = {
-        curriculumCourseId:
-          selectedCurriculumCourse?.id ??
-          null,
+        /*
+         * 일반 수강기록에서는 졸업요건을
+         * 직접 연결하지 않습니다.
+         */
+        curriculumCourseId: null,
+
         lectureId:
-          editingRecord?.lectureId ??
-          null,
+          selectedLecture.id,
+
         generalEducationRequirementId:
-          selectedGeneralEducationRequirement
-            ?.id ?? null,
-        generalEducationAreaId:
-          selectedGeneralEducationArea
-            ?.id ?? null,
-        academicYear:
-          editingRecord?.academicYear ??
           null,
+
+        generalEducationAreaId: null,
+
+        /*
+         * 실제 개설연도는 lecture에서
+         * 가져옵니다.
+         */
+        academicYear:
+          selectedLecture.academicYear,
+
+        /*
+         * grade + semester는 사용자의
+         * 학년-학기 위치입니다.
+         */
         grade,
         semester,
+
         courseName:
-          normalizedCourseName,
+          selectedLecture.courseName,
+
         courseCode:
-          selectedCurriculumCourse
-            ?.courseCode ??
-          editingRecord?.courseCode ??
-          null,
+          selectedLecture.courseCode,
+
         completionType,
-        credits: parsedCredits,
+
+        credits:
+          selectedLecture.credits,
+
+        /*
+         * 수정 시 기존 상태와 성적,
+         * 재수강 말소 여부를 보존합니다.
+         *
+         * 새 기록의 성적은 표에서
+         * 별도로 입력합니다.
+         */
         status:
           editingRecord?.status ??
           'completed',
+
         letterGrade:
-          letterGrade.length === 0
-            ? null
-            : letterGrade,
-        isRetake,
+          editingRecord?.letterGrade ??
+          null,
+
+        isRetake:
+          editingRecord?.isRetake ??
+          false,
+
         note:
           note.trim().length === 0
             ? null
@@ -686,7 +676,7 @@ export function CourseRecordModal({
                 ? '과목 입력'
                 : '과목 수정'}
             </h2>
-            </div>
+          </div>
 
           <button
             aria-label="닫기"
@@ -729,264 +719,166 @@ export function CourseRecordModal({
                       type="radio"
                       value={typeOption}
                       onChange={() => {
-                        handleCompletionTypeChange(
+                        setCompletionType(
                           typeOption,
                         )
+
+                        setFormError(null)
                       }}
                     />
 
-                    <span>{typeOption}</span>
+                    <span>
+                      {typeOption}
+                    </span>
                   </label>
                 ),
               )}
             </div>
           </fieldset>
 
-          {isMajorCourse ? (
+          <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
             <label className="course-record-modal-field">
-              <span>
-                공식 교육과정 과목
-              </span>
+              <span>개설학년도</span>
 
               <select
-                disabled={
-                  entryYear === null ||
-                  curriculumIsLoading
-                }
-                value={
-                  selectedCurriculumCourseId
-                }
+                value={academicYear}
                 onChange={(event) => {
-                  handleCurriculumCourseChange(
+                  handleAcademicYearChange(
                     event.target.value,
                   )
                 }}
               >
-                <option value="">
-                  {curriculumIsLoading
-                    ? '교육과정 불러오는 중...'
-                    : '과목을 선택해 주세요'}
-                </option>
-
-                {matchingCurriculumCourses.map(
-                  (course) => (
+                {ACADEMIC_YEARS.map(
+                  (yearOption) => (
                     <option
-                      key={course.id}
-                      value={course.id}
+                      key={yearOption}
+                      value={yearOption}
                     >
-                      {formatCourseOption(
-                        course,
-                      )}
+                      {yearOption}학년도
                     </option>
                   ),
                 )}
               </select>
-
-              {entryYear === null ? (
-                <small>
-                  전공 과목을 선택하려면
-                  회원정보에서 입학 학번을
-                  설정해야 합니다.
-                </small>
-              ) : (
-                <small>
-                  현재 선택 학기의 과목을
-                  위쪽에 먼저 표시합니다.
-                </small>
-              )}
             </label>
-          ) : null}
 
-          {isGeneralEducation ? (
-            <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
-              <label className="course-record-modal-field">
-                <span>교양 구분</span>
+            <label className="course-record-modal-field">
+              <span>개설학기</span>
 
-                <select
-                  disabled={
-                    entryYear === null ||
-                    generalEducationIsLoading
-                  }
-                  value={
-                    selectedGeneralEducationRequirementId
-                  }
-                  onChange={(event) => {
-                    handleGeneralEducationRequirementChange(
-                      event.target.value,
-                    )
-                  }}
-                >
-                  <option value="">
-                    {generalEducationIsLoading
-                      ? '교양요건 불러오는 중...'
-                      : '교양 구분을 선택해 주세요'}
-                  </option>
+              <select
+                value={academicSemester}
+                onChange={(event) => {
+                  handleAcademicSemesterChange(
+                    event.target.value,
+                  )
+                }}
+              >
+                <option value="1">
+                  1학기
+                </option>
 
-                  {generalEducationRequirements.map(
-                    (requirement) => (
-                      <option
-                        key={requirement.id}
-                        value={requirement.id}
-                      >
-                        {requirement.category}
-                      </option>
-                    ),
-                  )}
-                </select>
-              </label>
+                <option value="2">
+                  2학기
+                </option>
+              </select>
+            </label>
+          </div>
 
-              <label className="course-record-modal-field">
-                <span>세부 영역</span>
-
-                <select
-                  disabled={
-                    selectedGeneralEducationRequirement ===
-                    null
-                  }
-                  value={
-                    selectedGeneralEducationAreaId
-                  }
-                  onChange={(event) => {
-                    setSelectedGeneralEducationAreaId(
-                      event.target.value,
-                    )
-                  }}
-                >
-                  <option value="">
-                    세부 영역을 선택해 주세요
-                  </option>
-
-                  {selectedGeneralEducationRequirement
-                    ?.areas.map(
-                      (area) => (
-                        <option
-                          key={area.id}
-                          value={area.id}
-                        >
-                          {area.areaName}
-                        </option>
-                      ),
-                    )}
-                </select>
-              </label>
-            </div>
-          ) : null}
-
-          {generalEducationError !== null &&
-          isGeneralEducation ? (
-            <p
-              className="course-record-modal-error"
-              role="alert"
-            >
-              {generalEducationError}
-            </p>
-          ) : null}
-
-          {curriculumError !== null &&
-          isMajorCourse ? (
-            <p
-              className="course-record-modal-error"
-              role="alert"
-            >
-              {curriculumError}
-            </p>
-          ) : null}
-
-          <label className="course-record-modal-field">
+          <div className="course-record-modal-field course-record-modal-course-search">
             <span>과목명</span>
 
-            <input
-              autoFocus={!isMajorCourse}
-              disabled={isMajorCourse}
-              maxLength={100}
-              placeholder={
-                isMajorCourse
-                  ? '공식 과목을 선택해 주세요'
-                  : '예: 연구실 안전교육'
-              }
-              type="text"
-              value={courseName}
-              onChange={(event) => {
-                setCourseName(
-                  event.target.value,
-                )
-              }}
-            />
-          </label>
-
-          <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
-            <label className="course-record-modal-field">
-              <span>학점</span>
-
+            <div className="course-record-modal-search-input-wrap">
               <input
-                disabled={
-                  isMajorCourse &&
-                  selectedCurriculumCourse
-                    ?.credits !== null
-                }
-                max="30"
-                min="0.5"
-                placeholder="예: 2"
-                step="0.5"
-                type="number"
-                value={credits}
+                autoComplete="off"
+                autoFocus
+                placeholder="과목명 또는 과목코드를 입력해 주세요"
+                type="text"
+                value={courseQuery}
                 onChange={(event) => {
-                  setCredits(
+                  handleCourseQueryChange(
                     event.target.value,
                   )
                 }}
               />
 
-              {isMajorCourse ? (
-                <small>
-                  공식 교육과정 학점을
-                  사용합니다.
-                </small>
+              {lectureIsLoading ? (
+                <span className="course-record-modal-search-loading">
+                  검색 중...
+                </span>
               ) : null}
-            </label>
+            </div>
 
-            <label className="course-record-modal-field">
-              <span>성적</span>
-
-              <select
-                value={letterGrade}
-                onChange={(event) => {
-                  setLetterGrade(
-                    event.target.value,
-                  )
-                }}
+            {lectureSearchResults.length >
+            0 ? (
+              <div
+                aria-label="개설과목 검색 결과"
+                className="course-record-modal-search-results"
+                role="listbox"
               >
-                <option value="">
-                  성적 미입력
-                </option>
-
-                {LETTER_GRADES.map(
-                  (gradeOption) => (
-                    <option
-                      key={gradeOption}
-                      value={gradeOption}
+                {lectureSearchResults.map(
+                  (lecture) => (
+                    <button
+                      key={lecture.id}
+                      className="course-record-modal-search-result"
+                      role="option"
+                      type="button"
+                      onClick={() => {
+                        handleLectureSelect(
+                          lecture,
+                        )
+                      }}
                     >
-                      {gradeOption}
-                    </option>
+                      <strong>
+                        {lecture.courseName}
+                      </strong>
+
+                      <span>
+                        {formatLectureMeta(
+                          lecture,
+                        )}
+                      </span>
+                    </button>
                   ),
                 )}
-              </select>
-            </label>
+              </div>
+            ) : null}
+
+            {selectedLecture !== null ? (
+              <div className="course-record-modal-selected-lecture">
+                <div>
+                  <strong>
+                    {selectedLecture.courseName}
+                  </strong>
+
+                  <span>
+                    {formatLectureMeta(
+                      selectedLecture,
+                    )}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCourseQuery('')
+                    clearSelectedLecture()
+                  }}
+                >
+                  다시 선택
+                </button>
+              </div>
+            ) : null}
+
+            {lectureSearchError !== null ? (
+              <small className="course-record-modal-search-error">
+                {lectureSearchError}
+              </small>
+            ) : null}
+
+            <small>
+              선택한 개설학년도와 학기에
+              실제 개설된 과목만 검색됩니다.
+            </small>
           </div>
-
-          <label className="course-record-modal-checkbox">
-            <input
-              checked={isRetake}
-              type="checkbox"
-              onChange={(event) => {
-                setIsRetake(
-                  event.target.checked,
-                )
-              }}
-            />
-
-            <span>재수강 과목</span>
-          </label>
 
           <label className="course-record-modal-field">
             <span>
@@ -1030,22 +922,7 @@ export function CourseRecordModal({
               className="course-record-modal-submit"
               disabled={
                 formIsSubmitting ||
-                (
-                  isMajorCourse &&
-                  (
-                    entryYear === null ||
-                    curriculumIsLoading ||
-                    curriculumError !== null
-                  )
-                ) ||
-                (
-                  isGeneralEducation &&
-                  (
-                    entryYear === null ||
-                    generalEducationIsLoading ||
-                    generalEducationError !== null
-                  )
-                )
+                lectureIsLoading
               }
               type="submit"
             >
