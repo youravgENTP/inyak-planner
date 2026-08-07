@@ -318,11 +318,6 @@
   color: #a04444 !important;
 }
 
-.graduation-board-course div {
-  border-color: #91c4a2;
-  background: #b8ddc5;
-}
-
 .graduation-board-course--unmatched {
   border-color: #e0c58a;
   border-style: dashed;
