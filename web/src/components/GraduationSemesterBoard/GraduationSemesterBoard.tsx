@@ -578,7 +578,13 @@ function SemesterCard({
                         record.credits
                       }
                       semester={
-                        record.semester
+                        record.status ===
+                        'substituted'
+                          ? (
+                            curriculumCourse
+                              .semester
+                          )
+                          : record.semester
                       }
                       key={record.id}
                       record={record}

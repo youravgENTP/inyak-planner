@@ -304,28 +304,44 @@ function createYearSemesterBoard(
       )
 
   /*
-   * 전선은 공식 curriculum상의 권장 학기가
-   * 아니라 사용자가 실제로 기록한
+   * 일반 전선 기록은 사용자가 실제로 기록한
    * grade + semester 위치에 표시합니다.
    *
-   * 단, 졸업요건 판정은 사용자가 입력한
-   * completionType이 아니라 matcher가 연결한
-   * 공식 curriculum의 전선 여부를 따릅니다.
+   * 전적대 대체 인정은 CourseRecord 자체에
+   * grade / semester를 저장하지 않으므로,
+   * 연결된 공식 curriculum 과목의 위치를
+   * 기준으로 해당 학년 보드에 배치합니다.
    */
   const electiveRecords =
     matchedRecords.filter(
       ({
         curriculumCourse,
         record,
-      }) =>
-        curriculumCourse
-          .completionType === '전선' &&
-        record.status !== 'substituted' &&
-        recordBelongsToSemester(
+      }) => {
+        if (
+          curriculumCourse
+            .completionType !== '전선'
+        ) {
+          return false
+        }
+
+        if (
+          record.status === 'substituted'
+        ) {
+          return (
+            curriculumCourse.grade ===
+              grade &&
+            curriculumCourse.semester ===
+              semester
+          )
+        }
+
+        return recordBelongsToSemester(
           record,
           grade,
           semester,
-        ),
+        )
+      },
     )
 
   /*
