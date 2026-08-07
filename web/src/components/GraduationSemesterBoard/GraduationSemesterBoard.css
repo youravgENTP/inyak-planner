@@ -86,6 +86,45 @@
   width: max-content;
 }
 
+.graduation-board-year-group {
+  display: flex;
+  width: 292px;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.graduation-board-year-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.graduation-board-year-header span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #777;
+}
+
+.graduation-board-year-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.graduation-board-year-semesters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.graduation-board-year-group
+  .graduation-board-card {
+  width: 100%;
+  min-height: 0;
+}
+
 .graduation-board-card {
   width: 292px;
   min-height: 520px;

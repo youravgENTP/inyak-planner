@@ -22,12 +22,12 @@ import type {
   GeneralEducation,
 } from '../../domain/general-education/types'
 import {
-  createGraduationBoard,
+  createGraduationYearBoard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import type {
-  GraduationBoardCard,
   SemesterBoardCard,
   TransferCreditBoardCard,
+  YearBoardCard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import {
   GeneralEducationTransferCreditModal,
@@ -348,27 +348,13 @@ function SemesterCard({
       <header className="graduation-board-card-header">
         <div>
           <span>
-            {card.grade}학년
+            학기
           </span>
 
           <h3>
-            {card.grade}학년{' '}
             {card.semester}학기
           </h3>
         </div>
-
-        <button
-          aria-label={
-            `${card.grade}학년 ` +
-            `${card.semester}학기 과목 추가`
-          }
-          className="graduation-board-add-button"
-          disabled
-          title="수강 기록 & GPA에서 과목을 입력할 수 있습니다."
-          type="button"
-        >
-          +
-        </button>
       </header>
 
       <div className="graduation-board-card-summary">
@@ -1142,56 +1128,73 @@ function TransferCreditCard({
 }
 
 
-function BoardCard({
+function YearCard({
   card,
   curriculum,
-  generalEducation,
-  onRecordCreated,
   onRecordUpdated,
-  onRecordDeleted,
 }: {
-  card: GraduationBoardCard
+  card: YearBoardCard
   curriculum: Curriculum
-  generalEducation: GeneralEducation
-  onRecordCreated: (
-    record: CourseRecord,
-  ) => void
   onRecordUpdated: (
     record: CourseRecord,
   ) => void
-  onRecordDeleted: (
-    recordId: string,
-  ) => void
 }) {
-  if (card.kind === 'transferCredits') {
-    return (
-      <TransferCreditCard
-        card={card}
-        curriculum={curriculum}
-        generalEducation={
-          generalEducation
-        }
-        onRecordCreated={
-          onRecordCreated
-        }
-        onRecordUpdated={
-          onRecordUpdated
-        }
-        onRecordDeleted={
-          onRecordDeleted
-        }
-      />
-    )
-  }
-
   return (
-    <SemesterCard
-      card={card}
-      curriculum={curriculum}
-      onRecordUpdated={
-        onRecordUpdated
-      }
-    />
+    <section className="graduation-board-year-group">
+      <header className="graduation-board-year-header">
+        <span>
+          학년별 이수 현황
+        </span>
+
+        <h3>
+          {card.grade}학년
+        </h3>
+      </header>
+
+      <div className="graduation-board-year-semesters">
+        {card.semesters.map(
+          (semesterBoard) => {
+            /*
+             * 기존 SemesterCard를 한 단계 더
+             * 재사용합니다.
+             *
+             * 전필은 공식 curriculum 전체,
+             * 전선은 실제로 matcher가 연결한
+             * 사용자 기록만 전달합니다.
+             */
+            const semesterCard:
+              SemesterBoardCard = {
+                kind: 'semester',
+                grade: card.grade,
+                semester:
+                  semesterBoard.semester,
+                courses: [
+                  ...semesterBoard
+                    .requiredCourses,
+                  ...semesterBoard
+                    .electiveRecords,
+                ],
+                unmatchedRecords:
+                  semesterBoard
+                    .unmatchedRecords,
+              }
+
+            return (
+              <SemesterCard
+                card={semesterCard}
+                curriculum={curriculum}
+                onRecordUpdated={
+                  onRecordUpdated
+                }
+                key={
+                  semesterBoard.semester
+                }
+              />
+            )
+          },
+        )}
+      </div>
+    </section>
   )
 }
 
@@ -1205,8 +1208,8 @@ export function GraduationSemesterBoard({
   onRecordUpdated,
   onRecordDeleted,
 }: GraduationSemesterBoardProps) {
-  const cards =
-    createGraduationBoard(
+  const board =
+    createGraduationYearBoard(
       user,
       curriculum,
       records,
@@ -1216,7 +1219,7 @@ export function GraduationSemesterBoard({
     <section className="graduation-board-section">
       <header className="graduation-board-section-header">
         <div>
-          <p>학기별 이수 현황</p>
+          <p>학년별 이수 현황</p>
 
           <h2>
             전공 교육과정 이수 보드
@@ -1249,17 +1252,16 @@ export function GraduationSemesterBoard({
             졸업요건 미연결
           </span>
         </div>
-
       </header>
 
       <div
         className="graduation-board-scroll"
-        aria-label="학기별 전공 이수 현황"
+        aria-label="학년별 전공 이수 현황"
       >
         <div className="graduation-board-list">
-          {cards.map((card) => (
-            <BoardCard
-              card={card}
+          {board.transferCredits !== null ? (
+            <TransferCreditCard
+              card={board.transferCredits}
               curriculum={curriculum}
               generalEducation={
                 generalEducation
@@ -1273,15 +1275,17 @@ export function GraduationSemesterBoard({
               onRecordDeleted={
                 onRecordDeleted
               }
-              key={
-                card.kind ===
-                  'transferCredits'
-                  ? 'transfer-credits'
-                  : (
-                    `${card.grade}-` +
-                    card.semester
-                  )
+            />
+          ) : null}
+
+          {board.years.map((card) => (
+            <YearCard
+              card={card}
+              curriculum={curriculum}
+              onRecordUpdated={
+                onRecordUpdated
               }
+              key={card.grade}
             />
           ))}
         </div>
