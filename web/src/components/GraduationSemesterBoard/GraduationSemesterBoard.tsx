@@ -14,7 +14,6 @@ import {
 import type {
   CourseRecord,
   CourseRecordInput,
-  CourseRecordStatus,
 } from '../../domain/course-records/types'
 import type {
   Curriculum,
@@ -68,17 +67,30 @@ function formatCredits(
 
 
 function getStatusClassName(
-  status: CourseRecordStatus,
+  record: CourseRecord,
 ): string {
-  if (status === 'completed') {
+  /*
+   * F는 수강 자체는 완료된 기록이지만
+   * 졸업요건상 이수한 과목은 아닙니다.
+   *
+   * 따라서 status보다 F 판정을
+   * 먼저 적용합니다.
+   */
+  if (record.letterGrade === 'F') {
+    return (
+      'graduation-board-course--failed'
+    )
+  }
+
+  if (record.status === 'completed') {
     return (
       'graduation-board-course--completed'
     )
   }
 
   if (
-    status === 'planned' ||
-    status === 'in_progress'
+    record.status === 'planned' ||
+    record.status === 'in_progress'
   ) {
     return (
       'graduation-board-course--scheduled'
@@ -402,7 +414,7 @@ function SemesterCard({
                   record === null
                     ? ''
                     : getStatusClassName(
-                        record.status,
+                        record,
                       )
                 )
               }
@@ -1220,6 +1232,11 @@ export function GraduationSemesterBoard({
           <span>
             <i className="graduation-board-legend-scheduled" />
             수강 예정·중
+          </span>
+
+          <span>
+            <i className="graduation-board-legend-failed" />
+            미이수
           </span>
 
           <span>

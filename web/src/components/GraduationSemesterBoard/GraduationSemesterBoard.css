@@ -58,6 +58,10 @@
   background: #e3eef9;
 }
 
+.graduation-board-legend-failed {
+  background: #f9e4e4;
+}
+
 .graduation-board-legend-substituted {
   background: #b8ddc5;
 }
@@ -227,6 +231,27 @@
 .graduation-board-course--completed {
   border-color: #cfe5d6;
   background: #e2f1e7;
+}
+
+.graduation-board-course--scheduled {
+  border-color: #cbdeef;
+  background: #e3eef9;
+}
+
+.graduation-board-course--failed {
+  border-color: #e6bcbc;
+  background: #f9e4e4;
+}
+
+.graduation-board-course--substituted {
+  border-color: #91c4a2;
+  background: #b8ddc5;
+}
+
+.graduation-board-course--unmatched {
+  border-color: #e0c58a;
+  border-style: dashed;
+  background: #fff8e8;
 }
 
 .graduation-board-course-unmatched-label {
