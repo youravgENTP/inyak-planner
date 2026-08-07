@@ -231,6 +231,31 @@ export function TimetablePage() {
     ],
   )
 
+  /*
+   * 전체 lectures는 저장된 과거 시간표의
+   * 렌더링, 미리보기, 비교에 계속 사용합니다.
+   *
+   * 시간표 편집기에서만 현재 시간표의
+   * 학년도 + 학기에 해당하는 강의로
+   * 범위를 제한합니다.
+   */
+  const editableLectures = useMemo(() => {
+    if (activeTimetable === undefined) {
+      return []
+    }
+
+    return lectures.filter(
+      (lecture) =>
+        lecture.academicYear ===
+          activeTimetable.academicYear &&
+        lecture.semester ===
+          activeTimetable.semester,
+    )
+  }, [
+    activeTimetable,
+    lectures,
+  ])
+
   const comparisonTimetables = useMemo(
   () =>
     comparisonTimetableIds
@@ -1121,7 +1146,7 @@ async function handleDownloadSyllabi() {
       >
         {isEditing && (
           <TimetableEditorPanel
-            lectures={lectures}
+            lectures={editableLectures}
             selectedLectures={draftLectures}
             previewLectureId={
               previewLecture?.id ?? null
