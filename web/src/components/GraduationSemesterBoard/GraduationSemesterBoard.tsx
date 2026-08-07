@@ -30,6 +30,9 @@ import type {
   TransferCreditBoardCard,
 } from '../../domain/graduation-progress/createSemesterBoard'
 import {
+  CourseRecordModal,
+} from '../CourseRecordModal/CourseRecordModal'
+import {
   GeneralEducationTransferCreditModal,
 } from '../GeneralEducationTransferCreditModal/GeneralEducationTransferCreditModal'
 import {
@@ -181,14 +184,25 @@ function getSemesterSummary(
 function SemesterCard({
   card,
   curriculum,
+  entryYear,
+  onRecordCreated,
   onRecordUpdated,
 }: {
   card: SemesterBoardCard
   curriculum: Curriculum
+  entryYear: number | null
+  onRecordCreated: (
+    record: CourseRecord,
+  ) => void
   onRecordUpdated: (
     record: CourseRecord,
   ) => void
 }) {
+  const [
+    recordModalIsOpen,
+    setRecordModalIsOpen,
+  ] = useState(false)
+
   const [
     linkingRecordId,
     setLinkingRecordId,
@@ -344,7 +358,8 @@ function SemesterCard({
   }
 
   return (
-    <article className="graduation-board-card">
+    <>
+      <article className="graduation-board-card">
       <header className="graduation-board-card-header">
         <div>
           <span>
@@ -363,9 +378,10 @@ function SemesterCard({
             `${card.semester}학기 과목 추가`
           }
           className="graduation-board-add-button"
-          disabled
-          title="다음 단계에서 과목 입력 기능을 추가합니다."
           type="button"
+          onClick={() => {
+            setRecordModalIsOpen(true)
+          }}
         >
           +
         </button>
@@ -567,6 +583,26 @@ function SemesterCard({
         )}
       </ul>
     </article>
+
+    {recordModalIsOpen ? (
+      <CourseRecordModal
+        editingRecord={null}
+        entryYear={entryYear}
+        grade={card.grade}
+        semester={card.semester}
+        onClose={() => {
+          setRecordModalIsOpen(false)
+        }}
+        onSaved={(savedRecord) => {
+          onRecordCreated(
+            savedRecord,
+          )
+
+          setRecordModalIsOpen(false)
+        }}
+      />
+    ) : null}
+  </>
   )
 }
 
@@ -1146,6 +1182,7 @@ function BoardCard({
   card,
   curriculum,
   generalEducation,
+  entryYear,
   onRecordCreated,
   onRecordUpdated,
   onRecordDeleted,
@@ -1153,6 +1190,7 @@ function BoardCard({
   card: GraduationBoardCard
   curriculum: Curriculum
   generalEducation: GeneralEducation
+  entryYear: number | null
   onRecordCreated: (
     record: CourseRecord,
   ) => void
@@ -1188,6 +1226,10 @@ function BoardCard({
     <SemesterCard
       card={card}
       curriculum={curriculum}
+      entryYear={entryYear}
+      onRecordCreated={
+        onRecordCreated
+      }
       onRecordUpdated={
         onRecordUpdated
       }
@@ -1264,6 +1306,7 @@ export function GraduationSemesterBoard({
               generalEducation={
                 generalEducation
               }
+              entryYear={user.entryYear}
               onRecordCreated={
                 onRecordCreated
               }
