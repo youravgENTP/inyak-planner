@@ -12,6 +12,12 @@ import type {
   GeneralEducationRequirement,
 } from '../general-education/types'
 import {
+  matchCurriculumRecords,
+} from './matchCurriculumRecords'
+import type {
+  CurriculumRecordMatch,
+} from './matchCurriculumRecords'
+import {
   GRADUATION_TOTAL_CREDITS,
   MAJOR_ELECTIVE_CREDITS,
   MAJOR_REQUIRED_CREDITS,
@@ -203,19 +209,6 @@ function createCourseCountProgress(
 }
 
 
-function getMajorRecords(
-  records: readonly CourseRecord[],
-  completionType:
-    CurriculumCompletionType,
-): CourseRecord[] {
-  return records.filter(
-    (record) =>
-      record.completionType ===
-      completionType,
-  )
-}
-
-
 function getMajorRequiredCredits(
   completionType:
     CurriculumCompletionType,
@@ -230,7 +223,8 @@ function getMajorRequiredCredits(
 
 function createMajorProgress(
   curriculum: Curriculum,
-  records: readonly CourseRecord[],
+  matches:
+    readonly CurriculumRecordMatch[],
   completionType:
     CurriculumCompletionType,
 ): MajorCompletionProgress {
@@ -241,26 +235,42 @@ function createMajorProgress(
         completionType,
     )
 
+  /*
+   * 사용자가 수강기록 입력 당시 지정한
+   * completionType이 아니라,
+   * 학번별 curriculum에서 판정된
+   * completionType을 기준으로 분류합니다.
+   */
   const matchingRecords =
-    getMajorRecords(
-      records,
-      completionType,
-    )
+    matches
+      .filter(
+        (match) =>
+          match.curriculumCourse
+            .completionType ===
+          completionType,
+      )
+      .map(
+        (match) =>
+          match.record,
+      )
 
   return {
     completionType,
+
     credits: createCreditProgress(
       matchingRecords,
       getMajorRequiredCredits(
         completionType,
       ),
     ),
+
     courses: createCourseCountProgress(
       matchingRecords,
       officialCourses.length,
     ),
   }
 }
+
 
 
 function getGeneralEducationRecords(
@@ -449,17 +459,23 @@ export function calculateGraduationProgress(
         !record.isRetake,
     )
 
+  const curriculumMatchResult =
+    matchCurriculumRecords(
+      curriculum,
+      effectiveRecords,
+    )
+
   const majorRequired =
     createMajorProgress(
       curriculum,
-      effectiveRecords,
+      curriculumMatchResult.matches,
       '전필',
     )
 
   const majorElective =
     createMajorProgress(
       curriculum,
-      effectiveRecords,
+      curriculumMatchResult.matches,
       '전선',
     )
 
