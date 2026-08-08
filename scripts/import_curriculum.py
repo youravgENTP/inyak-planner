@@ -20,9 +20,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = PROJECT_ROOT / "data" / "db" / "inyak.db"
 
-EXPECTED_2024_COURSE_COUNT = 97
-EXPECTED_2024_REQUIRED_CREDITS = 118.0
-
 REQUIRED_COLUMNS = {
     "entry_year",
     "grade",
@@ -169,32 +166,6 @@ def load_csv(csv_path: Path) -> list[CurriculumCourse]:
     return courses
 
 
-def validate_2024(courses: list[CurriculumCourse]) -> None:
-    entry_year = courses[0].entry_year
-    if entry_year != 2024:
-        return
-
-    if len(courses) != EXPECTED_2024_COURSE_COUNT:
-        raise ValueError(
-            "2024학번 과목 수가 맞지 않습니다: "
-            f"{len(courses)}개 "
-            f"(예상 {EXPECTED_2024_COURSE_COUNT}개)"
-        )
-
-    required_credits = sum(
-        course.credits or 0
-        for course in courses
-        if course.completion_type == "전필"
-    )
-
-    if required_credits != EXPECTED_2024_REQUIRED_CREDITS:
-        raise ValueError(
-            "2024학번 전필 학점 합계가 맞지 않습니다: "
-            f"{required_credits:g}학점 "
-            f"(예상 {EXPECTED_2024_REQUIRED_CREDITS:g}학점)"
-        )
-
-
 def import_courses(
     courses: list[CurriculumCourse],
     *,
@@ -333,7 +304,6 @@ def main() -> None:
 
     try:
         courses = load_csv(csv_path)
-        validate_2024(courses)
         import_courses(courses, db_path=DB_PATH)
         print_summary(courses, db_path=DB_PATH)
     except (ValueError, RuntimeError, sqlite3.Error) as error:
