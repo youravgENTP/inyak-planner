@@ -11,17 +11,15 @@ import type {
   GeneralEducationArea,
   GeneralEducationRequirement,
 } from '../general-education/types'
+import type {
+  GraduationRequirements,
+} from '../graduation-requirements/types'
 import {
   matchCurriculumRecords,
 } from './matchCurriculumRecords'
 import type {
   CurriculumRecordMatch,
 } from './matchCurriculumRecords'
-import {
-  GRADUATION_TOTAL_CREDITS,
-  MAJOR_ELECTIVE_CREDITS,
-  MAJOR_REQUIRED_CREDITS,
-} from './types'
 import type {
   CourseCountProgress,
   CreditProgress,
@@ -144,7 +142,6 @@ function createCreditProgress(
   }
 }
 
-
 function combineCreditProgress(
   progresses:
     readonly CreditProgress[],
@@ -173,23 +170,29 @@ function combineCreditProgress(
       0,
     )
 
+  const requiredCredits =
+    progresses.reduce(
+      (total, progress) =>
+        total +
+        progress.requiredCredits,
+      0,
+    )
+
   return {
     completedCredits,
     inProgressCredits,
     plannedCredits,
-    requiredCredits:
-      GRADUATION_TOTAL_CREDITS,
+    requiredCredits,
     remainingCredits: Math.max(
-      GRADUATION_TOTAL_CREDITS -
+      requiredCredits -
         completedCredits,
       0,
     ),
     isSatisfied:
       completedCredits >=
-      GRADUATION_TOTAL_CREDITS,
+      requiredCredits,
   }
 }
-
 
 function createCourseCountProgress(
   records: readonly CourseRecord[],
@@ -230,24 +233,13 @@ function createCourseCountProgress(
 }
 
 
-function getMajorRequiredCredits(
-  completionType:
-    CurriculumCompletionType,
-): number {
-  if (completionType === '전필') {
-    return MAJOR_REQUIRED_CREDITS
-  }
-
-  return MAJOR_ELECTIVE_CREDITS
-}
-
-
 function createMajorProgress(
   curriculum: Curriculum,
   matches:
     readonly CurriculumRecordMatch[],
   completionType:
     CurriculumCompletionType,
+  requiredCredits: number,
 ): MajorCompletionProgress {
   const officialCourses =
     curriculum.courses.filter(
@@ -280,9 +272,7 @@ function createMajorProgress(
 
     credits: createCreditProgress(
       matchingRecords,
-      getMajorRequiredCredits(
-        completionType,
-      ),
+      requiredCredits,
     ),
 
     courses: createCourseCountProgress(
@@ -479,6 +469,8 @@ export function calculateGraduationProgress(
   curriculum: Curriculum,
   generalEducation:
     GeneralEducation,
+  graduationRequirements:
+    GraduationRequirements,
   records: readonly CourseRecord[],
 ): GraduationProgress {
   const effectiveRecords =
@@ -498,6 +490,8 @@ export function calculateGraduationProgress(
       curriculum,
       curriculumMatchResult.matches,
       '전필',
+      graduationRequirements
+        .majorRequiredCredits,
     )
 
   const majorElective =
@@ -505,6 +499,8 @@ export function calculateGraduationProgress(
       curriculum,
       curriculumMatchResult.matches,
       '전선',
+      graduationRequirements
+        .majorElectiveCredits,
     )
 
   const generalEducationProgress =

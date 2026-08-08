@@ -31,6 +31,12 @@ import type {
   GeneralEducation,
 } from '../domain/general-education/types'
 import {
+  fetchGraduationRequirements,
+} from '../domain/graduation-requirements/api'
+import type {
+  GraduationRequirements,
+} from '../domain/graduation-requirements/types'
+import {
   calculateGraduationProgress,
 } from '../domain/graduation-progress/calculateProgress'
 import type {
@@ -186,6 +192,13 @@ export function ProgressTrackerPage({
   )
 
   const [
+    graduationRequirements,
+    setGraduationRequirements,
+  ] = useState<GraduationRequirements | null>(
+    null,
+  )
+
+  const [
     dataAreLoading,
     setDataAreLoading,
   ] = useState(false)
@@ -213,12 +226,16 @@ export function ProgressTrackerPage({
           records,
           curriculumResult,
           generalEducationResult,
+          graduationRequirementsResult,
         ] = await Promise.all([
           getCourseRecords(),
           fetchCurriculum(
             user.entryYear,
           ),
           fetchGeneralEducation(
+            user.entryYear,
+          ),
+          fetchGraduationRequirements(
             user.entryYear,
           ),
         ])
@@ -229,6 +246,9 @@ export function ProgressTrackerPage({
         )
         setGeneralEducation(
           generalEducationResult,
+        )
+        setGraduationRequirements(
+          graduationRequirementsResult,
         )
       } catch (error) {
         setDataError(
@@ -260,7 +280,8 @@ export function ProgressTrackerPage({
       () => {
         if (
           curriculum === null ||
-          generalEducation === null
+          generalEducation === null ||
+          graduationRequirements === null
         ) {
           return null
         }
@@ -268,6 +289,7 @@ export function ProgressTrackerPage({
         return calculateGraduationProgress(
           curriculum,
           generalEducation,
+          graduationRequirements,
           courseRecords,
         )
       },
@@ -275,6 +297,7 @@ export function ProgressTrackerPage({
         courseRecords,
         curriculum,
         generalEducation,
+        graduationRequirements,
       ],
     )
 
