@@ -7,7 +7,6 @@ from typing import Any, Dict, List
 
 from server.database import (
     connect_database,
-    ensure_general_education_course_mapping_table,
 )
 
 
@@ -192,8 +191,6 @@ def import_mappings(
     rows = load_rows(
         input_path
     )
-
-    ensure_general_education_course_mapping_table()
 
     inserted_count = 0
     updated_count = 0

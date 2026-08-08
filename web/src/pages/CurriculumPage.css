@@ -69,6 +69,52 @@
   cursor: pointer;
 }
 
+/* =========================================================
+   Curriculum section switch
+   ========================================================= */
+
+.curriculum-section-switch {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px;
+
+  border: 1px solid #dfe8e1;
+  border-radius: 12px;
+
+  background: #f3f6f4;
+}
+
+.curriculum-section-switch-button {
+  min-width: 72px;
+  height: 38px;
+  padding: 0 16px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #718077;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.curriculum-section-switch-button:hover {
+  color: #31483a;
+}
+
+.curriculum-section-switch-button--active {
+  background: #fff;
+
+  color: #26392d;
+
+  box-shadow:
+    0 1px 3px
+    rgba(36, 57, 45, 0.12);
+}
+
 
 /* =========================================================
    Loading, error and empty states
