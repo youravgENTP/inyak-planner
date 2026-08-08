@@ -68,7 +68,7 @@
 .gpa-semester-metrics span {
   display: block;
   margin-bottom: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: #718078;
 }
 
@@ -83,7 +83,7 @@
 .gpa-semester-metrics small {
   display: block;
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 13px;
   color: #7992a2;
 }
 
@@ -370,7 +370,7 @@
   padding: 0 20px;
   border-bottom: 1px solid #edf1ee;
   background: #fcfdfc;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #7c8881;
 }
@@ -424,14 +424,14 @@
 
 .gpa-course-name-cell strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: 14px;
   color: #293b30;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .gpa-course-row > span {
-  font-size: 12px;
+  font-size: 13px;
   color: #68756d;
 }
 
@@ -443,7 +443,7 @@
   border-radius: 7px;
   background: transparent;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   color: #68756d;
 }
 

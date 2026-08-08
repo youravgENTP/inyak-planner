@@ -609,6 +609,20 @@ export function GpaCalculatorPage({
       [selectedRecords],
     )
 
+  const hasProjectedRecords =
+    regularRecords.some(
+      (record) =>
+        !record.isRetake &&
+        isActiveRecord(record),
+    )
+
+  const semesterHasProjectedRecords =
+    selectedRecords.some(
+      (record) =>
+        !record.isRetake &&
+        isActiveRecord(record),
+    )
+
   const semesterGpaChartPoints =
     useMemo(
       () =>
@@ -932,12 +946,14 @@ export function GpaCalculatorPage({
               )}
             </strong>
 
-            <small>
-              예상{' '}
-              {formatGpa(
-                projectedSummary.gpa,
-              )}
-            </small>
+            {hasProjectedRecords ? (
+              <small>
+                예상{' '}
+                {formatGpa(
+                  projectedSummary.gpa,
+                )}
+              </small>
+            ) : null}
           </article>
 
           <article>
@@ -949,12 +965,14 @@ export function GpaCalculatorPage({
               )}
             </strong>
 
-            <small>
-              예상{' '}
-              {formatGpa(
-                projectedSummary.majorGpa,
-              )}
-            </small>
+            {hasProjectedRecords ? (
+              <small>
+                예상{' '}
+                {formatGpa(
+                  projectedSummary.majorGpa,
+                )}
+              </small>
+            ) : null}
           </article>
 
           <article>
@@ -967,13 +985,15 @@ export function GpaCalculatorPage({
               )}
             </strong>
 
-            <small>
-              예상{' '}
-              {formatCredits(
-                projectedSummary
-                  .earnedCredits,
-              )}
-            </small>
+            {hasProjectedRecords ? (
+              <small>
+                예상{' '}
+                {formatCredits(
+                  projectedSummary
+                    .earnedCredits,
+                )}
+              </small>
+            ) : null}
           </article>
         </div>
 
@@ -1260,12 +1280,14 @@ export function GpaCalculatorPage({
                 )}
               </strong>
 
-              <small>
-                예상{' '}
-                {formatGpa(
-                  semesterProjectedSummary.gpa,
-                )}
-              </small>
+              {semesterHasProjectedRecords ? (
+                <small>
+                  예상{' '}
+                  {formatGpa(
+                    semesterProjectedSummary.gpa,
+                  )}
+                </small>
+              ) : null}
             </article>
 
             <article>
@@ -1278,13 +1300,15 @@ export function GpaCalculatorPage({
                 )}
               </strong>
 
-              <small>
-                예상{' '}
-                {formatGpa(
-                  semesterProjectedSummary
-                    .majorGpa,
-                )}
-              </small>
+              {semesterHasProjectedRecords ? (
+                <small>
+                  예상{' '}
+                  {formatGpa(
+                    semesterProjectedSummary
+                      .majorGpa,
+                  )}
+                </small>
+              ) : null}
             </article>
 
             <article>
@@ -1297,13 +1321,15 @@ export function GpaCalculatorPage({
                 )}
               </strong>
 
-              <small>
-                예상{' '}
-                {formatCredits(
-                  semesterProjectedSummary
-                    .earnedCredits,
-                )}
-              </small>
+              {semesterHasProjectedRecords ? (
+                <small>
+                  예상{' '}
+                  {formatCredits(
+                    semesterProjectedSummary
+                      .earnedCredits,
+                  )}
+                </small>
+              ) : null}
             </article>
           </div>
 
