@@ -222,6 +222,32 @@ def get_curriculum_courses(
         for row in rows
     ]
 
+
+def get_graduation_requirements(
+    *,
+    entry_year: int,
+) -> Optional[Dict[str, Any]]:
+    """입학연도에 해당하는 전공 졸업요건을 조회한다."""
+    with connect_database() as connection:
+        row = connection.execute(
+            """
+            SELECT
+                entry_year,
+                major_required_credits,
+                major_elective_credits,
+                notes
+            FROM graduation_requirements
+            WHERE entry_year = ?
+            """,
+            (entry_year,),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    return dict(row)
+
+
 def get_general_education_requirements(
     *,
     entry_year: int,

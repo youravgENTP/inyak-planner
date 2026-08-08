@@ -32,6 +32,7 @@ from server.course_records_router import (
 from server.database import (
     get_curriculum_courses,
     get_general_education_requirements,
+    get_graduation_requirements,
     get_lecture_by_id,
     get_lectures,
     get_lectures_by_ids,
@@ -133,6 +134,32 @@ def read_curriculum(
         "count": len(courses),
         "courses": courses,
     }
+
+
+@app.get("/api/graduation-requirements")
+def read_graduation_requirements(
+    entry_year: int = Query(
+        ge=2000,
+        le=2100,
+    ),
+) -> Dict[str, Any]:
+    requirement = (
+        get_graduation_requirements(
+            entry_year=entry_year,
+        )
+    )
+
+    if requirement is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"{entry_year}학번 전공 "
+                "졸업요건을 찾을 수 없습니다."
+            ),
+        )
+
+    return requirement
+
 
 @app.get("/api/general-education")
 def read_general_education(
