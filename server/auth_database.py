@@ -114,6 +114,7 @@ def ensure_user_course_record_columns() -> None:
                 "area_id"
             ): "INTEGER",
             "grade": "INTEGER",
+            "term": "TEXT",
         }
 
         for (
@@ -197,6 +198,7 @@ def create_auth_tables() -> None:
                 academic_year INTEGER,
                 grade INTEGER,
                 semester INTEGER,
+                term TEXT,
 
                 course_name TEXT NOT NULL,
                 course_code TEXT,
@@ -228,6 +230,16 @@ def create_auth_tables() -> None:
                 CHECK (
                     semester IS NULL
                     OR semester IN (1, 2)
+                ),
+
+                CHECK (
+                    term IS NULL
+                    OR term IN (
+                        'spring',
+                        'summer',
+                        'fall',
+                        'winter'
+                    )
                 ),
 
                 CHECK (
@@ -506,6 +518,7 @@ def create_user_course_record(
     academic_year: int | None,
     grade: int | None,
     semester: int | None,
+    term: str | None,
     course_name: str,
     course_code: str | None,
     completion_type: str,
@@ -532,6 +545,7 @@ def create_user_course_record(
                 academic_year,
                 grade,
                 semester,
+                term,
                 course_name,
                 course_code,
                 completion_type,
@@ -545,7 +559,7 @@ def create_user_course_record(
             )
             VALUES (
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
             """,
             (
@@ -558,6 +572,7 @@ def create_user_course_record(
                 academic_year,
                 grade,
                 semester,
+                term,
                 course_name.strip(),
                 (
                     course_code.strip()
@@ -596,6 +611,8 @@ def create_user_course_record(
             grade,
         "semester":
             semester,
+        "term":
+            term,
         "course_name":
             course_name.strip(),
         "course_code": (
@@ -643,6 +660,7 @@ def get_user_course_records(
                 academic_year,
                 grade,
                 semester,
+                term,
                 course_name,
                 course_code,
                 completion_type,
@@ -715,6 +733,7 @@ def update_user_course_record(
                 academic_year = ?,
                 grade = ?,
                 semester = ?,
+                term =?,
                 course_name = ?,
                 course_code = ?,
                 completion_type = ?,
@@ -735,6 +754,7 @@ def update_user_course_record(
                 academic_year,
                 grade,
                 semester,
+                term,
                 course_name.strip(),
                 (
                     course_code.strip()
@@ -772,6 +792,7 @@ def update_user_course_record(
                 academic_year,
                 grade,
                 semester,
+                term,
                 course_name,
                 course_code,
                 completion_type,
