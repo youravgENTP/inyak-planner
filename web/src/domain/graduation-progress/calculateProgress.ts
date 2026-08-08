@@ -275,10 +275,13 @@ function createMajorProgress(
       requiredCredits,
     ),
 
-    courses: createCourseCountProgress(
-      matchingRecords,
-      officialCourses.length,
-    ),
+    courses:
+      completionType === '전필'
+        ? createCourseCountProgress(
+            matchingRecords,
+            officialCourses.length,
+          )
+        : null,
   }
 }
 

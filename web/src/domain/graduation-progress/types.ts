@@ -36,7 +36,7 @@ export interface MajorCompletionProgress {
   completionType:
     CurriculumCompletionType
   credits: CreditProgress
-  courses: CourseCountProgress
+  courses: CourseCountProgress | null
 }
 
 export interface GeneralEducationAreaProgress {
