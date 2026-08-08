@@ -1,4 +1,5 @@
 import type {
+  AcademicTerm,
   CourseCompletionType,
   CourseRecord,
   CourseRecordInput,
@@ -22,6 +23,7 @@ interface CourseRecordApiItem {
   academic_year: number | null
   grade: number | null
   semester: number | null
+  term: AcademicTerm | null
   course_name: string
   course_code: string | null
   completion_type: CourseCompletionType
@@ -65,6 +67,8 @@ function mapCourseRecord(
       record.grade,
     semester:
       record.semester,
+    term:
+      record.term,
     courseName:
       record.course_name,
     courseCode:
@@ -158,6 +162,8 @@ function mapCourseRecordInput(
       input.grade ?? null,
     semester:
       input.semester,
+    term:
+      input.term ?? null,
     course_name:
       input.courseName,
     course_code:

@@ -10,6 +10,12 @@ export type CourseRecordStatus =
   | 'completed'
   | 'substituted'
 
+export type AcademicTerm =
+  | 'spring'
+  | 'summer'
+  | 'fall'
+  | 'winter'
+
 export interface CourseRecord {
   id: string
   userId: string
@@ -22,6 +28,7 @@ export interface CourseRecord {
   academicYear: number | null
   grade: number | null
   semester: number | null
+  term: AcademicTerm | null
   courseName: string
   courseCode: string | null
   completionType: CourseCompletionType
@@ -44,6 +51,7 @@ export interface CourseRecordInput {
   academicYear: number | null
   grade?: number | null
   semester: number | null
+  term?: AcademicTerm | null
   courseName: string
   courseCode: string | null
   completionType: CourseCompletionType
