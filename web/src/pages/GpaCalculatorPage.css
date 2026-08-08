@@ -8,6 +8,14 @@
   gap: 22px;
 }
 
+.gpa-workspace,
+.gpa-record-entry {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 22px;
+}
+
 .gpa-records-header p {
   margin: 0 0 7px;
   font-size: 12px;
@@ -530,6 +538,36 @@
 /* =========================================================
    반응형
    ========================================================= */
+
+/*
+ * 충분히 넓은 데스크톱에서는
+ * 전체 GPA 요약과 과목 입력 영역을
+ * 좌우 2열로 배치합니다.
+ */
+@media (min-width: 1400px) {
+  .gpa-workspace {
+    display: grid;
+    grid-template-columns:
+      minmax(400px, 0.9fr)
+      minmax(0, 1.35fr);
+    align-items: start;
+    gap: 24px;
+  }
+
+  /*
+   * 왼쪽 열의 폭이 기존 전체 페이지보다
+   * 좁아지므로 두 그래프는 위아래로
+   * 배치합니다.
+   */
+  .gpa-overview-visuals {
+    grid-template-columns: 1fr;
+  }
+
+  .gpa-overview-visuals > article:first-child {
+    border-right: 0;
+    border-bottom: 1px solid #e7ede8;
+  }
+}
 
 @media (max-width: 900px) {
   .gpa-overview-visuals {

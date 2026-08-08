@@ -935,6 +935,7 @@ export function GpaCalculatorPage({
         </div>
       </header>
 
+      <div className="gpa-workspace">
       <section className="gpa-overview">
         <div className="gpa-overview-metrics">
           <article>
@@ -1036,6 +1037,7 @@ export function GpaCalculatorPage({
         </div>
       </section>
 
+        <div className="gpa-record-entry">
       <nav
         aria-label="학기 선택"
         className="gpa-semester-tabs"
@@ -1545,6 +1547,8 @@ export function GpaCalculatorPage({
           </div>
         </section>
       ) : null}
+        </div>
+      </div>
 
       <TimetableImportModal
         isOpen={
