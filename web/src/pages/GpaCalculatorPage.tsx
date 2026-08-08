@@ -1116,51 +1116,50 @@ export function GpaCalculatorPage({
       transferTabIsSelected &&
       curriculum !== null &&
       generalEducation !== null ? (
-        <div className="graduation-board-section">
-          <TransferCreditCard
-            card={transferCreditCard}
-            curriculum={curriculum}
-            generalEducation={
-              generalEducation
-            }
-            onRecordCreated={(
-              createdRecord,
-            ) => {
-              setCourseRecords(
-                (currentRecords) => [
-                  ...currentRecords,
-                  createdRecord,
-                ],
-              )
-            }}
-            onRecordUpdated={(
-              updatedRecord,
-            ) => {
-              setCourseRecords(
-                (currentRecords) =>
-                  currentRecords.map(
-                    (record) =>
-                      record.id ===
-                      updatedRecord.id
-                        ? updatedRecord
-                        : record,
-                  ),
-              )
-            }}
-            onRecordDeleted={(
-              deletedRecordId,
-            ) => {
-              setCourseRecords(
-                (currentRecords) =>
-                  currentRecords.filter(
-                    (record) =>
-                      record.id !==
-                      deletedRecordId,
-                  ),
-              )
-            }}
-          />
-        </div>
+        <TransferCreditCard
+          variant="gpa"
+          card={transferCreditCard}
+          curriculum={curriculum}
+          generalEducation={
+            generalEducation
+          }
+          onRecordCreated={(
+            createdRecord,
+          ) => {
+            setCourseRecords(
+              (currentRecords) => [
+                ...currentRecords,
+                createdRecord,
+              ],
+            )
+          }}
+          onRecordUpdated={(
+            updatedRecord,
+          ) => {
+            setCourseRecords(
+              (currentRecords) =>
+                currentRecords.map(
+                  (record) =>
+                    record.id ===
+                    updatedRecord.id
+                      ? updatedRecord
+                      : record,
+                ),
+            )
+          }}
+          onRecordDeleted={(
+            deletedRecordId,
+          ) => {
+            setCourseRecords(
+              (currentRecords) =>
+                currentRecords.filter(
+                  (record) =>
+                    record.id !==
+                    deletedRecordId,
+                ),
+            )
+          }}
+        />
       ) : null}
 
       {!recordsAreLoading &&

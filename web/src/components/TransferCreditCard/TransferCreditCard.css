@@ -1,0 +1,219 @@
+/* =========================================================
+   GPA 페이지용 전적대 학점 인정 카드
+   ========================================================= */
+
+.transfer-credit-card--gpa {
+  width: 100%;
+  min-height: 0;
+  border-color: #dfe8e1;
+  border-radius: 16px;
+  background: #fff;
+}
+
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-card-header {
+  min-height: 0;
+  padding: 20px;
+  border-bottom: 1px solid #e7ede8;
+  background: #f8fbf9;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-card-header span {
+  font-size: 11px;
+  color: #718077;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-card-header h3 {
+  font-size: 19px;
+  color: #273a2e;
+}
+
+
+/* ---------------------------------------------------------
+   인정 학점 요약
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary {
+  border-bottom: 1px solid #e7ede8;
+  background: #fff;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary div {
+  gap: 6px;
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary div + div {
+  border-left: 1px solid #e7ede8;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary span {
+  font-size: 12px;
+  color: #718078;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary strong {
+  font-size: 20px;
+  color: #26392d;
+}
+
+
+/* ---------------------------------------------------------
+   인정 과목 목록
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-course-list {
+  gap: 0;
+  padding: 0;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course {
+  min-height: 64px;
+  padding: 10px 20px;
+  border: 0;
+  border-bottom: 1px solid #f0f3f1;
+  border-radius: 0;
+  background: #fff;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course:last-child {
+  border-bottom: 0;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course:hover {
+  background: #f8fbf9;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course-content {
+  gap: 3px;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course-content
+  > strong {
+  font-size: 13px;
+  color: #293b30;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-course-content
+  > span {
+  font-size: 11px;
+  color: #68756d;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-source {
+  color: #718078;
+}
+
+
+/* ---------------------------------------------------------
+   추가 메뉴
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-menu-list {
+  width: 190px;
+  padding: 6px;
+  overflow: visible;
+  border: 1px solid #dfe8e1;
+  border-radius: 10px;
+  box-shadow:
+    0 12px 28px rgb(32 49 39 / 14%);
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-menu-list
+  button {
+  padding: 10px 11px;
+  border-radius: 7px;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-menu-list
+  button + button {
+  border-top: 0;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-menu-list
+  button:hover {
+  background: #f3f7f4;
+}
+
+
+/* ---------------------------------------------------------
+   과목 관리 메뉴
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-more {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  color: #7d8881;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-more:hover {
+  background: #f0f4f1;
+}
+
+
+/* ---------------------------------------------------------
+   빈 상태
+   --------------------------------------------------------- */
+
+.transfer-credit-card--gpa
+  .graduation-board-empty {
+  min-height: 180px;
+  padding: 40px 20px;
+  background: #fff;
+  font-size: 12px;
+  color: #7b867f;
+}
+
+
+/* ---------------------------------------------------------
+   작은 화면
+   --------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .transfer-credit-card--gpa
+    .graduation-board-transfer-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .transfer-credit-card--gpa
+    .graduation-board-transfer-summary
+    div:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid #e7ede8;
+  }
+
+  .transfer-credit-card--gpa
+    .graduation-board-transfer-summary
+    div:nth-child(4) {
+    border-top: 1px solid #e7ede8;
+  }
+}

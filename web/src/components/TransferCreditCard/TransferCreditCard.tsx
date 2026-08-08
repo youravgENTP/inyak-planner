@@ -33,9 +33,10 @@ import {
 } from '../MajorTransferCreditModal/MajorTransferCreditModal'
 
 import '../GraduationSemesterBoard/GraduationSemesterBoard.css'
-
+import './TransferCreditCard.css'
 
 interface TransferCreditCardProps {
+  variant?: 'board' | 'gpa'
   card: TransferCreditBoardCard
   curriculum: Curriculum
   generalEducation: GeneralEducation
@@ -59,6 +60,7 @@ function formatCredits(
 
 
 export function TransferCreditCard({
+  variant = 'board',
   card,
   curriculum,
   generalEducation,
@@ -240,10 +242,24 @@ export function TransferCreditCard({
 
   return (
     <>
-      <article className="graduation-board-card graduation-board-card--transfer">
+      <article
+        className={
+          `graduation-board-card ` +
+          `graduation-board-card--transfer` +
+          (
+            variant === 'gpa'
+              ? ' transfer-credit-card--gpa'
+              : ''
+          )
+        }
+      >
         <header className="graduation-board-card-header">
           <div>
-            <span>편입생</span>
+            <span>
+              {variant === 'gpa'
+                ? '전적대 인정'
+                : '편입생'}
+            </span>
 
             <h3>
               전적대 학점 인정
@@ -259,7 +275,12 @@ export function TransferCreditCard({
                 menuIsOpen
               }
               aria-haspopup="menu"
-              className="graduation-board-transfer-add"
+              aria-label="인정 과목 추가"
+              className={
+                variant === 'gpa'
+                  ? 'gpa-add-course-button'
+                  : 'graduation-board-transfer-add'
+              }
               type="button"
               onClick={() => {
                 setActiveRecordMenuId(
@@ -272,7 +293,9 @@ export function TransferCreditCard({
                 )
               }}
             >
-              + 인정 과목 추가
+              {variant === 'gpa'
+                ? '+'
+                : '+ 인정 과목 추가'}
             </button>
 
             {menuIsOpen ? (
