@@ -106,6 +106,53 @@ ON curriculum_courses (
     course_code
 );
 
+
+/* =========================================================
+   학번별 전공 졸업요건
+   ========================================================= */
+
+/*
+ * 입학 학년도별 전공필수·전공선택 최소 이수학점을
+ * 저장합니다.
+ *
+ * 교양 졸업요건은 아래의
+ * general_education_requirements 테이블에서
+ * 별도로 관리합니다.
+ */
+CREATE TABLE IF NOT EXISTS graduation_requirements (
+    id INTEGER PRIMARY KEY,
+
+    /* 입학 학년도: 예) 2024학번 */
+    entry_year INTEGER NOT NULL UNIQUE,
+
+    /* 졸업에 필요한 최소 전공필수 학점 */
+    major_required_credits REAL NOT NULL
+        CHECK (major_required_credits >= 0),
+
+    /* 졸업에 필요한 최소 전공선택 학점 */
+    major_elective_credits REAL NOT NULL
+        CHECK (major_elective_credits >= 0),
+
+    /* 원자료 출처나 예외사항 */
+    notes TEXT,
+
+    created_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TEXT NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+);
+
+
+/* 입학연도별 전공 졸업요건 검색 */
+
+CREATE INDEX IF NOT EXISTS
+idx_graduation_requirements_entry_year
+ON graduation_requirements (
+    entry_year
+);
+
+
 /* =========================================================
    학번별 교양 졸업요건
    ========================================================= */
