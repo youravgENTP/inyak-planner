@@ -192,6 +192,107 @@
   color: #7b867f;
 }
 
+/* ---------------------------------------------------------
+   전필 · 전선 · 교양 인정 내역 펼치기
+   --------------------------------------------------------- */
+
+.graduation-board-transfer-summary-toggle {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+
+  padding: 12px 8px;
+
+  border: 0;
+  background: transparent;
+
+  color: inherit;
+  font: inherit;
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.graduation-board-transfer-summary-toggle:hover {
+  background: rgb(255 255 255 / 28%);
+}
+
+.graduation-board-transfer-summary-toggle strong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.graduation-board-transfer-summary-chevron {
+  display: inline-block;
+
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  color: #728078;
+
+  transition: transform 160ms ease;
+}
+
+.graduation-board-transfer-summary-chevron--open {
+  transform: rotate(180deg);
+}
+
+/*
+ * 버튼으로 바뀐 전필·전선·교양 셀에도
+ * 기존 summary 구분선을 적용합니다.
+ */
+.graduation-board-transfer-summary
+  > * + * {
+  border-left: 1px solid #dceae1;
+}
+
+/*
+ * 아무 분류도 펼쳐져 있지 않으면
+ * 빈 ul의 padding 공간도 제거합니다.
+ */
+.graduation-board-course-list:empty {
+  display: none;
+}
+
+
+/* GPA 페이지의 넓은 카드에서는
+   기존 summary 스타일에 맞춥니다. */
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary-toggle {
+  gap: 6px;
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary-toggle
+  strong {
+  justify-content: flex-start;
+  font-size: 20px;
+  color: #26392d;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary-toggle
+  span {
+  font-size: 12px;
+  color: #718078;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary
+  > * + * {
+  border-left-color: #e7ede8;
+}
+
+.transfer-credit-card--gpa
+  .graduation-board-transfer-summary-toggle:hover {
+  background: #f8fbf9;
+}
 
 /* ---------------------------------------------------------
    작은 화면
@@ -206,7 +307,7 @@
 
   .transfer-credit-card--gpa
     .graduation-board-transfer-summary
-    div:nth-child(3) {
+    > :nth-child(3) {
     border-left: 0;
     border-top: 1px solid #e7ede8;
   }
