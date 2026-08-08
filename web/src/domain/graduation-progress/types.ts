@@ -37,6 +37,7 @@ export interface MajorCompletionProgress {
     CurriculumCompletionType
   credits: CreditProgress
   courses: CourseCountProgress | null
+  isSatisfied: boolean
 }
 
 export interface GeneralEducationAreaProgress {
@@ -77,6 +78,7 @@ export interface GraduationProgress {
     MajorCompletionProgress
   generalEducation:
     GeneralEducationRequirementProgress[]
+  isSatisfied: boolean
   substitutedRecords:
     CourseRecord[]
 }

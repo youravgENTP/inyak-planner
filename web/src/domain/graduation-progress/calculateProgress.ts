@@ -267,21 +267,30 @@ function createMajorProgress(
           match.record,
       )
 
-  return {
-    completionType,
-
-    credits: createCreditProgress(
+  const credits =
+    createCreditProgress(
       matchingRecords,
       requiredCredits,
-    ),
+    )
 
-    courses:
-      completionType === '전필'
-        ? createCourseCountProgress(
-            matchingRecords,
-            officialCourses.length,
-          )
-        : null,
+  const courses =
+    completionType === '전필'
+      ? createCourseCountProgress(
+          matchingRecords,
+          officialCourses.length,
+        )
+      : null
+
+  return {
+    completionType,
+    credits,
+    courses,
+    isSatisfied:
+      credits.isSatisfied &&
+      (
+        courses === null ||
+        courses.isSatisfied
+      ),
   }
 }
 
@@ -531,6 +540,13 @@ export function calculateGraduationProgress(
     majorElective,
     generalEducation:
       generalEducationProgress,
+    isSatisfied:
+      majorRequired.isSatisfied &&
+      majorElective.isSatisfied &&
+      generalEducationProgress.every(
+        (requirement) =>
+          requirement.isSatisfied,
+      ),
     substitutedRecords:
       effectiveRecords.filter(
         (record) =>
