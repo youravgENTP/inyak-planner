@@ -21,8 +21,9 @@
 
 .semester-gpa-chart__y-label,
 .semester-gpa-chart__x-label {
-  fill: #87928b;
-  font-size: 9px;
+  fill: #718077;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .semester-gpa-chart__line {
