@@ -107,6 +107,18 @@
   transition: width 180ms ease;
 }
 
+.graduation-progress-summary-areas {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.graduation-progress-summary-areas strong {
+  margin-left: 4px;
+  font-size: 13px;
+  color: #333;
+}
+
 .graduation-progress-summary-details {
   display: grid;
   grid-template-columns:
