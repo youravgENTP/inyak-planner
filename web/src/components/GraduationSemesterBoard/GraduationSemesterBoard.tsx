@@ -463,7 +463,7 @@ function SemesterCard({
           <div className="graduation-board-accordion-section">
             <button
               aria-expanded={
-                openSection.has('required')
+                openSections.has('required')
               }
               className="graduation-board-accordion-toggle"
               type="button"
@@ -497,7 +497,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection.has('required')
+                    openSections.has('required')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -507,7 +507,7 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection.has('required') ? (
+            {openSections.has('required') ? (
               <ul className="graduation-board-course-list">
                 {card.requiredCourses.map(
                   ({
@@ -544,7 +544,7 @@ function SemesterCard({
           <div className="graduation-board-accordion-section">
             <button
               aria-expanded={
-                openSection.has('elective')
+                openSections.has('elective')
               }
               className="graduation-board-accordion-toggle"
               type="button"
@@ -570,7 +570,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection.has('elective')
+                    openSections.has('elective')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -580,7 +580,7 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection.has('elective') ? (
+            {openSections.has('elective') ? (
               <ul className="graduation-board-course-list">
                 {card.electiveRecords.map(
                   ({
@@ -658,8 +658,9 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection ===
-                    'generalEducation'
+                    openSections.has(
+                    'generalEducation',
+                    )
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -669,8 +670,9 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection ===
-            'generalEducation' ? (
+            {openSections.has(
+            'generalEducation',
+            ) ? (
               <ul className="graduation-board-course-list">
                 {card.generalEducationRecords.map(
                   (record) => (
@@ -728,7 +730,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection === 'unmatched'
+                    openSections.has('unmatched')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -738,7 +740,7 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection === 'unmatched' ? (
+            {openSections.has('unmatched') ? (
               <ul className="graduation-board-course-list">
                 {card.unmatchedRecords.map(
                   (record) => (
