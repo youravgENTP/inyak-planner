@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = PROJECT_ROOT / "data" / "db" / "inyak.db"
 
 EXPECTED_2024_COURSE_COUNT = 97
-EXPECTED_2024_REQUIRED_CREDITS = 116.0
+EXPECTED_2024_REQUIRED_CREDITS = 118.0
 
 REQUIRED_COLUMNS = {
     "entry_year",
