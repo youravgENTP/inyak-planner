@@ -14,6 +14,12 @@ import type {
 import type {
   GraduationRequirements,
 } from '../graduation-requirements/types'
+import type {
+  Lecture,
+} from '../lectures/types'
+import {
+  findCatalogElectiveRecords,
+} from './findCatalogElectiveRecords'
 import {
   matchCurriculumRecords,
 } from './matchCurriculumRecords'
@@ -240,6 +246,8 @@ function createMajorProgress(
   completionType:
     CurriculumCompletionType,
   requiredCredits: number,
+  additionalRecords:
+    readonly CourseRecord[] = [],
 ): MajorCompletionProgress {
   const officialCourses =
     curriculum.courses.filter(
@@ -254,8 +262,8 @@ function createMajorProgress(
    * 학번별 curriculum에서 판정된
    * completionType을 기준으로 분류합니다.
    */
-  const matchingRecords =
-    matches
+  const matchingRecords = [
+    ...matches
       .filter(
         (match) =>
           match.curriculumCourse
@@ -265,7 +273,9 @@ function createMajorProgress(
       .map(
         (match) =>
           match.record,
-      )
+      ),
+    ...additionalRecords,
+  ]
 
   const credits =
     createCreditProgress(
@@ -484,6 +494,7 @@ export function calculateGraduationProgress(
   graduationRequirements:
     GraduationRequirements,
   records: readonly CourseRecord[],
+  lectures: readonly Lecture[],
 ): GraduationProgress {
   const effectiveRecords =
     records.filter(
@@ -495,6 +506,13 @@ export function calculateGraduationProgress(
     matchCurriculumRecords(
       curriculum,
       effectiveRecords,
+    )
+
+  const catalogElectiveRecords =
+    findCatalogElectiveRecords(
+      curriculumMatchResult
+        .unmatchedRecords,
+      lectures,
     )
 
   const majorRequired =
@@ -513,6 +531,7 @@ export function calculateGraduationProgress(
       '전선',
       graduationRequirements
         .majorElectiveCredits,
+      catalogElectiveRecords,
     )
 
   const generalEducationProgress =

@@ -37,6 +37,12 @@ import type {
   GraduationRequirements,
 } from '../domain/graduation-requirements/types'
 import {
+  fetchLectures,
+} from '../domain/lectures/api'
+import type {
+  Lecture,
+} from '../domain/lectures/types'
+import {
   calculateGraduationProgress,
 } from '../domain/graduation-progress/calculateProgress'
 import type {
@@ -199,6 +205,11 @@ export function ProgressTrackerPage({
   )
 
   const [
+    lectures,
+    setLectures,
+  ] = useState<Lecture[]>([])
+
+  const [
     dataAreLoading,
     setDataAreLoading,
   ] = useState(false)
@@ -227,6 +238,7 @@ export function ProgressTrackerPage({
           curriculumResult,
           generalEducationResult,
           graduationRequirementsResult,
+          lecturesResult,
         ] = await Promise.all([
           getCourseRecords(),
           fetchCurriculum(
@@ -238,6 +250,7 @@ export function ProgressTrackerPage({
           fetchGraduationRequirements(
             user.entryYear,
           ),
+          fetchLectures(),
         ])
 
         setCourseRecords(records)
@@ -249,6 +262,9 @@ export function ProgressTrackerPage({
         )
         setGraduationRequirements(
           graduationRequirementsResult,
+        )
+        setLectures(
+          lecturesResult,
         )
       } catch (error) {
         setDataError(
@@ -291,6 +307,7 @@ export function ProgressTrackerPage({
           generalEducation,
           graduationRequirements,
           courseRecords,
+          lectures,
         )
       },
       [
@@ -298,6 +315,7 @@ export function ProgressTrackerPage({
         curriculum,
         generalEducation,
         graduationRequirements,
+        lectures,
       ],
     )
 
