@@ -264,18 +264,6 @@ export function CurriculumPage() {
     )
   }
 
-  const requiredSummary =
-    summarizeCourses(
-      curriculum.courses,
-      '전필',
-    )
-
-  const electiveSummary =
-    summarizeCourses(
-      curriculum.courses,
-      '전선',
-    )
-
   return (
     <section className="curriculum-page">
       <header className="curriculum-header">
@@ -308,41 +296,6 @@ export function CurriculumPage() {
           </p>
         </div>
 
-        {activeSection === 'major' && (
-          <div className="curriculum-overview">
-            <div className="curriculum-overview-item">
-              <span>전체 과목</span>
-
-              <strong>
-                {curriculum.count}과목
-              </strong>
-            </div>
-
-            <div className="curriculum-overview-item">
-              <span>전공필수</span>
-
-              <strong>
-                {requiredSummary.courseCount}
-                과목 ·{' '}
-                {formatCredits(
-                  requiredSummary,
-                )}
-              </strong>
-            </div>
-
-            <div className="curriculum-overview-item">
-              <span>전공선택</span>
-
-              <strong>
-                {electiveSummary.courseCount}
-                과목 ·{' '}
-                {formatCredits(
-                  electiveSummary,
-                )}
-              </strong>
-            </div>
-          </div>
-        )}
       </header>
 
       <div

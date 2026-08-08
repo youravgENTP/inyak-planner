@@ -910,7 +910,7 @@ export function GpaCalculatorPage({
           <p>졸업 요건</p>
 
           <h1>
-            수강 기록 &amp; GPA
+            수강이력 입력 &amp; GPA 계산
           </h1>
 
           <span>

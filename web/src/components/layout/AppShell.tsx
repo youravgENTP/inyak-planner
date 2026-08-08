@@ -260,7 +260,7 @@ export function AppShell({
                     onNavigate('gpa')
                   }
                 >
-                  수강 기록 &amp; GPA
+                  수강이력 입력 &amp; GPA 계산
                 </button>
 
                 <button
