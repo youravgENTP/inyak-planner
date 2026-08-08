@@ -37,6 +37,7 @@ import './TransferCreditCard.css'
 
 interface TransferCreditCardProps {
   variant?: 'board' | 'gpa'
+  readOnly?: boolean
   card: TransferCreditBoardCard
   curriculum: Curriculum
   generalEducation: GeneralEducation
@@ -61,6 +62,7 @@ function formatCredits(
 
 export function TransferCreditCard({
   variant = 'board',
+  readOnly = false,
   card,
   curriculum,
   generalEducation,
@@ -266,76 +268,78 @@ export function TransferCreditCard({
             </h3>
           </div>
 
-          <div
-            className="graduation-board-transfer-menu"
-            ref={menuRef}
-          >
-            <button
-              aria-expanded={
-                menuIsOpen
-              }
-              aria-haspopup="menu"
-              aria-label="인정 과목 추가"
-              className={
-                variant === 'gpa'
-                  ? 'gpa-add-course-button'
-                  : 'graduation-board-transfer-add'
-              }
-              type="button"
-              onClick={() => {
-                setActiveRecordMenuId(
-                  null,
-                )
-
-                setMenuIsOpen(
-                  (currentValue) =>
-                    !currentValue,
-                )
-              }}
+          {!readOnly ? (
+            <div
+              className="graduation-board-transfer-menu"
+              ref={menuRef}
             >
-              {variant === 'gpa'
-                ? '+'
-                : '+ 인정 과목 추가'}
-            </button>
+              <button
+                aria-expanded={
+                  menuIsOpen
+                }
+                aria-haspopup="menu"
+                aria-label="인정 과목 추가"
+                className={
+                  variant === 'gpa'
+                    ? 'gpa-add-course-button'
+                    : 'graduation-board-transfer-add'
+                }
+                type="button"
+                onClick={() => {
+                  setActiveRecordMenuId(
+                    null,
+                  )
 
-            {menuIsOpen ? (
-              <div
-                className="graduation-board-transfer-menu-list"
-                role="menu"
+                  setMenuIsOpen(
+                    (currentValue) =>
+                      !currentValue,
+                  )
+                }}
               >
-                <button
-                  role="menuitem"
-                  type="button"
-                  onClick={() => {
-                    setMenuIsOpen(false)
-                    setMajorModalIsOpen(
-                      true,
-                    )
-                  }}
-                >
-                  <strong>
-                    전공
-                  </strong>
-                </button>
+                {variant === 'gpa'
+                  ? '+'
+                  : '+ 인정 과목 추가'}
+              </button>
 
-                <button
-                  role="menuitem"
-                  type="button"
-                  onClick={() => {
-                    setMenuIsOpen(false)
-
-                    setGeneralEducationModalIsOpen(
-                      true,
-                    )
-                  }}
+              {menuIsOpen ? (
+                <div
+                  className="graduation-board-transfer-menu-list"
+                  role="menu"
                 >
-                  <strong>
-                    교양
-                  </strong>
-                </button>
-              </div>
-            ) : null}
-          </div>
+                  <button
+                    role="menuitem"
+                    type="button"
+                    onClick={() => {
+                      setMenuIsOpen(false)
+                      setMajorModalIsOpen(
+                        true,
+                      )
+                    }}
+                  >
+                    <strong>
+                      전공
+                    </strong>
+                  </button>
+
+                  <button
+                    role="menuitem"
+                    type="button"
+                    onClick={() => {
+                      setMenuIsOpen(false)
+
+                      setGeneralEducationModalIsOpen(
+                        true,
+                      )
+                    }}
+                  >
+                    <strong>
+                      교양
+                    </strong>
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </header>
 
         <div className="graduation-board-transfer-summary">
@@ -492,58 +496,77 @@ export function TransferCreditCard({
                       </span>
                     </div>
 
-                    <div
-                      className="graduation-board-transfer-actions"
-                      ref={
-                        activeRecordMenuId ===
-                        record.id
-                          ? actionMenuRef
-                          : null
-                      }
-                    >
-                      <button
-                        aria-expanded={
+                    {!readOnly ? (
+                      <div
+                        className="graduation-board-transfer-actions"
+                        ref={
                           activeRecordMenuId ===
                           record.id
+                            ? actionMenuRef
+                            : null
                         }
-                        aria-haspopup="menu"
-                        aria-label={
-                          `${record.courseName} 인정 기록 메뉴`
-                        }
-                        className="graduation-board-transfer-more"
-                        disabled={
-                          deletingRecordId ===
-                          record.id
-                        }
-                        type="button"
-                        onClick={() => {
-                          setMenuIsOpen(false)
-
-                          setActiveRecordMenuId(
-                            (
-                              currentRecordId,
-                            ) =>
-                              currentRecordId ===
-                              record.id
-                                ? null
-                                : record.id,
-                          )
-                        }}
                       >
-                        ⋯
-                      </button>
+                        <button
+                          aria-expanded={
+                            activeRecordMenuId ===
+                            record.id
+                          }
+                          aria-haspopup="menu"
+                          aria-label={
+                            `${record.courseName} 인정 기록 메뉴`
+                          }
+                          className="graduation-board-transfer-more"
+                          disabled={
+                            deletingRecordId ===
+                            record.id
+                          }
+                          type="button"
+                          onClick={() => {
+                            setMenuIsOpen(false)
 
-                      {activeRecordMenuId ===
-                      record.id ? (
-                        <div
-                          className="graduation-board-transfer-action-menu"
-                          role="menu"
+                            setActiveRecordMenuId(
+                              (
+                                currentRecordId,
+                              ) =>
+                                currentRecordId ===
+                                record.id
+                                  ? null
+                                  : record.id,
+                            )
+                          }}
                         >
-                          {curriculumCourse !==
-                            null ||
-                          generalEducationRequirement !==
-                            null ? (
+                          ⋯
+                        </button>
+
+                        {activeRecordMenuId ===
+                        record.id ? (
+                          <div
+                            className="graduation-board-transfer-action-menu"
+                            role="menu"
+                          >
+                            {curriculumCourse !==
+                              null ||
+                            generalEducationRequirement !==
+                              null ? (
+                              <button
+                                role="menuitem"
+                                type="button"
+                                onClick={() => {
+                                  setActiveRecordMenuId(
+                                    null,
+                                  )
+
+                                  setEditingRecord(
+                                    record,
+                                  )
+                                }}
+                              >
+                                수정
+                              </button>
+                            ) : null}
+
                             <button
+                              className="graduation-board-transfer-action-delete"
                               role="menuitem"
                               type="button"
                               onClick={() => {
@@ -551,34 +574,17 @@ export function TransferCreditCard({
                                   null,
                                 )
 
-                                setEditingRecord(
+                                void handleDeleteRecord(
                                   record,
                                 )
                               }}
                             >
-                              수정
+                              삭제
                             </button>
-                          ) : null}
-
-                          <button
-                            className="graduation-board-transfer-action-delete"
-                            role="menuitem"
-                            type="button"
-                            onClick={() => {
-                              setActiveRecordMenuId(
-                                null,
-                              )
-
-                              void handleDeleteRecord(
-                                record,
-                              )
-                            }}
-                          >
-                            삭제
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </li>
                 )
               },
@@ -587,7 +593,8 @@ export function TransferCreditCard({
         )}
       </article>
 
-      {majorModalIsOpen ? (
+      {!readOnly &&
+      majorModalIsOpen ? (
         <MajorTransferCreditModal
           curriculum={curriculum}
           onClose={() => {
@@ -601,7 +608,8 @@ export function TransferCreditCard({
         />
       ) : null}
 
-      {generalEducationModalIsOpen ? (
+      {!readOnly &&
+      generalEducationModalIsOpen ? (
         <GeneralEducationTransferCreditModal
           generalEducation={
             generalEducation
@@ -617,7 +625,8 @@ export function TransferCreditCard({
         />
       ) : null}
 
-      {editingRecord !== null &&
+      {!readOnly &&
+      editingRecord !== null &&
       editingRecord.curriculumCourseId !==
         null ? (
         <MajorTransferCreditModal
@@ -641,7 +650,8 @@ export function TransferCreditCard({
         />
       ) : null}
 
-      {editingRecord !== null &&
+      {!readOnly &&
+      editingRecord !== null &&
       editingRecord
         .generalEducationRequirementId !==
         null ? (

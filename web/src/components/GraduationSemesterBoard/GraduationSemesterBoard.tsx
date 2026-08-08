@@ -986,6 +986,7 @@ export function GraduationSemesterBoard({
         <div className="graduation-board-list">
           {board.transferCredits !== null ? (
             <TransferCreditCard
+              readOnly
               card={board.transferCredits}
               curriculum={curriculum}
               generalEducation={
