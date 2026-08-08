@@ -18,6 +18,9 @@ import type {
 import type {
   GeneralEducation,
 } from '../../domain/general-education/types'
+import type {
+  Lecture,
+} from '../../domain/lectures/types'
 import {
   createGraduationYearBoard,
 } from '../../domain/graduation-progress/createSemesterBoard'
@@ -36,6 +39,7 @@ interface GraduationSemesterBoardProps {
   curriculum: Curriculum
   generalEducation: GeneralEducation
   records: readonly CourseRecord[]
+  lectures: readonly Lecture[]
   onRecordCreated: (
     record: CourseRecord,
   ) => void
@@ -562,7 +566,8 @@ function SemesterCard({
                     <GraduationBoardCourse
                       completionType={
                         curriculumCourse
-                          .completionType
+                          ?.completionType ??
+                        '전선'
                       }
                       courseName={
                         record.courseName
@@ -572,7 +577,9 @@ function SemesterCard({
                       }
                       semester={
                         record.status ===
-                        'substituted'
+                          'substituted' &&
+                        curriculumCourse !==
+                          null
                           ? (
                             curriculumCourse
                               .semester
@@ -929,6 +936,7 @@ export function GraduationSemesterBoard({
   curriculum,
   generalEducation,
   records,
+  lectures,
   onRecordCreated,
   onRecordUpdated,
   onRecordDeleted,
@@ -938,6 +946,7 @@ export function GraduationSemesterBoard({
       user,
       curriculum,
       records,
+      lectures,
     )
 
   return (

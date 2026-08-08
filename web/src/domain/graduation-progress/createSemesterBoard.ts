@@ -8,6 +8,12 @@ import type {
   Curriculum,
   CurriculumCourse,
 } from '../curriculum/types'
+import type {
+  Lecture,
+} from '../lectures/types'
+import {
+  findCatalogElectiveRecords,
+} from './findCatalogElectiveRecords'
 import {
   matchCurriculumRecords,
 } from './matchCurriculumRecords'
@@ -185,8 +191,12 @@ export function createGraduationBoard(
 
 
 export interface SemesterBoardMatchedRecord {
+  /*
+   * null이면 공식 curriculum에는 없지만
+   * 실제 개설 당시 전선으로 확인된 기록입니다.
+   */
   curriculumCourse:
-    CurriculumCourse
+    CurriculumCourse | null
   record:
     CourseRecord
 }
@@ -318,6 +328,20 @@ function createYearSemesterBoard(
         curriculumCourse,
         record,
       }) => {
+        /*
+         * curriculumCourse가 null이면
+         * 공식 발표 교육과정에는 없지만,
+         * 실제 개설 당시 전선으로 확인된
+         * 동적 전선 기록입니다.
+         */
+        if (curriculumCourse === null) {
+          return recordBelongsToSemester(
+            record,
+            grade,
+            semester,
+          )
+        }
+
         if (
           curriculumCourse
             .completionType !== '전선'
@@ -395,6 +419,7 @@ export function createGraduationYearBoard(
   user: AuthUser,
   curriculum: Curriculum,
   records: readonly CourseRecord[],
+  lectures: readonly Lecture[],
 ): GraduationYearBoard {
   /*
    * 재수강으로 말소된 기록은
@@ -412,6 +437,27 @@ export function createGraduationYearBoard(
       effectiveRecords,
     )
 
+  const catalogElectiveRecords =
+    findCatalogElectiveRecords(
+      matchResult.unmatchedRecords,
+      lectures,
+    )
+
+  const catalogElectiveRecordIds =
+    new Set(
+      catalogElectiveRecords.map(
+        (record) => record.id,
+      ),
+    )
+
+  const remainingUnmatchedRecords =
+    matchResult.unmatchedRecords.filter(
+      (record) =>
+        !catalogElectiveRecordIds.has(
+          record.id,
+        ),
+    )
+
   const matchedRecordMap =
     new Map<number, CourseRecord>(
       matchResult.matches.map(
@@ -426,8 +472,8 @@ export function createGraduationYearBoard(
     )
 
   const matchedRecords:
-    SemesterBoardMatchedRecord[] =
-      matchResult.matches.map(
+    SemesterBoardMatchedRecord[] = [
+      ...matchResult.matches.map(
         ({
           curriculumCourse,
           record,
@@ -435,7 +481,15 @@ export function createGraduationYearBoard(
           curriculumCourse,
           record,
         }),
-      )
+      ),
+
+      ...catalogElectiveRecords.map(
+        (record) => ({
+          curriculumCourse: null,
+          record,
+        }),
+      ),
+    ]
 
   const years =
     Array.from(
@@ -454,8 +508,7 @@ export function createGraduationYearBoard(
                 matchedRecordMap,
                 matchedRecords,
                 effectiveRecords,
-                matchResult
-                  .unmatchedRecords,
+                remainingUnmatchedRecords,
                 grade,
                 semester,
               ),
