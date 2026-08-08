@@ -105,13 +105,11 @@ export function TransferCreditCard({
   )
 
   const [
-    openCompletionTypes,
-    setOpenCompletionTypes,
+    activeCompletionType,
+    setActiveCompletionType,
   ] = useState<
-    Set<CourseRecord['completionType']>
-  >(
-    () => new Set(),
-  )
+    CourseRecord['completionType'] | null
+  >(null)
 
   const menuRef =
     useRef<HTMLDivElement | null>(
@@ -172,29 +170,12 @@ export function TransferCreditCard({
     completionType:
       CourseRecord['completionType'],
   ) {
-    setOpenCompletionTypes(
-      (currentCompletionTypes) => {
-        const nextCompletionTypes =
-          new Set(
-            currentCompletionTypes,
-          )
-
-        if (
-          nextCompletionTypes.has(
-            completionType,
-          )
-        ) {
-          nextCompletionTypes.delete(
-            completionType,
-          )
-        } else {
-          nextCompletionTypes.add(
-            completionType,
-          )
-        }
-
-        return nextCompletionTypes
-      },
+    setActiveCompletionType(
+      (currentCompletionType) =>
+        currentCompletionType ===
+        completionType
+          ? null
+          : completionType,
     )
   }
 
@@ -282,12 +263,13 @@ export function TransferCreditCard({
       )
 
   const visibleRecords =
-    card.records.filter(
-      (record) =>
-        openCompletionTypes.has(
-          record.completionType,
-        ),
-    )
+    activeCompletionType === null
+      ? []
+      : card.records.filter(
+          (record) =>
+            record.completionType ===
+              activeCompletionType,
+        )
 
   return (
     <>
@@ -392,7 +374,7 @@ export function TransferCreditCard({
         <div className="graduation-board-transfer-summary">
           <button
             aria-expanded={
-              openCompletionTypes.has('전필')
+              activeCompletionType === '전필'
             }
             className="graduation-board-transfer-summary-toggle"
             type="button"
@@ -410,9 +392,8 @@ export function TransferCreditCard({
                 className={
                   'graduation-board-transfer-summary-chevron' +
                   (
-                    openCompletionTypes.has(
-                      '전필',
-                    )
+                    activeCompletionType ===
+                    '전필'
                       ? ' graduation-board-transfer-summary-chevron--open'
                       : ''
                   )
@@ -425,7 +406,7 @@ export function TransferCreditCard({
 
           <button
             aria-expanded={
-              openCompletionTypes.has('전선')
+              activeCompletionType === '전선'
             }
             className="graduation-board-transfer-summary-toggle"
             type="button"
@@ -443,9 +424,8 @@ export function TransferCreditCard({
                 className={
                   'graduation-board-transfer-summary-chevron' +
                   (
-                    openCompletionTypes.has(
-                      '전선',
-                    )
+                    activeCompletionType ===
+                    '전선'
                       ? ' graduation-board-transfer-summary-chevron--open'
                       : ''
                   )
@@ -458,7 +438,7 @@ export function TransferCreditCard({
 
           <button
             aria-expanded={
-              openCompletionTypes.has('교양')
+              activeCompletionType === '교양'
             }
             className="graduation-board-transfer-summary-toggle"
             type="button"
@@ -476,9 +456,8 @@ export function TransferCreditCard({
                 className={
                   'graduation-board-transfer-summary-chevron' +
                   (
-                    openCompletionTypes.has(
-                      '교양',
-                    )
+                    activeCompletionType ===
+                    '교양'
                       ? ' graduation-board-transfer-summary-chevron--open'
                       : ''
                   )
