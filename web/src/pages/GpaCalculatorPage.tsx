@@ -9,6 +9,10 @@ import {
 } from '../components/CourseRecordModal/CourseRecordModal'
 
 import {
+  TransferCreditCard,
+} from '../components/TransferCreditCard/TransferCreditCard'
+
+import {
   GradeDistributionChart,
 } from '../components/gpa/GradeDistributionChart'
 
@@ -20,6 +24,10 @@ import {
   TimetableImportModal,
 } from '../components/gpa/TimetableImportModal'
 
+import type {
+  AuthUser,
+} from '../domain/auth/api'
+
 import {
   deleteCourseRecord,
   getCourseRecords,
@@ -27,13 +35,29 @@ import {
 } from '../domain/course-records/api'
 
 import type {
-  AuthUser,
-} from '../domain/auth/api'
-
-import type {
   CourseRecord,
   CourseRecordInput,
 } from '../domain/course-records/types'
+
+import {
+  fetchCurriculum,
+} from '../domain/curriculum/api'
+
+import type {
+  Curriculum,
+} from '../domain/curriculum/types'
+
+import {
+  fetchGeneralEducation,
+} from '../domain/general-education/api'
+
+import type {
+  GeneralEducation,
+} from '../domain/general-education/types'
+
+import type {
+  TransferCreditBoardCard,
+} from '../domain/graduation-progress/createSemesterBoard'
 
 import './GpaCalculatorPage.css'
 
@@ -335,6 +359,20 @@ export function GpaCalculatorPage({
   ] = useState<CourseRecord[]>([])
 
   const [
+    curriculum,
+    setCurriculum,
+  ] = useState<Curriculum | null>(
+    null,
+  )
+
+  const [
+    generalEducation,
+    setGeneralEducation,
+  ] = useState<GeneralEducation | null>(
+    null,
+  )
+
+  const [
     selectedSemester,
     setSelectedSemester,
   ] = useState<SemesterDefinition>(
@@ -345,6 +383,13 @@ export function GpaCalculatorPage({
             semester: 1,
           }
         : SEMESTERS[0],
+  )
+
+  const [
+    transferTabIsSelected,
+    setTransferTabIsSelected,
+  ] = useState(
+    user.studentType === 'transfer',
   )
 
   const [
@@ -402,16 +447,43 @@ export function GpaCalculatorPage({
   useEffect(() => {
     let requestIsActive = true
 
-    async function loadCourseRecords() {
+    async function loadPageData() {
       setRecordsAreLoading(true)
       setRecordsError(null)
 
       try {
-        const records =
-          await getCourseRecords()
+        const transferDataPromise =
+          user.studentType ===
+            'transfer' &&
+          user.entryYear !== null
+            ? Promise.all([
+                fetchCurriculum(
+                  user.entryYear,
+                ),
+                fetchGeneralEducation(
+                  user.entryYear,
+                ),
+              ])
+            : Promise.resolve(null)
+
+        const [
+          records,
+          transferData,
+        ] = await Promise.all([
+          getCourseRecords(),
+          transferDataPromise,
+        ])
 
         if (requestIsActive) {
           setCourseRecords(records)
+
+          setCurriculum(
+            transferData?.[0] ?? null,
+          )
+
+          setGeneralEducation(
+            transferData?.[1] ?? null,
+          )
         }
       } catch (error) {
         if (!requestIsActive) {
@@ -421,7 +493,10 @@ export function GpaCalculatorPage({
         setRecordsError(
           error instanceof Error
             ? error.message
-            : '수강 기록을 불러오지 못했습니다.',
+            : (
+              '수강 기록과 전적대 인정 ' +
+              '정보를 불러오지 못했습니다.'
+            ),
         )
       } finally {
         if (requestIsActive) {
@@ -430,12 +505,15 @@ export function GpaCalculatorPage({
       }
     }
 
-    void loadCourseRecords()
+    void loadPageData()
 
     return () => {
       requestIsActive = false
     }
-  }, [])
+  }, [
+    user.entryYear,
+    user.studentType,
+  ])
 
   const regularRecords =
     useMemo(
@@ -447,6 +525,22 @@ export function GpaCalculatorPage({
             record.grade !== null &&
             record.semester !== null,
         ),
+      [courseRecords],
+    )
+
+  const transferCreditCard =
+    useMemo<TransferCreditBoardCard>(
+      () => ({
+        kind: 'transferCredits',
+
+        records:
+          courseRecords.filter(
+            (record) =>
+              record.status ===
+                'substituted' &&
+              !record.isRetake,
+          ),
+      }),
       [courseRecords],
     )
 
@@ -926,9 +1020,37 @@ export function GpaCalculatorPage({
         aria-label="학기 선택"
         className="gpa-semester-tabs"
       >
+        {user.studentType ===
+        'transfer' ? (
+          <button
+            aria-current={
+              transferTabIsSelected
+                ? 'page'
+                : undefined
+            }
+            className={
+              `gpa-semester-tab${
+                transferTabIsSelected
+                  ? ' gpa-semester-tab--active'
+                  : ''
+              }`
+            }
+            type="button"
+            onClick={() => {
+              setTransferTabIsSelected(
+                true,
+              )
+              setAddMenuIsOpen(false)
+            }}
+          >
+            전적대 학점 인정
+          </button>
+        ) : null}
+
         {availableSemesters.map(
           (semesterDefinition) => {
             const isSelected =
+              !transferTabIsSelected &&
               semesterDefinition.grade ===
                 selectedSemester.grade &&
               semesterDefinition.semester ===
@@ -954,6 +1076,9 @@ export function GpaCalculatorPage({
                 }
                 type="button"
                 onClick={() => {
+                  setTransferTabIsSelected(
+                    false,
+                  )
                   setSelectedSemester(
                     semesterDefinition,
                   )
@@ -987,7 +1112,79 @@ export function GpaCalculatorPage({
         </div>
       ) : null}
 
-      {!recordsAreLoading ? (
+      {!recordsAreLoading &&
+      transferTabIsSelected &&
+      curriculum !== null &&
+      generalEducation !== null ? (
+        <div className="graduation-board-section">
+          <TransferCreditCard
+            card={transferCreditCard}
+            curriculum={curriculum}
+            generalEducation={
+              generalEducation
+            }
+            onRecordCreated={(
+              createdRecord,
+            ) => {
+              setCourseRecords(
+                (currentRecords) => [
+                  ...currentRecords,
+                  createdRecord,
+                ],
+              )
+            }}
+            onRecordUpdated={(
+              updatedRecord,
+            ) => {
+              setCourseRecords(
+                (currentRecords) =>
+                  currentRecords.map(
+                    (record) =>
+                      record.id ===
+                      updatedRecord.id
+                        ? updatedRecord
+                        : record,
+                  ),
+              )
+            }}
+            onRecordDeleted={(
+              deletedRecordId,
+            ) => {
+              setCourseRecords(
+                (currentRecords) =>
+                  currentRecords.filter(
+                    (record) =>
+                      record.id !==
+                      deletedRecordId,
+                  ),
+              )
+            }}
+          />
+        </div>
+      ) : null}
+
+      {!recordsAreLoading &&
+      transferTabIsSelected &&
+      recordsError === null &&
+      (
+        curriculum === null ||
+        generalEducation === null
+      ) ? (
+        <div className="gpa-records-message">
+          {user.entryYear === null
+            ? (
+              '전적대 학점 인정을 관리하려면 ' +
+              '학번을 먼저 설정해 주세요.'
+            )
+            : (
+              '전적대 학점 인정 정보를 ' +
+              '불러오지 못했습니다.'
+            )}
+        </div>
+      ) : null}
+
+      {!recordsAreLoading &&
+      !transferTabIsSelected ? (
         <section className="gpa-semester-detail">
           <header className="gpa-semester-detail-header">
             <div>
