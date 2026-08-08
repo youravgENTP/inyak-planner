@@ -51,6 +51,14 @@ CourseRecordStatus = Literal[
 ]
 
 
+AcademicTerm = Literal[
+    "spring",
+    "summer",
+    "fall",
+    "winter",
+]
+
+
 class CourseRecordRequest(BaseModel):
     curriculum_course_id: Optional[int] = Field(
         default=None,
@@ -85,6 +93,7 @@ class CourseRecordRequest(BaseModel):
         ge=1,
         le=2,
     )
+    term: Optional[AcademicTerm] = None
     course_name: str = Field(
         min_length=1,
         max_length=100,
@@ -129,6 +138,14 @@ def get_request_values(
     request: CourseRecordRequest,
 ) -> dict[str, Any]:
     """요청 데이터를 DB 함수에 전달할 형태로 정리한다."""
+    term = request.term
+
+    if term is None:
+        if request.semester == 1:
+            term = "spring"
+        elif request.semester == 2:
+            term = "fall"
+
     return {
         "curriculum_course_id":
             request.curriculum_course_id,
@@ -144,6 +161,8 @@ def get_request_values(
             request.grade,
         "semester":
             request.semester,
+        "term":
+            term,
         "course_name":
             request.course_name.strip(),
         "course_code":

@@ -134,6 +134,21 @@ def ensure_user_course_record_columns() -> None:
 
         connection.execute(
             """
+            UPDATE user_course_records
+            SET term =
+                CASE semester
+                    WHEN 1 THEN 'spring'
+                    WHEN 2 THEN 'fall'
+                    ELSE term
+                END
+            WHERE
+                term IS NULL
+                AND semester IN (1, 2)
+            """
+        )
+
+        connection.execute(
+            """
             CREATE INDEX IF NOT EXISTS
                 idx_user_course_records_user_grade_semester
             ON user_course_records(
@@ -709,6 +724,7 @@ def update_user_course_record(
     academic_year: int | None,
     grade: int | None,
     semester: int | None,
+    term: str | None,
     course_name: str,
     course_code: str | None,
     completion_type: str,
