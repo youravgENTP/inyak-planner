@@ -187,10 +187,10 @@ function SemesterCard({
   ) => void
 }) {
   const [
-    openSection,
-    setOpenSection,
-  ] = useState<SemesterSectionKey | null>(
-    null,
+    openSections,
+    setOpenSections,
+  ] = useState<Set<SemesterSectionKey>>(
+    () => new Set(),
   )
 
   const [
@@ -293,11 +293,19 @@ function SemesterCard({
   function toggleSection(
     section: SemesterSectionKey,
   ) {
-    setOpenSection(
-      (currentSection) =>
-        currentSection === section
-          ? null
-          : section,
+    setOpenSections(
+      (currentSections) => {
+        const nextSections =
+          new Set(currentSections)
+
+        if (nextSections.has(section)) {
+          nextSections.delete(section)
+        } else {
+          nextSections.add(section)
+        }
+
+        return nextSections
+      },
     )
   }
 
@@ -455,7 +463,7 @@ function SemesterCard({
           <div className="graduation-board-accordion-section">
             <button
               aria-expanded={
-                openSection === 'required'
+                openSection.has('required')
               }
               className="graduation-board-accordion-toggle"
               type="button"
@@ -489,7 +497,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection === 'required'
+                    openSection.has('required')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -499,7 +507,7 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection === 'required' ? (
+            {openSection.has('required') ? (
               <ul className="graduation-board-course-list">
                 {card.requiredCourses.map(
                   ({
@@ -536,7 +544,7 @@ function SemesterCard({
           <div className="graduation-board-accordion-section">
             <button
               aria-expanded={
-                openSection === 'elective'
+                openSection.has('elective')
               }
               className="graduation-board-accordion-toggle"
               type="button"
@@ -562,7 +570,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSection === 'elective'
+                    openSection.has('elective')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -572,7 +580,7 @@ function SemesterCard({
               </span>
             </button>
 
-            {openSection === 'elective' ? (
+            {openSection.has('elective') ? (
               <ul className="graduation-board-course-list">
                 {card.electiveRecords.map(
                   ({
@@ -616,8 +624,9 @@ function SemesterCard({
           <div className="graduation-board-accordion-section">
             <button
               aria-expanded={
-                openSection ===
-                'generalEducation'
+                openSections.has(
+                  'generalEducation',
+                )
               }
               className="graduation-board-accordion-toggle"
               type="button"
@@ -692,7 +701,7 @@ function SemesterCard({
           <div className="graduation-board-accordion-section graduation-board-accordion-section--unmatched">
             <button
               aria-expanded={
-                openSection === 'unmatched'
+                openSections.has('unmatched')
               }
               className="graduation-board-accordion-toggle graduation-board-accordion-toggle--unmatched"
               type="button"
