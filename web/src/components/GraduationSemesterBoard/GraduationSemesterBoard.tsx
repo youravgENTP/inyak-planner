@@ -238,15 +238,31 @@ function SemesterCard({
       0,
     )
 
+  const fulfilledElectiveRecords =
+    card.electiveRecords.filter(
+      ({ record }) =>
+        recordFulfillsRequirement(
+          record,
+        ),
+    )
+
   const electiveCredits =
-    card.electiveRecords.reduce(
+    fulfilledElectiveRecords.reduce(
       (total, { record }) =>
         total + record.credits,
       0,
     )
 
+  const fulfilledGeneralEducationRecords =
+    card.generalEducationRecords.filter(
+      (record) =>
+        recordFulfillsRequirement(
+          record,
+        ),
+    )
+
   const generalEducationCredits =
-    card.generalEducationRecords.reduce(
+    fulfilledGeneralEducationRecords.reduce(
       (total, record) =>
         total + record.credits,
       0,
@@ -534,7 +550,7 @@ function SemesterCard({
                 </span>
 
                 <strong>
-                  {card.electiveRecords.length}
+                  {fulfilledElectiveRecords.length}
                   과목
                   {' · '}
                   {electiveCredits}학점
@@ -618,8 +634,7 @@ function SemesterCard({
 
                 <strong>
                   {
-                    card
-                      .generalEducationRecords
+                    fulfilledGeneralEducationRecords
                       .length
                   }
                   과목
