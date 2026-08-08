@@ -23,6 +23,12 @@ import './CurriculumPage.css'
 
 const DEFAULT_ENTRY_YEAR = 2024
 
+const ENTRY_YEARS = [
+  2022,
+  2023,
+  2024,
+] as const
+
 type CurriculumSection =
   | 'major'
   | 'generalEducation'
@@ -121,6 +127,11 @@ function formatCourseCredits(
 
 export function CurriculumPage() {
   const [
+    selectedEntryYear,
+    setSelectedEntryYear,
+  ] = useState(DEFAULT_ENTRY_YEAR)
+
+  const [
     curriculum,
     setCurriculum,
   ] = useState<Curriculum | null>(
@@ -164,10 +175,10 @@ export function CurriculumPage() {
           generalEducationResult,
         ] = await Promise.all([
           fetchCurriculum(
-            DEFAULT_ENTRY_YEAR,
+            selectedEntryYear,
           ),
           fetchGeneralEducation(
-            DEFAULT_ENTRY_YEAR,
+            selectedEntryYear,
           ),
         ])
 
@@ -204,7 +215,7 @@ export function CurriculumPage() {
     return () => {
       isCancelled = true
     }
-  }, [])
+  }, [selectedEntryYear])
 
   const semesterGroups = useMemo(
     () =>
@@ -245,19 +256,18 @@ export function CurriculumPage() {
 
   if (
     curriculum === null ||
-    generalEducation === null ||
-    curriculum.courses.length === 0
+    generalEducation === null
   ) {
     return (
       <section className="curriculum-page">
         <div className="curriculum-state">
           <h1>
-            등록된 졸업요건이 없습니다.
+            졸업요건 데이터를
+            불러오지 못했습니다.
           </h1>
 
           <p>
-            선택한 학번의 전공·교양
-            데이터를 확인해 주세요.
+            다시 시도해 주세요.
           </p>
         </div>
       </section>
@@ -273,7 +283,7 @@ export function CurriculumPage() {
           </p>
 
           <h1>
-            {curriculum.entryYear}학번{' '}
+            {selectedEntryYear}학번{' '}
             {activeSection === 'major'
               ? '전공 교육과정'
               : '교양 졸업요건'}
@@ -296,6 +306,29 @@ export function CurriculumPage() {
           </p>
         </div>
 
+        <label className="curriculum-entry-year-select">
+          <span>학번</span>
+
+          <select
+            value={selectedEntryYear}
+            onChange={(event) => {
+              setSelectedEntryYear(
+                Number(event.target.value),
+              )
+            }}
+          >
+            {ENTRY_YEARS.map(
+              (entryYear) => (
+                <option
+                  key={entryYear}
+                  value={entryYear}
+                >
+                  {entryYear}학번
+                </option>
+              ),
+            )}
+          </select>
+        </label>
       </header>
 
       <div
@@ -351,6 +384,20 @@ export function CurriculumPage() {
       </div>
 
       {activeSection === 'major' ? (
+        curriculum.courses.length === 0 ? (
+          <div className="curriculum-inline-empty">
+            <strong>
+              {selectedEntryYear}학번 전공
+              교육과정 데이터가 없습니다.
+            </strong>
+
+            <p>
+              해당 학번의 전공필수·전공선택
+              교육과정이 아직 등록되지
+              않았습니다.
+            </p>
+          </div>
+        ) : (
         <div
           className="curriculum-semester-scroll"
           aria-label="학기별 전공 교육과정"
@@ -507,6 +554,20 @@ export function CurriculumPage() {
               },
             )}
           </div>
+        </div>
+        )
+      ) : generalEducation.requirements.length ===
+        0 ? (
+        <div className="curriculum-inline-empty">
+          <strong>
+            {selectedEntryYear}학번 교양
+            졸업요건 데이터가 없습니다.
+          </strong>
+
+          <p>
+            해당 학번의 교양 교육과정이
+            아직 등록되지 않았습니다.
+          </p>
         </div>
       ) : (
         <GeneralEducationRequirements

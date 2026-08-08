@@ -37,6 +37,37 @@
   color: #666;
 }
 
+.curriculum-entry-year-select {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.curriculum-entry-year-select > span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #737373;
+}
+
+.curriculum-entry-year-select select {
+  min-width: 132px;
+  height: 44px;
+  padding:
+    0 38px
+    0 14px;
+
+  border: 1px solid #dfe8e1;
+  border-radius: 12px;
+
+  background-color: #fff;
+
+  color: #26392d;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
 
 
 /* =========================================================
@@ -68,6 +99,37 @@
 
 .curriculum-state--error {
   border-color: #e8b8b8;
+}
+
+.curriculum-inline-empty {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 32px;
+
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+
+  background: #fff;
+
+  text-align: center;
+}
+
+.curriculum-inline-empty strong {
+  font-size: 15px;
+  color: #34483b;
+}
+
+.curriculum-inline-empty p {
+  margin: 0;
+
+  line-height: 1.6;
+  font-size: 13px;
+  color: #777;
 }
 
 /* =========================================================
