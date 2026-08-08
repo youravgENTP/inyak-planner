@@ -272,14 +272,21 @@
 }
 
 .graduation-board-accordion-chevron {
+  width: 8px;
+  height: 8px;
   flex-shrink: 0;
-  font-size: 14px;
-  color: #777;
-  transition: transform 160ms ease;
+
+  border-right: 2px solid #777;
+  border-bottom: 2px solid #777;
+
+  transform: rotate(45deg) translateY(-2px);
+
+  transition:
+    transform 160ms ease;
 }
 
 .graduation-board-accordion-chevron--open {
-  transform: rotate(180deg);
+  transform: rotate(225deg) translateY(-2px);
 }
 
 .graduation-board-accordion-toggle--unmatched {

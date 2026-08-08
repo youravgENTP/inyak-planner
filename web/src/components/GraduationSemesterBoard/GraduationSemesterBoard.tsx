@@ -492,19 +492,17 @@ function SemesterCard({
                 </strong>
               </span>
 
-              <span
-                aria-hidden="true"
-                className={
-                  'graduation-board-accordion-chevron' +
-                  (
-                    openSections.has('required')
-                      ? ' graduation-board-accordion-chevron--open'
-                      : ''
-                  )
-                }
-              >
-                ▾
-              </span>
+                <span
+                  aria-hidden="true"
+                  className={
+                    'graduation-board-accordion-chevron' +
+                    (
+                      openSections.has('required')
+                        ? ' graduation-board-accordion-chevron--open'
+                        : ''
+                    )
+                  }
+                />
             </button>
 
             {openSections.has('required') ? (
@@ -570,14 +568,12 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSections.has('elective')
+                    openSections.has('required')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
                 }
-              >
-                ▾
-              </span>
+              />
             </button>
 
             {openSections.has('elective') ? (
@@ -658,16 +654,12 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSections.has(
-                    'generalEducation',
-                    )
+                    openSections.has('required')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
                 }
-              >
-                ▾
-              </span>
+              />
             </button>
 
             {openSections.has(
@@ -730,14 +722,12 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSections.has('unmatched')
+                    openSections.has('required')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
                 }
-              >
-                ▾
-              </span>
+              />
             </button>
 
             {openSections.has('unmatched') ? (
