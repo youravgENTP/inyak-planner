@@ -398,9 +398,7 @@ export function TransferCreditCard({
                       : ''
                   )
                 }
-              >
-                ▾
-              </i>
+              />
             </strong>
           </button>
 
@@ -431,7 +429,6 @@ export function TransferCreditCard({
                   )
                 }
               >
-                ▾
               </i>
             </strong>
           </button>
@@ -457,14 +454,12 @@ export function TransferCreditCard({
                   'graduation-board-transfer-summary-chevron' +
                   (
                     activeCompletionType ===
-                    '교양'
+                    '전필'
                       ? ' graduation-board-transfer-summary-chevron--open'
                       : ''
                   )
                 }
-              >
-                ▾
-              </i>
+              />
             </strong>
           </button>
 

@@ -227,17 +227,20 @@
 
 .graduation-board-transfer-summary-chevron {
   display: inline-block;
+  width: 8px;
+  height: 8px;
 
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 400;
-  color: #728078;
+  border-right: 2px solid #728078;
+  border-bottom: 2px solid #728078;
 
-  transition: transform 160ms ease;
+  transform: rotate(45deg) translateY(-2px);
+
+  transition:
+    transform 160ms ease;
 }
 
 .graduation-board-transfer-summary-chevron--open {
-  transform: rotate(180deg);
+  transform: rotate(225deg) translateY(-2px);
 }
 
 /*
