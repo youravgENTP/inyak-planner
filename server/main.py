@@ -22,6 +22,7 @@ from fastapi import (
     Response,
 )
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from server.auth_router import router as auth_router
@@ -53,10 +54,29 @@ SYLLABI_ROOT = (
     / "syllabi"
 )
 
+PROFILE_IMAGES_ROOT = (
+    PROJECT_ROOT
+    / "data"
+    / "uploads"
+    / "profile-images"
+)
+
+PROFILE_IMAGES_ROOT.mkdir(
+    parents=True,
+    exist_ok=True,
+)
 
 app = FastAPI(
     title="Inyak Planner API",
     version="0.1.0",
+)
+
+app.mount(
+    "/profile-images",
+    StaticFiles(
+        directory=PROFILE_IMAGES_ROOT
+    ),
+    name="profile-images",
 )
 
 app.include_router(auth_router)
