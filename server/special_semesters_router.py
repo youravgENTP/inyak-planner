@@ -10,6 +10,7 @@ from fastapi import (
     APIRouter,
     Cookie,
     HTTPException,
+    Response,
     status,
 )
 
@@ -134,6 +135,7 @@ def create_special_semester(
 @router.delete(
     "/{special_semester_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
 )
 def delete_special_semester(
     special_semester_id: str,
@@ -141,7 +143,7 @@ def delete_special_semester(
         default=None,
         alias=SESSION_COOKIE_NAME,
     ),
-) -> None:
+) -> Response:
     """
     특별학기와 해당 학기의 모든 과목 기록을 삭제한다.
     """
@@ -166,3 +168,7 @@ def delete_special_semester(
                 "찾을 수 없습니다."
             ),
         )
+
+    return Response(
+    status_code=status.HTTP_204_NO_CONTENT
+    )
