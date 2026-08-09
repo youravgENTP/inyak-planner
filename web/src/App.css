@@ -665,6 +665,7 @@ h1 {
 
 .timetable-page-context {
   margin-bottom: 14px;
+  padding-left: 4px;
 
   color: var(--navy-950);
 
