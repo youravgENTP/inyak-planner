@@ -10,6 +10,14 @@ import {
 } from '../components/saved-timetables/TimetableComparisonPage'
 
 import {
+  TimetableGraduationSimulation,
+} from '../components/saved-timetables/TimetableGraduationSimulation'
+
+import type {
+  AuthUser,
+} from '../domain/auth/api'
+
+import {
   fetchLectures,
 } from '../domain/lectures/api'
 
@@ -32,6 +40,8 @@ const TIMETABLE_DRAG_DATA_TYPE =
 
 
 interface TimetableComparisonWorkspacePageProps {
+  user: AuthUser
+
   timetables:
     readonly SavedTimetable[]
 }
@@ -56,6 +66,7 @@ function getLatestTimetable(
 
 
 export function TimetableComparisonWorkspacePage({
+  user,
   timetables,
 }: TimetableComparisonWorkspacePageProps) {
   const initialTimetable =
@@ -80,6 +91,11 @@ export function TimetableComparisonWorkspacePage({
     selectedTimetableIds,
     setSelectedTimetableIds,
   ] = useState<string[]>([])
+
+  const [
+    isSimulationOpen,
+    setIsSimulationOpen,
+  ] = useState(false)
 
   const [
     lectures,
@@ -201,6 +217,7 @@ export function TimetableComparisonWorkspacePage({
     )
 
     setSelectedTimetableIds([])
+        setIsSimulationOpen(false)
   }
 
 
@@ -210,6 +227,7 @@ export function TimetableComparisonWorkspacePage({
     setSelectedSemester(semester)
 
     setSelectedTimetableIds([])
+    setIsSimulationOpen(false)
   }
 
 
@@ -594,13 +612,59 @@ export function TimetableComparisonWorkspacePage({
               </p>
             </div>
           ) : (
-            <TimetableComparisonPage
-              timetables={
-                selectedTimetables
-              }
-              lectures={lectures}
-              showHeader={false}
-            />
+            <>
+              <div className="timetable-comparison-result-actions">
+                <button
+                  className={
+                    isSimulationOpen
+                      ? 'secondary-button'
+                      : 'primary-button'
+                  }
+                  type="button"
+                  disabled={
+                    user.entryYear === null ||
+                    user.studentType === null
+                  }
+                  onClick={() => {
+                    setIsSimulationOpen(
+                      (currentValue) =>
+                        !currentValue,
+                    )
+                  }}
+                >
+                  {isSimulationOpen
+                    ? '시뮬레이션 닫기'
+                    : '수강예정 시뮬레이션'}
+                </button>
+
+                {(
+                  user.entryYear === null ||
+                  user.studentType === null
+                ) ? (
+                  <span>
+                    학업정보 설정이 필요합니다.
+                  </span>
+                ) : null}
+              </div>
+
+              <TimetableComparisonPage
+                timetables={
+                  selectedTimetables
+                }
+                lectures={lectures}
+                showHeader={false}
+              />
+
+              {isSimulationOpen ? (
+                <TimetableGraduationSimulation
+                  user={user}
+                  timetables={
+                    selectedTimetables
+                  }
+                  lectures={lectures}
+                />
+              ) : null}
+            </>
           )}
         </section>
       </div>

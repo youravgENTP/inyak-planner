@@ -234,6 +234,7 @@ function App() {
     ) : currentPage ===
       'timetableComparison' ? (
       <TimetableComparisonWorkspacePage
+        user={currentUser}
         timetables={savedTimetables}
       />
     ) : (
