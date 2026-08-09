@@ -217,6 +217,10 @@ export function AccountPage({
                   학번 선택
                 </option>
 
+                <option value="2023">
+                  2023학번
+                </option>
+
                 <option value="2024">
                   2024학번
                 </option>
