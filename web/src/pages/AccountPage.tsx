@@ -1,11 +1,14 @@
 import {
+  type ChangeEvent,
   type FormEvent,
+  useRef,
   useState,
 } from 'react'
 
 import {
   changePassword,
   updateAcademicProfile,
+  uploadProfileImage,
   type AuthUser,
   type StudentType,
 } from '../domain/auth/api'
@@ -103,6 +106,74 @@ export function AccountPage({
     passwordSuccess,
     setPasswordSuccess,
   ] = useState<string | null>(null)
+
+  const profileImageInputRef =
+    useRef<HTMLInputElement>(null)
+
+  const [
+    isUploadingProfileImage,
+    setIsUploadingProfileImage,
+  ] = useState(false)
+
+  const [
+    profileImageError,
+    setProfileImageError,
+  ] = useState<string | null>(null)
+
+  const [
+    profileImageSuccess,
+    setProfileImageSuccess,
+  ] = useState<string | null>(null)  
+
+  async function handleProfileImageChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    const file =
+      event.target.files?.[0]
+
+    if (file === undefined) {
+      return
+    }
+
+    setProfileImageError(null)
+    setProfileImageSuccess(null)
+
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileImageError(
+        '프로필 이미지는 5MB 이하만 업로드할 수 있습니다.',
+      )
+      event.target.value = ''
+      return
+    }
+
+    setIsUploadingProfileImage(true)
+
+    try {
+      const updatedUser =
+        await uploadProfileImage(file)
+
+      onUserUpdated(updatedUser)
+
+      setProfileImageSuccess(
+        '프로필 이미지가 변경되었습니다.',
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        setProfileImageError(
+          error.message,
+        )
+      } else {
+        setProfileImageError(
+          '프로필 이미지를 변경하지 못했습니다.',
+        )
+      }
+    } finally {
+      setIsUploadingProfileImage(false)
+
+      // 같은 파일을 다시 선택해도 change 이벤트가 발생하도록 초기화합니다.
+      event.target.value = ''
+    }
+  }
 
   async function handleAcademicProfileSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -263,13 +334,52 @@ export function AccountPage({
             <strong>{user.username}</strong>
           </div>
 
-          <button
-            className="secondary-button"
-            type="button"
-            disabled
-          >
-            프로필 이미지 변경
-          </button>
+          <div className="account-profile-upload">
+            <input
+              ref={profileImageInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+              onChange={handleProfileImageChange}
+            />
+
+            <button
+              className="secondary-button"
+              type="button"
+              disabled={isUploadingProfileImage}
+              onClick={() => {
+                profileImageInputRef.current?.click()
+              }}
+            >
+              {isUploadingProfileImage
+                ? '업로드 중...'
+                : '프로필 이미지 변경'}
+            </button>
+
+            {profileImageError !== null && (
+              <p
+                className="
+                  account-academic-message
+                  account-academic-message--error
+                "
+                role="alert"
+              >
+                {profileImageError}
+              </p>
+            )}
+
+            {profileImageSuccess !== null && (
+              <p
+                className="
+                  account-academic-message
+                  account-academic-message--success
+                "
+                role="status"
+              >
+                {profileImageSuccess}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 

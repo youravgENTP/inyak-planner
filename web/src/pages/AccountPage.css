@@ -142,6 +142,20 @@
   white-space: nowrap;
 }
 
+/* 프로필 이미지 업로드 영역 */
+
+.account-profile-upload {
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+}
+
+
+.account-profile-upload p {
+  margin: 0;
+
+  text-align: right;
+}
 
 /* =========================================================
    계정 설정 행
@@ -361,4 +375,13 @@
   .account-danger-button {
     width: 100%;
   }
+}
+
+.account-profile-upload {
+  justify-items: stretch;
+}
+
+
+.account-profile-upload p {
+  text-align: left;
 }
