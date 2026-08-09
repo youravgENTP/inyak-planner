@@ -643,7 +643,7 @@ export function GpaCalculatorPage({
                   record.grade ===
                     semesterDefinition.grade &&
                   record.semester ===
-                    semesterDefinition.semester,
+                    semesterDefinition.semester &&
                   record.term === 
                     semesterDefinition.term
               )
@@ -1087,9 +1087,9 @@ export function GpaCalculatorPage({
               semesterDefinition.grade ===
                 selectedSemester.grade &&
               semesterDefinition.semester ===
-                selectedSemester.semester
+                selectedSemester.semester &&
               semesterDefinition.term ===
-                selectedSemester
+                selectedSemester.term
 
             return (
               <button
@@ -1108,7 +1108,7 @@ export function GpaCalculatorPage({
                 key={
                   `${semesterDefinition.grade}-` +
                   `${semesterDefinition.semester}-` +
-                  semesterDefinition.semester
+                  semesterDefinition.term
                 }
                 type="button"
                 onClick={() => {
