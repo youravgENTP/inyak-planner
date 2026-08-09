@@ -339,7 +339,7 @@
    ========================================================= */
 
 .gpa-semester-detail {
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #dfe8e1;
   border-radius: 16px;
   background: #fff;
@@ -352,6 +352,7 @@
   gap: 20px;
   padding: 20px;
   border-bottom: 1px solid #e7ede8;
+  border-radius: 16px 16px 0 0;
   background: #f8fbf9;
 }
 
@@ -653,6 +654,63 @@
 
 .gpa-course-menu:hover {
   background: #f0f4f1;
+}
+
+.gpa-course-menu-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.gpa-course-menu-popover {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 5px);
+  right: 0;
+
+  display: flex;
+  width: 90px;
+  overflow: hidden;
+  flex-direction: column;
+
+  padding: 5px;
+
+  border: 1px solid #dfe8e1;
+  border-radius: 10px;
+  background: #fff;
+
+  box-shadow:
+    0 8px 22px rgb(32 49 39 / 14%);
+}
+
+.gpa-course-menu-popover button {
+  width: 100%;
+  padding: 8px 10px;
+
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+
+  color: #34483b;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.gpa-course-menu-popover button:hover {
+  background: #f3f7f4;
+}
+
+.gpa-course-menu-popover
+  .gpa-course-menu-delete {
+  color: #a44747;
+}
+
+.gpa-course-menu-popover
+  .gpa-course-menu-delete:hover {
+  background: #fff2f2;
 }
 
 .gpa-course-empty {
