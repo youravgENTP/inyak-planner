@@ -163,6 +163,22 @@ export function CourseRecordModal({
   )
 
   const [
+    courseCode,
+    setCourseCode,
+  ] = useState(
+    editingRecord?.courseCode ?? '',
+  )
+
+  const [
+    credits,
+    setCredits,
+  ] = useState(
+    editingRecord === null
+      ? ''
+      : String(editingRecord.credits),
+  )
+
+  const [
     selectedLecture,
     setSelectedLecture,
   ] = useState<Lecture | null>(null)
@@ -378,6 +394,7 @@ export function CourseRecordModal({
       courseQuery.trim()
 
     if (
+      completionType === '교양' ||
       normalizedQuery.length === 0 ||
       selectedLecture !== null
     ) {
@@ -557,6 +574,7 @@ export function CourseRecordModal({
   }, [
     academicSemester,
     academicYear,
+    completionType,
     courseQuery,
     selectedLecture,
   ])
@@ -655,22 +673,84 @@ export function CourseRecordModal({
     event.preventDefault()
     setFormError(null)
 
-    if (selectedLecture === null) {
-      setFormError(
-        '검색 결과에서 개설과목을 선택해 주세요.',
-      )
-      return
-    }
-    if (
-      selectedLecture.credits === null
-    ) {
-      setFormError(
-        '선택한 개설과목에 학점 정보가 없어 저장할 수 없습니다.',
-      )
-      return
+    const isGeneralEducation =
+      completionType === '교양'
+
+    const normalizedCourseName =
+      courseQuery.trim()
+
+    const normalizedCourseCode =
+      courseCode.trim()
+
+    const parsedCredits =
+      Number(credits)
+
+    const parsedAcademicYear =
+      Number(academicYear)
+
+    let resolvedLecture:
+      Lecture | null = null
+
+    let resolvedCredits: number
+
+    if (isGeneralEducation) {
+      if (
+        normalizedCourseName.length === 0
+      ) {
+        setFormError(
+          '교양 과목명을 입력해 주세요.',
+        )
+        return
+      }
+
+      if (
+        !Number.isFinite(parsedCredits) ||
+        parsedCredits < 0 ||
+        parsedCredits > 30
+      ) {
+        setFormError(
+          '올바른 학점을 입력해 주세요.',
+        )
+        return
+      }
+
+      if (
+        !Number.isInteger(
+          parsedAcademicYear,
+        )
+      ) {
+        setFormError(
+          '개설학년도를 확인해 주세요.',
+        )
+        return
+      }
+    } else {
+      if (selectedLecture === null) {
+        setFormError(
+          '검색 결과에서 개설과목을 선택해 주세요.',
+        )
+        return
+      }
+
+      if (
+        selectedLecture.credits === null
+      ) {
+        setFormError(
+          '선택한 개설과목에 학점 정보가 없어 저장할 수 없습니다.',
+        )
+        return
+      }
+
+      resolvedLecture =
+        selectedLecture
     }
 
-    if (completionType === '교양') {
+    resolvedCredits =
+      isGeneralEducation
+        ? parsedCredits
+        : resolvedLecture?.credits ?? 0
+
+    if (isGeneralEducation) {
       if (entryYear === null) {
         setFormError(
           '교양 졸업요건을 지정하려면 학번을 먼저 설정해 주세요.',
@@ -696,7 +776,8 @@ export function CourseRecordModal({
       if (
         selectedGeneralEducationRequirementId ===
           null ||
-        selectedGeneralEducationAreaId === null
+        selectedGeneralEducationAreaId ===
+          null
       ) {
         setFormError(
           '교양 구분과 세부영역을 모두 선택해 주세요.',
@@ -724,42 +805,39 @@ export function CourseRecordModal({
 
     try {
       const input: CourseRecordInput = {
-        /*
-         * 새 수강기록에서는 졸업요건을
-         * 직접 연결하지 않습니다.
-         *
-         * 기존 기록 수정 시에는
-         * 개인 이수현황에서 지정한
-         * 수동 연결을 그대로 보존합니다.
-         */
         curriculumCourseId:
-          editingRecord?.curriculumCourseId ??
-          null,
+          isGeneralEducation
+            ? null
+            : (
+              editingRecord
+                ?.curriculumCourseId ??
+              null
+            ),
 
         lectureId:
-          selectedLecture.id,
+          isGeneralEducation
+            ? null
+            : resolvedLecture?.id ?? null,
 
         generalEducationRequirementId:
-          completionType === '교양'
+          isGeneralEducation
             ? selectedGeneralEducationRequirementId
             : null,
 
         generalEducationAreaId:
-          completionType === '교양'
+          isGeneralEducation
             ? selectedGeneralEducationAreaId
             : null,
 
-        /*
-         * 실제 개설연도는 lecture에서
-         * 가져옵니다.
-         */
         academicYear:
-          selectedLecture.academicYear,
+          isGeneralEducation
+            ? parsedAcademicYear
+            : (
+              resolvedLecture
+                ?.academicYear ??
+              null
+            ),
 
-        /*
-         * grade + semester는 사용자의
-         * 학년-학기 위치입니다.
-         */
         grade,
         semester,
 
@@ -768,23 +846,32 @@ export function CourseRecordModal({
           term,
 
         courseName:
-          selectedLecture.courseName,
+          isGeneralEducation
+            ? normalizedCourseName
+            : (
+              resolvedLecture
+                ?.courseName ??
+              normalizedCourseName
+            ),
 
         courseCode:
-          selectedLecture.courseCode,
+          isGeneralEducation
+            ? (
+              normalizedCourseCode.length === 0
+                ? null
+                : normalizedCourseCode
+            )
+            : (
+              resolvedLecture
+                ?.courseCode ??
+              null
+            ),
 
         completionType,
 
         credits:
-          selectedLecture.credits,
+          resolvedCredits,
 
-        /*
-         * 수정 시 기존 상태와 성적,
-         * 재수강 말소 여부를 보존합니다.
-         *
-         * 새 기록의 성적은 표에서
-         * 별도로 입력합니다.
-         */
         status:
           editingRecord?.status ??
           'in_progress',
@@ -1069,102 +1156,169 @@ export function CourseRecordModal({
             </label>
           </div>
 
-          <div className="course-record-modal-field course-record-modal-course-search">
-            <span>과목명</span>
+          {completionType === '교양' ? (
+            <>
+              <label className="course-record-modal-field">
+                <span>과목명</span>
 
-            <div className="course-record-modal-search-input-wrap">
-              <input
-                autoComplete="off"
-                autoFocus
-                placeholder="과목명 또는 과목코드를 입력해 주세요"
-                type="text"
-                value={courseQuery}
-                onChange={(event) => {
-                  handleCourseQueryChange(
-                    event.target.value,
-                  )
-                }}
-              />
-
-              {lectureIsLoading ? (
-                <span className="course-record-modal-search-loading">
-                  검색 중...
-                </span>
-              ) : null}
-            </div>
-
-            {lectureSearchResults.length >
-            0 ? (
-              <div
-                aria-label="개설과목 검색 결과"
-                className="course-record-modal-search-results"
-                role="listbox"
-              >
-                {lectureSearchResults.map(
-                  (lecture) => (
-                    <button
-                      key={lecture.id}
-                      className="course-record-modal-search-result"
-                      role="option"
-                      type="button"
-                      onClick={() => {
-                        handleLectureSelect(
-                          lecture,
-                        )
-                      }}
-                    >
-                      <strong>
-                        {lecture.courseName}
-                      </strong>
-
-                      <span>
-                        {formatLectureMeta(
-                          lecture,
-                        )}
-                      </span>
-                    </button>
-                  ),
-                )}
-              </div>
-            ) : null}
-
-            {selectedLecture !== null ? (
-              <div className="course-record-modal-selected-lecture">
-                <div>
-                  <strong>
-                    {selectedLecture.courseName}
-                  </strong>
-
-                  <span>
-                    {formatLectureMeta(
-                      selectedLecture,
-                    )}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCourseQuery('')
-                    clearSelectedLecture()
+                <input
+                  autoComplete="off"
+                  autoFocus
+                  placeholder="과목명을 입력해 주세요"
+                  type="text"
+                  value={courseQuery}
+                  onChange={(event) => {
+                    handleCourseQueryChange(
+                      event.target.value,
+                    )
                   }}
-                >
-                  다시 선택
-                </button>
+                />
+              </label>
+
+              <div className="course-record-modal-field-grid course-record-modal-field-grid--two">
+                <label className="course-record-modal-field">
+                  <span>
+                    학정번호
+                    <small>선택</small>
+                  </span>
+
+                  <input
+                    autoComplete="off"
+                    placeholder="예: AAB001"
+                    type="text"
+                    value={courseCode}
+                    onChange={(event) => {
+                      setCourseCode(
+                        event.target.value,
+                      )
+                      setFormError(null)
+                    }}
+                  />
+                </label>
+
+                <label className="course-record-modal-field">
+                  <span>학점</span>
+
+                  <input
+                    min="0"
+                    max="30"
+                    step="any"
+                    placeholder="예: 2"
+                    type="number"
+                    value={credits}
+                    onChange={(event) => {
+                      setCredits(
+                        event.target.value,
+                      )
+                      setFormError(null)
+                    }}
+                  />
+                </label>
               </div>
-            ) : null}
 
-            {lectureSearchError !== null ? (
-              <small className="course-record-modal-search-error">
-                {lectureSearchError}
+              <small>
+                교양 과목은 실제 개설과목 검색 없이
+                직접 입력할 수 있습니다.
               </small>
-            ) : null}
+            </>
+          ) : (
+            <div className="course-record-modal-field course-record-modal-course-search">
+              <span>과목명</span>
 
-            <small>
-              선택한 개설학년도와 학기에
-              실제 개설된 과목만 검색됩니다.
-            </small>
-          </div>
+              <div className="course-record-modal-search-input-wrap">
+                <input
+                  autoComplete="off"
+                  autoFocus
+                  placeholder="과목명 또는 과목코드를 입력해 주세요"
+                  type="text"
+                  value={courseQuery}
+                  onChange={(event) => {
+                    handleCourseQueryChange(
+                      event.target.value,
+                    )
+                  }}
+                />
+
+                {lectureIsLoading ? (
+                  <span className="course-record-modal-search-loading">
+                    검색 중...
+                  </span>
+                ) : null}
+              </div>
+
+              {lectureSearchResults.length >
+              0 ? (
+                <div
+                  aria-label="개설과목 검색 결과"
+                  className="course-record-modal-search-results"
+                  role="listbox"
+                >
+                  {lectureSearchResults.map(
+                    (lecture) => (
+                      <button
+                        key={lecture.id}
+                        className="course-record-modal-search-result"
+                        role="option"
+                        type="button"
+                        onClick={() => {
+                          handleLectureSelect(
+                            lecture,
+                          )
+                        }}
+                      >
+                        <strong>
+                          {lecture.courseName}
+                        </strong>
+
+                        <span>
+                          {formatLectureMeta(
+                            lecture,
+                          )}
+                        </span>
+                      </button>
+                    ),
+                  )}
+                </div>
+              ) : null}
+
+              {selectedLecture !== null ? (
+                <div className="course-record-modal-selected-lecture">
+                  <div>
+                    <strong>
+                      {selectedLecture.courseName}
+                    </strong>
+
+                    <span>
+                      {formatLectureMeta(
+                        selectedLecture,
+                      )}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCourseQuery('')
+                      clearSelectedLecture()
+                    }}
+                  >
+                    다시 선택
+                  </button>
+                </div>
+              ) : null}
+
+              {lectureSearchError !== null ? (
+                <small className="course-record-modal-search-error">
+                  {lectureSearchError}
+                </small>
+              ) : null}
+
+              <small>
+                선택한 개설학년도와 학기에
+                실제 개설된 과목만 검색됩니다.
+              </small>
+            </div>
+          )}
 
           <label className="course-record-modal-field">
             <span>
@@ -1208,7 +1362,10 @@ export function CourseRecordModal({
               className="course-record-modal-submit"
               disabled={
                 formIsSubmitting ||
-                lectureIsLoading
+                (
+                  completionType !== '교양' &&
+                  lectureIsLoading
+                )
               }
               type="submit"
             >
