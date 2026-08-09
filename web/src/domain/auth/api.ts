@@ -180,6 +180,35 @@ export async function updateAcademicProfile(
   return mapAuthUser(data.user)
 }
 
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/auth/password`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '비밀번호를 변경하지 못했습니다.',
+      ),
+    )
+  }
+}
+
 export async function logout():
   Promise<void> {
   const response = await fetch(
