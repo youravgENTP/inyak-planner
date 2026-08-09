@@ -12,11 +12,13 @@ import type {
 interface TimetableMiniPreviewProps {
   timetable: SavedTimetable
   lectures: readonly Lecture[]
+  mutedLectureIds?: ReadonlySet<number>
 }
 
 export function TimetableMiniPreview({
   timetable,
   lectures,
+  mutedLectureIds,
 }: TimetableMiniPreviewProps) {
   const lectureMap = useMemo(
     () =>
@@ -62,6 +64,9 @@ export function TimetableMiniPreview({
     >
       <TimetableGrid
         courses={courses}
+        mutedLectureIds={
+          mutedLectureIds
+        }
       />
     </div>
   )

@@ -188,6 +188,32 @@ export function TimetableComparisonPage({
     [lectures],
   )
 
+  const commonLectureIds = useMemo(
+    () => {
+      if (timetables.length < 2) {
+        return new Set<number>()
+      }
+
+      const [
+        firstTimetable,
+        ...otherTimetables
+      ] = timetables
+
+      return new Set(
+        firstTimetable.lectureIds.filter(
+          (lectureId) =>
+            otherTimetables.every(
+              (timetable) =>
+                timetable.lectureIds.includes(
+                  lectureId,
+                ),
+            ),
+        ),
+      )
+    },
+    [timetables],
+  )
+
   const summaries = useMemo(
     () =>
       timetables.map((timetable) =>
@@ -281,6 +307,9 @@ export function TimetableComparisonPage({
                   summary.timetable
                 }
                 lectures={lectures}
+                mutedLectureIds={
+                  commonLectureIds
+                }
               />
             </div>
 
