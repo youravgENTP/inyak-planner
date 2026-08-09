@@ -121,14 +121,9 @@ function ProgressBar({
 function CreditSummaryCard({
   title,
   progress,
-  areaProgress = null,
 }: {
   title: string
   progress: CreditProgress
-  areaProgress?: {
-    completed: number
-    required: number
-  } | null
 }) {
   return (
     <article className="graduation-progress-summary-card">
@@ -148,16 +143,6 @@ function CreditSummaryCard({
 
       <ProgressBar progress={progress} />
 
-      {areaProgress !== null ? (
-        <p className="graduation-progress-summary-areas">
-          이수 영역{' '}
-          <strong>
-            {areaProgress.completed}
-            {' / '}
-            {areaProgress.required}
-          </strong>
-        </p>
-      ) : null}
 
       <dl className="graduation-progress-summary-details">
         <div>
@@ -450,7 +435,6 @@ export function ProgressTrackerPage({
                   .credits
               }
             />
-
             {graduationProgress
               .generalEducation
               .map((requirement) => (
@@ -464,22 +448,9 @@ export function ProgressTrackerPage({
                   progress={
                     requirement.credits
                   }
-                  areaProgress={
-                    requirement.minimumAreaCount ===
-                    null
-                      ? null
-                      : {
-                          completed:
-                            requirement
-                              .completedAreaCount,
-                          required:
-                            requirement
-                              .minimumAreaCount,
-                        }
-                  }
                 />
               ))}
-          </div>
+            </div>
 
           {curriculum !== null &&
           generalEducation !== null ? (
