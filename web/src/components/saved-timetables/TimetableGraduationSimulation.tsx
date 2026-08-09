@@ -342,8 +342,10 @@ export function TimetableGraduationSimulation({
       () =>
         courseRecords.filter(
           (record) =>
-            record.status !==
-            'planned',
+            record.status ===
+              'completed' ||
+            record.status ===
+              'substituted',
         ),
       [courseRecords],
     )
