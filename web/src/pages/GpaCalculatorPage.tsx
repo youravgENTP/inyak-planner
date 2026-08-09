@@ -859,13 +859,13 @@ export function GpaCalculatorPage({
                 'summer'
                 ? (
                   `${semesterDefinition.grade}` +
-                  '-S'
+                  '-여름'
                 )
                 : semesterDefinition.term ===
                     'winter'
                   ? (
                     `${semesterDefinition.grade}` +
-                    '-W'
+                    '-겨울'
                   )
                   : (
                     `${semesterDefinition.grade}-` +
