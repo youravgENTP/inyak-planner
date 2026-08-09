@@ -280,6 +280,43 @@ def create_auth_tables() -> None:
                 CHECK (is_retake IN (0, 1))
             );
 
+            CREATE TABLE IF NOT EXISTS user_special_semesters (
+                id TEXT PRIMARY KEY,
+                user_id TEXT NOT NULL,
+
+                grade INTEGER NOT NULL,
+                semester INTEGER NOT NULL,
+                term TEXT NOT NULL,
+
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+
+                FOREIGN KEY (user_id)
+                    REFERENCES users(id)
+                    ON DELETE CASCADE,
+
+                CHECK (
+                    grade BETWEEN 1 AND 6
+                ),
+
+                CHECK (
+                    semester IN (1, 2)
+                ),
+
+                CHECK (
+                    term IN (
+                        'summer',
+                        'winter'
+                    )
+                ),
+
+                UNIQUE (
+                    user_id,
+                    grade,
+                    term
+                )
+            );
+
             CREATE INDEX IF NOT EXISTS
                 idx_sessions_user_id
             ON sessions(user_id);
@@ -305,6 +342,12 @@ def create_auth_tables() -> None:
             ON user_course_records(
                 user_id,
                 curriculum_course_id
+            );
+
+            CREATE INDEX IF NOT EXISTS
+                idx_user_special_semesters_user_id
+            ON user_special_semesters(
+                user_id
             );
             """
         )
@@ -521,6 +564,160 @@ def update_user_academic_profile(
         )
 
     return cursor.rowcount > 0
+
+
+def create_user_special_semester(
+    *,
+    user_id: str,
+    grade: int,
+    semester: int,
+    term: str,
+) -> dict[str, Any]:
+    """사용자의 특별학기를 생성한다."""
+    special_semester_id = str(uuid4())
+    current_time = get_current_time()
+
+    try:
+        with connect_auth_database() as connection:
+            connection.execute(
+                """
+                INSERT INTO user_special_semesters (
+                    id,
+                    user_id,
+                    grade,
+                    semester,
+                    term,
+                    created_at,
+                    updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    special_semester_id,
+                    user_id,
+                    grade,
+                    semester,
+                    term,
+                    current_time,
+                    current_time,
+                ),
+            )
+    except sqlite3.IntegrityError as error:
+        raise ValueError(
+            "이미 추가된 특별학기입니다."
+        ) from error
+
+    return {
+        "id":
+            special_semester_id,
+        "user_id":
+            user_id,
+        "grade":
+            grade,
+        "semester":
+            semester,
+        "term":
+            term,
+        "created_at":
+            current_time,
+        "updated_at":
+            current_time,
+    }
+
+
+def get_user_special_semesters(
+    *,
+    user_id: str,
+) -> list[dict[str, Any]]:
+    """사용자의 특별학기 목록을 조회한다."""
+    with connect_auth_database() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                id,
+                user_id,
+                grade,
+                semester,
+                term,
+                created_at,
+                updated_at
+            FROM user_special_semesters
+            WHERE user_id = ?
+            ORDER BY
+                grade ASC,
+                CASE term
+                    WHEN 'summer' THEN 1
+                    WHEN 'winter' THEN 2
+                    ELSE 3
+                END ASC
+            """,
+            (user_id,),
+        ).fetchall()
+
+    return [
+        dict(row)
+        for row in rows
+    ]
+
+
+def delete_user_special_semester(
+    *,
+    special_semester_id: str,
+    user_id: str,
+) -> bool:
+    """
+    특별학기와 해당 학기의 과목 기록을 함께 삭제한다.
+    """
+    with connect_auth_database() as connection:
+        semester_row = connection.execute(
+            """
+            SELECT
+                grade,
+                term
+            FROM user_special_semesters
+            WHERE
+                id = ?
+                AND user_id = ?
+            """,
+            (
+                special_semester_id,
+                user_id,
+            ),
+        ).fetchone()
+
+        if semester_row is None:
+            return False
+
+        connection.execute(
+            """
+            DELETE FROM user_course_records
+            WHERE
+                user_id = ?
+                AND grade = ?
+                AND term = ?
+            """,
+            (
+                user_id,
+                semester_row["grade"],
+                semester_row["term"],
+            ),
+        )
+
+        cursor = connection.execute(
+            """
+            DELETE FROM user_special_semesters
+            WHERE
+                id = ?
+                AND user_id = ?
+            """,
+            (
+                special_semester_id,
+                user_id,
+            ),
+        )
+
+    return cursor.rowcount > 0
+
 
 ##
 def create_user_course_record(
