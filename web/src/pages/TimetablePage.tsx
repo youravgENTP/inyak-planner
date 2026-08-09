@@ -1029,17 +1029,6 @@ export function TimetablePage({
     setIsSavedTimetablesModalOpen(false)
   }
 
-  function handleComparisonTimetableIdsChange(
-    timetableIds: string[],
-  ) {
-    setComparisonTimetableIds(
-      getValidComparisonTimetableIds(
-        timetableState.timetables,
-        timetableIds,
-      ),
-    )
-  }
-
   function handleOpenCreateTimetableModal() {
     setIsSavedTimetablesModalOpen(false)
     setIsDownloadModalOpen(false)
@@ -1138,29 +1127,6 @@ export function TimetablePage({
     )
   }
 
-function handleCompareTimetables(
-  timetableIds: readonly string[],
-) {
-  const validTimetableIds =
-    getValidComparisonTimetableIds(
-      timetableState.timetables,
-      timetableIds,
-    )
-
-  if (validTimetableIds.length < 2) {
-    return
-  }
-
-  setComparisonTimetableIds(
-    validTimetableIds,
-  )
-
-  setIsSavedTimetablesModalOpen(false)
-  setIsDownloadModalOpen(false)
-  setIsEditing(false)
-  setPreviewLecture(null)
-  setIsComparisonPageOpen(true)
-}
 
 function handleDeleteTimetable(
   timetableId: string,
@@ -1939,21 +1905,14 @@ async function handleDownloadSyllabi() {
         timetables={
           timetableState.timetables
         }
-        lectures={lectures}
         activeTimetableId={
           timetableState.activeTimetableId
-        }
-        comparisonTimetableIds={
-          comparisonTimetableIds
         }
         onClose={
           handleCloseSavedTimetablesModal
         }
         onSelectTimetable={
           handleSelectTimetable
-        }
-        onComparisonTimetableIdsChange={
-          handleComparisonTimetableIdsChange
         }
         onCreateTimetable={
           handleOpenCreateTimetableModal
@@ -1963,9 +1922,6 @@ async function handleDownloadSyllabi() {
         }
         onDeleteTimetable={
           handleDeleteTimetable
-        }
-        onCompare={
-          handleCompareTimetables
         }
       />
       <CreateTimetableModal

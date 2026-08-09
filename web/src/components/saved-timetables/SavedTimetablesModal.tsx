@@ -3,13 +3,8 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
-  type DragEvent,
   type MouseEvent,
 } from 'react'
-
-import { TimetableMiniPreview } from './TimetableMiniPreview'
-import type { Lecture } from '../../domain/lectures/types'
 
 import {
   groupTimetablesBySemester,
@@ -18,52 +13,30 @@ import {
 
 import './SavedTimetablesModal.css'
 
-const MAX_COMPARISON_TIMETABLES = 3
-
-const TIMETABLE_DRAG_DATA_TYPE =
-  'application/x-inyak-timetable-id'
-
-interface ComparisonGridStyle
-  extends CSSProperties {
-  '--comparison-count': number
-}
-
 interface SavedTimetablesModalProps {
   isOpen: boolean
   timetables: readonly SavedTimetable[]
-  lectures: readonly Lecture[]
   activeTimetableId: string
-  comparisonTimetableIds: readonly string[]
   onClose: () => void
   onSelectTimetable: (
     timetableId: string,
-  ) => void
-  onComparisonTimetableIdsChange: (
-    timetableIds: string[],
   ) => void
   onCreateTimetable: () => void
   onDuplicateActiveTimetable: () => void
   onDeleteTimetable?: (
     timetableId: string,
   ) => void
-  onCompare: (
-    timetableIds: readonly string[],
-  ) => void
 }
 
 export function SavedTimetablesModal({
   isOpen,
   timetables,
-  lectures,
   activeTimetableId,
-  comparisonTimetableIds,
   onClose,
   onSelectTimetable,
-  onComparisonTimetableIdsChange,
   onCreateTimetable,
   onDuplicateActiveTimetable,
   onDeleteTimetable,
-  onCompare,
 }: SavedTimetablesModalProps) {
   const modalRef =
     useRef<HTMLDivElement>(null)
@@ -73,10 +46,6 @@ export function SavedTimetablesModal({
     setIsCreateMenuOpen,
   ] = useState(false)
 
-  const [
-    isComparisonDropActive,
-    setIsComparisonDropActive,
-  ] = useState(false)
 
   const timetableGroups = useMemo(
     () =>
@@ -142,7 +111,6 @@ export function SavedTimetablesModal({
   useEffect(() => {
     if (!isOpen) {
       setIsCreateMenuOpen(false)
-      setIsComparisonDropActive(false)
 
       return
     }
@@ -191,98 +159,7 @@ export function SavedTimetablesModal({
       onClose()
     }
   }
-///////////
-  function handleTimetableDragStart(
-    event: DragEvent<HTMLDivElement>,
-    timetableId: string,
-  ) {
-    event.dataTransfer.effectAllowed =
-      'copy'
 
-    event.dataTransfer.setData(
-      TIMETABLE_DRAG_DATA_TYPE,
-      timetableId,
-    )
-
-    event.dataTransfer.setData(
-      'text/plain',
-      timetableId,
-    )
-  }
-
-  function handleComparisonDragOver(
-    event: DragEvent<HTMLDivElement>,
-  ) {
-    event.preventDefault()
-
-    event.dataTransfer.dropEffect =
-      'copy'
-
-    setIsComparisonDropActive(true)
-  }
-
-  function handleComparisonDragLeave(
-    event: DragEvent<HTMLDivElement>,
-  ) {
-    if (
-      event.currentTarget.contains(
-        event.relatedTarget as Node | null,
-      )
-    ) {
-      return
-    }
-
-    setIsComparisonDropActive(false)
-  }
-
-  function handleComparisonDrop(
-    event: DragEvent<HTMLDivElement>,
-  ) {
-    event.preventDefault()
-
-    setIsComparisonDropActive(false)
-
-    const timetableId =
-      event.dataTransfer.getData(
-        TIMETABLE_DRAG_DATA_TYPE,
-      ) ||
-      event.dataTransfer.getData(
-        'text/plain',
-      )
-
-    if (!timetableMap.has(timetableId)) {
-      return
-    }
-
-    if (
-      comparisonTimetableIds.includes(
-        timetableId,
-      )
-    ) {
-      return
-    }
-
-    if (isComparisonFull) {
-      return
-    }
-
-    onComparisonTimetableIdsChange([
-      ...comparisonTimetableIds,
-      timetableId,
-    ])
-  }
-
-  function handleRemoveComparisonTimetable(
-    timetableId: string,
-  ) {
-    onComparisonTimetableIdsChange(
-      comparisonTimetableIds.filter(
-        (currentTimetableId) =>
-          currentTimetableId !==
-          timetableId,
-      ),
-    )
-  }
 
   function handleCreateTimetable() {
     setIsCreateMenuOpen(false)
@@ -292,18 +169,6 @@ export function SavedTimetablesModal({
   function handleDuplicateTimetable() {
     setIsCreateMenuOpen(false)
     onDuplicateActiveTimetable()
-  }
-
-  function handleCompare() {
-    if (!canCompare) {
-      return
-    }
-
-    onCompare(
-      comparisonTimetables.map(
-        (timetable) => timetable.id,
-      ),
-    )
   }
 
   if (!isOpen) {
@@ -331,9 +196,8 @@ export function SavedTimetablesModal({
             </h2>
 
             <p>
-              시간표 이름을 누르면 해당
-              시간표로 이동하고, 아래 영역으로
-              끌면 비교할 수 있습니다.
+              저장된 시간표를 확인하고
+              관리할 수 있습니다.
             </p>
           </div>
 
@@ -359,8 +223,8 @@ export function SavedTimetablesModal({
                 </h3>
 
                 <p>
-                  클릭하여 열거나 비교 영역으로
-                  끌어다 놓으세요.
+                  시간표를 클릭하면 해당
+                  시간표로 이동합니다.
                 </p>
               </div>
 
@@ -430,32 +294,14 @@ export function SavedTimetablesModal({
                             timetable.id ===
                             activeTimetableId
 
-                          const isSelected =
-                            comparisonTimetableIds.includes(
-                              timetable.id,
-                            )
-
                           return (
                             <div
                               className={`saved-timetable-list-item${
                                 isActive
                                   ? ' saved-timetable-list-item--active'
                                   : ''
-                              }${
-                                isSelected
-                                  ? ' saved-timetable-list-item--selected'
-                                  : ''
                               }`}
                               key={timetable.id}
-                              draggable
-                              onDragStart={(
-                                event,
-                              ) =>
-                                handleTimetableDragStart(
-                                  event,
-                                  timetable.id,
-                                )
-                              }
                             >
                               <button
                                 className="saved-timetable-list-item__open"
@@ -516,7 +362,7 @@ export function SavedTimetablesModal({
               )}
             </div>
           </section>
-
+          {/*  */}
           <section
             className="saved-timetables-modal__comparison-section"
             aria-labelledby="comparison-selection-title"
@@ -630,7 +476,7 @@ export function SavedTimetablesModal({
             </div>
           </section>
         </div>
-
+        {/*  */}
         <footer className="saved-timetables-modal__footer">
           <p>
             {comparisonTimetables.length ===
