@@ -664,12 +664,13 @@ h1 {
    ========================================================= */
 
 .timetable-page-context {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 
-  color: var(--teal-700);
+  color: var(--navy-950);
 
-  font-size: 12px;
+  font-size: 30px;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /* 보기 모드:
