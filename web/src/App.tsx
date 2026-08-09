@@ -17,7 +17,6 @@ import {
 } from './domain/auth/api'
 
 import {
-  loadActiveTimetableId,
   loadSavedTimetables,
   type SavedTimetable,
 } from './domain/saved-timetables'
@@ -50,12 +49,6 @@ function App() {
     loadSavedTimetables,
   )
 
-  const [
-    requestedActiveTimetableId,
-    setRequestedActiveTimetableId,
-  ] = useState<string | null>(
-    loadActiveTimetableId,
-  )
 
   const [
     isCheckingAuthentication,
@@ -137,16 +130,10 @@ function App() {
       (
         timetables:
           readonly SavedTimetable[],
-
-        activeTimetableId: string,
       ) => {
         setSavedTimetables([
           ...timetables,
         ])
-
-        setRequestedActiveTimetableId(
-          activeTimetableId,
-        )
       },
       [],
     )
@@ -251,9 +238,6 @@ function App() {
       />
     ) : (
       <TimetablePage
-        requestedActiveTimetableId={
-          requestedActiveTimetableId
-        }
         onTimetableStateChange={
           handleTimetableStateChange
         }
