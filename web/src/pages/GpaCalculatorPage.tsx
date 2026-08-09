@@ -56,6 +56,15 @@ import type {
   GeneralEducation,
 } from '../domain/general-education/types'
 
+import {
+  createSpecialSemester,
+  getSpecialSemesters,
+} from '../domain/special-semesters/api'
+
+import type {
+  SpecialSemester,
+} from '../domain/special-semesters/types'
+
 import type {
   TransferCreditBoardCard,
 } from '../domain/graduation-progress/createSemesterBoard'
@@ -444,9 +453,9 @@ export function GpaCalculatorPage({
   ] = useState(false)
 
   const [
-    addedSpecialSemesters,
-    setAddedSpecialSemesters,
-  ] = useState<SemesterDefinition[]>([])
+    specialSemesters,
+    setSpecialSemesters,
+  ] = useState<SpecialSemester[]>([])
 
   const [
     specialSemesterMenuIsOpen,
@@ -515,14 +524,20 @@ export function GpaCalculatorPage({
 
         const [
           records,
+          storedSpecialSemesters,
           transferData,
         ] = await Promise.all([
           getCourseRecords(),
+          getSpecialSemesters(),
           transferDataPromise,
         ])
 
         if (requestIsActive) {
           setCourseRecords(records)
+
+          setSpecialSemesters(
+            storedSpecialSemesters,
+          )
 
           setCurriculum(
             transferData?.[0] ?? null,
@@ -618,10 +633,24 @@ export function GpaCalculatorPage({
           },
         )
 
+        const storedSpecialSemesters =
+          specialSemesters.map(
+            (specialSemester) => ({
+              grade:
+                specialSemester.grade,
+
+              semester:
+                specialSemester.semester,
+
+              term:
+                specialSemester.term,
+            }),
+          )
+
         const semesters = [
           ...availableSemesters,
           ...persistedSpecialSemesters,
-          ...addedSpecialSemesters,
+          ...storedSpecialSemesters,
         ]
 
         const uniqueSemesters =
@@ -675,9 +704,9 @@ export function GpaCalculatorPage({
         )
       },
       [
-        addedSpecialSemesters,
         availableSemesters,
         regularRecords,
+        specialSemesters,
       ],
     )
 
@@ -1371,54 +1400,55 @@ export function GpaCalculatorPage({
               className="gpa-special-semester-add"
               type="button"
               onClick={() => {
-                const newSemester:
-                  SemesterDefinition = {
-                    grade:
-                      specialSemesterGrade,
-                    semester:
-                      specialSemesterTerm ===
-                        'summer'
-                        ? 1
-                        : 2,
-                    term:
-                      specialSemesterTerm,
+                void (async () => {
+                  setRecordsError(null)
+
+                  try {
+                    const createdSemester =
+                      await createSpecialSemester({
+                        grade:
+                          specialSemesterGrade,
+
+                        term:
+                          specialSemesterTerm,
+                      })
+
+                    setSpecialSemesters(
+                      (currentSemesters) => [
+                        ...currentSemesters,
+                        createdSemester,
+                      ],
+                    )
+
+                    setTransferTabIsSelected(
+                      false,
+                    )
+
+                    setSelectedSemester({
+                      grade:
+                        createdSemester.grade,
+
+                      semester:
+                        createdSemester.semester,
+
+                      term:
+                        createdSemester.term,
+                    })
+
+                    setSpecialSemesterMenuIsOpen(
+                      false,
+                    )
+                  } catch (error) {
+                    setRecordsError(
+                      error instanceof Error
+                        ? error.message
+                        : (
+                          '특별학기를 ' +
+                          '추가하지 못했습니다.'
+                        ),
+                    )
                   }
-
-                setAddedSpecialSemesters(
-                  (currentSemesters) => {
-                    const alreadyExists =
-                      currentSemesters.some(
-                        (semesterDefinition) =>
-                          semesterDefinition
-                            .grade ===
-                            newSemester.grade &&
-                          semesterDefinition
-                            .term ===
-                            newSemester.term,
-                      )
-
-                    if (alreadyExists) {
-                      return currentSemesters
-                    }
-
-                    return [
-                      ...currentSemesters,
-                      newSemester,
-                    ]
-                  },
-                )
-
-                setTransferTabIsSelected(
-                  false,
-                )
-
-                setSelectedSemester(
-                  newSemester,
-                )
-
-                setSpecialSemesterMenuIsOpen(
-                  false,
-                )
+                })()
               }}
             >
               추가
