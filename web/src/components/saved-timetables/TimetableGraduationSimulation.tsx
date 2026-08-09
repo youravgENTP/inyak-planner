@@ -58,8 +58,9 @@ import type {
   Lecture,
 } from '../../domain/lectures/types'
 
-import type {
-  SavedTimetable,
+import {
+  getCommonTimetableLectureIds,
+  type SavedTimetable,
 } from '../../domain/saved-timetables'
 
 import './TimetableGraduationSimulation.css'
@@ -80,7 +81,10 @@ interface SimulationMetric {
   title: string
 
   currentCredits: number
-  addedCredits: number
+
+  commonAddedCredits: number
+  uniqueAddedCredits: number
+
   expectedCredits: number
 
   requiredCredits: number
@@ -147,6 +151,8 @@ function createMetric(
 
   currentCredits: number,
 
+  commonCredits: number,
+
   simulatedCredits: number,
 
   requiredCredits: number,
@@ -154,10 +160,17 @@ function createMetric(
   remainingCourseCount:
     number | null = null,
 ): SimulationMetric {
-  const addedCredits =
+  const commonAddedCredits =
+    Math.max(
+      commonCredits -
+        currentCredits,
+      0,
+    )
+
+  const uniqueAddedCredits =
     Math.max(
       simulatedCredits -
-        currentCredits,
+        commonCredits,
       0,
     )
 
@@ -166,7 +179,9 @@ function createMetric(
 
     currentCredits,
 
-    addedCredits,
+    commonAddedCredits,
+
+    uniqueAddedCredits,
 
     expectedCredits:
       simulatedCredits,
@@ -183,7 +198,6 @@ function createMetric(
     remainingCourseCount,
   }
 }
-
 
 function SimulationProgressBar({
   metric,
@@ -205,19 +219,35 @@ function SimulationProgressBar({
       100,
     )
 
-  const remainingWidth =
+  const remainingAfterCurrent =
     Math.max(
       100 - currentPercent,
       0,
     )
 
-  const addedPercent =
+  const commonPercent =
     Math.min(
       (
-        metric.addedCredits /
+        metric.commonAddedCredits /
         denominator
       ) * 100,
-      remainingWidth,
+      remainingAfterCurrent,
+    )
+
+  const remainingAfterCommon =
+    Math.max(
+      remainingAfterCurrent -
+        commonPercent,
+      0,
+    )
+
+  const uniquePercent =
+    Math.min(
+      (
+        metric.uniqueAddedCredits /
+        denominator
+      ) * 100,
+      remainingAfterCommon,
     )
 
   return (
@@ -252,17 +282,28 @@ function SimulationProgressBar({
         />
 
         <div
-          className="timetable-simulation-progress-added"
+          className="timetable-simulation-progress-common"
           style={{
             width:
-              `${addedPercent}%`,
+              `${commonPercent}%`,
+          }}
+        />
+
+        <div
+          className="timetable-simulation-progress-unique"
+          style={{
+            width:
+              `${uniquePercent}%`,
           }}
         />
       </div>
 
       <div className="timetable-simulation-progress-caption">
         <span>
-          +{metric.addedCredits}
+          공통 +{metric.commonAddedCredits}
+          학점 · 시간표별 +{
+            metric.uniqueAddedCredits
+          }
           학점
         </span>
 
@@ -456,27 +497,104 @@ export function TimetableGraduationSimulation({
           curriculum === null ||
           generalEducation === null ||
           graduationRequirements ===
-            null
+            null ||
+          timetables.length < 2
         ) {
           return []
         }
+
+        const commonLectureIds =
+          getCommonTimetableLectureIds(
+            timetables,
+          )
+
+        const referenceTimetable =
+          timetables[0]
+
+        const commonTimetable:
+          SavedTimetable = {
+            ...referenceTimetable,
+
+            id: 'simulation-common',
+            name: '공통 과목',
+
+            lectureIds: [
+              ...commonLectureIds,
+            ],
+          }
+
+        const commonSimulationRecords =
+          createTimetableSimulationRecords(
+            commonTimetable,
+            lectures,
+            baselineRecords,
+          )
+
+        const commonProgress =
+          calculateGraduationProgress(
+            curriculum,
+            generalEducation,
+            graduationRequirements,
+            [
+              ...baselineRecords,
+              ...commonSimulationRecords,
+            ],
+            lectures,
+          )
 
         const baselineGeneralEducation =
           getGeneralEducationCredits(
             baselineProgress,
           )
 
+        const commonGeneralEducation =
+          getGeneralEducationCredits(
+            commonProgress,
+          )
+
+        const currentRequiredCredits =
+          getExpectedCredits(
+            baselineProgress
+              .majorRequired
+              .credits,
+          )
+
+        const commonRequiredCredits =
+          getExpectedCredits(
+            commonProgress
+              .majorRequired
+              .credits,
+          )
+
+        const currentElectiveCredits =
+          getExpectedCredits(
+            baselineProgress
+              .majorElective
+              .credits,
+          )
+
+        const commonElectiveCredits =
+          getExpectedCredits(
+            commonProgress
+              .majorElective
+              .credits,
+          )
+
         return timetables.map(
           (timetable) => {
             /*
-             * 시간표마다 동일한 baseline에
-             * 독립적으로 과목을 더합니다.
+             * 공통 과목은 먼저 한 번만 추가하고,
+             * 이후 각 시간표에서 공통 과목을 제외한
+             * 시간표별 과목만 추가합니다.
              */
-            const simulationRecords =
+            const uniqueSimulationRecords =
               createTimetableSimulationRecords(
                 timetable,
                 lectures,
-                baselineRecords,
+                [
+                  ...baselineRecords,
+                  ...commonSimulationRecords,
+                ],
               )
 
             const simulatedProgress =
@@ -486,29 +604,16 @@ export function TimetableGraduationSimulation({
                 graduationRequirements,
                 [
                   ...baselineRecords,
-                  ...simulationRecords,
+                  ...commonSimulationRecords,
+                  ...uniqueSimulationRecords,
                 ],
                 lectures,
-              )
-
-            const currentRequiredCredits =
-              getExpectedCredits(
-                baselineProgress
-                  .majorRequired
-                  .credits,
               )
 
             const simulatedRequiredCredits =
               getExpectedCredits(
                 simulatedProgress
                   .majorRequired
-                  .credits,
-              )
-
-            const currentElectiveCredits =
-              getExpectedCredits(
-                baselineProgress
-                  .majorElective
                   .credits,
               )
 
@@ -560,6 +665,8 @@ export function TimetableGraduationSimulation({
 
                   currentRequiredCredits,
 
+                  commonRequiredCredits,
+
                   simulatedRequiredCredits,
 
                   baselineProgress
@@ -576,6 +683,8 @@ export function TimetableGraduationSimulation({
 
                   currentElectiveCredits,
 
+                  commonElectiveCredits,
+
                   simulatedElectiveCredits,
 
                   baselineProgress
@@ -589,6 +698,9 @@ export function TimetableGraduationSimulation({
                   '교양',
 
                   baselineGeneralEducation
+                    .current,
+
+                  commonGeneralEducation
                     .current,
 
                   simulatedGeneralEducation
@@ -660,27 +772,37 @@ export function TimetableGraduationSimulation({
           </strong>
 
           <span>
-            기준: 현재 수강이력
+            기준: 확정 이수내역
           </span>
 
           <div className="timetable-simulation-legend">
             <span>
               <i className="timetable-simulation-legend-current" />
-              현재
+              확정 이수
             </span>
 
             <span>
-              <i className="timetable-simulation-legend-added" />
-              + 시간표
+              <i className="timetable-simulation-legend-common" />
+              공통 과목
+            </span>
+
+            <span>
+              <i className="timetable-simulation-legend-unique" />
+              시간표별 과목
             </span>
           </div>
         </div>
 
         {simulationResults.map(
-          (result) => (
+          (result, index) => (
             <article
               key={result.timetable.id}
-              className="timetable-simulation-card"
+              className={
+                `timetable-simulation-card ` +
+                `timetable-simulation-card--${
+                  ['a', 'b', 'c'][index]
+                }`
+              }
             >
               <SimulationProgressBar
                 metric={

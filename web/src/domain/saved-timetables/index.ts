@@ -1,4 +1,8 @@
 export {
+  getCommonTimetableLectureIds,
+} from './comparison'
+
+export {
   canAddTimetableToComparison,
   getActiveTimetable,
   getTimetableById,

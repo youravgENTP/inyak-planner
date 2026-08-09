@@ -6,7 +6,10 @@ import {
 import "./TimetableComparisonPage.css"
 
 import type { Lecture } from '../../domain/lectures/types'
-import type { SavedTimetable } from '../../domain/saved-timetables'
+import {
+  getCommonTimetableLectureIds,
+  type SavedTimetable,
+} from '../../domain/saved-timetables'
 import { TimetableMiniPreview } from './TimetableMiniPreview'
 
 interface TimetableComparisonPageProps {
@@ -199,28 +202,10 @@ export function TimetableComparisonPage({
   )
 
   const commonLectureIds = useMemo(
-    () => {
-      if (timetables.length < 2) {
-        return new Set<number>()
-      }
-
-      const [
-        firstTimetable,
-        ...otherTimetables
-      ] = timetables
-
-      return new Set(
-        firstTimetable.lectureIds.filter(
-          (lectureId) =>
-            otherTimetables.every(
-              (timetable) =>
-                timetable.lectureIds.includes(
-                  lectureId,
-                ),
-            ),
-        ),
-      )
-    },
+    () =>
+      getCommonTimetableLectureIds(
+        timetables,
+      ),
     [timetables],
   )
 

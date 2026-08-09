@@ -106,8 +106,18 @@
   background: var(--teal-700);
 }
 
-.timetable-simulation-legend-added {
+.timetable-simulation-legend-common {
   background: #9fd7c4;
+}
+
+.timetable-simulation-legend-unique {
+  background:
+    linear-gradient(
+      90deg,
+      #55d8ca 0 33%,
+      #ffad63 33% 66%,
+      #ad96ff 66% 100%
+    );
 }
 
 
@@ -179,12 +189,38 @@
   background: var(--teal-700);
 }
 
-.timetable-simulation-progress-added {
+/* 모든 시간표에 공통인 과목의 추가 진행도입니다. */
+.timetable-simulation-progress-common {
   flex: 0 0 auto;
 
   height: 100%;
 
   background: #9fd7c4;
+}
+
+/* 시간표별 고유 구성으로 추가되는 진행도입니다. */
+.timetable-simulation-progress-unique {
+  flex: 0 0 auto;
+
+  height: 100%;
+}
+
+/* 첫 번째 시간표의 고유 진행도입니다. */
+.timetable-simulation-card--a
+  .timetable-simulation-progress-unique {
+  background: #55d8ca;
+}
+
+/* 두 번째 시간표의 고유 진행도입니다. */
+.timetable-simulation-card--b
+  .timetable-simulation-progress-unique {
+  background: #ffad63;
+}
+
+/* 세 번째 시간표의 고유 진행도입니다. */
+.timetable-simulation-card--c
+  .timetable-simulation-progress-unique {
+  background: #ad96ff;
 }
 
 .timetable-simulation-progress-caption {
