@@ -359,6 +359,20 @@ export function GpaCalculatorPage({
       [user.studentType],
     )
 
+  const availableGrades =
+    useMemo(
+      () =>
+        Array.from(
+          new Set(
+            availableSemesters.map(
+              (semesterDefinition) =>
+                semesterDefinition.grade,
+            ),
+          ),
+        ),
+      [availableSemesters],
+    )
+
   const [
     courseRecords,
     setCourseRecords,
@@ -428,6 +442,32 @@ export function GpaCalculatorPage({
     timetableImportModalIsOpen,
     setTimetableImportModalIsOpen,
   ] = useState(false)
+
+  const [
+    addedSpecialSemesters,
+    setAddedSpecialSemesters,
+  ] = useState<SemesterDefinition[]>([])
+
+  const [
+    specialSemesterMenuIsOpen,
+    setSpecialSemesterMenuIsOpen,
+  ] = useState(false)
+
+  const [
+    specialSemesterGrade,
+    setSpecialSemesterGrade,
+  ] = useState(
+    user.studentType === 'transfer'
+      ? 3
+      : 1,
+  )
+
+  const [
+    specialSemesterTerm,
+    setSpecialSemesterTerm,
+  ] = useState<
+    'summer' | 'winter'
+  >('summer')
 
   const [
     editingRecord,
@@ -533,6 +573,54 @@ export function GpaCalculatorPage({
             record.semester !== null,
         ),
       [courseRecords],
+    )
+
+  const displaySemesters =
+    useMemo(
+      () => {
+        const semesters = [
+          ...availableSemesters,
+          ...addedSpecialSemesters,
+        ]
+
+        return semesters.sort(
+          (
+            firstSemester,
+            secondSemester,
+          ) => {
+            if (
+              firstSemester.grade !==
+              secondSemester.grade
+            ) {
+              return (
+                firstSemester.grade -
+                secondSemester.grade
+              )
+            }
+
+            const termOrder:
+              Record<AcademicTerm, number> = {
+                spring: 1,
+                summer: 2,
+                fall: 3,
+                winter: 4,
+              }
+
+            return (
+              termOrder[
+                firstSemester.term
+              ] -
+              termOrder[
+                secondSemester.term
+              ]
+            )
+          },
+        )
+      },
+      [
+        addedSpecialSemesters,
+        availableSemesters,
+      ],
     )
 
   const transferCreditCard =
@@ -1080,7 +1168,7 @@ export function GpaCalculatorPage({
           </button>
         ) : null}
 
-        {availableSemesters.map(
+        {displaySemesters.map(
           (semesterDefinition) => {
             const isSelected =
               !transferTabIsSelected &&
@@ -1090,6 +1178,26 @@ export function GpaCalculatorPage({
                 selectedSemester.semester &&
               semesterDefinition.term ===
                 selectedSemester.term
+
+            const semesterLabel =
+              semesterDefinition.term ===
+                'summer'
+                ? (
+                  `${semesterDefinition.grade}` +
+                  '학년 여름계절'
+                )
+                : semesterDefinition.term ===
+                    'winter'
+                  ? (
+                    `${semesterDefinition.grade}` +
+                    '학년 겨울계절'
+                  )
+                  : (
+                    `${semesterDefinition.grade}` +
+                    '학년 ' +
+                    `${semesterDefinition.semester}` +
+                    '학기'
+                  )
 
             return (
               <button
@@ -1118,16 +1226,144 @@ export function GpaCalculatorPage({
                   setSelectedSemester(
                     semesterDefinition,
                   )
+                  setSpecialSemesterMenuIsOpen(
+                    false,
+                  )
                 }}
               >
-                {semesterDefinition.grade}
-                학년{' '}
-                {semesterDefinition.semester}
-                학기
+                {semesterLabel}
               </button>
             )
           },
         )}
+
+        <div className="gpa-special-semester-container">
+          <button
+            aria-expanded={
+              specialSemesterMenuIsOpen
+            }
+            aria-haspopup="dialog"
+            className="gpa-special-semester-button"
+            type="button"
+            onClick={() => {
+              setSpecialSemesterMenuIsOpen(
+                (isOpen) => !isOpen,
+              )
+            }}
+          >
+            + 특별학기
+          </button>
+
+          {specialSemesterMenuIsOpen ? (
+            <div className="gpa-special-semester-menu">
+              <label>
+                <span>학년</span>
+
+                <select
+                  value={specialSemesterGrade}
+                  onChange={(event) => {
+                    setSpecialSemesterGrade(
+                      Number(
+                        event.target.value,
+                      ),
+                    )
+                  }}
+                >
+                  {availableGrades.map(
+                    (grade) => (
+                      <option
+                        key={grade}
+                        value={grade}
+                      >
+                        {grade}학년
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
+
+              <label>
+                <span>구분</span>
+
+                <select
+                  value={specialSemesterTerm}
+                  onChange={(event) => {
+                    setSpecialSemesterTerm(
+                      event.target.value as
+                        'summer' |
+                        'winter',
+                    )
+                  }}
+                >
+                  <option value="summer">
+                    여름계절
+                  </option>
+
+                  <option value="winter">
+                    겨울계절
+                  </option>
+                </select>
+              </label>
+
+              <button
+                className="gpa-special-semester-add"
+                type="button"
+                onClick={() => {
+                  const newSemester:
+                    SemesterDefinition = {
+                      grade:
+                        specialSemesterGrade,
+                      semester:
+                        specialSemesterTerm ===
+                          'summer'
+                          ? 1
+                          : 2,
+                      term:
+                        specialSemesterTerm,
+                    }
+
+                  setAddedSpecialSemesters(
+                    (currentSemesters) => {
+                      const alreadyExists =
+                        currentSemesters.some(
+                          (semesterDefinition) =>
+                            semesterDefinition
+                              .grade ===
+                              newSemester.grade &&
+                            semesterDefinition
+                              .term ===
+                              newSemester.term,
+                        )
+
+                      if (alreadyExists) {
+                        return currentSemesters
+                      }
+
+                      return [
+                        ...currentSemesters,
+                        newSemester,
+                      ]
+                    },
+                  )
+
+                  setTransferTabIsSelected(
+                    false,
+                  )
+
+                  setSelectedSemester(
+                    newSemester,
+                  )
+
+                  setSpecialSemesterMenuIsOpen(
+                    false,
+                  )
+                }}
+              >
+                추가
+              </button>
+            </div>
+          ) : null}
+        </div>
       </nav>
 
       {recordsAreLoading ? (
@@ -1226,11 +1462,26 @@ export function GpaCalculatorPage({
               <p>선택 학기</p>
 
               <h2>
-                {selectedSemester.grade}
-                학년{' '}
-                {selectedSemester.semester}
-                학기
+                {selectedSemester.term ===
+                  'summer'
+                  ? (
+                    `${selectedSemester.grade}` +
+                    '학년 여름계절'
+                  )
+                  : selectedSemester.term ===
+                      'winter'
+                    ? (
+                      `${selectedSemester.grade}` +
+                      '학년 겨울계절'
+                    )
+                    : (
+                      `${selectedSemester.grade}` +
+                      '학년 ' +
+                      `${selectedSemester.semester}` +
+                      '학기'
+                    )}
               </h2>
+
             </div>
 
             <div className="gpa-add-course-container">

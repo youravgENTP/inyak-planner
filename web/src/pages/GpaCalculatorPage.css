@@ -194,6 +194,106 @@
 
 
 /* =========================================================
+   특별학기 추가
+   ========================================================= */
+
+.gpa-special-semester-container {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.gpa-special-semester-button {
+  height: 100%;
+  padding: 11px 16px;
+
+  border: 0;
+  border-bottom: 2px solid transparent;
+
+  background: transparent;
+
+  color: #66816f;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.gpa-special-semester-button:hover {
+  color: #31533d;
+}
+
+.gpa-special-semester-menu {
+  position: fixed;
+  z-index: 40;
+
+  display: flex;
+  width: 220px;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 14px;
+
+  border: 1px solid #dfe8e1;
+  border-radius: 12px;
+
+  background: #fff;
+
+  box-shadow:
+    0 12px 28px
+    rgb(32 49 39 / 14%);
+}
+
+.gpa-special-semester-menu label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gpa-special-semester-menu label > span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #718077;
+}
+
+.gpa-special-semester-menu select {
+  width: 100%;
+  min-height: 36px;
+
+  padding: 0 34px 0 10px;
+
+  border: 1px solid #dce5df;
+  border-radius: 8px;
+
+  background-color: #fff;
+
+  font: inherit;
+  font-size: 13px;
+  color: #34483b;
+}
+
+.gpa-special-semester-add {
+  min-height: 36px;
+
+  border: 1px solid #bfd2c4;
+  border-radius: 8px;
+
+  background: #f7fbf8;
+
+  color: #365e45;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.gpa-special-semester-add:hover {
+  background: #eef6f0;
+}
+
+
+/* =========================================================
    메시지
    ========================================================= */
 
