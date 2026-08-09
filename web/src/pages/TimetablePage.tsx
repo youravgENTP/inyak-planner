@@ -169,6 +169,16 @@ export function TimetablePage() {
   ] = useState(false)
 
   const [
+    renamingTimetableId,
+    setRenamingTimetableId,
+  ] = useState<string | null>(null)
+
+  const [
+    openTimetableMenuId,
+    setOpenTimetableMenuId,
+  ] = useState<string | null>(null)
+
+  const [
     isCreateTimetableModalOpen,
     setIsCreateTimetableModalOpen,
   ] = useState(false)
@@ -251,6 +261,30 @@ export function TimetablePage() {
     ],
   )
 
+  const renamingTimetable =
+    useMemo(
+      () => {
+        if (
+          renamingTimetableId === null
+        ) {
+          return activeTimetable
+        }
+
+        return (
+          timetableState.timetables.find(
+            (timetable) =>
+              timetable.id ===
+              renamingTimetableId,
+          ) ?? activeTimetable
+        )
+      },
+      [
+        activeTimetable,
+        renamingTimetableId,
+        timetableState.timetables,
+      ],
+    )
+
   const timetableBrowserYear =
     selectedTimetableYear ??
     activeTimetable?.academicYear ??
@@ -265,17 +299,29 @@ export function TimetablePage() {
     useMemo(
       () =>
         [
-          ...new Set(
-            timetableState.timetables.map(
+          ...new Set([
+            ...timetableState.timetables.map(
               (timetable) =>
                 timetable.academicYear,
             ),
-          ),
+
+            ...lectures
+              .filter(
+                (lecture) =>
+                  lecture.semester === 1 ||
+                  lecture.semester === 2,
+              )
+              .map(
+                (lecture) =>
+                  lecture.academicYear,
+              ),
+          ]),
         ].sort(
           (firstYear, secondYear) =>
             secondYear - firstYear,
         ),
       [
+        lectures,
         timetableState.timetables,
       ],
     )
@@ -869,25 +915,47 @@ export function TimetablePage() {
   }
 
   function handleOpenRenameTimetableModal() {
-  setIsDownloadModalOpen(false)
-  setIsSavedTimetablesModalOpen(false)
-  setIsRenameTimetableModalOpen(true)
-}
+    if (activeTimetable === undefined) {
+      return
+    }
 
-function handleCloseRenameTimetableModal() {
-  setIsRenameTimetableModalOpen(false)
-}
+    setRenamingTimetableId(
+      activeTimetable.id,
+    )
 
-function handleRenameTimetable(
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+    setIsRenameTimetableModalOpen(true)
+  }
+
+  function handleOpenRenameTimetable(
+    timetableId: string,
+  ) {
+    setRenamingTimetableId(
+      timetableId,
+    )
+
+    setOpenTimetableMenuId(null)
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+    setIsRenameTimetableModalOpen(true)
+  }
+
+  function handleCloseRenameTimetableModal() {
+    setIsRenameTimetableModalOpen(false)
+    setRenamingTimetableId(null)
+  }
+
+  function handleRenameTimetable(
     name: string,
   ) {
-    if (activeTimetable === undefined) {
+    if (renamingTimetable === undefined) {
       return
     }
 
     const renamedTimetable =
       updateSavedTimetable(
-        activeTimetable,
+        renamingTimetable,
         {
           name,
         },
@@ -896,6 +964,7 @@ function handleRenameTimetable(
     setTimetableState(
       (currentState) => ({
         ...currentState,
+
         timetables: replaceTimetable(
           currentState.timetables,
           renamedTimetable,
@@ -904,6 +973,7 @@ function handleRenameTimetable(
     )
 
     setIsRenameTimetableModalOpen(false)
+    setRenamingTimetableId(null)
   }
   
   function handleSelectTimetable(
@@ -993,14 +1063,24 @@ function handleRenameTimetable(
     setIsEditing(true)
   }
 
-  function handleDuplicateActiveTimetable() {
-    if (activeTimetable === undefined) {
+  function handleDuplicateTimetable(
+    timetableId: string,
+  ) {
+    const timetableToDuplicate =
+      timetableState.timetables.find(
+        (timetable) =>
+          timetable.id === timetableId,
+      )
+
+    if (
+      timetableToDuplicate === undefined
+    ) {
       return
     }
 
     const duplicatedTimetable =
       duplicateTimetable(
-        activeTimetable,
+        timetableToDuplicate,
         timetableState.timetables,
       )
 
@@ -1010,16 +1090,36 @@ function handleRenameTimetable(
           ...currentState.timetables,
           duplicatedTimetable,
         ],
+
         activeTimetableId:
           duplicatedTimetable.id,
       }),
     )
 
+    setSelectedTimetableYear(
+      duplicatedTimetable.academicYear,
+    )
+
+    setSelectedTimetableSemester(
+      duplicatedTimetable.semester,
+    )
+
+    setOpenTimetableMenuId(null)
     setDraftLectureIds([])
     setPreviewLecture(null)
     setIsEditing(false)
     setIsDownloadModalOpen(false)
     setIsSavedTimetablesModalOpen(false)
+  }
+
+  function handleDuplicateActiveTimetable() {
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    handleDuplicateTimetable(
+      activeTimetable.id,
+    )
   }
 
 function handleCompareTimetables(
@@ -1499,7 +1599,7 @@ async function handleDownloadSyllabi() {
                       activeTimetable.id
 
                     return (
-                      <button
+                      <article
                         key={timetable.id}
                         className={
                           `timetable-browser-item` +
@@ -1509,28 +1609,118 @@ async function handleDownloadSyllabi() {
                               : ''
                           )
                         }
-                        type="button"
-                        onClick={() => {
-                          handleSelectTimetable(
-                            timetable.id,
-                          )
-                        }}
                       >
-                        <strong>
-                          {timetable.name}
-                        </strong>
+                        <button
+                          className="timetable-browser-item-main"
+                          type="button"
+                          onClick={() => {
+                            setOpenTimetableMenuId(
+                              null,
+                            )
 
-                        <span>
-                          {
-                            timetableLectures
-                              .length
-                          }
-                          과목
-                          {' · '}
-                          {timetableCredits}
-                          학점
-                        </span>
-                      </button>
+                            handleSelectTimetable(
+                              timetable.id,
+                            )
+                          }}
+                        >
+                          <strong>
+                            {timetable.name}
+                          </strong>
+
+                          <span>
+                            {
+                              timetableLectures
+                                .length
+                            }
+                            과목
+                            {' · '}
+                            {timetableCredits}
+                            학점
+                          </span>
+                        </button>
+
+                        <div className="timetable-browser-item-menu">
+                          <button
+                            aria-expanded={
+                              openTimetableMenuId ===
+                              timetable.id
+                            }
+                            aria-haspopup="menu"
+                            aria-label={
+                              `${timetable.name} 관리 메뉴`
+                            }
+                            className="timetable-browser-item-menu-trigger"
+                            type="button"
+                            onClick={() => {
+                              setOpenTimetableMenuId(
+                                (
+                                  currentTimetableId,
+                                ) =>
+                                  currentTimetableId ===
+                                  timetable.id
+                                    ? null
+                                    : timetable.id,
+                              )
+                            }}
+                          >
+                            ⋯
+                          </button>
+
+                          {openTimetableMenuId ===
+                          timetable.id ? (
+                            <div
+                              className="timetable-browser-item-menu-popover"
+                              role="menu"
+                            >
+                              <button
+                                role="menuitem"
+                                type="button"
+                                onClick={() => {
+                                  handleOpenRenameTimetable(
+                                    timetable.id,
+                                  )
+                                }}
+                              >
+                                이름 변경
+                              </button>
+
+                              <button
+                                role="menuitem"
+                                type="button"
+                                onClick={() => {
+                                  handleDuplicateTimetable(
+                                    timetable.id,
+                                  )
+                                }}
+                              >
+                                복제
+                              </button>
+
+                              <button
+                                className="timetable-browser-item-menu-delete"
+                                role="menuitem"
+                                type="button"
+                                disabled={
+                                  timetableState
+                                    .timetables
+                                    .length <= 1
+                                }
+                                onClick={() => {
+                                  setOpenTimetableMenuId(
+                                    null,
+                                  )
+
+                                  handleDeleteTimetable(
+                                    timetable.id,
+                                  )
+                                }}
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          ) : null}
+                        </div>
+                      </article>
                     )
                   },
                 )}
@@ -1775,10 +1965,10 @@ async function handleDownloadSyllabi() {
           availableTimetableSemesters
         }
         initialAcademicYear={
-          activeTimetable.academicYear
+          timetableBrowserYear
         }
         initialSemester={
-          activeTimetable.semester
+          timetableBrowserSemester
         }
         onClose={() => {
           setIsCreateTimetableModalOpen(
@@ -1795,6 +1985,7 @@ async function handleDownloadSyllabi() {
           isRenameTimetableModalOpen
         }
         currentName={
+          renamingTimetable?.name ??
           activeTimetable.name
         }
         onClose={
