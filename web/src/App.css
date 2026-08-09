@@ -1399,18 +1399,12 @@ h1 {
   background: #e8eef0;
 }
 
-.course-block--slate {
-  color: #405661;
-  background: #e8eef0;
-}
 
 /* 비교 화면에서 여러 시간표에 공통인 수업 블록 */
 .course-block--muted {
   color: #5f6f78;
   background: #e3e8eb;
 }
-
-/* 미리보기 블럭 */
 
 /* 미리보기 블럭 */
 
