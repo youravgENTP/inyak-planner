@@ -193,6 +193,18 @@ export function TimetablePage() {
     createInitialTimetableState,
   )
 
+  const [
+    selectedTimetableYear,
+    setSelectedTimetableYear,
+  ] = useState<number | null>(null)
+
+  const [
+    selectedTimetableSemester,
+    setSelectedTimetableSemester,
+  ] = useState<
+    AcademicSemester | null
+  >(null)
+
   const [lectures, setLectures] =
     useState<Lecture[]>([])
 
@@ -641,6 +653,76 @@ export function TimetablePage() {
         (lecture.credits ?? 0),
       0,
     )
+
+  const timetableCategorySummary =
+    useMemo(() => {
+      const summary = {
+        required: {
+          count: 0,
+          credits: 0,
+        },
+
+        elective: {
+          count: 0,
+          credits: 0,
+        },
+
+        generalEducation: {
+          count: 0,
+          credits: 0,
+        },
+      }
+
+      displayedLectures.forEach(
+        (lecture) => {
+          const completionType =
+            lecture.completionType
+              ?.trim() ?? ''
+
+          const normalizedType =
+            completionType.toUpperCase()
+
+          const credits =
+            lecture.credits ?? 0
+
+          if (
+            completionType === '전필' ||
+            normalizedType === 'ME'
+          ) {
+            summary.required.count += 1
+            summary.required.credits +=
+              credits
+
+            return
+          }
+
+          if (
+            completionType === '전선' ||
+            normalizedType === 'MR'
+          ) {
+            summary.elective.count += 1
+            summary.elective.credits +=
+              credits
+
+            return
+          }
+
+          if (
+            completionType === '교양'
+          ) {
+            summary
+              .generalEducation
+              .count += 1
+
+            summary
+              .generalEducation
+              .credits += credits
+          }
+        },
+      )
+
+      return summary
+    }, [displayedLectures])
 
   function handleStartEditing() {
     if (activeTimetable === undefined) {
@@ -1123,71 +1205,12 @@ async function handleDownloadSyllabi() {
   }
 
   return (
-    <section className="timetable-page">
+        <section className="timetable-page">
       {!isEditing && (
-        <div className="page-heading-row">
-          <div>
-            <span className="page-kicker">
-              {activeTimetable.academicYear}
-              학년도{' '}
-              {activeTimetable.semester}학기
-            </span>
-
-            <h1>주간 시간표</h1>
-
-            <p>
-              수강 과목의 시간과 강의실을
-              한눈에 확인합니다.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {!isEditing && (
-        <div
-          className="summary-grid"
-          aria-label="시간표 요약"
-        >
-          <article className="summary-card">
-            <span>등록 과목</span>
-
-            <strong>
-              {displayedLectures.length}
-            </strong>
-
-            <small>
-              현재 시간표의 과목 수
-            </small>
-          </article>
-
-          <article className="summary-card">
-            <span>예상 학점</span>
-
-            <strong>{creditCount}</strong>
-
-            <small>
-              선택 과목의 총 학점
-            </small>
-          </article>
-
-          <button
-            className="summary-card summary-card--button"
-            type="button"
-            onClick={
-              handleOpenSavedTimetablesModal
-            }
-            aria-haspopup="dialog"
-          >
-            <span>저장된 시간표</span>
-
-            <strong>
-              {timetableState.timetables.length}
-            </strong>
-
-            <small>
-              시간표 목록 보기
-            </small>
-          </button>
+        <div className="timetable-page-context">
+          {activeTimetable.academicYear}
+          학년도{' '}
+          {activeTimetable.semester}학기
         </div>
       )}
 
@@ -1217,6 +1240,255 @@ async function handleDownloadSyllabi() {
             : ''
         }`}
       >
+        {!isEditing && (
+          <aside
+            className="
+              panel
+              timetable-browser-panel
+            "
+            aria-label="시간표 선택"
+          >
+            <div className="timetable-browser-summary">
+              <div className="timetable-browser-summary-main">
+                <span>
+                  등록 과목 / 학점
+                </span>
+
+                <strong>
+                  {displayedLectures.length}개
+                  {' / '}
+                  {creditCount}학점
+                </strong>
+              </div>
+
+              <dl className="timetable-browser-summary-breakdown">
+                <div>
+                  <dt>전필</dt>
+
+                  <dd>
+                    {
+                      timetableCategorySummary
+                        .required.count
+                    }
+                    개
+                    {' / '}
+                    {
+                      timetableCategorySummary
+                        .required.credits
+                    }
+                    학점
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>전선</dt>
+
+                  <dd>
+                    {
+                      timetableCategorySummary
+                        .elective.count
+                    }
+                    개
+                    {' / '}
+                    {
+                      timetableCategorySummary
+                        .elective.credits
+                    }
+                    학점
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>교양</dt>
+
+                  <dd>
+                    {
+                      timetableCategorySummary
+                        .generalEducation.count
+                    }
+                    개
+                    {' / '}
+                    {
+                      timetableCategorySummary
+                        .generalEducation.credits
+                    }
+                    학점
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="timetable-browser-controls">
+              <label>
+                <span>학년도</span>
+
+                <select
+                  value={
+                    timetableBrowserYear
+                  }
+                  onChange={(event) => {
+                    setSelectedTimetableYear(
+                      Number(
+                        event.target.value,
+                      ),
+                    )
+                  }}
+                >
+                  {timetableBrowserYears.map(
+                    (academicYear) => (
+                      <option
+                        key={academicYear}
+                        value={academicYear}
+                      >
+                        {academicYear}학년도
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
+
+              <label>
+                <span>학기</span>
+
+                <select
+                  value={
+                    timetableBrowserSemester
+                  }
+                  onChange={(event) => {
+                    setSelectedTimetableSemester(
+                      Number(
+                        event.target.value,
+                      ) as AcademicSemester,
+                    )
+                  }}
+                >
+                  <option value={1}>
+                    1학기
+                  </option>
+
+                  <option value={2}>
+                    2학기
+                  </option>
+                </select>
+              </label>
+            </div>
+
+            <div className="timetable-browser-list-header">
+              <div>
+                <span>
+                  {timetableBrowserYear}-
+                  {timetableBrowserSemester}
+                </span>
+
+                <strong>
+                  저장된 시간표
+                </strong>
+              </div>
+
+              <button
+                type="button"
+                onClick={
+                  handleOpenCreateTimetableModal
+                }
+              >
+                + 새 시간표
+              </button>
+            </div>
+
+            {filteredSavedTimetables.length ===
+            0 ? (
+              <p className="timetable-browser-empty">
+                이 학기에 저장된 시간표가
+                없습니다.
+              </p>
+            ) : (
+              <div className="timetable-browser-list">
+                {filteredSavedTimetables.map(
+                  (timetable) => {
+                    const timetableLectures =
+                      timetable.lectureIds
+                        .map((lectureId) =>
+                          lectureMap.get(
+                            lectureId,
+                          ),
+                        )
+                        .filter(
+                          (
+                            lecture,
+                          ): lecture is Lecture =>
+                            lecture !==
+                            undefined,
+                        )
+
+                    const timetableCredits =
+                      timetableLectures.reduce(
+                        (
+                          totalCredits,
+                          lecture,
+                        ) =>
+                          totalCredits +
+                          (
+                            lecture.credits ??
+                            0
+                          ),
+                        0,
+                      )
+
+                    const timetableIsActive =
+                      timetable.id ===
+                      activeTimetable.id
+
+                    return (
+                      <button
+                        key={timetable.id}
+                        className={
+                          `timetable-browser-item` +
+                          (
+                            timetableIsActive
+                              ? ' timetable-browser-item--active'
+                              : ''
+                          )
+                        }
+                        type="button"
+                        onClick={() => {
+                          handleSelectTimetable(
+                            timetable.id,
+                          )
+                        }}
+                      >
+                        <strong>
+                          {timetable.name}
+                        </strong>
+
+                        <span>
+                          {
+                            timetableLectures
+                              .length
+                          }
+                          과목
+                          {' · '}
+                          {timetableCredits}
+                          학점
+                        </span>
+                      </button>
+                    )
+                  },
+                )}
+              </div>
+            )}
+
+            <button
+              className="timetable-browser-manage"
+              type="button"
+              onClick={
+                handleOpenSavedTimetablesModal
+              }
+            >
+              전체 시간표 관리
+            </button>
+          </aside>
+        )}
+
         {isEditing && (
           <TimetableEditorPanel
             lectures={editableLectures}
