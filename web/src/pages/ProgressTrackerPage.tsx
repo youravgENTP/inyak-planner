@@ -161,25 +161,19 @@ function CreditSummaryCard({
 
       <dl className="graduation-progress-summary-details">
         <div>
-          <dt>수강 중</dt>
-          <dd>
-            {formatCredits(
-              progress.inProgressCredits,
-            )}
-          </dd>
-        </div>
+          <dt>이수 예정</dt>
 
-        <div>
-          <dt>수강 예정</dt>
           <dd>
             {formatCredits(
-              progress.plannedCredits,
+              progress.inProgressCredits +
+                progress.plannedCredits,
             )}
           </dd>
         </div>
 
         <div>
           <dt>남은 학점</dt>
+
           <dd>
             {formatCredits(
               progress.remainingCredits,
