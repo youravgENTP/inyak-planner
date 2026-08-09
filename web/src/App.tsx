@@ -195,6 +195,9 @@ function App() {
     <AppShell
       activePage={activeNavigationPage}
       username={currentUser.username}
+      profileImageFilename={
+        currentUser.profileImageFilename
+      }
       onNavigate={(page) =>
         setCurrentPage(page)
       }

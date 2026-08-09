@@ -123,6 +123,16 @@
   font-weight: 800;
 }
 
+/* 사이드바 실제 프로필 이미지 */
+
+.sidebar-profile-avatar img {
+  width: 100%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  object-fit: cover;
+}
 
 /* 사용자 이름과 보조 문구 */
 .sidebar-profile-text {

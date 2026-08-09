@@ -1,5 +1,19 @@
 const API_BASE_URL = 'http://localhost:8000'
 
+export function getProfileImageUrl(
+  profileImageFilename: string | null,
+): string | null {
+  if (profileImageFilename === null) {
+    return null
+  }
+
+  return (
+    `${API_BASE_URL}/profile-images/` +
+    encodeURIComponent(
+      profileImageFilename,
+    )
+  )
+}
 
 export type StudentType =
   | 'regular'

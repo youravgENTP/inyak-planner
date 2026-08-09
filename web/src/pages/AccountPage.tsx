@@ -7,6 +7,7 @@ import {
 
 import {
   changePassword,
+  getProfileImageUrl,
   updateAcademicProfile,
   uploadProfileImage,
   type AuthUser,
@@ -47,6 +48,11 @@ export function AccountPage({
 }: AccountPageProps) {
   const profileInitial =
     getProfileInitial(user.username)
+
+  const profileImageUrl =
+    getProfileImageUrl(
+      user.profileImageFilename,
+    )
 
   const [
     entryYear,
@@ -326,7 +332,14 @@ export function AccountPage({
             className="account-profile-avatar"
             aria-hidden="true"
           >
-            {profileInitial}
+            {profileImageUrl !== null ? (
+              <img
+                src={profileImageUrl}
+                alt=""
+              />
+            ) : (
+              profileInitial
+            )}
           </div>
 
           <div className="account-profile-info">

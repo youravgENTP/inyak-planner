@@ -5,6 +5,10 @@ import {
   useState,
 } from 'react'
 
+import {
+  getProfileImageUrl,
+} from '../../domain/auth/api'
+
 export type AppNavigationPage =
   | 'timetable'
   | 'timetableComparison'
@@ -16,6 +20,7 @@ interface AppShellProps {
   activePage: AppNavigationPage
   children: ReactNode
   username: string
+  profileImageFilename: string | null
 
   onNavigate: (
     page: AppNavigationPage,
@@ -44,6 +49,7 @@ export function AppShell({
   activePage,
   children,
   username,
+  profileImageFilename,
   onNavigate,
   onOpenAccount,
   onLogout,
@@ -58,6 +64,11 @@ export function AppShell({
 
   const profileInitial =
     getProfileInitial(username)
+
+  const profileImageUrl =
+    getProfileImageUrl(
+      profileImageFilename,
+    )
 
 
   useEffect(() => {
@@ -155,7 +166,14 @@ export function AppShell({
               className="sidebar-profile-avatar"
               aria-hidden="true"
             >
-              {profileInitial}
+              {profileImageUrl !== null ? (
+                <img
+                  src={profileImageUrl}
+                  alt=""
+                />
+              ) : (
+                profileInitial
+              )}
             </span>
 
             <span className="sidebar-profile-text">
