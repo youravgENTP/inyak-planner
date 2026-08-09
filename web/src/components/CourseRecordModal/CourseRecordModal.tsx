@@ -76,6 +76,7 @@ interface CourseRecordModalProps {
    */
   grade: number
   semester: number
+  term: AcademicTerm
 
   onClose: () => void
   onSaved: (
@@ -122,6 +123,7 @@ export function CourseRecordModal({
   entryYear,
   grade,
   semester,
+  term,
   onClose,
   onSaved,
 }: CourseRecordModalProps) {
@@ -763,11 +765,7 @@ export function CourseRecordModal({
 
         term:
           editingRecord?.term ??
-          (
-            semester === 1
-              ? 'spring'
-              : 'fall'
-          ) as AcademicTerm,
+          term,
 
         courseName:
           selectedLecture.courseName,

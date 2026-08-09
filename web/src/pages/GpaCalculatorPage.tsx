@@ -1856,6 +1856,9 @@ export function GpaCalculatorPage({
           semester={
             selectedSemester.semester
           }
+          term={
+            selectedSemester.term
+          }
           onClose={() => {
             setRecordModalIsOpen(false)
             setEditingRecord(null)
