@@ -68,9 +68,14 @@
 }
 
 .graduation-progress-summary-card {
+  display: flex;
+  flex-direction: column;
+
   padding: 22px;
+
   border: 1px solid #e4e4e4;
   border-radius: 16px;
+
   background: #fff;
 }
 
@@ -123,17 +128,15 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 32px;
 
-  margin: 18px 0 0;
+  width: 72%;
+  margin: auto auto 0;
+  padding-top: 18px;
 }
 
 .graduation-progress-summary-details div {
   min-width: 0;
-}
-
-.graduation-progress-summary-details div:last-child {
-  text-align: right;
 }
 
 .graduation-progress-summary-details dt {
