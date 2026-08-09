@@ -26,6 +26,7 @@ interface TimetableGridProps {
   timetableRef?: Ref<HTMLDivElement>
   onRemoveLecture?: (lectureId: number) => void
   mutedLectureIds?: ReadonlySet<number>
+  comparisonCourseClassName?: string
 }
 
 function createTimeSlots(): number[] {
@@ -53,6 +54,7 @@ export function TimetableGrid({
   timetableRef,
   onRemoveLecture,
   mutedLectureIds,
+  comparisonCourseClassName,
 }: TimetableGridProps) {
   function handleRemoveCourse(
     course: TimetableCourse,
@@ -139,16 +141,20 @@ export function TimetableGrid({
                 course.sourceLectureId !== undefined &&
                 onRemoveLecture !== undefined
 
-              const blockClassName = [
-                'course-block',
-                `course-block--${course.color}`,
+              const isMuted =
                 course.sourceLectureId !==
                   undefined &&
                 mutedLectureIds?.has(
                   course.sourceLectureId,
-                )
+                ) === true
+
+              const blockClassName = [
+                'course-block',
+                `course-block--${course.color}`,
+                isMuted
                   ? 'course-block--muted'
-                  : '',
+                  : comparisonCourseClassName ??
+                    '',
                 course.isPreview
                   ? 'course-block--preview'
                   : '',

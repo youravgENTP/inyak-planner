@@ -13,12 +13,14 @@ interface TimetableMiniPreviewProps {
   timetable: SavedTimetable
   lectures: readonly Lecture[]
   mutedLectureIds?: ReadonlySet<number>
+  comparisonCourseClassName?: string
 }
 
 export function TimetableMiniPreview({
   timetable,
   lectures,
   mutedLectureIds,
+  comparisonCourseClassName,
 }: TimetableMiniPreviewProps) {
   const lectureMap = useMemo(
     () =>
@@ -66,6 +68,9 @@ export function TimetableMiniPreview({
         courses={courses}
         mutedLectureIds={
           mutedLectureIds
+        }
+        comparisonCourseClassName={
+          comparisonCourseClassName
         }
       />
     </div>

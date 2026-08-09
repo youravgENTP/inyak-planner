@@ -37,6 +37,12 @@ interface TimetableComparisonSummary {
   otherCourseCount: number
 }
 
+const COMPARISON_COURSE_CLASS_NAMES = [
+  'course-block--comparison-a',
+  'course-block--comparison-b',
+  'course-block--comparison-c',
+] as const
+
 function normalizeCompletionType(
   completionType: string | null,
 ): string {
@@ -333,7 +339,8 @@ export function TimetableComparisonPage({
             시간표
           </div>
 
-          {summaries.map((summary) => (
+          {summaries.map(
+            (summary, index) => (
             <div
               className="timetable-comparison-grid__timetable"
               key={`${summary.timetable.id}-preview`}
@@ -345,6 +352,11 @@ export function TimetableComparisonPage({
                 lectures={lectures}
                 mutedLectureIds={
                   commonLectureIds
+                }
+                comparisonCourseClassName={
+                  COMPARISON_COURSE_CLASS_NAMES[
+                    index
+                  ]
                 }
               />
             </div>

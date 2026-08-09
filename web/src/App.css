@@ -1399,6 +1399,24 @@ h1 {
   background: #e8eef0;
 }
 
+/* 비교 화면의 첫 번째 시간표 고유 과목 */
+.course-block--comparison-a {
+  color: #083f3b;
+  background: #55d8ca;
+}
+
+/* 비교 화면의 두 번째 시간표 고유 과목 */
+.course-block--comparison-b {
+  color: #633009;
+  background: #ffad63;
+}
+
+/* 비교 화면의 세 번째 시간표 고유 과목 */
+.course-block--comparison-c {
+  color: #35276b;
+  background: #ad96ff;
+}
+
 
 /* 비교 화면에서 여러 시간표에 공통인 수업 블록 */
 .course-block--muted {
