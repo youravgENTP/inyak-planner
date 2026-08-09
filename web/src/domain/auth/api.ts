@@ -7,6 +7,7 @@ export type StudentType =
 export interface AuthUser {
   id: string
   username: string
+  profileImageFilename: string | null
   entryYear: number | null
   studentType: StudentType | null
   createdAt: string
@@ -15,6 +16,7 @@ export interface AuthUser {
 interface AuthUserApiItem {
   id: string
   username: string
+  profile_image_filename: string | null
   entry_year: number | null
   student_type: StudentType | null
   created_at: string
@@ -34,6 +36,8 @@ function mapAuthUser(
   return {
     id: user.id,
     username: user.username,
+    profileImageFilename:
+      user.profile_image_filename,
     entryYear: user.entry_year,
     studentType: user.student_type,
     createdAt: user.created_at,
@@ -170,6 +174,40 @@ export async function updateAcademicProfile(
       await getErrorMessage(
         response,
         '학업정보를 변경하지 못했습니다.',
+      ),
+    )
+  }
+
+  const data =
+    (await response.json()) as AuthResponse
+
+  return mapAuthUser(data.user)
+}
+
+export async function uploadProfileImage(
+  file: File,
+): Promise<AuthUser> {
+  const formData = new FormData()
+
+  formData.append(
+    'image',
+    file,
+  )
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/auth/profile-image`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(
+        response,
+        '프로필 이미지를 변경하지 못했습니다.',
       ),
     )
   }

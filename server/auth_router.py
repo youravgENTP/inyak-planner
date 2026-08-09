@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from pathlib import Path
+from uuid import uuid4
+
 from typing import (
     Any, 
     Literal, 
@@ -9,10 +12,13 @@ from typing import (
 from fastapi import (
     APIRouter,
     Cookie,
+    File,
     HTTPException,
     Response,
+    UploadFile,
     status,
 )
+
 from pydantic import BaseModel, Field
 
 from server.auth_database import (
@@ -20,6 +26,7 @@ from server.auth_database import (
     create_user,
     get_user_by_id,
     get_user_by_username,
+    update_profile_image_filename,
     update_user_academic_profile,
     update_user_password,
 )
@@ -35,6 +42,47 @@ from server.session_service import (
 
 
 SESSION_COOKIE_NAME = "inyak_session"
+
+PROJECT_ROOT = Path(
+    __file__
+).resolve().parents[1]
+
+PROFILE_IMAGE_DIRECTORY = (
+    PROJECT_ROOT
+    / "data"
+    / "uploads"
+    / "profile-images"
+)
+
+MAX_PROFILE_IMAGE_BYTES = (
+    5 * 1024 * 1024
+)
+
+
+def get_profile_image_extension(
+    image_bytes: bytes,
+) -> str | None:
+    """파일 내용으로 허용 이미지 형식을 판별한다."""
+    if image_bytes.startswith(
+        b"\x89PNG\r\n\x1a\n"
+    ):
+        return "png"
+
+    if image_bytes.startswith(
+        b"\xff\xd8\xff"
+    ):
+        return "jpg"
+
+    if (
+        len(image_bytes) >= 12
+        and image_bytes[0:4] == b"RIFF"
+        and image_bytes[8:12] == b"WEBP"
+    ):
+        return "webp"
+
+    return None
+
+
 
 router = APIRouter(
     prefix="/api/auth",
@@ -259,6 +307,147 @@ def read_current_user(
     }
 
 @router.patch("/profile")
+@router.post("/profile-image")
+async def upload_profile_image(
+    image: UploadFile = File(...),
+    session_token: Optional[str] = Cookie(
+        default=None,
+        alias=SESSION_COOKIE_NAME,
+    ),
+) -> dict[str, Any]:
+    """현재 사용자의 프로필 이미지를 업로드한다."""
+    user = require_authenticated_user(
+        session_token
+    )
+
+    image_bytes = await image.read(
+        MAX_PROFILE_IMAGE_BYTES + 1
+    )
+
+    if len(image_bytes) == 0:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_422_UNPROCESSABLE_ENTITY
+            ),
+            detail="이미지 파일이 비어 있습니다.",
+        )
+
+    if (
+        len(image_bytes) >
+        MAX_PROFILE_IMAGE_BYTES
+    ):
+        raise HTTPException(
+            status_code=(
+                status.HTTP_413_REQUEST_ENTITY_TOO_LARGE
+            ),
+            detail=(
+                "프로필 이미지는 "
+                "5MB 이하만 업로드할 수 있습니다."
+            ),
+        )
+
+    extension = get_profile_image_extension(
+        image_bytes
+    )
+
+    if extension is None:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+            ),
+            detail=(
+                "JPEG, PNG, WebP 이미지만 "
+                "업로드할 수 있습니다."
+            ),
+        )
+
+    PROFILE_IMAGE_DIRECTORY.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    new_filename = (
+        f"{uuid4().hex}.{extension}"
+    )
+    new_image_path = (
+        PROFILE_IMAGE_DIRECTORY /
+        new_filename
+    )
+
+    try:
+        new_image_path.write_bytes(
+            image_bytes
+        )
+    except OSError as error:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail=(
+                "프로필 이미지를 저장하지 "
+                "못했습니다."
+            ),
+        ) from error
+
+    old_filename = user.get(
+        "profile_image_filename"
+    )
+
+    image_was_updated = (
+        update_profile_image_filename(
+            user_id=user["id"],
+            profile_image_filename=(
+                new_filename
+            ),
+        )
+    )
+
+    if not image_was_updated:
+        new_image_path.unlink(
+            missing_ok=True
+        )
+
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail=(
+                "프로필 이미지 정보를 "
+                "저장하지 못했습니다."
+            ),
+        )
+
+    if old_filename is not None:
+        old_image_path = (
+            PROFILE_IMAGE_DIRECTORY /
+            old_filename
+        )
+
+        old_image_path.unlink(
+            missing_ok=True
+        )
+
+    updated_user = get_user_by_id(
+        user["id"]
+    )
+
+    if updated_user is None:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_500_INTERNAL_SERVER_ERROR
+            ),
+            detail=(
+                "변경된 사용자 정보를 "
+                "불러오지 못했습니다."
+            ),
+        )
+
+    return {
+        "user": get_public_user(
+            updated_user
+        ),
+    }
+
 def update_academic_profile(
     request: AcademicProfileRequest,
     session_token: Optional[str] = Cookie(

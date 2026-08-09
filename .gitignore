@@ -12,3 +12,6 @@ __pycache__/
 
 # Generated databases
 data/db/*.db
+
+# User uploads
+data/uploads/
