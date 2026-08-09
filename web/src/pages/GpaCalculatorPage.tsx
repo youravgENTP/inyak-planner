@@ -35,6 +35,7 @@ import {
 } from '../domain/course-records/api'
 
 import type {
+  AcademicTerm,
   CourseRecord,
   CourseRecordInput,
 } from '../domain/course-records/types'
@@ -65,6 +66,7 @@ import './GpaCalculatorPage.css'
 interface SemesterDefinition {
   grade: number
   semester: number
+  term: AcademicTerm
 }
 
 
@@ -85,10 +87,12 @@ const SEMESTERS: SemesterDefinition[] =
         {
           grade,
           semester: 1,
+          term: 'spring' as const,
         },
         {
           grade,
           semester: 2,
+          term: 'fall' as const
         },
       ]
     },
@@ -383,6 +387,7 @@ export function GpaCalculatorPage({
         ? {
             grade: 3,
             semester: 1,
+            term: 'spring',
           }
         : SEMESTERS[0],
   )
@@ -555,7 +560,9 @@ export function GpaCalculatorPage({
               record.grade ===
                 selectedSemester.grade &&
               record.semester ===
-                selectedSemester.semester,
+                selectedSemester.semester &&
+              record.term === 
+                selectedSemester.term,
           )
           .sort(
             (firstRecord, secondRecord) =>
@@ -637,6 +644,8 @@ export function GpaCalculatorPage({
                     semesterDefinition.grade &&
                   record.semester ===
                     semesterDefinition.semester,
+                  record.term === 
+                    semesterDefinition.term
               )
 
             const confirmed =
@@ -1079,6 +1088,8 @@ export function GpaCalculatorPage({
                 selectedSemester.grade &&
               semesterDefinition.semester ===
                 selectedSemester.semester
+              semesterDefinition.term ===
+                selectedSemester
 
             return (
               <button
@@ -1096,6 +1107,7 @@ export function GpaCalculatorPage({
                 }
                 key={
                   `${semesterDefinition.grade}-` +
+                  `${semesterDefinition.semester}-` +
                   semesterDefinition.semester
                 }
                 type="button"
