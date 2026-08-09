@@ -829,7 +829,7 @@ export function GpaCalculatorPage({
   const semesterGpaChartPoints =
     useMemo(
       () =>
-        availableSemesters.map(
+        displaySemesters.map(
           (semesterDefinition) => {
             const semesterRecords =
               regularRecords.filter(
@@ -838,8 +838,8 @@ export function GpaCalculatorPage({
                     semesterDefinition.grade &&
                   record.semester ===
                     semesterDefinition.semester &&
-                  record.term === 
-                    semesterDefinition.term
+                  record.term ===
+                    semesterDefinition.term,
               )
 
             const confirmed =
@@ -854,10 +854,27 @@ export function GpaCalculatorPage({
                 true,
               )
 
+            const semesterLabel =
+              semesterDefinition.term ===
+                'summer'
+                ? (
+                  `${semesterDefinition.grade}` +
+                  '-S'
+                )
+                : semesterDefinition.term ===
+                    'winter'
+                  ? (
+                    `${semesterDefinition.grade}` +
+                    '-W'
+                  )
+                  : (
+                    `${semesterDefinition.grade}-` +
+                    semesterDefinition.semester
+                  )
+
             return {
               label:
-                `${semesterDefinition.grade}-` +
-                semesterDefinition.semester,
+                semesterLabel,
 
               confirmedGpa:
                 confirmed.gpa,
@@ -868,7 +885,7 @@ export function GpaCalculatorPage({
           },
         ),
       [
-        availableSemesters,
+        displaySemesters,
         regularRecords,
       ],
     )
@@ -2029,6 +2046,9 @@ export function GpaCalculatorPage({
         }
         semester={
           selectedSemester.semester
+        }
+        term={
+          selectedSemester.term
         }
         existingRecords={
           courseRecords

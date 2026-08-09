@@ -9,6 +9,7 @@ import {
 } from '../../domain/course-records/api'
 
 import type {
+  AcademicTerm,
   CourseCompletionType,
   CourseRecord,
   CourseRecordInput,
@@ -34,6 +35,7 @@ interface TimetableImportModalProps {
   isOpen: boolean
   grade: number
   semester: number
+  term: AcademicTerm
 
   existingRecords:
     readonly CourseRecord[]
@@ -91,6 +93,7 @@ export function TimetableImportModal({
   isOpen,
   grade,
   semester,
+  term,
   existingRecords,
   onClose,
   onImported,
@@ -263,6 +266,7 @@ export function TimetableImportModal({
                 record.grade === grade &&
                 record.semester ===
                   semester &&
+                record.term === term &&
                 record.lectureId !== null,
             )
             .map(
@@ -274,6 +278,7 @@ export function TimetableImportModal({
         existingRecords,
         grade,
         semester,
+        term,
       ],
     )
 
@@ -338,12 +343,13 @@ export function TimetableImportModal({
             lecture.academicYear,
 
           /*
-           * grade + semester는
+           * grade + semester + term은
            * GPA 화면에서 선택한 사용자의
-           * 학년-학기 위치입니다.
+           * 실제 학기 위치입니다.
            */
           grade,
           semester,
+          term,
 
           courseName:
             lecture.courseName,
@@ -429,8 +435,15 @@ export function TimetableImportModal({
             </h2>
 
             <p>
-              {grade}학년 {semester}학기의
-              수강 기록으로 추가합니다.
+              {term === 'summer'
+                ? `${grade}학년 여름계절`
+                : term === 'winter'
+                  ? `${grade}학년 겨울계절`
+                  : (
+                    `${grade}학년 ` +
+                    `${semester}학기`
+                  )}
+              의 수강 기록으로 추가합니다.
             </p>
           </div>
 
