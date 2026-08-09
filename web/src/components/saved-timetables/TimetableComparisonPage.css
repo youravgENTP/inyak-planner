@@ -333,6 +333,83 @@
   text-align: center;
 }
 
+/* =========================================================
+   요약 행
+   ========================================================= */
+
+/* 각 시간표의 학점과 과목 구성을 요약하는 셀입니다. */
+.timetable-comparison-grid__compact-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  min-width: 0;
+  padding: 16px;
+
+  background: #ffffff;
+  border-right: 1px solid #e4ecee;
+  border-bottom: 1px solid #e4ecee;
+}
+
+/* 전체 학점과 전체 과목 수를 강조합니다. */
+.timetable-comparison-grid__summary-total {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+/* 전체 학점입니다. */
+.timetable-comparison-grid__summary-total strong {
+  color: #173348;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* 전체 과목 수입니다. */
+.timetable-comparison-grid__summary-total span {
+  color: #738895;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 전필·전선·교양별 세부 구성을 배치합니다. */
+.timetable-comparison-grid__summary-breakdown {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* 하나의 이수 구분 요약입니다. */
+.timetable-comparison-grid__summary-breakdown > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+  padding: 9px 10px;
+
+  background: #f6f9fa;
+  border: 1px solid #e3ebed;
+  border-radius: 9px;
+}
+
+/* 전필·전선·교양 이름입니다. */
+.timetable-comparison-grid__summary-breakdown strong {
+  color: #405b6d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* 과목 수와 학점입니다. */
+.timetable-comparison-grid__summary-breakdown span {
+  color: #718592;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
 
 /* =========================================================
    각 행의 마지막 열 테두리 제거

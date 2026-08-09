@@ -22,6 +22,7 @@ interface TimetableComparisonSummary {
   timetable: SavedTimetable
 
   totalCredits: number
+  totalCourseCount: number
 
   requiredCredits: number
   electiveCredits: number
@@ -151,6 +152,9 @@ function createComparisonSummary(
 
     totalCredits:
       sumCredits(timetableLectures),
+
+    totalCourseCount:
+      timetableLectures.length,
 
     requiredCredits:
       sumCredits(requiredLectures),
@@ -363,10 +367,11 @@ export function TimetableComparisonPage({
 
           
           ))}
-                  {showCompactSummary ? (
+          {/*  */}
+          {showCompactSummary ? (
             <>
               <div className="timetable-comparison-grid__row-label">
-                구성 요약
+                요약
               </div>
 
               {summaries.map(
@@ -377,64 +382,83 @@ export function TimetableComparisonPage({
                       `${summary.timetable.id}-summary`
                     }
                   >
-                    <strong>
-                      {summary.totalCredits}
-                      학점
-                    </strong>
-
-                    <div>
-                      <span>
-                        전필{' '}
-                        {
-                          summary
-                            .requiredCourseCount
-                        }
-                        개 ·{' '}
-                        {
-                          summary
-                            .requiredCredits
-                        }
+                    <div className="timetable-comparison-grid__summary-total">
+                      <strong>
+                        {summary.totalCredits}
                         학점
-                      </span>
+                      </strong>
 
                       <span>
-                        전선{' '}
-                        {
-                          summary
-                            .electiveCourseCount
-                        }
-                        개 ·{' '}
-                        {
-                          summary
-                            .electiveCredits
-                        }
-                        학점
+                        {summary.totalCourseCount}
+                        과목
                       </span>
+                    </div>
 
-                      <span>
-                        교양{' '}
-                        {
-                          summary
-                            .generalEducationCourseCount
-                        }
-                        개 ·{' '}
-                        {
-                          summary
-                            .generalEducationCredits
-                        }
-                        학점
-                      </span>
+                    <div className="timetable-comparison-grid__summary-breakdown">
+                      <div>
+                        <strong>전필</strong>
+
+                        <span>
+                          {
+                            summary
+                              .requiredCourseCount
+                          }
+                          과목 ·{' '}
+                          {
+                            summary
+                              .requiredCredits
+                          }
+                          학점
+                        </span>
+                      </div>
+
+                      <div>
+                        <strong>전선</strong>
+
+                        <span>
+                          {
+                            summary
+                              .electiveCourseCount
+                          }
+                          과목 ·{' '}
+                          {
+                            summary
+                              .electiveCredits
+                          }
+                          학점
+                        </span>
+                      </div>
+
+                      <div>
+                        <strong>교양</strong>
+
+                        <span>
+                          {
+                            summary
+                              .generalEducationCourseCount
+                          }
+                          과목 ·{' '}
+                          {
+                            summary
+                              .generalEducationCredits
+                          }
+                          학점
+                        </span>
+                      </div>
 
                       {summary.otherCourseCount >
                       0 ? (
-                        <span>
-                          기타{' '}
-                          {
-                            summary
-                              .otherCourseCount
-                          }
-                          개
-                        </span>
+                        <div>
+                          <strong>기타</strong>
+
+                          <span>
+                            {
+                              summary
+                                .otherCourseCount
+                            }
+                            과목
+                          </span>
+                        </div>
                       ) : null}
                     </div>
                   </div>
@@ -442,6 +466,7 @@ export function TimetableComparisonPage({
               )}
             </>
           ) : null}
+          {/*  */}
                     <div className="timetable-comparison-grid__row-label">
             시간표별 과목
           </div>
