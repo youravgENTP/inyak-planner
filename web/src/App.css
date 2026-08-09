@@ -330,6 +330,95 @@
 }
 
 /* =========================================================
+   시간표 바로가기
+   ========================================================= */
+
+.timetable-shortcuts {
+  display: grid;
+  gap: 7px;
+
+  margin-top: 5px;
+  padding: 4px 0 0 18px;
+}
+
+.timetable-shortcuts-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 0 10px;
+}
+
+.timetable-shortcuts-heading span {
+  overflow: hidden;
+
+  color: #7893a2;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timetable-shortcuts-heading small {
+  flex: 0 0 auto;
+
+  color: #667f8d;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.timetable-shortcuts-list {
+  display: grid;
+  gap: 3px;
+}
+
+.timetable-shortcut-item {
+  width: 100%;
+  min-width: 0;
+
+  padding: 7px 10px;
+
+  border: 0;
+  border-radius: 7px;
+
+  color: #8fa5b3;
+  background: transparent;
+
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.timetable-shortcut-item span {
+  display: block;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timetable-shortcut-item:hover {
+  color: #ffffff;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+.timetable-shortcut-item--active {
+  color: #ffffff;
+
+  background:
+    rgba(33, 143, 139, 0.16);
+}
+
+/* =========================================================
    6. 사이드바 하단 정보
    학기와 학과 정보를 사이드바 아래쪽에 표시
    ========================================================= */

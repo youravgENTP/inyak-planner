@@ -149,7 +149,20 @@ function createDownloadFilename(
   )
 }
 
-export function TimetablePage() {
+interface TimetablePageProps {
+  requestedActiveTimetableId:
+    string | null
+
+  onTimetableStateChange: (
+    timetables: readonly SavedTimetable[],
+    activeTimetableId: string,
+  ) => void
+}
+
+export function TimetablePage({
+  requestedActiveTimetableId,
+  onTimetableStateChange,
+}: TimetablePageProps) {
   const [isEditing, setIsEditing] =
     useState(false)
 
@@ -503,6 +516,43 @@ export function TimetablePage() {
   )
 
   useEffect(() => {
+    if (
+      requestedActiveTimetableId ===
+        null ||
+      requestedActiveTimetableId ===
+        timetableState.activeTimetableId ||
+      !timetableState.timetables.some(
+        (timetable) =>
+          timetable.id ===
+          requestedActiveTimetableId,
+      )
+    ) {
+      return
+    }
+
+    setTimetableState(
+      (currentState) => ({
+        ...currentState,
+
+        activeTimetableId:
+          requestedActiveTimetableId,
+      }),
+    )
+
+    setDraftLectureIds([])
+    setPreviewLecture(null)
+    setOpenTimetableMenuId(null)
+
+    setIsEditing(false)
+    setIsDownloadModalOpen(false)
+    setIsSavedTimetablesModalOpen(false)
+  }, [
+    requestedActiveTimetableId,
+    timetableState.activeTimetableId,
+    timetableState.timetables,
+  ])
+
+  useEffect(() => {
     saveSavedTimetables(
       timetableState.timetables,
     )
@@ -510,7 +560,15 @@ export function TimetablePage() {
     saveActiveTimetableId(
       timetableState.activeTimetableId,
     )
-  }, [timetableState])
+
+    onTimetableStateChange(
+      timetableState.timetables,
+      timetableState.activeTimetableId,
+    )
+  }, [
+    onTimetableStateChange,
+    timetableState,
+  ])
 
   useEffect(() => {
     setComparisonTimetableIds(

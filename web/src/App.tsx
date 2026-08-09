@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useState,
 } from 'react'
@@ -14,6 +15,13 @@ import {
   logout,
   type AuthUser,
 } from './domain/auth/api'
+
+import {
+  loadActiveTimetableId,
+  loadSavedTimetables,
+  type SavedTimetable,
+} from './domain/saved-timetables'
+
 import { AccountPage } from './pages/AccountPage'
 import { AuthPage } from './pages/AuthPage'
 import { CurriculumPage } from './pages/CurriculumPage'
@@ -33,6 +41,20 @@ function App() {
     currentPage,
     setCurrentPage,
   ] = useState<AppPage>('timetable')
+
+  const [
+    timetableShortcuts,
+    setTimetableShortcuts,
+  ] = useState<SavedTimetable[]>(
+    loadSavedTimetables,
+  )
+
+  const [
+    requestedActiveTimetableId,
+    setRequestedActiveTimetableId,
+  ] = useState<string | null>(
+    loadActiveTimetableId,
+  )
 
   const [
     isCheckingAuthentication,
@@ -109,6 +131,37 @@ function App() {
     setCurrentPage('timetable')
   }
 
+  const handleTimetableStateChange =
+    useCallback(
+      (
+        timetables:
+          readonly SavedTimetable[],
+
+        activeTimetableId: string,
+      ) => {
+        setTimetableShortcuts([
+          ...timetables,
+        ])
+
+        setRequestedActiveTimetableId(
+          activeTimetableId,
+        )
+      },
+      [],
+    )
+
+  const handleTimetableShortcutSelect =
+    useCallback(
+      (timetableId: string) => {
+        setRequestedActiveTimetableId(
+          timetableId,
+        )
+
+        setCurrentPage('timetable')
+      },
+      [],
+    )
+
   if (isCheckingAuthentication) {
     return (
       <main className="auth-page">
@@ -166,6 +219,13 @@ function App() {
     <AppShell
       activePage={activeNavigationPage}
       username={currentUser.username}
+      timetables={timetableShortcuts}
+      activeTimetableId={
+        requestedActiveTimetableId
+      }
+      onSelectTimetable={
+        handleTimetableShortcutSelect
+      }
       onNavigate={(page) =>
         setCurrentPage(page)
       }
@@ -203,7 +263,14 @@ function App() {
         user={currentUser}
       />
     ) : (
-      <TimetablePage />
+      <TimetablePage
+        requestedActiveTimetableId={
+          requestedActiveTimetableId
+        }
+        onTimetableStateChange={
+          handleTimetableStateChange
+        }
+      />
     )}
 
     </AppShell>
