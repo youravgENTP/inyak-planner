@@ -222,7 +222,8 @@
 
 
 /* 학업정보 선택 상자 */
-.account-academic-field select {
+.account-academic-field select,
+.account-academic-field input {
   width: 100%;
   padding: 11px 12px;
 
@@ -238,7 +239,8 @@
 
 
 /* 학업정보 선택 상자 포커스 */
-.account-academic-field select:focus {
+.account-academic-field select:focus,
+.account-academic-field input:focus {
   border-color: var(--teal-600);
   outline: 3px solid rgba(33, 143, 139, 0.14);
 }
@@ -271,6 +273,12 @@
 /* 저장 오류 메시지 */
 .account-academic-message--error {
   color: #a63d3d;
+}
+
+/* 비밀번호 변경 입력 영역 */
+.account-password-fields {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
 }
 
 

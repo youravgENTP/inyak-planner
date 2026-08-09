@@ -4,6 +4,7 @@ import {
 } from 'react'
 
 import {
+  changePassword,
   updateAcademicProfile,
   type AuthUser,
   type StudentType,
@@ -73,6 +74,36 @@ export function AccountPage({
     setAcademicProfileSuccess,
   ] = useState<string | null>(null)
 
+  const [
+    currentPassword,
+    setCurrentPassword,
+  ] = useState('')
+
+  const [
+    newPassword,
+    setNewPassword,
+  ] = useState('')
+
+  const [
+    newPasswordConfirm,
+    setNewPasswordConfirm,
+  ] = useState('')
+
+  const [
+    isChangingPassword,
+    setIsChangingPassword,
+  ] = useState(false)
+
+  const [
+    passwordError,
+    setPasswordError,
+  ] = useState<string | null>(null)
+
+  const [
+    passwordSuccess,
+    setPasswordSuccess,
+  ] = useState<string | null>(null)
+
   async function handleAcademicProfileSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
@@ -117,6 +148,71 @@ export function AccountPage({
       }
     } finally {
       setIsSavingAcademicProfile(false)
+    }
+  }
+
+  async function handlePasswordSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault()
+
+    if (
+      currentPassword === '' ||
+      newPassword === '' ||
+      newPasswordConfirm === ''
+    ) {
+      setPasswordError(
+        '비밀번호 입력란을 모두 작성해 주세요.',
+      )
+      setPasswordSuccess(null)
+      return
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError(
+        '새 비밀번호는 8자 이상이어야 합니다.',
+      )
+      setPasswordSuccess(null)
+      return
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+      setPasswordError(
+        '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.',
+      )
+      setPasswordSuccess(null)
+      return
+    }
+
+    setIsChangingPassword(true)
+    setPasswordError(null)
+    setPasswordSuccess(null)
+
+    try {
+      await changePassword(
+        currentPassword,
+        newPassword,
+      )
+
+      setCurrentPassword('')
+      setNewPassword('')
+      setNewPasswordConfirm('')
+
+      setPasswordSuccess(
+        '비밀번호가 변경되었습니다.',
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        setPasswordError(
+          error.message,
+        )
+      } else {
+        setPasswordError(
+          '비밀번호를 변경하지 못했습니다.',
+        )
+      }
+    } finally {
+      setIsChangingPassword(false)
     }
   }
 
@@ -308,28 +404,118 @@ export function AccountPage({
           <h2>계정 보안</h2>
 
           <p>
-            비밀번호 변경 기능은 이후
-            단계에서 추가합니다.
+            현재 비밀번호를 확인한 뒤
+            새 비밀번호로 변경합니다.
           </p>
         </div>
 
-        <div className="account-setting-row">
-          <div>
-            <strong>비밀번호</strong>
+        <form
+          className="account-academic-form"
+          onSubmit={handlePasswordSubmit}
+        >
+          <div className="account-academic-fields account-password-fields">
+            <div className="account-academic-field">
+              <label htmlFor="current-password">
+                현재 비밀번호
+              </label>
 
-            <span>
-              계정 비밀번호를 변경합니다.
-            </span>
+              <input
+                id="current-password"
+                type="password"
+                autoComplete="current-password"
+                value={currentPassword}
+                disabled={isChangingPassword}
+                onChange={(event) => {
+                  setCurrentPassword(
+                    event.target.value,
+                  )
+                  setPasswordError(null)
+                  setPasswordSuccess(null)
+                }}
+              />
+            </div>
+
+            <div className="account-academic-field">
+              <label htmlFor="new-password">
+                새 비밀번호
+              </label>
+
+              <input
+                id="new-password"
+                type="password"
+                autoComplete="new-password"
+                value={newPassword}
+                disabled={isChangingPassword}
+                onChange={(event) => {
+                  setNewPassword(
+                    event.target.value,
+                  )
+                  setPasswordError(null)
+                  setPasswordSuccess(null)
+                }}
+              />
+            </div>
+
+            <div className="account-academic-field">
+              <label htmlFor="new-password-confirm">
+                새 비밀번호 확인
+              </label>
+
+              <input
+                id="new-password-confirm"
+                type="password"
+                autoComplete="new-password"
+                value={newPasswordConfirm}
+                disabled={isChangingPassword}
+                onChange={(event) => {
+                  setNewPasswordConfirm(
+                    event.target.value,
+                  )
+                  setPasswordError(null)
+                  setPasswordSuccess(null)
+                }}
+              />
+            </div>
           </div>
 
-          <button
-            className="secondary-button"
-            type="button"
-            disabled
-          >
-            비밀번호 변경
-          </button>
-        </div>
+          <div className="account-academic-actions">
+            <div>
+              {passwordError !== null && (
+                <p
+                  className="
+                    account-academic-message
+                    account-academic-message--error
+                  "
+                  role="alert"
+                >
+                  {passwordError}
+                </p>
+              )}
+
+              {passwordSuccess !== null && (
+                <p
+                  className="
+                    account-academic-message
+                    account-academic-message--success
+                  "
+                  role="status"
+                >
+                  {passwordSuccess}
+                </p>
+              )}
+            </div>
+
+            <button
+              className="secondary-button"
+              type="submit"
+              disabled={isChangingPassword}
+            >
+              {isChangingPassword
+                ? '변경 중...'
+                : '비밀번호 변경'}
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="account-section">
