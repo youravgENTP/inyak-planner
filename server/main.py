@@ -29,6 +29,10 @@ from server.course_records_router import (
     router as course_records_router,
 )
 
+from server.special_semesters_router import (
+    router as special_semesters_router,
+)
+
 from server.database import (
     get_curriculum_courses,
     get_general_education_requirements,
@@ -56,8 +60,13 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+
 app.include_router(
     course_records_router
+)
+
+app.include_router(
+    special_semesters_router
 )
 
 app.add_middleware(
