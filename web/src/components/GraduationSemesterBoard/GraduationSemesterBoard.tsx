@@ -568,7 +568,7 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSections.has('required')
+                    openSections.has('elective')
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )
@@ -654,7 +654,9 @@ function SemesterCard({
                 className={
                   'graduation-board-accordion-chevron' +
                   (
-                    openSections.has('required')
+                    openSections.has(
+                      'generalEducation'
+                    )
                       ? ' graduation-board-accordion-chevron--open'
                       : ''
                   )

@@ -454,7 +454,7 @@ export function TransferCreditCard({
                   'graduation-board-transfer-summary-chevron' +
                   (
                     activeCompletionType ===
-                    '전필'
+                    '교양'
                       ? ' graduation-board-transfer-summary-chevron--open'
                       : ''
                   )
