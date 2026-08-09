@@ -251,6 +251,66 @@ export function TimetablePage() {
     ],
   )
 
+  const timetableBrowserYear =
+    selectedTimetableYear ??
+    activeTimetable?.academicYear ??
+    2026
+
+  const timetableBrowserSemester =
+    selectedTimetableSemester ??
+    activeTimetable?.semester ??
+    1
+
+  const timetableBrowserYears =
+    useMemo(
+      () =>
+        [
+          ...new Set(
+            timetableState.timetables.map(
+              (timetable) =>
+                timetable.academicYear,
+            ),
+          ),
+        ].sort(
+          (firstYear, secondYear) =>
+            secondYear - firstYear,
+        ),
+      [
+        timetableState.timetables,
+      ],
+    )
+
+  const filteredSavedTimetables =
+    useMemo(
+      () =>
+        timetableState.timetables.filter(
+          (timetable) =>
+            timetable.academicYear ===
+              timetableBrowserYear &&
+            timetable.semester ===
+              timetableBrowserSemester,
+        ),
+      [
+        timetableBrowserSemester,
+        timetableBrowserYear,
+        timetableState.timetables,
+      ],
+    )
+
+  useEffect(() => {
+    if (activeTimetable === undefined) {
+      return
+    }
+
+    setSelectedTimetableYear(
+      activeTimetable.academicYear,
+    )
+
+    setSelectedTimetableSemester(
+      activeTimetable.semester,
+    )
+  }, [activeTimetable])
+
   /*
    * 새 시간표 생성 시 사용할 학기 목록입니다.
    *
