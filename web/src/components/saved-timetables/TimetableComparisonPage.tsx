@@ -443,10 +443,10 @@ export function TimetableComparisonPage({
             </>
           ) : null}
                     <div className="timetable-comparison-grid__row-label">
-            차이 과목
+            시간표별 과목
           </div>
 
-          {summaries.map((summary) => {
+          {summaries.map((summary, index) => {
             const differingLectures =
               differingLecturesByTimetableId.get(
                 summary.timetable.id,
@@ -454,7 +454,9 @@ export function TimetableComparisonPage({
 
             return (
               <div
-                className="timetable-comparison-grid__differences"
+                className={`timetable-comparison-grid__differences timetable-comparison-grid__differences--${
+                  ['a', 'b', 'c'][index]
+                }`}
                 key={`${summary.timetable.id}-differences`}
               >
                 {differingLectures.length > 0 ? (

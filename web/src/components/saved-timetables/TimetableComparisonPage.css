@@ -360,7 +360,7 @@
   border-bottom: 1px solid #e4ecee;
 }
 
-/* 차이 과목 목록입니다. */
+/* 고유 과목 목록입니다. */
 .timetable-comparison-grid__differences ul {
   display: flex;
   flex-wrap: wrap;
@@ -372,7 +372,7 @@
   list-style: none;
 }
 
-/* 차이가 나는 개별 과목입니다. */
+/* 고유한 개별 과목입니다. */
 .timetable-comparison-grid__differences li {
   display: flex;
   flex-direction: column;
@@ -381,23 +381,48 @@
   min-width: 0;
   padding: 9px 11px;
 
-  background: #f5f9fa;
-  border: 1px solid #dfe9ec;
+  border: 1px solid transparent;
   border-radius: 10px;
 }
 
 /* 과목명입니다. */
 .timetable-comparison-grid__differences strong {
-  color: #203c50;
+  color: inherit;
   font-size: 13px;
   font-weight: 800;
 }
 
 /* 이수 구분과 학점입니다. */
 .timetable-comparison-grid__differences span {
-  color: #778b99;
+  color: inherit;
   font-size: 11px;
   line-height: 1.4;
+
+  opacity: 0.78;
+}
+
+/* 첫 번째 시간표의 고유 과목 카드입니다. */
+.timetable-comparison-grid__differences--a li {
+  color: #083f3b;
+
+  background: #55d8ca;
+  border-color: #2fb5a8;
+}
+
+/* 두 번째 시간표의 고유 과목 카드입니다. */
+.timetable-comparison-grid__differences--b li {
+  color: #633009;
+
+  background: #ffad63;
+  border-color: #ed8b35;
+}
+
+/* 세 번째 시간표의 고유 과목 카드입니다. */
+.timetable-comparison-grid__differences--c li {
+  color: #35276b;
+
+  background: #ad96ff;
+  border-color: #8065e6;
 }
 
 /* 차이 과목이 없을 때의 안내입니다. */

@@ -1420,8 +1420,16 @@ h1 {
 
 /* 비교 화면에서 여러 시간표에 공통인 수업 블록 */
 .course-block--muted {
-  color: #5f6f78;
-  background: #e3e8eb;
+  color: #53636c;
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      #e3e8eb 0,
+      #e3e8eb 9px,
+      #c5cfd4 9px,
+      #c5cfd4 11px
+    );
 }
 
 /* 미리보기 블럭 */
