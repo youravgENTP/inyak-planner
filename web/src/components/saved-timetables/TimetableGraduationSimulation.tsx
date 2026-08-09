@@ -2,6 +2,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  type CSSProperties,
 } from 'react'
 
 import type {
@@ -81,6 +82,7 @@ interface SimulationMetric {
   currentCredits: number
   addedCredits: number
   expectedCredits: number
+
   requiredCredits: number
   remainingCredits: number
 
@@ -89,17 +91,174 @@ interface SimulationMetric {
 }
 
 
+interface TimetableScheduleSummary {
+  totalCredits: number
+
+  requiredCourseCount: number
+  requiredCredits: number
+
+  electiveCourseCount: number
+  electiveCredits: number
+
+  generalEducationCourseCount:
+    number
+
+  generalEducationCredits: number
+
+  otherCourseCount: number
+}
+
+
 interface TimetableSimulationResult {
   timetable: SavedTimetable
 
-  required:
-    SimulationMetric
-
-  elective:
-    SimulationMetric
+  required: SimulationMetric
+  elective: SimulationMetric
 
   generalEducation:
     SimulationMetric
+
+  schedule:
+    TimetableScheduleSummary
+}
+
+
+function normalizeCompletionType(
+  completionType: string | null,
+): string {
+  return (
+    completionType
+      ?.trim()
+      .replace(/\s+/g, '') ??
+    ''
+  )
+}
+
+
+function isRequiredLecture(
+  lecture: Lecture,
+): boolean {
+  const completionType =
+    normalizeCompletionType(
+      lecture.completionType,
+    )
+
+  return (
+    completionType === '전필' ||
+    completionType === '전공필수'
+  )
+}
+
+
+function isElectiveLecture(
+  lecture: Lecture,
+): boolean {
+  const completionType =
+    normalizeCompletionType(
+      lecture.completionType,
+    )
+
+  return (
+    completionType === '전선' ||
+    completionType === '전공선택'
+  )
+}
+
+
+function isGeneralEducationLecture(
+  lecture: Lecture,
+): boolean {
+  const completionType =
+    normalizeCompletionType(
+      lecture.completionType,
+    )
+
+  return (
+    completionType === '교양' ||
+    completionType.startsWith(
+      '교양',
+    )
+  )
+}
+
+
+function sumCredits(
+  lectures: readonly Lecture[],
+): number {
+  return lectures.reduce(
+    (totalCredits, lecture) =>
+      totalCredits +
+      (lecture.credits ?? 0),
+    0,
+  )
+}
+
+
+function createScheduleSummary(
+  timetable: SavedTimetable,
+
+  lectureMap: ReadonlyMap<
+    number,
+    Lecture
+  >,
+): TimetableScheduleSummary {
+  const timetableLectures =
+    timetable.lectureIds
+      .map((lectureId) =>
+        lectureMap.get(lectureId),
+      )
+      .filter(
+        (
+          lecture,
+        ): lecture is Lecture =>
+          lecture !== undefined,
+      )
+
+  const requiredLectures =
+    timetableLectures.filter(
+      isRequiredLecture,
+    )
+
+  const electiveLectures =
+    timetableLectures.filter(
+      isElectiveLecture,
+    )
+
+  const generalEducationLectures =
+    timetableLectures.filter(
+      isGeneralEducationLecture,
+    )
+
+  return {
+    totalCredits:
+      sumCredits(timetableLectures),
+
+    requiredCourseCount:
+      requiredLectures.length,
+
+    requiredCredits:
+      sumCredits(requiredLectures),
+
+    electiveCourseCount:
+      electiveLectures.length,
+
+    electiveCredits:
+      sumCredits(electiveLectures),
+
+    generalEducationCourseCount:
+      generalEducationLectures.length,
+
+    generalEducationCredits:
+      sumCredits(
+        generalEducationLectures,
+      ),
+
+    otherCourseCount:
+      timetableLectures.length -
+      requiredLectures.length -
+      electiveLectures.length -
+      generalEducationLectures.length,
+  }
 }
 
 
@@ -144,9 +303,13 @@ function getGeneralEducationCredits(
 
 function createMetric(
   title: string,
+
   currentCredits: number,
+
   simulatedCredits: number,
+
   requiredCredits: number,
+
   remainingCourseCount:
     number | null = null,
 ): SimulationMetric {
@@ -224,17 +387,17 @@ function SimulationProgressBar({
         </strong>
 
         <span>
+          예상{' '}
           {metric.expectedCredits}
           {' / '}
           {metric.requiredCredits}
-          학점
         </span>
       </div>
 
       <div
         className="timetable-simulation-progress-bar"
         aria-label={
-          `${metric.title} ` +
+          `${metric.title} 예상 ` +
           `${metric.expectedCredits} / ` +
           `${metric.requiredCredits}학점`
         }
@@ -258,27 +421,27 @@ function SimulationProgressBar({
 
       <div className="timetable-simulation-progress-caption">
         <span>
-          현재 {metric.currentCredits}
-        </span>
-
-        <span>
           +{metric.addedCredits}
+          학점
         </span>
 
         <strong>
-          남은 {metric.remainingCredits}
-          학점
+          {metric.remainingCredits}
+          학점 남음
+
+          {metric.remainingCourseCount !==
+          null ? (
+            <>
+              {' · '}
+              {
+                metric
+                  .remainingCourseCount
+              }
+              과목 남음
+            </>
+          ) : null}
         </strong>
       </div>
-
-      {metric.remainingCourseCount !==
-      null ? (
-        <small>
-          전필 과목{' '}
-          {metric.remainingCourseCount}
-          개 남음
-        </small>
-      ) : null}
     </div>
   )
 }
@@ -311,9 +474,9 @@ export function TimetableGraduationSimulation({
   const [
     graduationRequirements,
     setGraduationRequirements,
-  ] = useState<GraduationRequirements | null>(
-    null,
-  )
+  ] = useState<
+    GraduationRequirements | null
+  >(null)
 
   const [
     isLoading,
@@ -324,6 +487,41 @@ export function TimetableGraduationSimulation({
     loadError,
     setLoadError,
   ] = useState<string | null>(null)
+
+
+  /*
+   * 시뮬레이션의 기준점은
+   * 현재까지의 실제 수강이력입니다.
+   *
+   * 미래 계획으로 저장된 planned 기록은
+   * reference state에서 제외합니다.
+   */
+  const baselineRecords =
+    useMemo(
+      () =>
+        courseRecords.filter(
+          (record) =>
+            record.status !==
+            'planned',
+        ),
+      [courseRecords],
+    )
+
+
+  const lectureMap =
+    useMemo(
+      () =>
+        new Map(
+          lectures.map(
+            (lecture) =>
+              [
+                lecture.id,
+                lecture,
+              ] as const,
+          ),
+        ),
+      [lectures],
+    )
 
 
   useEffect(() => {
@@ -408,12 +606,12 @@ export function TimetableGraduationSimulation({
           curriculum,
           generalEducation,
           graduationRequirements,
-          courseRecords,
+          baselineRecords,
           lectures,
         )
       },
       [
-        courseRecords,
+        baselineRecords,
         curriculum,
         generalEducation,
         graduationRequirements,
@@ -444,11 +642,15 @@ export function TimetableGraduationSimulation({
 
         return timetables.map(
           (timetable) => {
+            /*
+             * 시간표마다 동일한 baseline에
+             * 독립적으로 과목을 더합니다.
+             */
             const simulationRecords =
               createTimetableSimulationRecords(
                 timetable,
                 lectures,
-                courseRecords,
+                baselineRecords,
               )
 
             const simulatedProgress =
@@ -457,7 +659,7 @@ export function TimetableGraduationSimulation({
                 generalEducation,
                 graduationRequirements,
                 [
-                  ...courseRecords,
+                  ...baselineRecords,
                   ...simulationRecords,
                 ],
                 lectures,
@@ -528,7 +730,7 @@ export function TimetableGraduationSimulation({
 
               required:
                 createMetric(
-                  '전공필수',
+                  '전필',
 
                   currentRequiredCredits,
 
@@ -544,7 +746,7 @@ export function TimetableGraduationSimulation({
 
               elective:
                 createMetric(
-                  '전공선택',
+                  '전선',
 
                   currentElectiveCredits,
 
@@ -569,16 +771,23 @@ export function TimetableGraduationSimulation({
                   baselineGeneralEducation
                     .required,
                 ),
+
+              schedule:
+                createScheduleSummary(
+                  timetable,
+                  lectureMap,
+                ),
             }
           },
         )
       },
       [
         baselineProgress,
-        courseRecords,
+        baselineRecords,
         curriculum,
         generalEducation,
         graduationRequirements,
+        lectureMap,
         lectures,
         timetables,
       ],
@@ -601,6 +810,7 @@ export function TimetableGraduationSimulation({
   if (isLoading) {
     return (
       <div className="timetable-simulation-message">
+        현재 수강이력을 기준으로
         졸업요건을 계산하고 있습니다.
       </div>
     )
@@ -616,49 +826,43 @@ export function TimetableGraduationSimulation({
 
   return (
     <section className="timetable-simulation">
-      <header className="timetable-simulation-header">
-        <div>
-          <h2>
-            수강예정 시뮬레이션
-          </h2>
-
-          <p>
-            현재 수강이력에 각 시간표의
-            과목을 수강 예정으로 더해
-            계산합니다.
-          </p>
-        </div>
-
-        <div className="timetable-simulation-legend">
-          <span>
-            <i className="timetable-simulation-legend-current" />
-            현재
-          </span>
-
-          <span>
-            <i className="timetable-simulation-legend-added" />
-            이 시간표로 추가
-          </span>
-        </div>
-      </header>
-
       <div
         className="timetable-simulation-grid"
         style={{
-          gridTemplateColumns:
-            `repeat(${simulationResults.length}, minmax(220px, 1fr))`,
-        }}
+          '--comparison-column-count':
+            simulationResults.length,
+        } as CSSProperties}
       >
+        <div className="timetable-simulation-row-label">
+          <strong>
+            수강예정
+            <br />
+            시뮬레이션
+          </strong>
+
+          <span>
+            기준: 현재 수강이력
+          </span>
+
+          <div className="timetable-simulation-legend">
+            <span>
+              <i className="timetable-simulation-legend-current" />
+              현재
+            </span>
+
+            <span>
+              <i className="timetable-simulation-legend-added" />
+              + 시간표
+            </span>
+          </div>
+        </div>
+
         {simulationResults.map(
           (result) => (
             <article
               key={result.timetable.id}
               className="timetable-simulation-card"
             >
-              <h3>
-                {result.timetable.name}
-              </h3>
-
               <SimulationProgressBar
                 metric={
                   result.required
@@ -673,9 +877,85 @@ export function TimetableGraduationSimulation({
 
               <SimulationProgressBar
                 metric={
-                  result.generalEducation
+                  result
+                    .generalEducation
                 }
               />
+
+              <div className="timetable-simulation-compact-summary">
+                <strong>
+                  {
+                    result
+                      .schedule
+                      .totalCredits
+                  }
+                  학점
+                </strong>
+
+                <div>
+                  <span>
+                    전필{' '}
+                    {
+                      result
+                        .schedule
+                        .requiredCourseCount
+                    }
+                    개 ·{' '}
+                    {
+                      result
+                        .schedule
+                        .requiredCredits
+                    }
+                    학점
+                  </span>
+
+                  <span>
+                    전선{' '}
+                    {
+                      result
+                        .schedule
+                        .electiveCourseCount
+                    }
+                    개 ·{' '}
+                    {
+                      result
+                        .schedule
+                        .electiveCredits
+                    }
+                    학점
+                  </span>
+
+                  <span>
+                    교양{' '}
+                    {
+                      result
+                        .schedule
+                        .generalEducationCourseCount
+                    }
+                    개 ·{' '}
+                    {
+                      result
+                        .schedule
+                        .generalEducationCredits
+                    }
+                    학점
+                  </span>
+
+                  {result.schedule
+                    .otherCourseCount >
+                  0 ? (
+                    <span>
+                      기타{' '}
+                      {
+                        result
+                          .schedule
+                          .otherCourseCount
+                      }
+                      개
+                    </span>
+                  ) : null}
+                </div>
+              </div>
             </article>
           ),
         )}
