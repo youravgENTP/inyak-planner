@@ -1135,7 +1135,6 @@ export function GpaCalculatorPage({
           </article>
         </div>
       </section>
-      </div>
 
         <div className="gpa-record-entry">
           <div className="gpa-semester-tabs-row">
@@ -1817,6 +1816,7 @@ export function GpaCalculatorPage({
           </div>
         </section>
       ) : null}
+      </div>
     </div>
 
       <TimetableImportModal
