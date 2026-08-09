@@ -1369,6 +1369,7 @@ export function GpaCalculatorPage({
           </div>
         ) : null}
       </div>
+      </div>
 
       {recordsAreLoading ? (
         <div className="gpa-records-message">
@@ -1816,8 +1817,7 @@ export function GpaCalculatorPage({
           </div>
         </section>
       ) : null}
-          </div>
-        </div>
+    </div>
 
       <TimetableImportModal
         isOpen={
