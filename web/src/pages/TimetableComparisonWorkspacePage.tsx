@@ -653,6 +653,9 @@ export function TimetableComparisonWorkspacePage({
                 }
                 lectures={lectures}
                 showHeader={false}
+                showCompactSummary={
+                  !isSimulationOpen
+                }
               />
 
               {isSimulationOpen ? (

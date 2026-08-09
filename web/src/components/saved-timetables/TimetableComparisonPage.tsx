@@ -15,16 +15,25 @@ interface TimetableComparisonPageProps {
 
   onBack?: () => void
   showHeader?: boolean
+  showCompactSummary?: boolean
 }
 
 interface TimetableComparisonSummary {
   timetable: SavedTimetable
-  lectures: Lecture[]
+
   totalCredits: number
+
   requiredCredits: number
   electiveCredits: number
+
+  generalEducationCredits: number
+
   requiredCourseCount: number
   electiveCourseCount: number
+
+  generalEducationCourseCount:
+    number
+
   otherCourseCount: number
 }
 
@@ -61,6 +70,22 @@ function isElectiveLecture(
   return (
     completionType === '전선' ||
     completionType === '전공선택'
+  )
+}
+
+function isGeneralEducationLecture(
+  lecture: Lecture,
+): boolean {
+  const completionType =
+    normalizeCompletionType(
+      lecture.completionType,
+    )
+
+  return (
+    completionType === '교양' ||
+    completionType.startsWith(
+      '교양',
+    )
   )
 }
 
@@ -104,24 +129,43 @@ function createComparisonSummary(
       isElectiveLecture,
     )
 
+  const generalEducationLectures =
+    timetableLectures.filter(
+      isGeneralEducationLecture,
+    )
+
   const otherCourseCount =
     timetableLectures.length -
     requiredLectures.length -
-    electiveLectures.length
+    electiveLectures.length -
+    generalEducationLectures.length
 
   return {
     timetable,
-    lectures: timetableLectures,
+
     totalCredits:
       sumCredits(timetableLectures),
+
     requiredCredits:
       sumCredits(requiredLectures),
+
     electiveCredits:
       sumCredits(electiveLectures),
+
+    generalEducationCredits:
+      sumCredits(
+        generalEducationLectures,
+      ),
+
     requiredCourseCount:
       requiredLectures.length,
+
     electiveCourseCount:
       electiveLectures.length,
+
+    generalEducationCourseCount:
+      generalEducationLectures.length,
+
     otherCourseCount,
   }
 }
@@ -131,6 +175,7 @@ export function TimetableComparisonPage({
   lectures,
   onBack,
   showHeader = true,
+  showCompactSummary = true,
 }: TimetableComparisonPageProps) {
   const lectureMap = useMemo(
     () =>
@@ -238,134 +283,88 @@ export function TimetableComparisonPage({
                 lectures={lectures}
               />
             </div>
+
+          
           ))}
+                  {showCompactSummary ? (
+            <>
+              <div className="timetable-comparison-grid__row-label">
+                구성 요약
+              </div>
 
-          <div className="timetable-comparison-grid__row-label">
-            총 학점
-          </div>
+              {summaries.map(
+                (summary) => (
+                  <div
+                    className="timetable-comparison-grid__compact-summary"
+                    key={
+                      `${summary.timetable.id}-summary`
+                    }
+                  >
+                    <strong>
+                      {summary.totalCredits}
+                      학점
+                    </strong>
 
-          {summaries.map((summary) => (
-            <div
-              className="timetable-comparison-grid__metric"
-              key={`${summary.timetable.id}-total-credits`}
-            >
-              <strong>
-                {summary.totalCredits}
-              </strong>
+                    <div>
+                      <span>
+                        전필{' '}
+                        {
+                          summary
+                            .requiredCourseCount
+                        }
+                        개 ·{' '}
+                        {
+                          summary
+                            .requiredCredits
+                        }
+                        학점
+                      </span>
 
-              <span>학점</span>
-            </div>
-          ))}
+                      <span>
+                        전선{' '}
+                        {
+                          summary
+                            .electiveCourseCount
+                        }
+                        개 ·{' '}
+                        {
+                          summary
+                            .electiveCredits
+                        }
+                        학점
+                      </span>
 
-          <div className="timetable-comparison-grid__row-label">
-            전공필수
-          </div>
+                      <span>
+                        교양{' '}
+                        {
+                          summary
+                            .generalEducationCourseCount
+                        }
+                        개 ·{' '}
+                        {
+                          summary
+                            .generalEducationCredits
+                        }
+                        학점
+                      </span>
 
-          {summaries.map((summary) => (
-            <div
-              className="timetable-comparison-grid__metric"
-              key={`${summary.timetable.id}-required`}
-            >
-              <strong>
-                {
-                  summary.requiredCourseCount
-                }
-                개
-              </strong>
-
-              <span>
-                {summary.requiredCredits}
-                학점
-              </span>
-            </div>
-          ))}
-
-          <div className="timetable-comparison-grid__row-label">
-            전공선택
-          </div>
-
-          {summaries.map((summary) => (
-            <div
-              className="timetable-comparison-grid__metric"
-              key={`${summary.timetable.id}-elective`}
-            >
-              <strong>
-                {
-                  summary.electiveCourseCount
-                }
-                개
-              </strong>
-
-              <span>
-                {summary.electiveCredits}
-                학점
-              </span>
-            </div>
-          ))}
-
-          <div className="timetable-comparison-grid__row-label">
-            기타 과목
-          </div>
-
-          {summaries.map((summary) => (
-            <div
-              className="timetable-comparison-grid__metric"
-              key={`${summary.timetable.id}-other`}
-            >
-              <strong>
-                {summary.otherCourseCount}
-                개
-              </strong>
-
-              <span>
-                전필·전선 외
-              </span>
-            </div>
-          ))}
-
-          <div className="timetable-comparison-grid__row-label">
-            등록 과목
-          </div>
-
-          {summaries.map((summary) => (
-            <div
-              className="timetable-comparison-grid__course-list"
-              key={`${summary.timetable.id}-courses`}
-            >
-              {summary.lectures.length >
-              0 ? (
-                <ul>
-                  {summary.lectures.map(
-                    (lecture) => (
-                      <li key={lecture.id}>
-                        <div>
-                          <strong>
-                            {
-                              lecture.courseName
-                            }
-                          </strong>
-
-                          <span>
-                            {lecture.professor ??
-                              '담당교수 미정'}
-                          </span>
-                        </div>
-
-                        <small>
-                          {lecture.completionType ??
-                            '구분 없음'}
-                        </small>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              ) : (
-                <p>
-                  등록된 과목이 없습니다.
-                </p>
+                      {summary.otherCourseCount >
+                      0 ? (
+                        <span>
+                          기타{' '}
+                          {
+                            summary
+                              .otherCourseCount
+                          }
+                          개
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                ),
               )}
-            </div>
-          ))}
+            </>
+          ) : null}
         </div>
       </div>
     </section>
