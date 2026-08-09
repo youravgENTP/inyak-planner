@@ -1,0 +1,365 @@
+/* =========================================================
+   시간표 비교 workspace
+   ========================================================= */
+
+.timetable-comparison-workspace-page {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+
+/* 페이지 제목 */
+
+.timetable-comparison-workspace-header {
+  padding-left: 4px;
+}
+
+.timetable-comparison-workspace-header > span {
+  color: var(--teal-700);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.timetable-comparison-workspace-header h1 {
+  margin: 5px 0 0;
+
+  color: var(--navy-950);
+
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.timetable-comparison-workspace-header p {
+  margin: 8px 0 0;
+
+  color: var(--ink-500);
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* 좌측 선택 영역 + 우측 비교 영역 */
+
+.timetable-comparison-workspace {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 285px)
+    minmax(0, 1fr);
+
+  align-items: start;
+  gap: 20px;
+}
+
+
+/* =========================================================
+   좌측 시간표 picker
+   ========================================================= */
+
+.timetable-comparison-picker {
+  min-width: 0;
+  overflow: visible;
+}
+
+
+/* 학년도 / 학기 */
+
+.timetable-comparison-picker-controls {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 8px;
+
+  padding: 18px;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.timetable-comparison-picker-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.timetable-comparison-picker-controls
+  label > span {
+  color: var(--ink-500);
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.timetable-comparison-picker-controls select {
+  width: 100%;
+  min-width: 0;
+
+  padding: 8px 30px 8px 9px;
+
+  border: 1px solid var(--line);
+  border-radius: 8px;
+
+  color: var(--navy-900);
+  background: #fff;
+
+  font: inherit;
+  font-size: 12px;
+}
+
+
+/* 저장 시간표 제목 */
+
+.timetable-comparison-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 16px 18px 10px;
+}
+
+.timetable-comparison-picker-heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.timetable-comparison-picker-heading strong {
+  color: var(--navy-950);
+
+  font-size: 13px;
+}
+
+.timetable-comparison-picker-heading span,
+.timetable-comparison-picker-heading small {
+  color: var(--ink-500);
+
+  font-size: 10px;
+}
+
+
+/* 저장 시간표 카드 */
+
+.timetable-comparison-picker-list {
+  display: grid;
+  gap: 8px;
+
+  padding: 0 12px 14px;
+}
+
+.timetable-comparison-picker-item {
+  overflow: hidden;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+
+  background: #fff;
+}
+
+.timetable-comparison-picker-item:hover {
+  border-color: #b9d3c3;
+}
+
+.timetable-comparison-picker-item--selected {
+  border-color: #8db89c;
+  background: #edf6f0;
+}
+
+.timetable-comparison-picker-item button {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  gap: 4px 8px;
+
+  width: 100%;
+  padding: 12px;
+
+  border: 0;
+
+  color: inherit;
+  background: transparent;
+
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.timetable-comparison-picker-item
+  button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.timetable-comparison-picker-item strong {
+  overflow: hidden;
+
+  color: var(--navy-950);
+
+  font-size: 12px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timetable-comparison-picker-item span {
+  grid-column: 1;
+
+  color: var(--ink-500);
+
+  font-size: 10px;
+}
+
+.timetable-comparison-picker-item small {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+
+  align-self: center;
+
+  color: var(--teal-700);
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.timetable-comparison-picker-empty {
+  margin: 0;
+  padding: 24px 18px;
+
+  color: var(--ink-500);
+
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+
+/* =========================================================
+   우측 비교 결과 영역
+   ========================================================= */
+
+.timetable-comparison-result-panel {
+  min-width: 0;
+  min-height: 520px;
+
+  padding: 18px;
+
+  border: 1px solid var(--line);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.72);
+}
+
+
+/* 선택된 시간표 chip */
+
+.timetable-comparison-selected-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-bottom: 16px;
+}
+
+.timetable-comparison-selected-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 8px 7px 10px;
+
+  border: 1px solid #cfe1d5;
+  border-radius: 999px;
+
+  background: #edf6f0;
+
+  color: var(--navy-900);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.timetable-comparison-selected-item button {
+  display: grid;
+
+  width: 20px;
+  height: 20px;
+  padding: 0;
+
+  place-items: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  color: var(--ink-500);
+  background: transparent;
+
+  font: inherit;
+
+  cursor: pointer;
+}
+
+.timetable-comparison-selected-item
+  button:hover {
+  background: rgba(16, 39, 58, 0.07);
+}
+
+
+/* 아직 2개가 선택되지 않았을 때 */
+
+.timetable-comparison-result-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 450px;
+  padding: 40px;
+
+  border: 1px dashed #cbd9d2;
+  border-radius: 14px;
+
+  text-align: center;
+}
+
+.timetable-comparison-result-empty strong {
+  color: var(--navy-950);
+
+  font-size: 20px;
+}
+
+.timetable-comparison-result-empty p {
+  max-width: 420px;
+
+  margin: 12px 0 0;
+
+  color: var(--ink-500);
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.timetable-comparison-result-empty span {
+  margin-top: 7px;
+
+  color: var(--ink-500);
+
+  font-size: 11px;
+}
+
+
+@media (max-width: 1100px) {
+  .timetable-comparison-workspace {
+    grid-template-columns:
+      minmax(0, 1fr);
+  }
+
+  .timetable-comparison-result-panel {
+    min-height: 420px;
+  }
+}

@@ -27,6 +27,7 @@ import { AuthPage } from './pages/AuthPage'
 import { CurriculumPage } from './pages/CurriculumPage'
 import { GpaCalculatorPage } from './pages/GpaCalculatorPage'
 import { ProgressTrackerPage } from './pages/ProgressTrackerPage'
+import { TimetableComparisonWorkspacePage } from './pages/TimetableComparisonWorkspacePage'
 import { TimetablePage } from './pages/TimetablePage'
 
 type AppPage =
@@ -43,8 +44,8 @@ function App() {
   ] = useState<AppPage>('timetable')
 
   const [
-    timetableShortcuts,
-    setTimetableShortcuts,
+    savedTimetables,
+    setSavedTimetables,
   ] = useState<SavedTimetable[]>(
     loadSavedTimetables,
   )
@@ -139,25 +140,13 @@ function App() {
 
         activeTimetableId: string,
       ) => {
-        setTimetableShortcuts([
+        setSavedTimetables([
           ...timetables,
         ])
 
         setRequestedActiveTimetableId(
           activeTimetableId,
         )
-      },
-      [],
-    )
-
-  const handleTimetableShortcutSelect =
-    useCallback(
-      (timetableId: string) => {
-        setRequestedActiveTimetableId(
-          timetableId,
-        )
-
-        setCurrentPage('timetable')
       },
       [],
     )
@@ -219,13 +208,6 @@ function App() {
     <AppShell
       activePage={activeNavigationPage}
       username={currentUser.username}
-      timetables={timetableShortcuts}
-      activeTimetableId={
-        requestedActiveTimetableId
-      }
-      onSelectTimetable={
-        handleTimetableShortcutSelect
-      }
       onNavigate={(page) =>
         setCurrentPage(page)
       }
@@ -261,6 +243,11 @@ function App() {
     ) : currentPage === 'gpa' ? (
       <GpaCalculatorPage 
         user={currentUser}
+      />
+    ) : currentPage ===
+      'timetableComparison' ? (
+      <TimetableComparisonWorkspacePage
+        timetables={savedTimetables}
       />
     ) : (
       <TimetablePage

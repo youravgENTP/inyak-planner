@@ -12,7 +12,9 @@ import { TimetableMiniPreview } from './TimetableMiniPreview'
 interface TimetableComparisonPageProps {
   timetables: readonly SavedTimetable[]
   lectures: readonly Lecture[]
-  onBack: () => void
+
+  onBack?: () => void
+  showHeader?: boolean
 }
 
 interface TimetableComparisonSummary {
@@ -128,6 +130,7 @@ export function TimetableComparisonPage({
   timetables,
   lectures,
   onBack,
+  showHeader = true,
 }: TimetableComparisonPageProps) {
   const lectureMap = useMemo(
     () =>
@@ -156,30 +159,34 @@ export function TimetableComparisonPage({
       className="timetable-comparison-page"
       aria-labelledby="timetable-comparison-title"
     >
-      <header className="timetable-comparison-page__header">
-        <div>
-          <span className="page-kicker">
-            시간표 비교
-          </span>
+      {showHeader ? (
+        <header className="timetable-comparison-page__header">
+          <div>
+            <span className="page-kicker">
+              시간표 비교
+            </span>
 
-          <h1 id="timetable-comparison-title">
-            시간표 비교
-          </h1>
+            <h1 id="timetable-comparison-title">
+              시간표 비교
+            </h1>
 
-          <p>
-            선택한 시간표의 구성과 학점을
-            나란히 비교합니다.
-          </p>
-        </div>
+            <p>
+              선택한 시간표의 구성과 학점을
+              나란히 비교합니다.
+            </p>
+          </div>
 
-        <button
-          className="secondary-button"
-          type="button"
-          onClick={onBack}
-        >
-          ← 시간표로 돌아가기
-        </button>
-      </header>
+          {onBack !== undefined ? (
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={onBack}
+            >
+              ← 시간표로 돌아가기
+            </button>
+          ) : null}
+        </header>
+      ) : null}
 
       <div className="timetable-comparison-page__scroll">
         <div

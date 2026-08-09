@@ -5,12 +5,9 @@ import {
   useState,
 } from 'react'
 
-import type {
-  SavedTimetable,
-} from '../../domain/saved-timetables'
-
 export type AppNavigationPage =
   | 'timetable'
+  | 'timetableComparison'
   | 'curriculum'
   | 'progress'
   | 'gpa'
@@ -19,16 +16,6 @@ interface AppShellProps {
   activePage: AppNavigationPage
   children: ReactNode
   username: string
-
-  timetables:
-    readonly SavedTimetable[]
-
-  activeTimetableId:
-    string | null
-
-  onSelectTimetable: (
-    timetableId: string,
-  ) => void
 
   onNavigate: (
     page: AppNavigationPage,
@@ -57,9 +44,6 @@ export function AppShell({
   activePage,
   children,
   username,
-  timetables,
-  activeTimetableId,
-  onSelectTimetable,
   onNavigate,
   onOpenAccount,
   onLogout,
@@ -75,26 +59,6 @@ export function AppShell({
   const profileInitial =
     getProfileInitial(username)
 
-  const shortcutBaseTimetable =
-    timetables.find(
-      (timetable) =>
-        timetable.id ===
-        activeTimetableId,
-    ) ??
-    timetables[0]
-
-  const timetableShortcuts =
-    shortcutBaseTimetable === undefined
-      ? []
-      : timetables.filter(
-          (timetable) =>
-            timetable.academicYear ===
-              shortcutBaseTimetable
-                .academicYear &&
-            timetable.semester ===
-              shortcutBaseTimetable
-                .semester,
-        )
 
   useEffect(() => {
     if (!isProfileMenuOpen) {
@@ -237,73 +201,51 @@ export function AppShell({
           aria-label="주요 메뉴"
         >
           <div className="nav-section">
-            <button
-              className={
-                `nav-item${
-                  activePage === 'timetable'
-                    ? ' nav-item--active'
-                    : ''
-                }`
-              }
-              type="button"
-              onClick={() =>
-                onNavigate('timetable')
-              }
-            >
-              시간표
-            </button>
-
-            {shortcutBaseTimetable !==
-            undefined ? (
-              <div className="timetable-shortcuts">
-                <div className="timetable-shortcuts-heading">
-                  <span>
-                    시간표 바로가기
-                  </span>
-
-                  <small>
-                    {
-                      shortcutBaseTimetable
-                        .academicYear
-                    }
-                    -
-                    {
-                      shortcutBaseTimetable
-                        .semester
-                    }
-                  </small>
-                </div>
-
-                <div className="timetable-shortcuts-list">
-                  {timetableShortcuts.map(
-                    (timetable) => (
-                      <button
-                        key={timetable.id}
-                        className={
-                          `timetable-shortcut-item` +
-                          (
-                            timetable.id ===
-                            activeTimetableId
-                              ? ' timetable-shortcut-item--active'
-                              : ''
-                          )
-                        }
-                        type="button"
-                        onClick={() => {
-                          onSelectTimetable(
-                            timetable.id,
-                          )
-                        }}
-                      >
-                        <span>
-                          {timetable.name}
-                        </span>
-                      </button>
-                    ),
-                  )}
-                </div>
+            <div className="nav-group">
+              <div className="nav-group-title">
+                시간표
               </div>
-            ) : null}
+
+              <div className="nav-submenu">
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage ===
+                      'timetable'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate(
+                      'timetable',
+                    )
+                  }
+                >
+                  시간표 보기
+                </button>
+
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage ===
+                      'timetableComparison'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate(
+                      'timetableComparison',
+                    )
+                  }
+                >
+                  시간표 비교
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="nav-section">
