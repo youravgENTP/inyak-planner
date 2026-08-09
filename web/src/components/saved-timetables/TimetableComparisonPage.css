@@ -346,6 +346,68 @@
  * 실제 외곽에서는 선이 겹쳐 보이지 않습니다.
  */
 
+/* =========================================================
+   차이 과목 행
+   ========================================================= */
+
+/* 각 시간표에서 공통이 아닌 과목만 표시하는 셀입니다. */
+.timetable-comparison-grid__differences {
+  min-width: 0;
+  padding: 14px;
+
+  background: #ffffff;
+  border-right: 1px solid #e4ecee;
+  border-bottom: 1px solid #e4ecee;
+}
+
+/* 차이 과목 목록입니다. */
+.timetable-comparison-grid__differences ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+/* 차이가 나는 개별 과목입니다. */
+.timetable-comparison-grid__differences li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  min-width: 0;
+  padding: 9px 11px;
+
+  background: #f5f9fa;
+  border: 1px solid #dfe9ec;
+  border-radius: 10px;
+}
+
+/* 과목명입니다. */
+.timetable-comparison-grid__differences strong {
+  color: #203c50;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 이수 구분과 학점입니다. */
+.timetable-comparison-grid__differences span {
+  color: #778b99;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* 차이 과목이 없을 때의 안내입니다. */
+.timetable-comparison-grid__differences > p {
+  margin: 0;
+  padding: 8px 2px;
+
+  color: #8798a3;
+  font-size: 13px;
+}
 
 /* =========================================================
    반응형 레이아웃

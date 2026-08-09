@@ -214,6 +214,42 @@ export function TimetableComparisonPage({
     [timetables],
   )
 
+  const differingLecturesByTimetableId =
+    useMemo(
+      () =>
+        new Map(
+          timetables.map((timetable) => {
+            const differingLectures =
+              timetable.lectureIds
+                .filter(
+                  (lectureId) =>
+                    !commonLectureIds.has(
+                      lectureId,
+                    ),
+                )
+                .map((lectureId) =>
+                  lectureMap.get(lectureId),
+                )
+                .filter(
+                  (
+                    lecture,
+                  ): lecture is Lecture =>
+                    lecture !== undefined,
+                )
+
+            return [
+              timetable.id,
+              differingLectures,
+            ] as const
+          }),
+        ),
+      [
+        commonLectureIds,
+        lectureMap,
+        timetables,
+      ],
+    )
+
   const summaries = useMemo(
     () =>
       timetables.map((timetable) =>
@@ -394,6 +430,51 @@ export function TimetableComparisonPage({
               )}
             </>
           ) : null}
+                    <div className="timetable-comparison-grid__row-label">
+            차이 과목
+          </div>
+
+          {summaries.map((summary) => {
+            const differingLectures =
+              differingLecturesByTimetableId.get(
+                summary.timetable.id,
+              ) ?? []
+
+            return (
+              <div
+                className="timetable-comparison-grid__differences"
+                key={`${summary.timetable.id}-differences`}
+              >
+                {differingLectures.length > 0 ? (
+                  <ul>
+                    {differingLectures.map(
+                      (lecture) => (
+                        <li key={lecture.id}>
+                          <strong>
+                            {lecture.courseName}
+                          </strong>
+
+                          <span>
+                            {lecture.completionType ??
+                              '구분 없음'}
+
+                            {lecture.credits !==
+                              null
+                              ? ` · ${lecture.credits}학점`
+                              : ''}
+                          </span>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                ) : (
+                  <p>
+                    공통 과목만 있습니다.
+                  </p>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>
