@@ -8,7 +8,6 @@ import {
 import { CreateTimetableModal } from '../components/saved-timetables/CreateTimetableModal'
 import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
 import { RenameTimetableModal } from '../components/saved-timetables/RenameTimetableModal'
-import { TimetableComparisonPage } from '../components/saved-timetables/TimetableComparisonPage'
 import TimetableDownloadModal from '../components/timetable-download/TimetableDownloadModal'
 import { TimetableEditorPanel } from '../components/timetable-editor/TimetableEditorPanel'
 import { TimetableGrid } from '../components/timetable/TimetableGrid'
@@ -26,7 +25,6 @@ import {
   createSavedTimetable,
   duplicateTimetable,
   getActiveTimetable,
-  getValidComparisonTimetableIds,
   loadActiveTimetableId,
   loadSavedTimetables,
   replaceTimetable,
@@ -192,15 +190,6 @@ export function TimetablePage({
     setIsCreateTimetableModalOpen,
   ] = useState(false)
 
-  const [
-    isComparisonPageOpen,
-    setIsComparisonPageOpen,
-  ] = useState(false)
-
-  const [
-    comparisonTimetableIds,
-    setComparisonTimetableIds,
-  ] = useState<string[]>([])
 
   const timetableElementRef =
     useRef<HTMLDivElement>(null)
@@ -447,26 +436,6 @@ export function TimetablePage({
     lectures,
   ])
 
-  const comparisonTimetables = useMemo(
-  () =>
-    comparisonTimetableIds
-      .map((timetableId) =>
-        timetableState.timetables.find(
-          (timetable) =>
-            timetable.id === timetableId,
-        ),
-      )
-      .filter(
-        (
-          timetable,
-        ): timetable is SavedTimetable =>
-          timetable !== undefined,
-      ),
-  [
-    comparisonTimetableIds,
-    timetableState.timetables,
-  ],
-)
 
   const lectureMap = useMemo(
     () =>
@@ -528,15 +497,6 @@ export function TimetablePage({
     timetableState,
   ])
 
-  useEffect(() => {
-    setComparisonTimetableIds(
-      (currentTimetableIds) =>
-        getValidComparisonTimetableIds(
-          timetableState.timetables,
-          currentTimetableIds,
-        ),
-    )
-  }, [timetableState.timetables])
 
   useEffect(() => {
     async function loadLectures() {
@@ -921,7 +881,6 @@ export function TimetablePage({
   }
 
   function handleOpenSavedTimetablesModal() {
-    setIsComparisonPageOpen(false)
     setIsDownloadModalOpen(false)
     setIsSavedTimetablesModalOpen(true)
   }
@@ -1198,14 +1157,6 @@ function handleDeleteTimetable(
     }
   })
 
-  setComparisonTimetableIds(
-    (currentTimetableIds) =>
-      currentTimetableIds.filter(
-        (currentTimetableId) =>
-          currentTimetableId !==
-          timetableId,
-      ),
-  )
 
   if (isDeletingActiveTimetable) {
     setDraftLectureIds([])
@@ -1216,9 +1167,6 @@ function handleDeleteTimetable(
   }
 }
 
-function handleCloseComparisonPage() {
-  setIsComparisonPageOpen(false)
-}
 
 async function handleDownloadSyllabi() {
   if (
@@ -1330,19 +1278,6 @@ async function handleDownloadSyllabi() {
           현재 시간표를 불러오지 못했습니다.
         </p>
       </section>
-    )
-  }
-
-  if (
-    isComparisonPageOpen &&
-    comparisonTimetables.length >= 2
-  ) {
-    return (
-      <TimetableComparisonPage
-        timetables={comparisonTimetables}
-        lectures={lectures}
-        onBack={handleCloseComparisonPage}
-      />
     )
   }
 
