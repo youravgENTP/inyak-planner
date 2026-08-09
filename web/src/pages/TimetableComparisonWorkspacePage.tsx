@@ -540,33 +540,69 @@ export function TimetableComparisonWorkspacePage({
         >
           {selectedTimetables.length >
           0 ? (
-            <div className="timetable-comparison-selected-list">
-              {selectedTimetables.map(
-                (timetable) => (
-                  <div
-                    key={timetable.id}
-                    className="timetable-comparison-selected-item"
-                  >
-                    <span>
-                      {timetable.name}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleRemoveTimetable(
-                          timetable.id,
-                        )
-                      }}
-                      aria-label={
-                        `${timetable.name} 비교 목록에서 제거`
-                      }
+            <div className="timetable-comparison-selection-toolbar">
+              <div className="timetable-comparison-selected-list">
+                {selectedTimetables.map(
+                  (timetable) => (
+                    <div
+                      key={timetable.id}
+                      className="timetable-comparison-selected-item"
                     >
-                      ×
-                    </button>
-                  </div>
-                ),
-              )}
+                      <span>
+                        {timetable.name}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleRemoveTimetable(
+                            timetable.id,
+                          )
+                        }}
+                        aria-label={
+                          `${timetable.name} 비교 목록에서 제거`
+                        }
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ),
+                )}
+              </div>
+
+              {selectedTimetables.length >=
+              2 ? (
+                <div className="timetable-comparison-simulation-control">
+                  <button
+                    className="timetable-comparison-simulation-toggle"
+                    type="button"
+                    disabled={
+                      user.entryYear === null ||
+                      user.studentType === null
+                    }
+                    onClick={() => {
+                      setIsSimulationOpen(
+                        (currentValue) =>
+                          !currentValue,
+                      )
+                    }}
+                  >
+                    {isSimulationOpen
+                      ? '시뮬레이션 닫기'
+                      : '수강예정 시뮬레이션'}
+                  </button>
+
+                  {(
+                    user.entryYear === null ||
+                    user.studentType === null
+                  ) ? (
+                    <span>
+                      학업정보 설정이
+                      필요합니다.
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           ) : null}
 
@@ -613,49 +649,13 @@ export function TimetableComparisonWorkspacePage({
             </div>
           ) : (
             <>
-              <div className="timetable-comparison-result-actions">
-                <button
-                  className={
-                    isSimulationOpen
-                      ? 'secondary-button'
-                      : 'primary-button'
-                  }
-                  type="button"
-                  disabled={
-                    user.entryYear === null ||
-                    user.studentType === null
-                  }
-                  onClick={() => {
-                    setIsSimulationOpen(
-                      (currentValue) =>
-                        !currentValue,
-                    )
-                  }}
-                >
-                  {isSimulationOpen
-                    ? '시뮬레이션 닫기'
-                    : '수강예정 시뮬레이션'}
-                </button>
-
-                {(
-                  user.entryYear === null ||
-                  user.studentType === null
-                ) ? (
-                  <span>
-                    학업정보 설정이 필요합니다.
-                  </span>
-                ) : null}
-              </div>
-
               <TimetableComparisonPage
                 timetables={
                   selectedTimetables
                 }
                 lectures={lectures}
                 showHeader={false}
-                showCompactSummary={
-                  !isSimulationOpen
-                }
+                showCompactSummary
               />
 
               {isSimulationOpen ? (

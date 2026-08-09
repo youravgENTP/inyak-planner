@@ -61,14 +61,14 @@
 .timetable-simulation-row-label strong {
   color: #405b6d;
 
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.45;
 }
 
 .timetable-simulation-row-label > span {
   color: var(--ink-500);
 
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -90,7 +90,7 @@
 
   color: var(--ink-500);
 
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .timetable-simulation-legend i {
@@ -147,14 +147,14 @@
   strong {
   color: var(--navy-900);
 
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .timetable-simulation-progress-heading
   span {
   color: var(--ink-500);
 
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -196,14 +196,14 @@
 
   color: var(--ink-500);
 
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .timetable-simulation-progress-caption
   strong {
   color: var(--navy-900);
 
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
 
   text-align: right;
@@ -211,29 +211,6 @@
 
 
 /* 시간표 자체 구성 요약 */
-
-.timetable-simulation-compact-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 14px;
-
-  margin-top: 3px;
-  padding-top: 14px;
-
-  border-top: 1px solid var(--line);
-}
-
-.timetable-simulation-compact-summary
-  > strong {
-  flex: 0 0 auto;
-
-  color: var(--teal-700);
-
-  font-size: 17px;
-  font-weight: 900;
-}
 
 .timetable-simulation-compact-summary
   > div {

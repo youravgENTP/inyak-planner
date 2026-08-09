@@ -91,23 +91,6 @@ interface SimulationMetric {
 }
 
 
-interface TimetableScheduleSummary {
-  totalCredits: number
-
-  requiredCourseCount: number
-  requiredCredits: number
-
-  electiveCourseCount: number
-  electiveCredits: number
-
-  generalEducationCourseCount:
-    number
-
-  generalEducationCredits: number
-
-  otherCourseCount: number
-}
-
 
 interface TimetableSimulationResult {
   timetable: SavedTimetable
@@ -117,148 +100,6 @@ interface TimetableSimulationResult {
 
   generalEducation:
     SimulationMetric
-
-  schedule:
-    TimetableScheduleSummary
-}
-
-
-function normalizeCompletionType(
-  completionType: string | null,
-): string {
-  return (
-    completionType
-      ?.trim()
-      .replace(/\s+/g, '') ??
-    ''
-  )
-}
-
-
-function isRequiredLecture(
-  lecture: Lecture,
-): boolean {
-  const completionType =
-    normalizeCompletionType(
-      lecture.completionType,
-    )
-
-  return (
-    completionType === '전필' ||
-    completionType === '전공필수'
-  )
-}
-
-
-function isElectiveLecture(
-  lecture: Lecture,
-): boolean {
-  const completionType =
-    normalizeCompletionType(
-      lecture.completionType,
-    )
-
-  return (
-    completionType === '전선' ||
-    completionType === '전공선택'
-  )
-}
-
-
-function isGeneralEducationLecture(
-  lecture: Lecture,
-): boolean {
-  const completionType =
-    normalizeCompletionType(
-      lecture.completionType,
-    )
-
-  return (
-    completionType === '교양' ||
-    completionType.startsWith(
-      '교양',
-    )
-  )
-}
-
-
-function sumCredits(
-  lectures: readonly Lecture[],
-): number {
-  return lectures.reduce(
-    (totalCredits, lecture) =>
-      totalCredits +
-      (lecture.credits ?? 0),
-    0,
-  )
-}
-
-
-function createScheduleSummary(
-  timetable: SavedTimetable,
-
-  lectureMap: ReadonlyMap<
-    number,
-    Lecture
-  >,
-): TimetableScheduleSummary {
-  const timetableLectures =
-    timetable.lectureIds
-      .map((lectureId) =>
-        lectureMap.get(lectureId),
-      )
-      .filter(
-        (
-          lecture,
-        ): lecture is Lecture =>
-          lecture !== undefined,
-      )
-
-  const requiredLectures =
-    timetableLectures.filter(
-      isRequiredLecture,
-    )
-
-  const electiveLectures =
-    timetableLectures.filter(
-      isElectiveLecture,
-    )
-
-  const generalEducationLectures =
-    timetableLectures.filter(
-      isGeneralEducationLecture,
-    )
-
-  return {
-    totalCredits:
-      sumCredits(timetableLectures),
-
-    requiredCourseCount:
-      requiredLectures.length,
-
-    requiredCredits:
-      sumCredits(requiredLectures),
-
-    electiveCourseCount:
-      electiveLectures.length,
-
-    electiveCredits:
-      sumCredits(electiveLectures),
-
-    generalEducationCourseCount:
-      generalEducationLectures.length,
-
-    generalEducationCredits:
-      sumCredits(
-        generalEducationLectures,
-      ),
-
-    otherCourseCount:
-      timetableLectures.length -
-      requiredLectures.length -
-      electiveLectures.length -
-      generalEducationLectures.length,
-  }
 }
 
 
@@ -507,23 +348,6 @@ export function TimetableGraduationSimulation({
       [courseRecords],
     )
 
-
-  const lectureMap =
-    useMemo(
-      () =>
-        new Map(
-          lectures.map(
-            (lecture) =>
-              [
-                lecture.id,
-                lecture,
-              ] as const,
-          ),
-        ),
-      [lectures],
-    )
-
-
   useEffect(() => {
     if (user.entryYear === null) {
       setIsLoading(false)
@@ -771,12 +595,6 @@ export function TimetableGraduationSimulation({
                   baselineGeneralEducation
                     .required,
                 ),
-
-              schedule:
-                createScheduleSummary(
-                  timetable,
-                  lectureMap,
-                ),
             }
           },
         )
@@ -787,7 +605,6 @@ export function TimetableGraduationSimulation({
         curriculum,
         generalEducation,
         graduationRequirements,
-        lectureMap,
         lectures,
         timetables,
       ],
@@ -881,81 +698,6 @@ export function TimetableGraduationSimulation({
                     .generalEducation
                 }
               />
-
-              <div className="timetable-simulation-compact-summary">
-                <strong>
-                  {
-                    result
-                      .schedule
-                      .totalCredits
-                  }
-                  학점
-                </strong>
-
-                <div>
-                  <span>
-                    전필{' '}
-                    {
-                      result
-                        .schedule
-                        .requiredCourseCount
-                    }
-                    개 ·{' '}
-                    {
-                      result
-                        .schedule
-                        .requiredCredits
-                    }
-                    학점
-                  </span>
-
-                  <span>
-                    전선{' '}
-                    {
-                      result
-                        .schedule
-                        .electiveCourseCount
-                    }
-                    개 ·{' '}
-                    {
-                      result
-                        .schedule
-                        .electiveCredits
-                    }
-                    학점
-                  </span>
-
-                  <span>
-                    교양{' '}
-                    {
-                      result
-                        .schedule
-                        .generalEducationCourseCount
-                    }
-                    개 ·{' '}
-                    {
-                      result
-                        .schedule
-                        .generalEducationCredits
-                    }
-                    학점
-                  </span>
-
-                  {result.schedule
-                    .otherCourseCount >
-                  0 ? (
-                    <span>
-                      기타{' '}
-                      {
-                        result
-                          .schedule
-                          .otherCourseCount
-                      }
-                      개
-                    </span>
-                  ) : null}
-                </div>
-              </div>
             </article>
           ),
         )}

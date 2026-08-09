@@ -260,10 +260,11 @@
 
 .timetable-comparison-selected-list {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
-  gap: 8px;
 
-  margin-bottom: 16px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .timetable-comparison-selected-item {
@@ -354,23 +355,59 @@
 
 
 /* =========================================================
-   비교 결과 action
+   비교 대상 + 시뮬레이션 toolbar
    ========================================================= */
 
-.timetable-comparison-result-actions {
+.timetable-comparison-selection-toolbar {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: space-between;
 
-  gap: 10px;
+  gap: 16px;
 
   margin-bottom: 16px;
 }
 
-.timetable-comparison-result-actions span {
+.timetable-comparison-simulation-control {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.timetable-comparison-simulation-toggle {
+  min-width: 164px;
+  height: 42px;
+  padding: 0 16px;
+
+  border: 1px solid #b9d7cf;
+  border-radius: 10px;
+
+  color: #ffffff;
+  background: var(--teal-700);
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.timetable-comparison-simulation-toggle:hover {
+  background: #176f6c;
+}
+
+.timetable-comparison-simulation-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.timetable-comparison-simulation-control
+  span {
   color: var(--ink-500);
 
-  font-size: 10px;
+  font-size: 11px;
 }
 
 
