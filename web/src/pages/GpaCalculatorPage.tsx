@@ -578,12 +578,77 @@ export function GpaCalculatorPage({
   const displaySemesters =
     useMemo(
       () => {
+        const persistedSpecialSemesters:
+          SemesterDefinition[] = []
+
+        regularRecords.forEach(
+          (record) => {
+            if (
+              record.grade === null ||
+              record.semester === null ||
+              (
+                record.term !== 'summer' &&
+                record.term !== 'winter'
+              )
+            ) {
+              return
+            }
+
+            const semesterDefinition:
+              SemesterDefinition = {
+                grade: record.grade,
+                semester: record.semester,
+                term: record.term,
+              }
+
+            const alreadyExists =
+              persistedSpecialSemesters.some(
+                (existingSemester) =>
+                  existingSemester.grade ===
+                    semesterDefinition.grade &&
+                  existingSemester.term ===
+                    semesterDefinition.term,
+              )
+
+            if (!alreadyExists) {
+              persistedSpecialSemesters.push(
+                semesterDefinition,
+              )
+            }
+          },
+        )
+
         const semesters = [
           ...availableSemesters,
+          ...persistedSpecialSemesters,
           ...addedSpecialSemesters,
         ]
 
-        return semesters.sort(
+        const uniqueSemesters =
+          semesters.filter(
+            (
+              semesterDefinition,
+              index,
+              allSemesters,
+            ) =>
+              allSemesters.findIndex(
+                (candidateSemester) =>
+                  candidateSemester.grade ===
+                    semesterDefinition.grade &&
+                  candidateSemester.term ===
+                    semesterDefinition.term,
+              ) === index,
+          )
+
+        const termOrder:
+          Record<AcademicTerm, number> = {
+            spring: 1,
+            summer: 2,
+            fall: 3,
+            winter: 4,
+          }
+
+        return uniqueSemesters.sort(
           (
             firstSemester,
             secondSemester,
@@ -597,14 +662,6 @@ export function GpaCalculatorPage({
                 secondSemester.grade
               )
             }
-
-            const termOrder:
-              Record<AcademicTerm, number> = {
-                spring: 1,
-                summer: 2,
-                fall: 3,
-                winter: 4,
-              }
 
             return (
               termOrder[
@@ -620,6 +677,7 @@ export function GpaCalculatorPage({
       [
         addedSpecialSemesters,
         availableSemesters,
+        regularRecords,
       ],
     )
 
