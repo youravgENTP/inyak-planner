@@ -9,6 +9,7 @@ import {
   updateCourseRecord,
 } from '../../domain/course-records/api'
 import type {
+  AcademicTerm,
   CourseCompletionType,
   CourseRecord,
   CourseRecordInput,
@@ -759,6 +760,14 @@ export function CourseRecordModal({
          */
         grade,
         semester,
+
+        term:
+          editingRecord?.term ??
+          (
+            semester === 1
+              ? 'spring'
+              : 'fall'
+          ) as AcademicTerm,
 
         courseName:
           selectedLecture.courseName,

@@ -316,6 +316,8 @@ function createRecordInput(
       record.grade,
     semester:
       record.semester,
+    term:
+      record.term,
     courseName:
       record.courseName,
     courseCode:
