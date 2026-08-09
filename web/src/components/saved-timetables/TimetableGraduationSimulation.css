@@ -18,7 +18,7 @@
   display: grid;
 
   grid-template-columns:
-    140px
+    110px
     repeat(
       var(--comparison-column-count),
       minmax(300px, 1fr)
@@ -28,7 +28,7 @@
 
   min-width:
     calc(
-      140px +
+      110px +
       var(--comparison-column-count) *
       300px
     );
@@ -286,7 +286,7 @@
 @media (max-width: 640px) {
   .timetable-simulation-grid {
     grid-template-columns:
-      112px
+      96px
       repeat(
         var(--comparison-column-count),
         minmax(280px, 1fr)
@@ -294,7 +294,7 @@
 
     min-width:
       calc(
-        112px +
+        96px +
         var(--comparison-column-count) *
         280px
       );

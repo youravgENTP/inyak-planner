@@ -300,8 +300,8 @@ function SimulationProgressBar({
 
       <div className="timetable-simulation-progress-caption">
         <span>
-          공통 +{metric.commonAddedCredits}
-          학점 · 시간표별 +{
+          +{
+            metric.commonAddedCredits +
             metric.uniqueAddedCredits
           }
           학점
