@@ -58,6 +58,7 @@ import type {
 
 import {
   createSpecialSemester,
+  deleteSpecialSemester,
   getSpecialSemesters,
 } from '../domain/special-semesters/api'
 
@@ -750,6 +751,24 @@ export function GpaCalculatorPage({
       [
         regularRecords,
         selectedSemester,
+      ],
+    )
+
+  const selectedSpecialSemester =
+    useMemo(
+      () =>
+        specialSemesters.find(
+          (specialSemester) =>
+            specialSemester.grade ===
+              selectedSemester.grade &&
+            specialSemester.semester ===
+              selectedSemester.semester &&
+            specialSemester.term ===
+              selectedSemester.term,
+        ) ?? null,
+      [
+        selectedSemester,
+        specialSemesters,
       ],
     )
 
@@ -1576,56 +1595,150 @@ export function GpaCalculatorPage({
 
             </div>
 
-            <div className="gpa-add-course-container">
-              <button
-                aria-expanded={
-                  addMenuIsOpen
-                }
-                aria-haspopup="menu"
-                aria-label="과목 추가"
-                className="gpa-add-course-button"
-                type="button"
-                onClick={() => {
-                  setAddMenuIsOpen(
-                    (isOpen) => !isOpen,
-                  )
-                }}
-              >
-                +
-              </button>
+            <div className="gpa-semester-detail-actions">
+              {selectedSpecialSemester !== null ? (
+                <button
+                  className="gpa-delete-special-semester-button"
+                  type="button"
+                  onClick={() => {
+                    const semesterLabel =
+                      selectedSemester.term ===
+                        'summer'
+                        ? (
+                          `${selectedSemester.grade}` +
+                          '학년 여름계절'
+                        )
+                        : (
+                          `${selectedSemester.grade}` +
+                          '학년 겨울계절'
+                        )
 
-              {addMenuIsOpen ? (
-                <div
-                  className="gpa-add-course-menu"
-                  role="menu"
-                >
-                  <button
-                    role="menuitem"
-                    type="button"
-                    onClick={() => {
-                      setAddMenuIsOpen(false)
-
-                      setTimetableImportModalIsOpen(
-                        true,
+                    const confirmed =
+                      window.confirm(
+                        (
+                          `${semesterLabel}을 삭제하시겠습니까?\n\n` +
+                          '이 학기에 등록된 모든 과목 기록도 ' +
+                          '함께 삭제됩니다.'
+                        ),
                       )
-                    }}
-                  >
-                    시간표에서 가져오기
-                  </button>
 
-                  <button
-                    role="menuitem"
-                    type="button"
-                    onClick={() => {
-                      setAddMenuIsOpen(false)
-                      setEditingRecord(null)
-                      setRecordModalIsOpen(true)
-                    }}
-                  >
-                    과목 직접 입력하기
-                  </button>
-                </div>
+                    if (!confirmed) {
+                      return
+                    }
+
+                    void (async () => {
+                      setRecordsError(null)
+
+                      try {
+                        await deleteSpecialSemester(
+                          selectedSpecialSemester.id,
+                        )
+
+                        setSpecialSemesters(
+                          (currentSemesters) =>
+                            currentSemesters.filter(
+                              (specialSemester) =>
+                                specialSemester.id !==
+                                selectedSpecialSemester.id,
+                            ),
+                        )
+
+                        setCourseRecords(
+                          (currentRecords) =>
+                            currentRecords.filter(
+                              (record) =>
+                                !(
+                                  record.grade ===
+                                    selectedSemester.grade &&
+                                  record.term ===
+                                    selectedSemester.term
+                                ),
+                            ),
+                        )
+
+                        setSelectedSemester({
+                          grade:
+                            selectedSemester.grade,
+
+                          semester:
+                            selectedSemester.semester,
+
+                          term:
+                            selectedSemester.term ===
+                              'summer'
+                              ? 'spring'
+                              : 'fall',
+                        })
+
+                        setAddMenuIsOpen(false)
+                      } catch (error) {
+                        setRecordsError(
+                          error instanceof Error
+                            ? error.message
+                            : (
+                              '특별학기를 ' +
+                              '삭제하지 못했습니다.'
+                            ),
+                        )
+                      }
+                    })()
+                  }}
+                >
+                  특별학기 삭제
+                </button>
               ) : null}
+
+              <div className="gpa-add-course-container">
+                <button
+                  aria-expanded={
+                    addMenuIsOpen
+                  }
+                  aria-haspopup="menu"
+                  aria-label="과목 추가"
+                  className="gpa-add-course-button"
+                  type="button"
+                  onClick={() => {
+                    setAddMenuIsOpen(
+                      (isOpen) => !isOpen,
+                    )
+                  }}
+                >
+                  +
+                </button>
+
+                {addMenuIsOpen ? (
+                  <div
+                    className="gpa-add-course-menu"
+                    role="menu"
+                  >
+                    <button
+                      role="menuitem"
+                      type="button"
+                      onClick={() => {
+                        setAddMenuIsOpen(false)
+
+                        setTimetableImportModalIsOpen(
+                          true,
+                        )
+                      }}
+                    >
+                      시간표에서 가져오기
+                    </button>
+
+                    <button
+                      role="menuitem"
+                      type="button"
+                      onClick={() => {
+                        setAddMenuIsOpen(false)
+                        setEditingRecord(null)
+                        setRecordModalIsOpen(true)
+                      }}
+                    >
+                      과목 직접 입력하기
+                    </button>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </header>
 

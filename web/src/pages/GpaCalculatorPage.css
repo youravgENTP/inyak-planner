@@ -386,6 +386,29 @@
    과목 추가 메뉴
    ========================================================= */
 
+.gpa-semester-detail-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.gpa-delete-special-semester-button {
+  padding: 9px 12px;
+  border: 1px solid #e1c4c4;
+  border-radius: 9px;
+  background: #fffafa;
+  color: #9b4646;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gpa-delete-special-semester-button:hover {
+  background: #fff3f3;
+}
+
 .gpa-add-course-container {
   position: relative;
   flex: 0 0 auto;
