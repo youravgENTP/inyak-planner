@@ -165,10 +165,21 @@
    학기 탭
    ========================================================= */
 
+.gpa-semester-tabs-row {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+
+  border-bottom: 1px solid #dfe7e1;
+}
+
 .gpa-semester-tabs {
   display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+
   overflow-x: auto;
-  border-bottom: 1px solid #dfe7e1;
+
   scrollbar-width: thin;
 }
 
@@ -199,7 +210,12 @@
 
 .gpa-special-semester-container {
   position: relative;
+
+  display: flex;
   flex: 0 0 auto;
+  align-items: stretch;
+
+  background: #f3f7f4;
 }
 
 .gpa-special-semester-button {
@@ -207,14 +223,16 @@
   padding: 11px 16px;
 
   border: 0;
+  border-left: 1px solid #dfe7e1;
   border-bottom: 2px solid transparent;
 
   background: transparent;
 
-  color: #66816f;
+  color: #426f51;
   font: inherit;
   font-size: 12px;
   font-weight: 700;
+  white-space: nowrap;
 
   cursor: pointer;
 }
@@ -224,8 +242,11 @@
 }
 
 .gpa-special-semester-menu {
-  position: fixed;
+  position: absolute;
   z-index: 40;
+
+  top: calc(100% + 8px);
+  right: 0;
 
   display: flex;
   width: 220px;

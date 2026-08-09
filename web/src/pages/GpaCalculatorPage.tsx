@@ -1135,12 +1135,14 @@ export function GpaCalculatorPage({
           </article>
         </div>
       </section>
+      </div>
 
         <div className="gpa-record-entry">
-      <nav
-        aria-label="학기 선택"
-        className="gpa-semester-tabs"
-      >
+          <div className="gpa-semester-tabs-row">
+            <nav
+              aria-label="학기 선택"
+              className="gpa-semester-tabs"
+            >
         {user.studentType ===
         'transfer' ? (
           <button
@@ -1237,134 +1239,136 @@ export function GpaCalculatorPage({
           },
         )}
 
-        <div className="gpa-special-semester-container">
-          <button
-            aria-expanded={
-              specialSemesterMenuIsOpen
-            }
-            aria-haspopup="dialog"
-            className="gpa-special-semester-button"
-            type="button"
-            onClick={() => {
-              setSpecialSemesterMenuIsOpen(
-                (isOpen) => !isOpen,
-              )
-            }}
-          >
-            + 특별학기
-          </button>
 
-          {specialSemesterMenuIsOpen ? (
-            <div className="gpa-special-semester-menu">
-              <label>
-                <span>학년</span>
+      </nav>
 
-                <select
-                  value={specialSemesterGrade}
-                  onChange={(event) => {
-                    setSpecialSemesterGrade(
-                      Number(
-                        event.target.value,
-                      ),
-                    )
-                  }}
-                >
-                  {availableGrades.map(
-                    (grade) => (
-                      <option
-                        key={grade}
-                        value={grade}
-                      >
-                        {grade}학년
-                      </option>
+      <div className="gpa-special-semester-container">
+        <button
+          aria-expanded={
+            specialSemesterMenuIsOpen
+          }
+          aria-haspopup="dialog"
+          className="gpa-special-semester-button"
+          type="button"
+          onClick={() => {
+            setSpecialSemesterMenuIsOpen(
+              (isOpen) => !isOpen,
+            )
+          }}
+        >
+          + 특별학기
+        </button>
+
+        {specialSemesterMenuIsOpen ? (
+          <div className="gpa-special-semester-menu">
+            <label>
+              <span>학년</span>
+
+              <select
+                value={specialSemesterGrade}
+                onChange={(event) => {
+                  setSpecialSemesterGrade(
+                    Number(
+                      event.target.value,
                     ),
-                  )}
-                </select>
-              </label>
-
-              <label>
-                <span>구분</span>
-
-                <select
-                  value={specialSemesterTerm}
-                  onChange={(event) => {
-                    setSpecialSemesterTerm(
-                      event.target.value as
-                        'summer' |
-                        'winter',
-                    )
-                  }}
-                >
-                  <option value="summer">
-                    여름계절
-                  </option>
-
-                  <option value="winter">
-                    겨울계절
-                  </option>
-                </select>
-              </label>
-
-              <button
-                className="gpa-special-semester-add"
-                type="button"
-                onClick={() => {
-                  const newSemester:
-                    SemesterDefinition = {
-                      grade:
-                        specialSemesterGrade,
-                      semester:
-                        specialSemesterTerm ===
-                          'summer'
-                          ? 1
-                          : 2,
-                      term:
-                        specialSemesterTerm,
-                    }
-
-                  setAddedSpecialSemesters(
-                    (currentSemesters) => {
-                      const alreadyExists =
-                        currentSemesters.some(
-                          (semesterDefinition) =>
-                            semesterDefinition
-                              .grade ===
-                              newSemester.grade &&
-                            semesterDefinition
-                              .term ===
-                              newSemester.term,
-                        )
-
-                      if (alreadyExists) {
-                        return currentSemesters
-                      }
-
-                      return [
-                        ...currentSemesters,
-                        newSemester,
-                      ]
-                    },
-                  )
-
-                  setTransferTabIsSelected(
-                    false,
-                  )
-
-                  setSelectedSemester(
-                    newSemester,
-                  )
-
-                  setSpecialSemesterMenuIsOpen(
-                    false,
                   )
                 }}
               >
-                추가
-              </button>
-            </div>
-          ) : null}
-        </div>
-      </nav>
+                {availableGrades.map(
+                  (grade) => (
+                    <option
+                      key={grade}
+                      value={grade}
+                    >
+                      {grade}학년
+                    </option>
+                  ),
+                )}
+              </select>
+            </label>
+
+            <label>
+              <span>구분</span>
+
+              <select
+                value={specialSemesterTerm}
+                onChange={(event) => {
+                  setSpecialSemesterTerm(
+                    event.target.value as
+                      'summer' |
+                      'winter',
+                  )
+                }}
+              >
+                <option value="summer">
+                  여름계절
+                </option>
+
+                <option value="winter">
+                  겨울계절
+                </option>
+              </select>
+            </label>
+
+            <button
+              className="gpa-special-semester-add"
+              type="button"
+              onClick={() => {
+                const newSemester:
+                  SemesterDefinition = {
+                    grade:
+                      specialSemesterGrade,
+                    semester:
+                      specialSemesterTerm ===
+                        'summer'
+                        ? 1
+                        : 2,
+                    term:
+                      specialSemesterTerm,
+                  }
+
+                setAddedSpecialSemesters(
+                  (currentSemesters) => {
+                    const alreadyExists =
+                      currentSemesters.some(
+                        (semesterDefinition) =>
+                          semesterDefinition
+                            .grade ===
+                            newSemester.grade &&
+                          semesterDefinition
+                            .term ===
+                            newSemester.term,
+                      )
+
+                    if (alreadyExists) {
+                      return currentSemesters
+                    }
+
+                    return [
+                      ...currentSemesters,
+                      newSemester,
+                    ]
+                  },
+                )
+
+                setTransferTabIsSelected(
+                  false,
+                )
+
+                setSelectedSemester(
+                  newSemester,
+                )
+
+                setSpecialSemesterMenuIsOpen(
+                  false,
+                )
+              }}
+            >
+              추가
+            </button>
+          </div>
+        ) : null}
+      </div>
 
       {recordsAreLoading ? (
         <div className="gpa-records-message">
@@ -1812,8 +1816,8 @@ export function GpaCalculatorPage({
           </div>
         </section>
       ) : null}
+          </div>
         </div>
-      </div>
 
       <TimetableImportModal
         isOpen={
