@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
 from uuid import uuid4
 
 from typing import (
@@ -40,19 +39,13 @@ from server.session_service import (
     get_user_by_session_token,
 )
 
+from server.storage_service import (
+    delete_profile_image as delete_profile_image_from_storage,
+    upload_profile_image as upload_profile_image_to_storage,
+)
+
 
 SESSION_COOKIE_NAME = "inyak_session"
-
-PROJECT_ROOT = Path(
-    __file__
-).resolve().parents[1]
-
-PROFILE_IMAGE_DIRECTORY = (
-    PROJECT_ROOT
-    / "data"
-    / "uploads"
-    / "profile-images"
-)
 
 MAX_PROFILE_IMAGE_BYTES = (
     5 * 1024 * 1024
@@ -306,7 +299,6 @@ def read_current_user(
         "user": get_public_user(user),
     }
 
-@router.patch("/profile")
 @router.post("/profile-image")
 async def upload_profile_image(
     image: UploadFile = File(...),
@@ -361,24 +353,27 @@ async def upload_profile_image(
             ),
         )
 
-    PROFILE_IMAGE_DIRECTORY.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
     new_filename = (
         f"{uuid4().hex}.{extension}"
     )
-    new_image_path = (
-        PROFILE_IMAGE_DIRECTORY /
-        new_filename
-    )
+
+    content_types = {
+        "jpg": "image/jpeg",
+        "png": "image/png",
+        "webp": "image/webp",
+    }
+
+    content_type = content_types[
+        extension
+    ]
 
     try:
-        new_image_path.write_bytes(
-            image_bytes
+        upload_profile_image_to_storage(
+            filename=new_filename,
+            image_bytes=image_bytes,
+            content_type=content_type,
         )
-    except OSError as error:
+    except Exception as error:
         raise HTTPException(
             status_code=(
                 status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -403,9 +398,12 @@ async def upload_profile_image(
     )
 
     if not image_was_updated:
-        new_image_path.unlink(
-            missing_ok=True
-        )
+        try:
+            delete_profile_image_from_storage(
+                new_filename
+            )
+        except Exception:
+            pass
 
         raise HTTPException(
             status_code=(
@@ -418,14 +416,12 @@ async def upload_profile_image(
         )
 
     if old_filename is not None:
-        old_image_path = (
-            PROFILE_IMAGE_DIRECTORY /
-            old_filename
-        )
-
-        old_image_path.unlink(
-            missing_ok=True
-        )
+        try:
+            delete_profile_image_from_storage(
+                old_filename
+            )
+        except Exception:
+            pass
 
     updated_user = get_user_by_id(
         user["id"]
@@ -448,6 +444,7 @@ async def upload_profile_image(
         ),
     }
 
+@router.patch("/profile")
 def update_academic_profile(
     request: AcademicProfileRequest,
     session_token: Optional[str] = Cookie(
@@ -567,3 +564,12 @@ def logout(
 
     if session_token is not None:
         delete_session(session_token)
+        
+    response.delete_cookie(
+        key=SESSION_COOKIE_NAME,
+        path="/",
+    )
+
+    return {
+        "message": "로그아웃되었습니다.",
+    }

@@ -1,5 +1,8 @@
 const API_BASE_URL = 'http://localhost:8000'
 
+const SUPABASE_URL =
+  'https://alkamigyftmalimqoixa.supabase.co'
+
 export function getProfileImageUrl(
   profileImageFilename: string | null,
 ): string | null {
@@ -8,7 +11,9 @@ export function getProfileImageUrl(
   }
 
   return (
-    `${API_BASE_URL}/profile-images/` +
+    `${SUPABASE_URL}` +
+    `/storage/v1/object/public/` +
+    `profile-images/` +
     encodeURIComponent(
       profileImageFilename,
     )
