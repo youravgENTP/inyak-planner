@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import os
 import re
 from io import BytesIO
 from pathlib import Path
@@ -68,9 +70,15 @@ app.include_router(
     special_semesters_router
 )
 
+frontend_origin = os.environ.get(
+    "FRONTEND_ORIGIN",
+    "http://localhost:5173",
+).rstrip("/")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        frontend_origin,
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ],

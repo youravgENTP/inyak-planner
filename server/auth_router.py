@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from uuid import uuid4
 
 from typing import (
@@ -135,13 +136,25 @@ def set_session_cookie(
     현재는 localhost의 HTTP 개발 환경이므로
     secure=False를 사용한다.
     """
+    is_production = (
+        os.environ.get(
+            "APP_ENV",
+            "development",
+        ).lower()
+        == "production"
+    )
+
     response.set_cookie(
         key=SESSION_COOKIE_NAME,
         value=session_token,
         max_age=60 * 60 * 24 * 7,
         httponly=True,
-        secure=False,
-        samesite="lax",
+        secure=is_production,
+        samesite=(
+            "none"
+            if is_production
+            else "lax"
+        ),
         path="/",
     )
 
@@ -564,10 +577,24 @@ def logout(
 
     if session_token is not None:
         delete_session(session_token)
-        
+            
+    is_production = (
+        os.environ.get(
+            "APP_ENV",
+            "development",
+        ).lower()
+        == "production"
+    )
+
     response.delete_cookie(
         key=SESSION_COOKIE_NAME,
         path="/",
+        secure=is_production,
+        samesite=(
+            "none"
+            if is_production
+            else "lax"
+        ),
     )
 
     return {

@@ -1,6 +1,9 @@
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ??
+  'http://localhost:8000'
 
 const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL ??
   'https://alkamigyftmalimqoixa.supabase.co'
 
 export function getProfileImageUrl(
