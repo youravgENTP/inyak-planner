@@ -1,21 +1,32 @@
 from __future__ import annotations
 
-import sqlite3
-from pathlib import Path
+import os
 from typing import Any, Dict, List, Optional
 
+import psycopg
+from psycopg.rows import dict_row
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATABASE_PATH = PROJECT_ROOT / "data" / "db" / "inyak.db"
+def get_database_url() -> str:
+    """환경변수에서 PostgreSQL 연결 문자열을 읽는다."""
+    database_url = os.environ.get(
+        "DATABASE_URL",
+        "",
+    ).strip()
+
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL 환경변수가 설정되어 있지 않습니다."
+        )
+
+    return database_url
 
 
-def connect_database() -> sqlite3.Connection:
-    """inyak SQLite 데이터베이스에 연결한다."""
-    connection = sqlite3.connect(DATABASE_PATH)
-    connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA foreign_keys = ON")
-
-    return connection
+def connect_database() -> psycopg.Connection:
+    """Supabase PostgreSQL 데이터베이스에 연결한다."""
+    return psycopg.connect(
+        get_database_url(),
+        row_factory=dict_row,
+    )
 
 def get_lectures(
     *,
@@ -28,11 +39,11 @@ def get_lectures(
     parameters: List[object] = []
 
     if academic_year is not None:
-        conditions.append("academic_year = ?")
+        conditions.append("academic_year = %s")
         parameters.append(academic_year)
 
     if semester is not None:
-        conditions.append("semester = ?")
+        conditions.append("semester = %s")
         parameters.append(semester)
 
     if query:
@@ -42,10 +53,10 @@ def get_lectures(
             conditions.append(
                 """
                 (
-                    course_code LIKE ?
-                    OR course_name LIKE ?
-                    OR professor LIKE ?
-                    OR department LIKE ?
+                    course_code LIKE %s
+                    OR course_name LIKE %s
+                    OR professor LIKE %s
+                    OR department LIKE %s
                 )
                 """
             )
@@ -87,7 +98,11 @@ def get_lectures(
         {where_clause}
         ORDER BY
             course_code,
-            CAST(section AS INTEGER),
+            CASE
+                WHEN section ~ '^[0-9]+$'
+                THEN section::INTEGER
+                ELSE 999999
+            END,
             section
     """
 
@@ -121,7 +136,7 @@ def get_lecture_by_id(
                 competency_type,
                 schedule_and_room
             FROM courses
-            WHERE id = ?
+            WHERE id = %s
             """,
             (lecture_id,),
         ).fetchone()
@@ -143,7 +158,7 @@ def get_lectures_by_ids(
     )
 
     placeholders = ", ".join(
-        "?" for _ in unique_lecture_ids
+        "%s" for _ in unique_lecture_ids
     )
 
     sql = f"""
@@ -203,7 +218,7 @@ def get_curriculum_courses(
                 credits,
                 notes
             FROM curriculum_courses
-            WHERE entry_year = ?
+            WHERE entry_year = %s
             ORDER BY
                 grade,
                 semester,
@@ -237,7 +252,7 @@ def get_graduation_requirements(
                 major_elective_credits,
                 notes
             FROM graduation_requirements
-            WHERE entry_year = ?
+            WHERE entry_year = %s
             """,
             (entry_year,),
         ).fetchone()
@@ -265,7 +280,7 @@ def get_general_education_requirements(
                 notes,
                 display_order
             FROM general_education_requirements
-            WHERE entry_year = ?
+            WHERE entry_year = %s
             ORDER BY display_order
             """,
             (entry_year,),
@@ -287,7 +302,7 @@ def get_general_education_requirements(
             AS requirement
                 ON requirement.id =
                    area.requirement_id
-            WHERE requirement.entry_year = ?
+            WHERE requirement.entry_year = %s
             ORDER BY
                 requirement.display_order,
                 area.display_order
@@ -389,7 +404,7 @@ def get_curriculum_course_by_id(
                 credits,
                 notes
             FROM curriculum_courses
-            WHERE id = ?
+            WHERE id = %s
             """,
             (curriculum_course_id,),
         ).fetchone()
@@ -425,8 +440,8 @@ def get_general_education_link(
                 ON requirement.id =
                    area.requirement_id
             WHERE
-                requirement.id = ?
-                AND area.id = ?
+                requirement.id = %s
+                AND area.id = %s
             """,
             (
                 requirement_id,
