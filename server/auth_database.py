@@ -1,40 +1,53 @@
 from __future__ import annotations
 
-import sqlite3
+import os
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
-from uuid import uuid4
+from uuid import UUID, uuid4
+
+import psycopg
+from psycopg.rows import dict_row
 
 
-PROJECT_ROOT = Path(
-    __file__
-).resolve().parents[1]
+def get_database_url() -> str:
+    """환경변수에서 PostgreSQL 연결 문자열을 읽는다."""
+    database_url = os.environ.get(
+        "DATABASE_URL",
+        "",
+    ).strip()
 
-AUTH_DATABASE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "auth.db"
-)
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL 환경변수가 설정되어 있지 않습니다."
+        )
+
+    return database_url
 
 
-def connect_auth_database() -> sqlite3.Connection:
-    """회원과 세션 정보를 저장하는 인증 DB에 연결한다."""
-    AUTH_DATABASE_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True,
+def connect_auth_database() -> psycopg.Connection:
+    """Supabase PostgreSQL 인증 데이터베이스에 연결한다."""
+    return psycopg.connect(
+        get_database_url(),
+        row_factory=dict_row,
     )
 
-    connection = sqlite3.connect(
-        AUTH_DATABASE_PATH
-    )
-    connection.row_factory = sqlite3.Row
-    connection.execute(
-        "PRAGMA foreign_keys = ON"
-    )
 
-    return connection
+def normalize_database_row(
+    row: dict[str, Any],
+) -> dict[str, Any]:
+    """
+    PostgreSQL 전용 타입을 기존 SQLite API 형식에 맞춘다.
+    """
+    result = dict(row)
+
+    for key, value in result.items():
+        if isinstance(value, UUID):
+            result[key] = str(value)
+
+        elif isinstance(value, datetime):
+            result[key] = value.isoformat()
+
+    return result
 
 
 def get_current_time() -> str:
@@ -44,317 +57,12 @@ def get_current_time() -> str:
     ).isoformat()
 
 
-def ensure_user_profile_columns() -> None:
-    """
-    기존 users 테이블에 사용자 프로필 컬럼이 없으면 추가한다.
-
-    SQLite의 CREATE TABLE IF NOT EXISTS는 기존 테이블의
-    컬럼을 자동으로 변경하지 않으므로 별도 마이그레이션이 필요하다.
-    """
-    with connect_auth_database() as connection:
-        columns = connection.execute(
-            """
-            PRAGMA table_info(users)
-            """
-        ).fetchall()
-
-        column_names = {
-            column["name"]
-            for column in columns
-        }
-
-        columns_to_add = {
-            "profile_image_filename": "TEXT",
-            "entry_year": "INTEGER",
-            "student_type": "TEXT",
-        }
-
-        for (
-            column_name,
-            column_type,
-        ) in columns_to_add.items():
-            if column_name in column_names:
-                continue
-
-            connection.execute(
-                f"""
-                ALTER TABLE users
-                ADD COLUMN
-                    {column_name} {column_type}
-                """
-            )
-
-def ensure_user_course_record_columns() -> None:
-    """
-    기존 개인 이수 기록 테이블에 교양요건 연결 컬럼이
-    없으면 추가한다.
-
-    교양요건 원본은 inyak.db에 있으므로 auth.db에서는
-    외래키가 아닌 논리 ID로 저장한다.
-    """
-    with connect_auth_database() as connection:
-        columns = connection.execute(
-            """
-            PRAGMA table_info(user_course_records)
-            """
-        ).fetchall()
-
-        column_names = {
-            column["name"]
-            for column in columns
-        }
-
-        columns_to_add = {
-            (
-                "general_education_"
-                "requirement_id"
-            ): "INTEGER",
-            (
-                "general_education_"
-                "area_id"
-            ): "INTEGER",
-            "grade": "INTEGER",
-            "term": "TEXT",
-        }
-
-        for (
-            column_name,
-            column_type,
-        ) in columns_to_add.items():
-            if column_name in column_names:
-                continue
-
-            connection.execute(
-                f"""
-                ALTER TABLE user_course_records
-                ADD COLUMN
-                    {column_name} {column_type}
-                """
-            )
-
-        connection.execute(
-            """
-            UPDATE user_course_records
-            SET term =
-                CASE semester
-                    WHEN 1 THEN 'spring'
-                    WHEN 2 THEN 'fall'
-                    ELSE term
-                END
-            WHERE
-                term IS NULL
-                AND semester IN (1, 2)
-            """
-        )
-
-        connection.execute(
-            """
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_user_grade_semester
-            ON user_course_records(
-                user_id,
-                grade,
-                semester
-            )
-            """
-        )
-
-        connection.execute(
-            """
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_general_education
-            ON user_course_records(
-                user_id,
-                general_education_requirement_id,
-                general_education_area_id
-            )
-            """ 
-        )
-
-
 def create_auth_tables() -> None:
-    """회원, 로그인 세션, 개인 이수 기록 테이블을 생성한다."""
-    with connect_auth_database() as connection:
-        connection.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
-                username TEXT NOT NULL,
-                username_normalized TEXT NOT NULL UNIQUE,
-                password_hash TEXT NOT NULL,
-                profile_image_filename TEXT,
-                entry_year INTEGER,
-                student_type TEXT,
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL
-            );
-
-            CREATE TABLE IF NOT EXISTS sessions (
-                id TEXT PRIMARY KEY,
-                user_id TEXT NOT NULL,
-                token_hash TEXT NOT NULL UNIQUE,
-                created_at TEXT NOT NULL,
-                expires_at TEXT NOT NULL,
-                FOREIGN KEY (user_id)
-                    REFERENCES users(id)
-                    ON DELETE CASCADE
-            );
-
-            CREATE TABLE IF NOT EXISTS user_course_records (
-                id TEXT PRIMARY KEY,
-                user_id TEXT NOT NULL,
-
-                curriculum_course_id INTEGER,
-                lecture_id INTEGER,
-
-                general_education_requirement_id INTEGER,
-                general_education_area_id INTEGER,
-
-                academic_year INTEGER,
-                grade INTEGER,
-                semester INTEGER,
-                term TEXT,
-
-                course_name TEXT NOT NULL,
-                course_code TEXT,
-                completion_type TEXT NOT NULL,
-                credits REAL NOT NULL,
-
-                status TEXT NOT NULL,
-                letter_grade TEXT,
-                is_retake INTEGER NOT NULL DEFAULT 0,
-                note TEXT,
-
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL,
-
-                FOREIGN KEY (user_id)
-                    REFERENCES users(id)
-                    ON DELETE CASCADE,
-
-                CHECK (
-                    academic_year IS NULL
-                    OR academic_year BETWEEN 2000 AND 2100
-                ),
-
-                CHECK (
-                    grade IS NULL
-                    OR grade BETWEEN 1 AND 6
-                ),
-
-                CHECK (
-                    semester IS NULL
-                    OR semester IN (1, 2)
-                ),
-
-                CHECK (
-                    term IS NULL
-                    OR term IN (
-                        'spring',
-                        'summer',
-                        'fall',
-                        'winter'
-                    )
-                ),
-
-                CHECK (
-                    completion_type IN (
-                        '전필',
-                        '전선',
-                        '교양',
-                        '기타'
-                    )
-                ),
-
-                CHECK (
-                    status IN (
-                        'planned',
-                        'in_progress',
-                        'completed',
-                        'substituted'
-                    )
-                ),
-
-                CHECK (credits >= 0),
-
-                CHECK (is_retake IN (0, 1))
-            );
-
-            CREATE TABLE IF NOT EXISTS user_special_semesters (
-                id TEXT PRIMARY KEY,
-                user_id TEXT NOT NULL,
-
-                grade INTEGER NOT NULL,
-                semester INTEGER NOT NULL,
-                term TEXT NOT NULL,
-
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL,
-
-                FOREIGN KEY (user_id)
-                    REFERENCES users(id)
-                    ON DELETE CASCADE,
-
-                CHECK (
-                    grade BETWEEN 1 AND 6
-                ),
-
-                CHECK (
-                    semester IN (1, 2)
-                ),
-
-                CHECK (
-                    term IN (
-                        'summer',
-                        'winter'
-                    )
-                ),
-
-                UNIQUE (
-                    user_id,
-                    grade,
-                    term
-                )
-            );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_sessions_user_id
-            ON sessions(user_id);
-
-            CREATE INDEX IF NOT EXISTS
-                idx_sessions_expires_at
-            ON sessions(expires_at);
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_user_id
-            ON user_course_records(user_id);
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_user_semester
-            ON user_course_records(
-                user_id,
-                academic_year,
-                semester
-            );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_course_records_curriculum_course
-            ON user_course_records(
-                user_id,
-                curriculum_course_id
-            );
-
-            CREATE INDEX IF NOT EXISTS
-                idx_user_special_semesters_user_id
-            ON user_special_semesters(
-                user_id
-            );
-            """
-        )
-
-    ensure_user_profile_columns()
-    ensure_user_course_record_columns()
-
+    """
+    인증 테이블은 SQL migration으로 관리하므로
+    런타임에서는 별도 생성 작업을 하지 않는다.
+    """
+    return None
 
 def normalize_username(
     username: str,
@@ -390,7 +98,7 @@ def create_user(
                     created_at,
                     updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     user_id,
@@ -404,7 +112,7 @@ def create_user(
                     current_time,
                 ),
             )
-    except sqlite3.IntegrityError as error:
+    except psycopg.IntegrityError as error:
         raise ValueError(
             "이미 사용 중인 사용자 ID입니다."
         ) from error
@@ -442,7 +150,7 @@ def get_user_by_username(
                 created_at,
                 updated_at
             FROM users
-            WHERE username_normalized = ?
+            WHERE username_normalized = %s
             """,
             (normalized_username,),
         ).fetchone()
@@ -450,7 +158,7 @@ def get_user_by_username(
     if row is None:
         return None
 
-    return dict(row)
+    return normalize_database_row(row)
 
 
 def get_user_by_id(
@@ -471,7 +179,7 @@ def get_user_by_id(
                 created_at,
                 updated_at
             FROM users
-            WHERE id = ?
+            WHERE id = %s
             """,
             (user_id,),
         ).fetchone()
@@ -479,7 +187,7 @@ def get_user_by_id(
     if row is None:
         return None
 
-    return dict(row)
+    return normalize_database_row(row)
 
 
 def update_user_password(
@@ -495,9 +203,9 @@ def update_user_password(
             """
             UPDATE users
             SET
-                password_hash = ?,
-                updated_at = ?
-            WHERE id = ?
+                password_hash = %s,
+                updated_at = %s
+            WHERE id = %s
             """,
             (
                 password_hash,
@@ -522,9 +230,9 @@ def update_profile_image_filename(
             """
             UPDATE users
             SET
-                profile_image_filename = ?,
-                updated_at = ?
-            WHERE id = ?
+                profile_image_filename = %s,
+                updated_at = %s
+            WHERE id = %s
             """,
             (
                 profile_image_filename,
@@ -550,10 +258,10 @@ def update_user_academic_profile(
             """
             UPDATE users
             SET
-                entry_year = ?,
-                student_type = ?,
-                updated_at = ?
-            WHERE id = ?
+                entry_year = %s,
+                student_type = %s,
+                updated_at = %s
+            WHERE id = %s
             """,
             (
                 entry_year,
@@ -590,7 +298,7 @@ def create_user_special_semester(
                     created_at,
                     updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     special_semester_id,
@@ -602,7 +310,7 @@ def create_user_special_semester(
                     current_time,
                 ),
             )
-    except sqlite3.IntegrityError as error:
+    except psycopg.IntegrityError as error:
         raise ValueError(
             "이미 추가된 특별학기입니다."
         ) from error
@@ -642,7 +350,7 @@ def get_user_special_semesters(
                 created_at,
                 updated_at
             FROM user_special_semesters
-            WHERE user_id = ?
+            WHERE user_id = %s
             ORDER BY
                 grade ASC,
                 CASE term
@@ -655,7 +363,7 @@ def get_user_special_semesters(
         ).fetchall()
 
     return [
-        dict(row)
+        normalize_database_row(row)
         for row in rows
     ]
 
@@ -676,8 +384,8 @@ def delete_user_special_semester(
                 term
             FROM user_special_semesters
             WHERE
-                id = ?
-                AND user_id = ?
+                id = %s
+                AND user_id = %s
             """,
             (
                 special_semester_id,
@@ -692,9 +400,9 @@ def delete_user_special_semester(
             """
             DELETE FROM user_course_records
             WHERE
-                user_id = ?
-                AND grade = ?
-                AND term = ?
+                user_id = %s
+                AND grade = %s
+                AND term = %s
             """,
             (
                 user_id,
@@ -707,8 +415,8 @@ def delete_user_special_semester(
             """
             DELETE FROM user_special_semesters
             WHERE
-                id = ?
-                AND user_id = ?
+                id = %s
+                AND user_id = %s
             """,
             (
                 special_semester_id,
@@ -770,8 +478,8 @@ def create_user_course_record(
                 updated_at
             )
             VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             """,
             (
@@ -795,7 +503,7 @@ def create_user_course_record(
                 credits,
                 status,
                 letter_grade,
-                int(is_retake),
+                is_retake,
                 (
                     note.strip()
                     if note is not None
@@ -884,7 +592,7 @@ def get_user_course_records(
                 created_at,
                 updated_at
             FROM user_course_records
-            WHERE user_id = ?
+            WHERE user_id = %s
             ORDER BY
                 CASE
                     WHEN grade IS NULL
@@ -901,7 +609,7 @@ def get_user_course_records(
     records: list[dict[str, Any]] = []
 
     for row in rows:
-        record = dict(row)
+        record = normalize_database_row(row)
         record["is_retake"] = bool(
             record["is_retake"]
         )
@@ -939,25 +647,25 @@ def update_user_course_record(
             """
             UPDATE user_course_records
             SET
-                curriculum_course_id = ?,
-                lecture_id = ?,
-                general_education_requirement_id = ?,
-                general_education_area_id = ?,
-                academic_year = ?,
-                grade = ?,
-                semester = ?,
-                term =?,
-                course_name = ?,
-                course_code = ?,
-                completion_type = ?,
-                credits = ?,
-                status = ?,
-                letter_grade = ?,
-                is_retake = ?,
-                note = ?,
-                updated_at = ?
-            WHERE id = ?
-              AND user_id = ?
+                curriculum_course_id = %s,
+                lecture_id = %s,
+                general_education_requirement_id = %s,
+                general_education_area_id = %s,
+                academic_year = %s,
+                grade = %s,
+                semester = %s,
+                term =%s,
+                course_name = %s,
+                course_code = %s,
+                completion_type = %s,
+                credits = %s,
+                status = %s,
+                letter_grade = %s,
+                is_retake = %s,
+                note = %s,
+                updated_at = %s
+            WHERE id = %s
+              AND user_id = %s
             """,
             (
                 curriculum_course_id,
@@ -978,7 +686,7 @@ def update_user_course_record(
                 credits,
                 status,
                 letter_grade,
-                int(is_retake),
+                is_retake,
                 (
                     note.strip()
                     if note is not None
@@ -1017,8 +725,8 @@ def update_user_course_record(
                 created_at,
                 updated_at
             FROM user_course_records
-            WHERE id = ?
-              AND user_id = ?
+            WHERE id = %s
+              AND user_id = %s
             """,
             (
                 record_id,
@@ -1029,7 +737,7 @@ def update_user_course_record(
     if row is None:
         return None
 
-    record = dict(row)
+    record = normalize_database_row(row)
     record["is_retake"] = bool(
         record["is_retake"]
     )
@@ -1047,8 +755,8 @@ def delete_user_course_record(
         cursor = connection.execute(
             """
             DELETE FROM user_course_records
-            WHERE id = ?
-              AND user_id = ?
+            WHERE id = %s
+              AND user_id = %s
             """,
             (
                 record_id,
