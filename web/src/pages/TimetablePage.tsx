@@ -597,6 +597,7 @@ export function TimetablePage({
             ? error.message
             : '시간표를 불러오지 못했습니다.',
         )
+      }
     }
 
     void loadTimetables()
