@@ -994,19 +994,33 @@ export function TimetablePage({
           lectureIds: draftLectureIds,
         },
       )
-
-    setTimetableState(
-      (currentState) => ({
-        ...currentState,
-        timetables: replaceTimetable(
-          currentState.timetables,
+    // 
+    try {
+      const savedTimetable =
+        await updateTimetable(
           updatedTimetable,
-        ),
-      }),
-    )
+        )
 
-    setPreviewLecture(null)
-    setIsEditing(false)
+      setTimetableState(
+        (currentState) => ({
+          ...currentState,
+          timetables: replaceTimetable(
+            currentState.timetables,
+            savedTimetable,
+          ),
+        }),
+      )
+
+      setPreviewLecture(null)
+      setIsEditing(false)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '시간표를 저장하지 못했습니다.',
+      )
+    }
+    // 
   }
 
   function handleOpenDownloadModal() {
@@ -1075,31 +1089,31 @@ export function TimetablePage({
       )
 
     try {
-      const savedTimetable =
-        await updateTimetable(
-          updatedTimetable,
-        )
-
-      setTimetableState(
-        (currentState) => ({
-          ...currentState,
-          timetables: replaceTimetable(
-            currentState.timetables,
-            savedTimetable,
-          ),
-        }),
+    const savedTimetable =
+      await updateTimetable(
+        renamedTimetable,
       )
 
-      setPreviewLecture(null)
-      setIsEditing(false)
-    } catch (error) {
-      window.alert(
-        error instanceof Error
-          ? error.message
-          : '시간표를 저장하지 못했습니다.',
-      )
-    }
-  }
+    setTimetableState(
+      (currentState) => ({
+        ...currentState,
+
+        timetables: replaceTimetable(
+          currentState.timetables,
+          savedTimetable,
+        ),
+      }),
+    )
+
+  setIsRenameTimetableModalOpen(false)
+  setRenamingTimetableId(null)
+} catch (error) {
+  window.alert(
+    error instanceof Error
+      ? error.message
+      : '시간표 이름을 변경하지 못했습니다.',
+  )
+}
   
   function handleSelectTimetable(
     timetableId: string,
