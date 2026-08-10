@@ -1107,12 +1107,13 @@ export function TimetablePage({
 
   setIsRenameTimetableModalOpen(false)
   setRenamingTimetableId(null)
-} catch (error) {
-  window.alert(
-    error instanceof Error
-      ? error.message
-      : '시간표 이름을 변경하지 못했습니다.',
-  )
+  } catch (error) {
+    window.alert(
+      error instanceof Error
+        ? error.message
+        : '시간표 이름을 변경하지 못했습니다.',
+    )
+  }
 }
   
   function handleSelectTimetable(
