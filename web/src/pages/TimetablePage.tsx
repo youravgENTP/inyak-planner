@@ -22,11 +22,9 @@ import {
 import type { Lecture } from '../domain/lectures/types'
 import {
   createDefaultTimetableName,
-  createSavedTimetable,
   duplicateTimetable,
   getActiveTimetable,
   loadActiveTimetableId,
-  loadSavedTimetables,
   replaceTimetable,
   removeTimetable,
   saveActiveTimetableId,
@@ -50,42 +48,9 @@ interface TimetableCollectionState {
 
 function createInitialTimetableState():
   TimetableCollectionState {
-  const storedTimetables =
-    loadSavedTimetables()
-
-  const storedActiveTimetableId =
-    loadActiveTimetableId()
-
-  if (storedTimetables.length > 0) {
-    const hasStoredActiveTimetable =
-      storedActiveTimetableId !== null &&
-      storedTimetables.some(
-        (timetable) =>
-          timetable.id ===
-          storedActiveTimetableId,
-      )
-
-    return {
-      timetables: storedTimetables,
-      activeTimetableId:
-        hasStoredActiveTimetable
-          ? storedActiveTimetableId
-          : storedTimetables[0].id,
-    }
-  }
-
-  const initialTimetable =
-    createSavedTimetable({
-      name: '내 시간표',
-      academicYear: 2026,
-      semester: 2,
-      lectureIds: [],
-    })
-
   return {
-    timetables: [initialTimetable],
-    activeTimetableId:
-      initialTimetable.id,
+    timetables: [],
+    activeTimetableId: '',
   }
 }
 
@@ -523,61 +488,6 @@ export function TimetablePage({
             timetables:
               serverTimetables,
             activeTimetableId,
-          })
-
-          return
-        }
-
-        /*
-        * 서버에는 아무 시간표가 없는데
-        * 현재 origin의 localStorage에는
-        * 기존 시간표가 있다면 서버로 이전합니다.
-        */
-        const localTimetables =
-          loadSavedTimetables()
-
-        if (localTimetables.length > 0) {
-          const migratedTimetables =
-            await Promise.all(
-              localTimetables.map(
-                (timetable) =>
-                  createTimetable({
-                    name:
-                      timetable.name,
-                    academicYear:
-                      timetable.academicYear,
-                    semester:
-                      timetable.semester,
-                    lectureIds:
-                      timetable.lectureIds,
-                  }),
-              ),
-            )
-
-          const previousActiveId =
-            loadActiveTimetableId()
-
-          const previousActiveIndex =
-            previousActiveId === null
-              ? -1
-              : localTimetables.findIndex(
-                  (timetable) =>
-                    timetable.id ===
-                    previousActiveId,
-                )
-
-          const activeTimetable =
-            previousActiveIndex >= 0
-              ? migratedTimetables[
-                  previousActiveIndex
-                ]
-              : migratedTimetables[0]
-
-          setTimetableState({
-            timetables:
-              migratedTimetables,
-            activeTimetableId:
-              activeTimetable.id,
           })
 
           return
