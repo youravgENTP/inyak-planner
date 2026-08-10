@@ -32,6 +32,10 @@ import {
   saveActiveTimetableId,
   saveSavedTimetables,
   updateSavedTimetable,
+  createTimetable,
+  deleteTimetable,
+  getTimetables,
+  updateTimetable,
   type AcademicSemester,
   type CreateTimetableValues,
   type SavedTimetable,
@@ -234,6 +238,16 @@ export function TimetablePage({
   const [
     lectureLoadError,
     setLectureLoadError,
+  ] = useState<string | null>(null)
+
+  const [
+    isLoadingTimetables,
+    setIsLoadingTimetables,
+  ] = useState(true)
+
+  const [
+    timetableLoadError,
+    setTimetableLoadError,
   ] = useState<string | null>(null)
 
   const [
@@ -479,6 +493,130 @@ export function TimetablePage({
         ),
     [draftLectureIds, lectureMap],
   )
+
+  useEffect(() => {
+    async function loadTimetables() {
+      try {
+        setIsLoadingTimetables(true)
+        setTimetableLoadError(null)
+
+        const serverTimetables =
+          await getTimetables()
+
+        /*
+        * 서버에 이미 시간표가 있으면
+        * 서버 데이터를 원본으로 사용합니다.
+        */
+        if (serverTimetables.length > 0) {
+          const storedActiveTimetableId =
+            loadActiveTimetableId()
+
+          const activeTimetableId =
+            storedActiveTimetableId !== null &&
+            serverTimetables.some(
+              (timetable) =>
+                timetable.id ===
+                storedActiveTimetableId,
+            )
+              ? storedActiveTimetableId
+              : serverTimetables[0].id
+
+          setTimetableState({
+            timetables:
+              serverTimetables,
+            activeTimetableId,
+          })
+
+          return
+        }
+
+        /*
+        * 서버에는 아무 시간표가 없는데
+        * 현재 origin의 localStorage에는
+        * 기존 시간표가 있다면 서버로 이전합니다.
+        */
+        const localTimetables =
+          loadSavedTimetables()
+
+        if (localTimetables.length > 0) {
+          const migratedTimetables =
+            await Promise.all(
+              localTimetables.map(
+                (timetable) =>
+                  createTimetable({
+                    name:
+                      timetable.name,
+                    academicYear:
+                      timetable.academicYear,
+                    semester:
+                      timetable.semester,
+                    lectureIds:
+                      timetable.lectureIds,
+                  }),
+              ),
+            )
+
+          const previousActiveId =
+            loadActiveTimetableId()
+
+          const previousActiveIndex =
+            previousActiveId === null
+              ? -1
+              : localTimetables.findIndex(
+                  (timetable) =>
+                    timetable.id ===
+                    previousActiveId,
+                )
+
+          const activeTimetable =
+            previousActiveIndex >= 0
+              ? migratedTimetables[
+                  previousActiveIndex
+                ]
+              : migratedTimetables[0]
+
+          setTimetableState({
+            timetables:
+              migratedTimetables,
+            activeTimetableId:
+              activeTimetable.id,
+          })
+
+          return
+        }
+
+        /*
+        * 신규 사용자라면
+        * 기본 시간표 하나를 서버에 생성합니다.
+        */
+        const initialTimetable =
+          await createTimetable({
+            name: '내 시간표',
+            academicYear: 2026,
+            semester: 2,
+            lectureIds: [],
+          })
+
+        setTimetableState({
+          timetables: [
+            initialTimetable,
+          ],
+          activeTimetableId:
+            initialTimetable.id,
+        })
+      } catch (error) {
+        setTimetableLoadError(
+          error instanceof Error
+            ? error.message
+            : '시간표를 불러오지 못했습니다.',
+        )
+      } finally {
+        setIsLoadingTimetables(false)
+      }
+    }
+
+    void loadTimetables()
+  }, [])
 
   useEffect(() => {
     saveSavedTimetables(
@@ -844,7 +982,7 @@ export function TimetablePage({
     setPreviewLecture(null)
   }
 
-  function handleSaveEditing() {
+  async function handleSaveEditing() {
     if (activeTimetable === undefined) {
       return
     }
@@ -921,7 +1059,7 @@ export function TimetablePage({
     setRenamingTimetableId(null)
   }
 
-  function handleRenameTimetable(
+  async function handleRenameTimetable(
     name: string,
   ) {
     if (renamingTimetable === undefined) {
@@ -936,19 +1074,31 @@ export function TimetablePage({
         },
       )
 
-    setTimetableState(
-      (currentState) => ({
-        ...currentState,
+    try {
+      const savedTimetable =
+        await updateTimetable(
+          updatedTimetable,
+        )
 
-        timetables: replaceTimetable(
-          currentState.timetables,
-          renamedTimetable,
-        ),
-      }),
-    )
+      setTimetableState(
+        (currentState) => ({
+          ...currentState,
+          timetables: replaceTimetable(
+            currentState.timetables,
+            savedTimetable,
+          ),
+        }),
+      )
 
-    setIsRenameTimetableModalOpen(false)
-    setRenamingTimetableId(null)
+      setPreviewLecture(null)
+      setIsEditing(false)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '시간표를 저장하지 못했습니다.',
+      )
+    }
   }
   
   function handleSelectTimetable(

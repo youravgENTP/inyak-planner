@@ -1,4 +1,11 @@
 export {
+  createTimetable,
+  deleteTimetable,
+  getTimetables,
+  updateTimetable,
+} from './api'
+
+export {
   getCommonTimetableLectureIds,
 } from './comparison'
 
