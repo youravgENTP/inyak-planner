@@ -16,9 +16,8 @@ import {
   type AuthUser,
 } from './domain/auth/api'
 
-import {
-  loadSavedTimetables,
-  type SavedTimetable,
+import type {
+  SavedTimetable,
 } from './domain/saved-timetables'
 
 import { AccountPage } from './pages/AccountPage'
@@ -45,9 +44,7 @@ function App() {
   const [
     savedTimetables,
     setSavedTimetables,
-  ] = useState<SavedTimetable[]>(
-    loadSavedTimetables,
-  )
+  ] = useState<SavedTimetable[]>([])
 
 
   const [
@@ -101,6 +98,7 @@ function App() {
     try {
       await logout()
 
+      setSavedTimetables([])
       setCurrentUser(null)
       setCurrentPage('timetable')
     } catch (error) {
@@ -121,6 +119,7 @@ function App() {
   function handleAuthenticated(
     user: AuthUser,
   ) {
+    setSavedTimetables([])
     setCurrentUser(user)
     setCurrentPage('timetable')
   }
