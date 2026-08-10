@@ -12,6 +12,7 @@ from uuid import uuid4
 
 from server.auth_database import (
     connect_auth_database,
+    normalize_database_row,
 )
 
 
@@ -65,14 +66,14 @@ def create_session(
                 created_at,
                 expires_at
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
             """,
             (
                 session_id,
                 user_id,
                 token_hash,
-                created_at.isoformat(),
-                expires_at.isoformat(),
+                created_at,
+                expires_at,
             ),
         )
 
@@ -86,7 +87,7 @@ def get_user_by_session_token(
     token_hash = hash_session_token(
         session_token
     )
-    current_time = get_current_time().isoformat()
+    current_time = get_current_time()
 
     with connect_auth_database() as connection:
         row = connection.execute(
@@ -103,8 +104,8 @@ def get_user_by_session_token(
             FROM sessions
             JOIN users
                 ON users.id = sessions.user_id
-            WHERE sessions.token_hash = ?
-              AND sessions.expires_at > ?
+            WHERE sessions.token_hash = %s
+              AND sessions.expires_at > %s
             """,
             (
                 token_hash,
@@ -115,7 +116,7 @@ def get_user_by_session_token(
     if row is None:
         return None
 
-    return dict(row)
+    return normalize_database_row(row)
 
 
 def delete_session(
@@ -130,7 +131,7 @@ def delete_session(
         connection.execute(
             """
             DELETE FROM sessions
-            WHERE token_hash = ?
+            WHERE token_hash = %s
             """,
             (token_hash,),
         )
