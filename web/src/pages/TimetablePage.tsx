@@ -33,6 +33,7 @@ import {
   saveSavedTimetables,
   updateSavedTimetable,
   createTimetable,
+  deleteTimetable,
   getTimetables,
   updateTimetable,
   type AcademicSemester,
@@ -1145,39 +1146,47 @@ export function TimetablePage({
     setIsCreateTimetableModalOpen(true)
   }
 
-  function handleCreateTimetable(
+  async function handleCreateTimetable(
     values: CreateTimetableValues,
   ) {
-    const newTimetable =
-      createSavedTimetable(values)
+    try {
+      const newTimetable =
+        await createTimetable(values)
 
-    setTimetableState(
-      (currentState) => ({
-        timetables: [
-          ...currentState.timetables,
-          newTimetable,
-        ],
-        activeTimetableId:
-          newTimetable.id,
-      }),
-    )
+      setTimetableState(
+        (currentState) => ({
+          timetables: [
+            ...currentState.timetables,
+            newTimetable,
+          ],
+          activeTimetableId:
+            newTimetable.id,
+        }),
+      )
 
-    setDraftLectureIds([])
-    setPreviewLecture(null)
+      setDraftLectureIds([])
+      setPreviewLecture(null)
 
-    setIsCreateTimetableModalOpen(false)
-    setIsDownloadModalOpen(false)
-    setIsSavedTimetablesModalOpen(false)
+      setIsCreateTimetableModalOpen(false)
+      setIsDownloadModalOpen(false)
+      setIsSavedTimetablesModalOpen(false)
 
-    /*
-     * 새 빈 시간표를 만들면 바로
-     * 과목을 추가할 수 있도록
-     * 편집 모드로 진입합니다.
-     */
-    setIsEditing(true)
+      /*
+      * 새 빈 시간표를 만들면 바로
+      * 과목을 추가할 수 있도록
+      * 편집 모드로 진입합니다.
+      */
+      setIsEditing(true)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '시간표를 생성하지 못했습니다.',
+      )
+    }
   }
 
-  function handleDuplicateTimetable(
+  async function handleDuplicateTimetable(
     timetableId: string,
   ) {
     const timetableToDuplicate =
@@ -1198,32 +1207,52 @@ export function TimetablePage({
         timetableState.timetables,
       )
 
-    setTimetableState(
-      (currentState) => ({
-        timetables: [
-          ...currentState.timetables,
-          duplicatedTimetable,
-        ],
+    try {
+      const savedTimetable =
+        await createTimetable({
+          name:
+            duplicatedTimetable.name,
+          academicYear:
+            duplicatedTimetable.academicYear,
+          semester:
+            duplicatedTimetable.semester,
+          lectureIds:
+            duplicatedTimetable.lectureIds,
+        })
 
-        activeTimetableId:
-          duplicatedTimetable.id,
-      }),
-    )
+      setTimetableState(
+        (currentState) => ({
+          timetables: [
+            ...currentState.timetables,
+            savedTimetable,
+          ],
 
-    setSelectedTimetableYear(
-      duplicatedTimetable.academicYear,
-    )
+          activeTimetableId:
+            savedTimetable.id,
+        }),
+      )
 
-    setSelectedTimetableSemester(
-      duplicatedTimetable.semester,
-    )
+      setSelectedTimetableYear(
+        savedTimetable.academicYear,
+      )
 
-    setOpenTimetableMenuId(null)
-    setDraftLectureIds([])
-    setPreviewLecture(null)
-    setIsEditing(false)
-    setIsDownloadModalOpen(false)
-    setIsSavedTimetablesModalOpen(false)
+      setSelectedTimetableSemester(
+        savedTimetable.semester,
+      )
+
+      setOpenTimetableMenuId(null)
+      setDraftLectureIds([])
+      setPreviewLecture(null)
+      setIsEditing(false)
+      setIsDownloadModalOpen(false)
+      setIsSavedTimetablesModalOpen(false)
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : '시간표를 복제하지 못했습니다.',
+      )
+    }
   }
 
   function handleDuplicateActiveTimetable() {
@@ -1231,13 +1260,12 @@ export function TimetablePage({
       return
     }
 
-    handleDuplicateTimetable(
+    void handleDuplicateTimetable(
       activeTimetable.id,
     )
   }
 
-
-function handleDeleteTimetable(
+async function handleDeleteTimetable(
   timetableId: string,
 ) {
   if (
@@ -1261,6 +1289,20 @@ function handleDeleteTimetable(
   )
 
   if (!shouldDelete) {
+    return
+  }
+
+  try {
+    await deleteTimetable(
+      timetableId,
+    )
+  } catch (error) {
+    window.alert(
+      error instanceof Error
+        ? error.message
+        : '시간표를 삭제하지 못했습니다.',
+    )
+
     return
   }
 
@@ -1306,7 +1348,6 @@ function handleDeleteTimetable(
         nextActiveTimetableId,
     }
   })
-
 
   if (isDeletingActiveTimetable) {
     setDraftLectureIds([])
