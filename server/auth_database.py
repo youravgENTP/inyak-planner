@@ -746,6 +746,7 @@ def update_user_course_record(
 ##
 
 def delete_user_course_record(
+    
     *,
     record_id: str,
     user_id: str,
@@ -760,6 +761,192 @@ def delete_user_course_record(
             """,
             (
                 record_id,
+                user_id,
+            ),
+        )
+
+    return cursor.rowcount > 0
+
+
+def create_user_saved_timetable(
+    *,
+    user_id: str,
+    name: str,
+    academic_year: int,
+    semester: int,
+    lecture_ids: list[int],
+) -> dict[str, Any]:
+    """사용자의 시간표를 생성한다."""
+    timetable_id = str(uuid4())
+    current_time = get_current_time()
+
+    normalized_lecture_ids = list(
+        dict.fromkeys(lecture_ids)
+    )
+
+    with connect_auth_database() as connection:
+        connection.execute(
+            """
+            INSERT INTO user_saved_timetables (
+                id,
+                user_id,
+                name,
+                academic_year,
+                semester,
+                lecture_ids,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                %s, %s, %s, %s,
+                %s, %s, %s, %s
+            )
+            """,
+            (
+                timetable_id,
+                user_id,
+                name.strip(),
+                academic_year,
+                semester,
+                normalized_lecture_ids,
+                current_time,
+                current_time,
+            ),
+        )
+
+    return {
+        "id": timetable_id,
+        "user_id": user_id,
+        "name": name.strip(),
+        "academic_year": academic_year,
+        "semester": semester,
+        "lecture_ids": normalized_lecture_ids,
+        "created_at": current_time,
+        "updated_at": current_time,
+    }
+
+
+def get_user_saved_timetables(
+    *,
+    user_id: str,
+) -> list[dict[str, Any]]:
+    """사용자의 모든 저장 시간표를 조회한다."""
+    with connect_auth_database() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                id,
+                user_id,
+                name,
+                academic_year,
+                semester,
+                lecture_ids,
+                created_at,
+                updated_at
+            FROM user_saved_timetables
+            WHERE user_id = %s
+            ORDER BY
+                academic_year DESC,
+                semester DESC,
+                created_at ASC
+            """,
+            (user_id,),
+        ).fetchall()
+
+    return [
+        normalize_database_row(row)
+        for row in rows
+    ]
+
+
+def update_user_saved_timetable(
+    *,
+    timetable_id: str,
+    user_id: str,
+    name: str,
+    academic_year: int,
+    semester: int,
+    lecture_ids: list[int],
+) -> dict[str, Any] | None:
+    """사용자 소유의 저장 시간표를 변경한다."""
+    current_time = get_current_time()
+
+    normalized_lecture_ids = list(
+        dict.fromkeys(lecture_ids)
+    )
+
+    with connect_auth_database() as connection:
+        cursor = connection.execute(
+            """
+            UPDATE user_saved_timetables
+            SET
+                name = %s,
+                academic_year = %s,
+                semester = %s,
+                lecture_ids = %s,
+                updated_at = %s
+            WHERE
+                id = %s
+                AND user_id = %s
+            """,
+            (
+                name.strip(),
+                academic_year,
+                semester,
+                normalized_lecture_ids,
+                current_time,
+                timetable_id,
+                user_id,
+            ),
+        )
+
+        if cursor.rowcount == 0:
+            return None
+
+        row = connection.execute(
+            """
+            SELECT
+                id,
+                user_id,
+                name,
+                academic_year,
+                semester,
+                lecture_ids,
+                created_at,
+                updated_at
+            FROM user_saved_timetables
+            WHERE
+                id = %s
+                AND user_id = %s
+            """,
+            (
+                timetable_id,
+                user_id,
+            ),
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    return normalize_database_row(row)
+
+
+def delete_user_saved_timetable(
+    *,
+    timetable_id: str,
+    user_id: str,
+) -> bool:
+    """사용자 소유의 저장 시간표를 삭제한다."""
+    with connect_auth_database() as connection:
+        cursor = connection.execute(
+            """
+            DELETE FROM user_saved_timetables
+            WHERE
+                id = %s
+                AND user_id = %s
+            """,
+            (
+                timetable_id,
                 user_id,
             ),
         )

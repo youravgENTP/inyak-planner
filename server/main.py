@@ -35,6 +35,10 @@ from server.special_semesters_router import (
     router as special_semesters_router,
 )
 
+from server.timetables_router import (
+    router as timetables_router,
+)
+
 from server.database import (
     get_curriculum_courses,
     get_general_education_requirements,
@@ -68,6 +72,10 @@ app.include_router(
 
 app.include_router(
     special_semesters_router
+)
+
+app.include_router(
+    timetables_router
 )
 
 frontend_origin = os.environ.get(
