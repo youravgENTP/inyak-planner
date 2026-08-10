@@ -240,6 +240,10 @@ export function TimetablePage({
     setLectureLoadError,
   ] = useState<string | null>(null)
 
+
+  const hasLoadedTimetablesRef =
+    useRef(false)
+
   const [
     isDownloadingSyllabi,
     setIsDownloadingSyllabi,
@@ -485,6 +489,12 @@ export function TimetablePage({
   )
 
   useEffect(() => {
+    if (hasLoadedTimetablesRef.current) {
+      return
+    }
+
+    hasLoadedTimetablesRef.current = true
+
     async function loadTimetables() {
       try {
 
