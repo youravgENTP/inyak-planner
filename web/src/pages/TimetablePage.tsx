@@ -33,7 +33,6 @@ import {
   saveSavedTimetables,
   updateSavedTimetable,
   createTimetable,
-  deleteTimetable,
   getTimetables,
   updateTimetable,
   type AcademicSemester,
@@ -238,16 +237,6 @@ export function TimetablePage({
   const [
     lectureLoadError,
     setLectureLoadError,
-  ] = useState<string | null>(null)
-
-  const [
-    isLoadingTimetables,
-    setIsLoadingTimetables,
-  ] = useState(true)
-
-  const [
-    timetableLoadError,
-    setTimetableLoadError,
   ] = useState<string | null>(null)
 
   const [
@@ -497,8 +486,6 @@ export function TimetablePage({
   useEffect(() => {
     async function loadTimetables() {
       try {
-        setIsLoadingTimetables(true)
-        setTimetableLoadError(null)
 
         const serverTimetables =
           await getTimetables()
@@ -605,14 +592,11 @@ export function TimetablePage({
             initialTimetable.id,
         })
       } catch (error) {
-        setTimetableLoadError(
+        window.alert(
           error instanceof Error
             ? error.message
             : '시간표를 불러오지 못했습니다.',
         )
-      } finally {
-        setIsLoadingTimetables(false)
-      }
     }
 
     void loadTimetables()
