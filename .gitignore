@@ -15,3 +15,11 @@ data/db/*.db
 
 # User uploads
 data/uploads/
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+
+# Local database backups
+backups/
