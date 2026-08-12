@@ -140,12 +140,24 @@ function CalendarHalf({
                   '0',
                 )}`
 
+              const monthStart =
+                `${monthKey}-01`
+
+              const monthEnd =
+                `${monthKey}-${String(
+                  daysInMonth,
+                ).padStart(
+                  2,
+                  '0',
+                )}`
+
               const monthEvents =
                 events.filter(
                   (event) =>
-                    event.startDate.startsWith(
-                      monthKey,
-                    ),
+                    event.startDate <=
+                      monthEnd &&
+                    event.endDate >=
+                      monthStart,
                 )
 
               return (
@@ -209,6 +221,57 @@ function CalendarHalf({
                               {exists
                                 ? day
                                 : ''}
+                            </div>
+                          )
+                        },
+                      )}
+                    </div>
+
+                    <div className="academic-calendar-horizontal-events">
+                      {monthEvents.map(
+                        (
+                          event,
+                          index,
+                        ) => {
+                          const startDay =
+                            event.startDate <
+                            monthStart
+                              ? 1
+                              : Number(
+                                  event.startDate.slice(
+                                    8,
+                                    10,
+                                  ),
+                                )
+
+                          const endDay =
+                            event.endDate >
+                            monthEnd
+                              ? daysInMonth
+                              : Number(
+                                  event.endDate.slice(
+                                    8,
+                                    10,
+                                  ),
+                                )
+
+                          return (
+                            <div
+                              className="academic-calendar-horizontal-event"
+                              key={
+                                `${event.startDate}-` +
+                                `${event.endDate}-` +
+                                `${event.title}-` +
+                                `${index}`
+                              }
+                              style={{
+                                gridColumn:
+                                  `${startDay} / ` +
+                                  `${endDay + 1}`,
+                              }}
+                              title={event.title}
+                            >
+                              {event.title}
                             </div>
                           )
                         },
