@@ -169,49 +169,49 @@ function CalendarHalf({
                   <div className="academic-calendar-horizontal-days-wrapper">
                     <div className="academic-calendar-horizontal-days">
                       {Array.from(
-                      {
-                        length: 31,
-                      },
-                      (
-                        _,
-                        index,
-                      ) => {
-                        const day =
-                          index + 1
+                        {
+                          length: 31,
+                        },
+                        (
+                          _,
+                          index,
+                        ) => {
+                          const day =
+                            index + 1
 
-                        const exists =
-                          day <=
-                          daysInMonth
+                          const exists =
+                            day <=
+                            daysInMonth
 
-                        const weekend =
-                          exists &&
-                          isWeekend(
-                            year,
-                            month,
-                            day,
+                          const weekend =
+                            exists &&
+                            isWeekend(
+                              year,
+                              month,
+                              day,
+                            )
+
+                          return (
+                            <div
+                              className={[
+                                'academic-calendar-horizontal-day',
+                                weekend
+                                  ? 'academic-calendar-horizontal-day--weekend'
+                                  : '',
+                                !exists
+                                  ? 'academic-calendar-horizontal-day--empty'
+                                  : '',
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
+                              key={day}
+                            >
+                              {exists
+                                ? day
+                                : ''}
+                            </div>
                           )
-
-                        return (
-                          <div
-                            className={[
-                              'academic-calendar-horizontal-day',
-                              weekend
-                                ? 'academic-calendar-horizontal-day--weekend'
-                                : '',
-                              !exists
-                                ? 'academic-calendar-horizontal-day--empty'
-                                : '',
-                            ]
-                              .filter(Boolean)
-                              .join(' ')}
-                            key={day}
-                          >
-                            {exists
-                              ? day
-                              : ''}
-                          </div>
-                        )
-                      },
+                        },
                       )}
                     </div>
                   </div>
