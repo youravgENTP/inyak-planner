@@ -1943,16 +1943,19 @@ h1 {
 }
 
 .academic-calendar-month-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  column-gap: 40px;
 }
 
 .academic-calendar-month {
+  min-width: 0;
   padding: 24px 0;
   border-top: 1px solid #e5e7eb;
 }
 
-.academic-calendar-month:first-child {
+.academic-calendar-month:nth-child(-n + 2) {
   border-top: 0;
 }
 
@@ -1996,8 +1999,8 @@ h1 {
 }
 
 .academic-calendar-event--current {
-  background: #eef5fc;
-  color: #123b69;
+  background: #edf6f0;
+  color: var(--navy-900);
 }
 
 .academic-calendar-event--current
@@ -2005,6 +2008,20 @@ h1 {
 .academic-calendar-event--current
   .academic-calendar-event-title {
   font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .academic-calendar-month-list {
+    grid-template-columns: 1fr;
+  }
+
+  .academic-calendar-month:nth-child(-n + 2) {
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .academic-calendar-month:first-child {
+    border-top: 0;
+  }
 }
 
 @media (max-width: 640px) {
