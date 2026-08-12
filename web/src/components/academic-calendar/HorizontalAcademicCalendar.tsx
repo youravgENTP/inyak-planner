@@ -2,8 +2,13 @@ import {
   useState,
 } from 'react'
 
+import type {
+  AcademicCalendarEvent,
+} from '../../domain/academic-calendar/types'
+
 interface HorizontalAcademicCalendarProps {
   academicYear: number
+  events: AcademicCalendarEvent[]
   onAcademicYearChange: (
     year: number,
   ) => void
@@ -102,9 +107,11 @@ function getBackHalfMonths(
 function CalendarHalf({
   title,
   months,
+  events,
 }: {
   title: string
   months: CalendarMonth[]
+  events: AcademicCalendarEvent[]
 }) {
   return (
     <section className="academic-calendar-horizontal-half">
@@ -125,6 +132,20 @@ function CalendarHalf({
                   month,
                 )
 
+                const monthKey =
+                `${year}-${String(month).padStart(
+                    2,
+                    '0',
+                )}`
+
+                const monthEvents =
+                events.filter(
+                    (event) =>
+                    event.startDate.startsWith(
+                        monthKey,
+                    ),
+                )
+
               return (
                 <div
                   className="academic-calendar-horizontal-month"
@@ -140,7 +161,8 @@ function CalendarHalf({
                     </strong>
                   </div>
 
-                  <div className="academic-calendar-horizontal-days">
+                <div className="academic-calendar-horizontal-days-wrapper">
+                <div className="academic-calendar-horizontal-days">
                     {Array.from(
                       {
                         length: 31,
