@@ -19,45 +19,44 @@ async function renderElementToPng(
       '.academic-calendar-horizontal-scroll',
     )
 
-  if (scrollContainer === null) {
+  const calendarGrid =
+    element.querySelector<HTMLElement>(
+      '.academic-calendar-horizontal-grid',
+    )
+
+  if (
+    scrollContainer === null ||
+    calendarGrid === null
+  ) {
     throw new Error(
       'PDF로 저장할 학사일정 영역을 찾지 못했습니다.',
     )
   }
 
-  const fullCalendarWidth =
-    scrollContainer.scrollWidth
+  const captureWidth =
+    calendarGrid.offsetWidth
 
-  const originalElementWidth =
-    element.style.width
+  const captureHeight =
+    element.scrollHeight
 
-  const originalElementMaxWidth =
-    element.style.maxWidth
+  const originalOverflow =
+    scrollContainer.style.overflow
 
-  const originalScrollWidth =
+  const originalWidth =
     scrollContainer.style.width
 
-  const originalScrollMaxWidth =
+  const originalMaxWidth =
     scrollContainer.style.maxWidth
 
-  const originalScrollOverflowX =
-    scrollContainer.style.overflowX
-
   try {
-    element.style.width =
-      `${fullCalendarWidth}px`
-
-    element.style.maxWidth =
-      'none'
+    scrollContainer.style.overflow =
+      'visible'
 
     scrollContainer.style.width =
-      `${fullCalendarWidth}px`
+      `${captureWidth}px`
 
     scrollContainer.style.maxWidth =
       'none'
-
-    scrollContainer.style.overflowX =
-      'hidden'
 
     return await toPng(
       element,
@@ -67,27 +66,29 @@ async function renderElementToPng(
         cacheBust: true,
         pixelRatio:
           PDF_PIXEL_RATIO,
+
         width:
-          element.scrollWidth,
+          captureWidth,
+
         height:
-          element.scrollHeight,
+          captureHeight,
+
+        style: {
+          width:
+            `${captureWidth}px`,
+          maxWidth: 'none',
+        },
       },
     )
   } finally {
-    element.style.width =
-      originalElementWidth
-
-    element.style.maxWidth =
-      originalElementMaxWidth
+    scrollContainer.style.overflow =
+      originalOverflow
 
     scrollContainer.style.width =
-      originalScrollWidth
+      originalWidth
 
     scrollContainer.style.maxWidth =
-      originalScrollMaxWidth
-
-    scrollContainer.style.overflowX =
-      originalScrollOverflowX
+      originalMaxWidth
   }
 }
 
