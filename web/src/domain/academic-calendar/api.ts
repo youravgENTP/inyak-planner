@@ -63,3 +63,50 @@ export async function getAcademicCalendar(
     ),
   }
 }
+
+// (전반기, 후반기) 합쳐서 반환
+export async function getAcademicYearCalendar(
+  academicYear: number,
+): Promise<AcademicCalendar> {
+  const [
+    currentYearCalendar,
+    nextYearCalendar,
+  ] = await Promise.all([
+    getAcademicCalendar(
+      academicYear,
+    ),
+    getAcademicCalendar(
+      academicYear + 1,
+    ),
+  ])
+
+  const currentYearEvents =
+    currentYearCalendar.events.filter(
+      (event) =>
+        event.startDate >=
+        `${academicYear}-02-01`,
+    )
+
+  const nextYearEvents =
+    nextYearCalendar.events.filter(
+      (event) =>
+        event.startDate <=
+        `${academicYear + 1}-02-28`,
+    )
+
+  const events = [
+    ...currentYearEvents,
+    ...nextYearEvents,
+  ].sort(
+    (left, right) =>
+      left.startDate.localeCompare(
+        right.startDate,
+      ),
+  )
+
+  return {
+    academicYear,
+    count: events.length,
+    events,
+  }
+}

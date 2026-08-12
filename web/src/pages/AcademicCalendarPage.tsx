@@ -5,7 +5,7 @@ import {
 } from 'react'
 
 import {
-  getAcademicCalendar,
+  getAcademicYearCalendar,
 } from '../domain/academic-calendar/api'
 
 import type {
@@ -79,7 +79,7 @@ export function AcademicCalendarPage() {
 
       try {
         const result =
-          await getAcademicCalendar(
+          await getAcademicYearCalendar(
             selectedYear,
           )
 
@@ -156,7 +156,7 @@ export function AcademicCalendarPage() {
           </button>
 
           <strong>
-            {selectedYear}년
+            {selectedYear}학년도
           </strong>
 
           <button
