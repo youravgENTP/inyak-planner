@@ -774,12 +774,8 @@ function CalendarHalf({
                 }}
               >
                 <div className="academic-calendar-horizontal-month-label">
-                  <span className="academic-calendar-horizontal-year">
-                    {year}
-                  </span>
-
                   <strong>
-                    {month}월
+                    {month}
                   </strong>
                 </div>
 
