@@ -480,7 +480,6 @@ def create_user_course_record(
                 letter_grade_crypto_version,
                 is_retake,
                 note,
-                note,
                 created_at,
                 updated_at
             )
