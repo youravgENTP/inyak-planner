@@ -252,9 +252,9 @@ function CalendarHalf({
 
               const monthRowHeight =
                 Math.max(
-                  88,
-                  58 +
-                    laneCount * 30,
+                  132,
+                  84 +
+                    laneCount * 32,
                 )
 
               return (
@@ -351,9 +351,18 @@ function CalendarHalf({
                           },
                           index,
                         ) => {
+                          const isSingleDay =
+                            event.startDate ===
+                            event.endDate
+
                           return (
                             <div
-                              className="academic-calendar-horizontal-event"
+                              className={[
+                                'academic-calendar-horizontal-event',
+                                isSingleDay
+                                  ? 'academic-calendar-horizontal-event--single'
+                                  : 'academic-calendar-horizontal-event--range',
+                              ].join(' ')}
                               key={
                                 `${event.startDate}-` +
                                 `${event.endDate}-` +
