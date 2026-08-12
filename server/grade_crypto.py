@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.ciphers.aead import (
 )
 
 
-GRADE_CRYPTO_VERSION = 1
+GRADE_CRYPTO_VERSION = 2
 
 GRADE_CRYPTO_KEY_ENV_NAME = (
     "GRADE_ENCRYPTION_KEY"
