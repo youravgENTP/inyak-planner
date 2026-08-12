@@ -940,6 +940,7 @@ export function GpaCalculatorPage({
             record,
             nextStatus,
           ),
+          user.id,
         )
 
       setCourseRecords(
@@ -990,6 +991,7 @@ export function GpaCalculatorPage({
                   record,
                   nextStatus,
                 ),
+                user.id,
               ),
           ),
         )
@@ -1070,6 +1072,7 @@ export function GpaCalculatorPage({
       await updateCourseRecord(
         record.id,
         input,
+        user.id,
       )
 
     setCourseRecords(
@@ -2072,6 +2075,7 @@ export function GpaCalculatorPage({
       {recordModalIsOpen ? (
         <CourseRecordModal
           editingRecord={editingRecord}
+          userId={user.id}
           entryYear={user.entryYear}
           grade={selectedSemester.grade}
           semester={

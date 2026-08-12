@@ -60,6 +60,7 @@ const ACADEMIC_YEARS =
 
 interface CourseRecordModalProps {
   editingRecord: CourseRecord | null
+  userId: string
 
   /*
    * 현재 GpaCalculatorPage와의 연결을
@@ -120,6 +121,7 @@ function formatLectureMeta(
 
 export function CourseRecordModal({
   editingRecord,
+  userId,
   entryYear,
   grade,
   semester,
@@ -892,10 +894,14 @@ export function CourseRecordModal({
 
       const savedRecord =
         editingRecord === null
-          ? await createCourseRecord(input)
+          ? await createCourseRecord(
+              input,
+              userId,
+            )
           : await updateCourseRecord(
               editingRecord.id,
               input,
+              userId,
             )
 
       onSaved(savedRecord)

@@ -6,6 +6,13 @@ import type {
   CourseRecordStatus,
 } from './types'
 
+// 성적 암호화 관련 임포트
+import {
+  decryptLetterGrade,
+  encryptLetterGrade,
+  getStoredGradeKey,
+} from './crypto'
+
 
 // const API_BASE_URL =
 //   'http://localhost:8000'
@@ -34,6 +41,16 @@ interface CourseRecordApiItem {
   credits: number
   status: CourseRecordStatus
   letter_grade: string | null
+
+  letter_grade_ciphertext:
+    string | null
+
+  letter_grade_iv:
+    string | null
+
+  letter_grade_crypto_version:
+    number | null
+
   is_retake: boolean
   note: string | null
   created_at: string
@@ -50,9 +67,48 @@ interface CourseRecordsErrorResponse {
 }
 
 
-function mapCourseRecord(
+// 수정 : 암호문이 있는 경우에만 복호화
+async function mapCourseRecord(
   record: CourseRecordApiItem,
-): CourseRecord {
+): Promise<CourseRecord> {
+  let letterGrade =
+    record.letter_grade
+
+  const hasEncryptedLetterGrade =
+    record.letter_grade_ciphertext !==
+      null &&
+    record.letter_grade_iv !== null &&
+    record.letter_grade_crypto_version !==
+      null
+
+  if (hasEncryptedLetterGrade) {
+    const key =
+      await getStoredGradeKey(
+        record.user_id,
+      )
+
+    if (key === null) {
+      throw new Error(
+        '이 기기에서 성적 암호화 키를 찾을 수 없습니다. 계정 설정에서 복구 코드를 이용해 성적 암호화 키를 복원해 주세요.',
+      )
+    }
+
+    letterGrade =
+      await decryptLetterGrade(
+        key,
+        {
+          ciphertext:
+            record
+              .letter_grade_ciphertext!,
+          iv:
+            record.letter_grade_iv!,
+          cryptoVersion:
+            record
+              .letter_grade_crypto_version!,
+        },
+      )
+  }
+
   return {
     id: record.id,
     userId: record.user_id,
@@ -83,8 +139,9 @@ function mapCourseRecord(
       record.credits,
     status:
       record.status,
-    letterGrade:
-      record.letter_grade,
+
+    letterGrade,
+
     isRetake:
       record.is_retake,
     note:
@@ -143,14 +200,48 @@ export async function getCourseRecords():
     (await response.json()) as
       CourseRecordsResponse
 
-  return data.records.map(
-    mapCourseRecord,
+  return Promise.all(
+    data.records.map(
+      mapCourseRecord,
+    ),
   )
-}
 
-function mapCourseRecordInput(
+async function mapCourseRecordInput(
   input: CourseRecordInput,
+  userId?: string,
 ) {
+  let encryptedLetterGrade:
+    {
+      ciphertext: string
+      iv: string
+      cryptoVersion: number
+    } | null = null
+
+  if (input.letterGrade !== null) {
+    if (userId === undefined) {
+      throw new Error(
+        '성적을 암호화하려면 로그인 사용자 정보를 확인할 수 있어야 합니다.',
+      )
+    }
+
+    const key =
+      await getStoredGradeKey(
+        userId,
+      )
+
+    if (key === null) {
+      throw new Error(
+        '성적 암호화 키가 없습니다. 계정 설정에서 먼저 성적 암호화 키를 생성하거나 복원해 주세요.',
+      )
+    }
+
+    encryptedLetterGrade =
+      await encryptLetterGrade(
+        key,
+        input.letterGrade,
+      )
+  }
+
   return {
     curriculum_course_id:
       input.curriculumCourseId,
@@ -178,8 +269,25 @@ function mapCourseRecordInput(
       input.credits,
     status:
       input.status,
+
+    /*
+     * 평문 성적은 서버로 보내지 않는다.
+     */
     letter_grade:
-      input.letterGrade,
+      null,
+
+    letter_grade_ciphertext:
+      encryptedLetterGrade
+        ?.ciphertext ?? null,
+
+    letter_grade_iv:
+      encryptedLetterGrade
+        ?.iv ?? null,
+
+    letter_grade_crypto_version:
+      encryptedLetterGrade
+        ?.cryptoVersion ?? null,
+
     is_retake:
       input.isRetake,
     note:
@@ -189,7 +297,15 @@ function mapCourseRecordInput(
 
 export async function createCourseRecord(
   input: CourseRecordInput,
+  userId?: string,
 ): Promise<CourseRecord> {
+
+  const requestBody =
+    await mapCourseRecordInput(
+      input,
+      userId,
+    )
+
   const response = await fetch(
     `${API_BASE_URL}/api/course-records`,
     {
@@ -200,7 +316,7 @@ export async function createCourseRecord(
           'application/json',
       },
       body: JSON.stringify(
-        mapCourseRecordInput(input),
+        requestBody,
       ),
     },
   )
@@ -227,7 +343,14 @@ export async function createCourseRecord(
 export async function updateCourseRecord(
   recordId: string,
   input: CourseRecordInput,
+  userId?: string,
 ): Promise<CourseRecord> {
+  const requestBody =
+    await mapCourseRecordInput(
+      input,
+      userId,
+    )
+
   const response = await fetch(
     `${API_BASE_URL}/api/course-records/${recordId}`,
     {
@@ -238,7 +361,7 @@ export async function updateCourseRecord(
           'application/json',
       },
       body: JSON.stringify(
-        mapCourseRecordInput(input),
+        requestBody,
       ),
     },
   )
