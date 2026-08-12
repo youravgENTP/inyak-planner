@@ -193,11 +193,27 @@ async function renderElementToPng(
     0,
   )
 
+  const gridTop =
+    titleImage.naturalHeight +
+    gapPx
+
   context.drawImage(
     gridImage,
     0,
-    titleImage.naturalHeight +
-      gapPx,
+    gridTop,
+  )
+
+  context.strokeStyle =
+    '#8fa3b8'
+
+  context.lineWidth =
+    2 * PDF_PIXEL_RATIO
+
+  context.strokeRect(
+    0,
+    gridTop,
+    canvas.width,
+    gridImage.naturalHeight,
   )
 
   return {
