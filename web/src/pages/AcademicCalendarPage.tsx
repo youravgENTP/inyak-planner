@@ -50,6 +50,11 @@ export function AcademicCalendarPage() {
   const [selectedYear, setSelectedYear] =
     useState(2026)
 
+  const [viewMode, setViewMode] =
+    useState<'list' | 'horizontal'>(
+      'list',
+    )
+
   const [calendar, setCalendar] =
     useState<AcademicCalendar | null>(
       null,
@@ -168,6 +173,55 @@ export function AcademicCalendarPage() {
         </div>
       </header>
 
+      </header>
+
+      <div className="academic-calendar-toolbar">
+        <div
+          className="academic-calendar-view-switch"
+          role="group"
+          aria-label="학사일정 보기 방식"
+        >
+          <button
+            className={
+              viewMode === 'list'
+                ? 'academic-calendar-view-button academic-calendar-view-button--active'
+                : 'academic-calendar-view-button'
+            }
+            type="button"
+            onClick={() =>
+              setViewMode('list')
+            }
+          >
+            목록뷰
+          </button>
+
+          <button
+            className={
+              viewMode === 'horizontal'
+                ? 'academic-calendar-view-button academic-calendar-view-button--active'
+                : 'academic-calendar-view-button'
+            }
+            type="button"
+            onClick={() =>
+              setViewMode('horizontal')
+            }
+          >
+            가로뷰
+          </button>
+        </div>
+
+        <button
+          className="academic-calendar-pdf-button"
+          type="button"
+          disabled
+          title="PDF 다운로드 기능 준비 중"
+        >
+          PDF 다운로드
+        </button>
+      </div>
+
+      {loadingError !== null ? (
+
       {loadingError !== null ? (
         <p className="academic-calendar-message">
           {loadingError}
@@ -176,6 +230,10 @@ export function AcademicCalendarPage() {
         <p className="academic-calendar-message">
           학사일정을 불러오는 중입니다.
         </p>
+      ) : viewMode === 'horizontal' ? (
+        <div className="academic-calendar-placeholder">
+          가로뷰를 준비 중입니다.
+        </div>
       ) : (
         <div className="academic-calendar-month-list">
           {Array.from(
