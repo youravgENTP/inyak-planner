@@ -639,26 +639,36 @@ function CalendarHalf({
                               }}
                               title={event.title}
                             >
-                              {isSingleDay
-                                ? singleDayTitleParts.map(
-                                    (
-                                      titlePart,
-                                      partIndex,
-                                    ) => (
-                                      <span
-                                        className="academic-calendar-horizontal-event-single-column"
-                                        key={
-                                          `${titlePart}-` +
-                                          `${partIndex}`
-                                        }
-                                      >
-                                        {renderVerticalTitlePart(
-                                          titlePart,
-                                        )}
-                                      </span>
-                                    ),
-                                  )
-                                : displayTitle}
+                              {isSingleDay ? (
+                                singleDayTitleParts.map(
+                                  (
+                                    titlePart,
+                                    partIndex,
+                                  ) => (
+                                    <span
+                                      className="academic-calendar-horizontal-event-single-column"
+                                      key={
+                                        `${titlePart}-` +
+                                        `${partIndex}`
+                                      }
+                                    >
+                                      {renderVerticalTitlePart(
+                                        titlePart,
+                                      )}
+                                    </span>
+                                  ),
+                                )
+                              ) : (
+                                <div className="academic-calendar-horizontal-range-track">
+                                  <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--start" />
+
+                                  <span className="academic-calendar-horizontal-range-label">
+                                    {displayTitle}
+                                  </span>
+
+                                  <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--end" />
+                                </div>
+                              )}
                             </div>
                           )
                         },
