@@ -14,19 +14,81 @@ const PDF_PIXEL_RATIO = 2
 async function renderElementToPng(
   element: HTMLElement,
 ): Promise<string> {
-  return toPng(
-    element,
-    {
-      backgroundColor: '#ffffff',
-      cacheBust: true,
-      pixelRatio:
-        PDF_PIXEL_RATIO,
-      width:
-        element.scrollWidth,
-      height:
-        element.scrollHeight,
-    },
-  )
+  const scrollContainer =
+    element.querySelector<HTMLElement>(
+      '.academic-calendar-horizontal-scroll',
+    )
+
+  if (scrollContainer === null) {
+    throw new Error(
+      'PDF로 저장할 학사일정 영역을 찾지 못했습니다.',
+    )
+  }
+
+  const fullCalendarWidth =
+    scrollContainer.scrollWidth
+
+  const originalElementWidth =
+    element.style.width
+
+  const originalElementMaxWidth =
+    element.style.maxWidth
+
+  const originalScrollWidth =
+    scrollContainer.style.width
+
+  const originalScrollMaxWidth =
+    scrollContainer.style.maxWidth
+
+  const originalScrollOverflowX =
+    scrollContainer.style.overflowX
+
+  try {
+    element.style.width =
+      `${fullCalendarWidth}px`
+
+    element.style.maxWidth =
+      'none'
+
+    scrollContainer.style.width =
+      `${fullCalendarWidth}px`
+
+    scrollContainer.style.maxWidth =
+      'none'
+
+    scrollContainer.style.overflowX =
+      'hidden'
+
+    return await toPng(
+      element,
+      {
+        backgroundColor:
+          '#ffffff',
+        cacheBust: true,
+        pixelRatio:
+          PDF_PIXEL_RATIO,
+        width:
+          element.scrollWidth,
+        height:
+          element.scrollHeight,
+      },
+    )
+  } finally {
+    element.style.width =
+      originalElementWidth
+
+    element.style.maxWidth =
+      originalElementMaxWidth
+
+    scrollContainer.style.width =
+      originalScrollWidth
+
+    scrollContainer.style.maxWidth =
+      originalScrollMaxWidth
+
+    scrollContainer.style.overflowX =
+      originalScrollOverflowX
+  }
 }
 
 

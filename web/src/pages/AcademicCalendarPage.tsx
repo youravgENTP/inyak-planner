@@ -234,24 +234,25 @@ export function AcademicCalendarPage() {
           </button>
         </div>
 
-        <button
-          className="academic-calendar-pdf-button"
-          type="button"
-          disabled={
-            viewMode !==
-              'horizontal' ||
-            isLoading ||
-            calendar === null ||
-            isDownloadingPdf
-          }
-          onClick={() => {
-            void handlePdfDownload()
-          }}
-        >
-          {isDownloadingPdf
-            ? 'PDF 생성 중...'
-            : 'PDF 다운로드'}
-        </button>
+        {viewMode ===
+          'horizontal' && (
+          <button
+            className="academic-calendar-pdf-button"
+            type="button"
+            disabled={
+              isLoading ||
+              calendar === null ||
+              isDownloadingPdf
+            }
+            onClick={() => {
+              void handlePdfDownload()
+            }}
+          >
+            {isDownloadingPdf
+              ? 'PDF 생성 중...'
+              : 'PDF 다운로드'}
+          </button>
+        )}
       </div>
 
       {loadingError !== null ? (
