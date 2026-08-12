@@ -219,8 +219,10 @@ export function AcademicCalendarPage() {
           PDF 다운로드
         </button>
       </div>
+        </div>
+      </header>
 
-      {loadingError !== null ? (
+      <div className="academic-calendar-toolbar"></div>
 
       {loadingError !== null ? (
         <p className="academic-calendar-message">
