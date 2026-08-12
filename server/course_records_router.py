@@ -25,6 +25,10 @@ from server.auth_router import (
     require_authenticated_user,
 )
 
+from server.grade_crypto import (
+    encrypt_letter_grade,
+)
+
 from server.database import (
     get_curriculum_course_by_id,
     get_general_education_link,
@@ -156,7 +160,16 @@ def normalize_optional_text(
 def get_request_values(
     request: CourseRecordRequest,
 ) -> dict[str, Any]:
-    """요청 데이터를 DB 함수에 전달할 형태로 정리한다."""
+    """
+    요청 데이터를 DB 함수에 전달할 형태로 정리한다.
+
+    평문 성적이 전달된 경우에는
+    서버에서 AES-GCM으로 암호화하고,
+    DB에는 평문 성적을 전달하지 않는다.
+
+    기존 브라우저 암호화(version 1) 데이터는
+    migration 기간 동안 그대로 허용한다.
+    """
     term = request.term
 
     if term is None:
@@ -164,6 +177,57 @@ def get_request_values(
             term = "spring"
         elif request.semester == 2:
             term = "fall"
+
+    letter_grade = normalize_optional_text(
+        request.letter_grade
+    )
+
+    letter_grade_ciphertext = (
+        normalize_optional_text(
+            request.letter_grade_ciphertext
+        )
+    )
+
+    letter_grade_iv = (
+        normalize_optional_text(
+            request.letter_grade_iv
+        )
+    )
+
+    letter_grade_crypto_version = (
+        request.letter_grade_crypto_version
+    )
+
+    if letter_grade is not None:
+        encrypted_grade = (
+            encrypt_letter_grade(
+                letter_grade
+            )
+        )
+
+        letter_grade = None
+
+        letter_grade_ciphertext = (
+            str(
+                encrypted_grade[
+                    "ciphertext"
+                ]
+            )
+        )
+
+        letter_grade_iv = (
+            str(
+                encrypted_grade["iv"]
+            )
+        )
+
+        letter_grade_crypto_version = (
+            int(
+                encrypted_grade[
+                    "crypto_version"
+                ]
+            )
+        )
 
     return {
         "curriculum_course_id":
@@ -195,19 +259,13 @@ def get_request_values(
         "status":
             request.status,
         "letter_grade":
-            normalize_optional_text(
-                request.letter_grade
-            ),
+            letter_grade,
         "letter_grade_ciphertext":
-            normalize_optional_text(
-                request.letter_grade_ciphertext
-            ),
+            letter_grade_ciphertext,
         "letter_grade_iv":
-            normalize_optional_text(
-                request.letter_grade_iv
-            ),
+            letter_grade_iv,
         "letter_grade_crypto_version":
-            request.letter_grade_crypto_version,
+            letter_grade_crypto_version,
         "is_retake":
             request.is_retake,
         "note":
