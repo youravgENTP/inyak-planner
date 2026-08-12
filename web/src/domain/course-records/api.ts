@@ -9,7 +9,6 @@ import type {
 // 성적 암호화 관련 임포트
 import {
   decryptLetterGrade,
-  encryptLetterGrade,
   getStoredGradeKey,
 } from './crypto'
 
@@ -209,40 +208,8 @@ export async function getCourseRecords():
 
 async function mapCourseRecordInput(
   input: CourseRecordInput,
-  userId?: string,
+  _userId?: string,
 ) {
-  let encryptedLetterGrade:
-    {
-      ciphertext: string
-      iv: string
-      cryptoVersion: number
-    } | null = null
-
-  if (input.letterGrade !== null) {
-    if (userId === undefined) {
-      throw new Error(
-        '성적을 암호화하려면 로그인 사용자 정보를 확인할 수 있어야 합니다.',
-      )
-    }
-
-    const key =
-      await getStoredGradeKey(
-        userId,
-      )
-
-    if (key === null) {
-      throw new Error(
-        '성적 암호화 키가 없습니다. 계정 설정에서 먼저 성적 암호화 키를 생성하거나 복원해 주세요.',
-      )
-    }
-
-    encryptedLetterGrade =
-      await encryptLetterGrade(
-        key,
-        input.letterGrade,
-      )
-  }
-
   return {
     curriculum_course_id:
       input.curriculumCourseId,
@@ -272,22 +239,27 @@ async function mapCourseRecordInput(
       input.status,
 
     /*
-     * 평문 성적은 서버로 보내지 않는다.
+     * 성적 평문은 HTTPS를 통해
+     * FastAPI로 전달한다.
+     *
+     * FastAPI가 서버 측 AES-GCM으로
+     * 암호화한 뒤 DB에는 암호문만 저장한다.
      */
     letter_grade:
+      input.letterGrade,
+
+    /*
+     * 브라우저는 더 이상 새 성적을
+     * 직접 암호화하지 않는다.
+     */
+    letter_grade_ciphertext:
       null,
 
-    letter_grade_ciphertext:
-      encryptedLetterGrade
-        ?.ciphertext ?? null,
-
     letter_grade_iv:
-      encryptedLetterGrade
-        ?.iv ?? null,
+      null,
 
     letter_grade_crypto_version:
-      encryptedLetterGrade
-        ?.cryptoVersion ?? null,
+      null,
 
     is_retake:
       input.isRetake,
