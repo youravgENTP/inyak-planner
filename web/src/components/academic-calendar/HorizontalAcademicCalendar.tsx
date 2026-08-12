@@ -166,9 +166,9 @@ function CalendarHalf({
                     </strong>
                   </div>
 
-                <div className="academic-calendar-horizontal-days-wrapper">
+                  <div className="academic-calendar-horizontal-days-wrapper">
                     <div className="academic-calendar-horizontal-days">
-                    {Array.from(
+                      {Array.from(
                       {
                         length: 31,
                       },
@@ -212,10 +212,10 @@ function CalendarHalf({
                           </div>
                         )
                       },
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
               )
             },
           )}
@@ -252,57 +252,57 @@ export function HorizontalAcademicCalendar({
 
   return (
     <div className="academic-calendar-horizontal">
-        <div className="academic-calendar-horizontal-controls">
+      <div className="academic-calendar-horizontal-controls">
         <div className="academic-calendar-horizontal-year-select">
-            <select
+          <select
             value={academicYear}
             onChange={(event) =>
-                onAcademicYearChange(
+              onAcademicYearChange(
                 Number(
-                    event.target.value,
+                  event.target.value,
                 ),
-                )
+              )
             }
-            >
+          >
             {[
-                2024,
-                2025,
-                2026,
-                2027,
+              2024,
+              2025,
+              2026,
+              2027,
             ].map((year) => (
-                <option
+              <option
                 key={year}
                 value={year}
-                >
+              >
                 {year}
-                </option>
+              </option>
             ))}
-            </select>
+          </select>
 
-            <span>
+          <span>
             학년도
-            </span>
+          </span>
         </div>
 
         <select
-            value={half}
-            onChange={(event) =>
+          value={half}
+          onChange={(event) =>
             setHalf(
-                event.target.value as
+              event.target.value as
                 | 'front'
                 | 'back',
             )
-            }
+          }
         >
-            <option value="front">
+          <option value="front">
             상반기
-            </option>
+          </option>
 
-            <option value="back">
+          <option value="back">
             하반기
-            </option>
+          </option>
         </select>
-        </div>
+      </div>
 
       <CalendarHalf
         title={title}
