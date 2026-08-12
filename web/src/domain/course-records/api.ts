@@ -35,16 +35,6 @@ interface CourseRecordApiItem {
   credits: number
   status: CourseRecordStatus
   letter_grade: string | null
-
-  letter_grade_ciphertext:
-    string | null
-
-  letter_grade_iv:
-    string | null
-
-  letter_grade_crypto_version:
-    number | null
-
   is_retake: boolean
   note: string | null
   created_at: string
@@ -203,20 +193,6 @@ async function mapCourseRecordInput(
      */
     letter_grade:
       input.letterGrade,
-
-    /*
-     * 브라우저는 더 이상 새 성적을
-     * 직접 암호화하지 않는다.
-     */
-    letter_grade_ciphertext:
-      null,
-
-    letter_grade_iv:
-      null,
-
-    letter_grade_crypto_version:
-      null,
-
     is_retake:
       input.isRetake,
     note:
