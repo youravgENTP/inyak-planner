@@ -8,6 +8,10 @@ import {
   getAcademicYearCalendar,
 } from '../domain/academic-calendar/api'
 
+import {
+  HorizontalAcademicCalendar,
+} from '../components/academic-calendar/HorizontalAcademicCalendar'
+
 import type {
   AcademicCalendar,
   AcademicCalendarEvent,
@@ -227,9 +231,9 @@ export function AcademicCalendarPage() {
           학사일정을 불러오는 중입니다.
         </p>
       ) : viewMode === 'horizontal' ? (
-        <div className="academic-calendar-placeholder">
-          가로뷰를 준비 중입니다.
-        </div>
+        <HorizontalAcademicCalendar
+          academicYear={selectedYear}
+        />
       ) : (
         <div className="academic-calendar-month-list">
           {Array.from(

@@ -2068,3 +2068,91 @@ h1 {
     align-self: flex-start;
   }
 }
+
+/* ========================================
+   학사일정 가로뷰
+======================================== */
+
+.academic-calendar-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.academic-calendar-horizontal-half h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.academic-calendar-horizontal-scroll {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.academic-calendar-horizontal-grid {
+  min-width: 1180px;
+}
+
+.academic-calendar-horizontal-month {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  min-height: 56px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.academic-calendar-horizontal-month:last-child {
+  border-bottom: 0;
+}
+
+.academic-calendar-horizontal-month-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-right: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.academic-calendar-horizontal-year {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.academic-calendar-horizontal-month-label strong {
+  font-size: 15px;
+}
+
+.academic-calendar-horizontal-days {
+  display: grid;
+  grid-template-columns: repeat(
+    31,
+    minmax(32px, 1fr)
+  );
+}
+
+.academic-calendar-horizontal-day {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 56px;
+  padding-top: 7px;
+  border-right: 1px solid #eef0f3;
+  color: #4b5563;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.academic-calendar-horizontal-day:last-child {
+  border-right: 0;
+}
+
+.academic-calendar-horizontal-day--weekend {
+  background: #f3f4f6;
+}
+
+.academic-calendar-horizontal-day--empty {
+  background: #fafafa;
+  color: transparent;
+}
