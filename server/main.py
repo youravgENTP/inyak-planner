@@ -26,6 +26,10 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from server.academic_calendar_router import (
+    router as academic_calendar_router,
+)
+
 from server.auth_router import router as auth_router
 from server.course_records_router import (
     router as course_records_router,
@@ -76,6 +80,10 @@ app.include_router(
 
 app.include_router(
     timetables_router
+)
+
+app.include_router(
+    academic_calendar_router
 )
 
 frontend_origin = os.environ.get(
