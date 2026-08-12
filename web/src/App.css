@@ -1900,6 +1900,7 @@ h1 {
 
 .academic-calendar-page {
   width: 100%;
+  min-width: 0;
   max-width: 960px;
   margin: 0 auto;
 }
@@ -2073,6 +2074,7 @@ h1 {
 
 .academic-calendar-horizontal {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   gap: 48px;
 }
@@ -2083,7 +2085,12 @@ h1 {
 }
 
 .academic-calendar-horizontal-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
   overflow-x: auto;
+
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   background: #ffffff;
