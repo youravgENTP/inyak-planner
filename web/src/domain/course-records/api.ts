@@ -273,44 +273,76 @@ async function mapCourseRecordInput(
 async function mapAndMigrateCourseRecord(
   record: CourseRecordApiItem,
 ): Promise<CourseRecord> {
-  /*
-   * 이미 암호화된 성적이거나
-   * 애초에 성적이 없는 기록은
-   * 그대로 일반 변환만 수행한다.
-   */
-  if (
-    record.letter_grade === null ||
+  let letterGrade =
+    record.letter_grade
+
+  const isLegacyClientEncryptedGrade =
     record.letter_grade_ciphertext !==
-      null ||
-    record.letter_grade_iv !== null ||
-    record.letter_grade_crypto_version !==
-      null
-  ) {
-    return mapCourseRecord(record)
+      null &&
+    record.letter_grade_iv !== null &&
+    record.letter_grade_crypto_version ===
+      1
+
+  /*
+   * 기존 version 1 성적이라면
+   * 현재 브라우저에 저장된 기존 키로
+   * 한 번 복호화한다.
+   */
+  if (isLegacyClientEncryptedGrade) {
+    const key =
+      await getStoredGradeKey(
+        record.user_id,
+      )
+
+    if (key === null) {
+      /*
+       * 기존 version 1 데이터는
+       * 해당 브라우저 키 없이는
+       * 복호화할 수 없다.
+       *
+       * migration 기간 동안 기존
+       * 오류 처리 방식을 그대로 유지한다.
+       */
+      return mapCourseRecord(record)
+    }
+
+    letterGrade =
+      await decryptLetterGrade(
+        key,
+        {
+          ciphertext:
+            record
+              .letter_grade_ciphertext!,
+          iv:
+            record.letter_grade_iv!,
+          cryptoVersion:
+            record
+              .letter_grade_crypto_version!,
+        },
+      )
   }
 
-  /*
-   * 여기까지 왔다면:
-   *
-   * letter_grade = "A+"
-   * ciphertext = null
-   *
-   * 형태의 기존 평문 데이터이다.
-   */
-  const key =
-    await getStoredGradeKey(
-      record.user_id,
-    )
+  const isLegacyPlaintextGrade =
+    record.letter_grade !== null &&
+    record.letter_grade_ciphertext ===
+      null &&
+    record.letter_grade_iv === null &&
+    record.letter_grade_crypto_version ===
+      null
 
   /*
-   * 아직 사용자가 암호화 키를
-   * 생성하지 않은 경우에는
-   * 기존 서비스 동작을 유지한다.
+   * migration 대상이 아니면
+   * 일반 CourseRecord로 변환한다.
    *
-   * 키 생성 후 다음 조회 때
-   * 자동으로 migration된다.
+   * 여기에는:
+   * - 성적이 없는 기록
+   * - 서버에서 이미 복호화된 version 2 기록
+   * 이 포함된다.
    */
-  if (key === null) {
+  if (
+    !isLegacyClientEncryptedGrade &&
+    !isLegacyPlaintextGrade
+  ) {
     return mapCourseRecord(record)
   }
 
@@ -356,15 +388,17 @@ async function mapAndMigrateCourseRecord(
       record.status,
 
     /*
-     * 기존 TEXT 성적을 브라우저에서
-     * 암호화하기 위해 입력값으로 전달한다.
+     * version 1이면 브라우저에서
+     * 복호화한 평문 성적,
      *
-     * updateCourseRecord 내부에서는
-     * 서버에 이 값을 평문으로 보내지 않고
-     * AES-GCM 암호문으로 변환한다.
+     * 기존 평문 데이터이면
+     * 원래 letter_grade가 들어간다.
+     *
+     * updateCourseRecord()가 이를
+     * FastAPI에 보내면 서버에서
+     * version 2로 암호화한다.
      */
-    letterGrade:
-      record.letter_grade,
+    letterGrade,
 
     isRetake:
       record.is_retake,
