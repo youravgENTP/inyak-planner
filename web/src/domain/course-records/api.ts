@@ -202,10 +202,10 @@ export async function getCourseRecords():
 
   return Promise.all(
     data.records.map(
-      mapCourseRecord,
+      mapAndMigrateCourseRecord,
     ),
   )
-  }
+}
 
 async function mapCourseRecordInput(
   input: CourseRecordInput,
@@ -294,6 +294,118 @@ async function mapCourseRecordInput(
     note:
       input.note,
   }
+}
+
+// 기존의 TEXT 성적을 찾고, 암호화하는 함수
+
+async function mapAndMigrateCourseRecord(
+  record: CourseRecordApiItem,
+): Promise<CourseRecord> {
+  /*
+   * 이미 암호화된 성적이거나
+   * 애초에 성적이 없는 기록은
+   * 그대로 일반 변환만 수행한다.
+   */
+  if (
+    record.letter_grade === null ||
+    record.letter_grade_ciphertext !==
+      null ||
+    record.letter_grade_iv !== null ||
+    record.letter_grade_crypto_version !==
+      null
+  ) {
+    return mapCourseRecord(record)
+  }
+
+  /*
+   * 여기까지 왔다면:
+   *
+   * letter_grade = "A+"
+   * ciphertext = null
+   *
+   * 형태의 기존 평문 데이터이다.
+   */
+  const key =
+    await getStoredGradeKey(
+      record.user_id,
+    )
+
+  /*
+   * 아직 사용자가 암호화 키를
+   * 생성하지 않은 경우에는
+   * 기존 서비스 동작을 유지한다.
+   *
+   * 키 생성 후 다음 조회 때
+   * 자동으로 migration된다.
+   */
+  if (key === null) {
+    return mapCourseRecord(record)
+  }
+
+  const input: CourseRecordInput = {
+    curriculumCourseId:
+      record.curriculum_course_id,
+
+    lectureId:
+      record.lecture_id,
+
+    generalEducationRequirementId:
+      record
+        .general_education_requirement_id,
+
+    generalEducationAreaId:
+      record.general_education_area_id,
+
+    academicYear:
+      record.academic_year,
+
+    grade:
+      record.grade,
+
+    semester:
+      record.semester,
+
+    term:
+      record.term,
+
+    courseName:
+      record.course_name,
+
+    courseCode:
+      record.course_code,
+
+    completionType:
+      record.completion_type,
+
+    credits:
+      record.credits,
+
+    status:
+      record.status,
+
+    /*
+     * 기존 TEXT 성적을 브라우저에서
+     * 암호화하기 위해 입력값으로 전달한다.
+     *
+     * updateCourseRecord 내부에서는
+     * 서버에 이 값을 평문으로 보내지 않고
+     * AES-GCM 암호문으로 변환한다.
+     */
+    letterGrade:
+      record.letter_grade,
+
+    isRetake:
+      record.is_retake,
+
+    note:
+      record.note,
+  }
+
+  return updateCourseRecord(
+    record.id,
+    input,
+    record.user_id,
+  )
 }
 
 export async function createCourseRecord(
