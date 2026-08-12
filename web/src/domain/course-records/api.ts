@@ -205,6 +205,7 @@ export async function getCourseRecords():
       mapCourseRecord,
     ),
   )
+  }
 
 async function mapCourseRecordInput(
   input: CourseRecordInput,
