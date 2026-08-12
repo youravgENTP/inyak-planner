@@ -132,23 +132,28 @@ function CalendarHalf({
                   month,
                 )
 
-                const monthKey =
-                `${year}-${String(month).padStart(
-                    2,
-                    '0',
-                )}`
-
-                const monthEvents =
+              const monthEvents =
                 events.filter(
-                    (event) =>
+                  (event) =>
                     event.startDate.startsWith(
-                        monthKey,
+                      monthKey,
                     ),
                 )
+
+              const monthKey =
+                `${year}-${String(
+                  month,
+                ).padStart(
+                  2,
+                  '0',
+                )}`
 
               return (
                 <div
                   className="academic-calendar-horizontal-month"
+                  data-event-count={
+                    monthEvents.length
+                  }
                   key={`${year}-${month}`}
                 >
                   <div className="academic-calendar-horizontal-month-label">
@@ -162,7 +167,7 @@ function CalendarHalf({
                   </div>
 
                 <div className="academic-calendar-horizontal-days-wrapper">
-                <div className="academic-calendar-horizontal-days">
+                    <div className="academic-calendar-horizontal-days">
                     {Array.from(
                       {
                         length: 31,
@@ -210,6 +215,7 @@ function CalendarHalf({
                     )}
                   </div>
                 </div>
+              </div>
               )
             },
           )}
@@ -222,6 +228,7 @@ function CalendarHalf({
 
 export function HorizontalAcademicCalendar({
   academicYear,
+  events,
   onAcademicYearChange,
 }: HorizontalAcademicCalendarProps) {
   const [half, setHalf] =
@@ -300,6 +307,7 @@ export function HorizontalAcademicCalendar({
       <CalendarHalf
         title={title}
         months={months}
+        events={events}
       />
     </div>
   )

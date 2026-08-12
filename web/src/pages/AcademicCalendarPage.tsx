@@ -203,6 +203,7 @@ export function AcademicCalendarPage() {
       ) : viewMode === 'horizontal' ? (
         <HorizontalAcademicCalendar
           academicYear={selectedYear}
+          events={calendar.events}
           onAcademicYearChange={
             setSelectedYear
           }
