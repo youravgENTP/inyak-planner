@@ -6,11 +6,6 @@ import type {
   CourseRecordStatus,
 } from './types'
 
-// 성적 암호화 관련 임포트
-import {
-  decryptLetterGrade,
-  getStoredGradeKey,
-} from './crypto'
 
 
 // const API_BASE_URL =
@@ -66,48 +61,10 @@ interface CourseRecordsErrorResponse {
 }
 
 
-// 수정 : 암호문이 있는 경우에만 복호화
+// 수정 : 프론트에서 암호화 방식 자체를 모르도록 재설계
 async function mapCourseRecord(
   record: CourseRecordApiItem,
 ): Promise<CourseRecord> {
-  let letterGrade =
-    record.letter_grade
-
-  const hasEncryptedLetterGrade =
-    record.letter_grade_ciphertext !==
-      null &&
-    record.letter_grade_iv !== null &&
-    record.letter_grade_crypto_version !==
-      null
-
-  if (hasEncryptedLetterGrade) {
-    const key =
-      await getStoredGradeKey(
-        record.user_id,
-      )
-
-    if (key === null) {
-      throw new Error(
-        '이 기기에서 성적 암호화 키를 찾을 수 없습니다. 계정 설정에서 복구 코드를 이용해 성적 암호화 키를 복원해 주세요.',
-      )
-    }
-
-    letterGrade =
-      await decryptLetterGrade(
-        key,
-        {
-          ciphertext:
-            record
-              .letter_grade_ciphertext!,
-          iv:
-            record.letter_grade_iv!,
-          cryptoVersion:
-            record
-              .letter_grade_crypto_version!,
-        },
-      )
-  }
-
   return {
     id: record.id,
     userId: record.user_id,
@@ -138,9 +95,8 @@ async function mapCourseRecord(
       record.credits,
     status:
       record.status,
-
-    letterGrade,
-
+    letterGrade:
+      record.letter_grade,
     isRetake:
       record.is_retake,
     note:
@@ -201,7 +157,7 @@ export async function getCourseRecords():
 
   return Promise.all(
     data.records.map(
-      mapAndMigrateCourseRecord,
+      mapCourseRecord,
     ),
   )
 }
@@ -266,152 +222,6 @@ async function mapCourseRecordInput(
     note:
       input.note,
   }
-}
-
-// 기존의 TEXT 성적을 찾고, 암호화하는 함수
-
-async function mapAndMigrateCourseRecord(
-  record: CourseRecordApiItem,
-): Promise<CourseRecord> {
-  let letterGrade =
-    record.letter_grade
-
-  const isLegacyClientEncryptedGrade =
-    record.letter_grade_ciphertext !==
-      null &&
-    record.letter_grade_iv !== null &&
-    record.letter_grade_crypto_version ===
-      1
-
-  /*
-   * 기존 version 1 성적이라면
-   * 현재 브라우저에 저장된 기존 키로
-   * 한 번 복호화한다.
-   */
-  if (isLegacyClientEncryptedGrade) {
-    const key =
-      await getStoredGradeKey(
-        record.user_id,
-      )
-
-    if (key === null) {
-      /*
-       * 기존 version 1 데이터는
-       * 해당 브라우저 키 없이는
-       * 복호화할 수 없다.
-       *
-       * migration 기간 동안 기존
-       * 오류 처리 방식을 그대로 유지한다.
-       */
-      return mapCourseRecord(record)
-    }
-
-    letterGrade =
-      await decryptLetterGrade(
-        key,
-        {
-          ciphertext:
-            record
-              .letter_grade_ciphertext!,
-          iv:
-            record.letter_grade_iv!,
-          cryptoVersion:
-            record
-              .letter_grade_crypto_version!,
-        },
-      )
-  }
-
-  const isLegacyPlaintextGrade =
-    record.letter_grade !== null &&
-    record.letter_grade_ciphertext ===
-      null &&
-    record.letter_grade_iv === null &&
-    record.letter_grade_crypto_version ===
-      null
-
-  /*
-   * migration 대상이 아니면
-   * 일반 CourseRecord로 변환한다.
-   *
-   * 여기에는:
-   * - 성적이 없는 기록
-   * - 서버에서 이미 복호화된 version 2 기록
-   * 이 포함된다.
-   */
-  if (
-    !isLegacyClientEncryptedGrade &&
-    !isLegacyPlaintextGrade
-  ) {
-    return mapCourseRecord(record)
-  }
-
-  const input: CourseRecordInput = {
-    curriculumCourseId:
-      record.curriculum_course_id,
-
-    lectureId:
-      record.lecture_id,
-
-    generalEducationRequirementId:
-      record
-        .general_education_requirement_id,
-
-    generalEducationAreaId:
-      record.general_education_area_id,
-
-    academicYear:
-      record.academic_year,
-
-    grade:
-      record.grade,
-
-    semester:
-      record.semester,
-
-    term:
-      record.term,
-
-    courseName:
-      record.course_name,
-
-    courseCode:
-      record.course_code,
-
-    completionType:
-      record.completion_type,
-
-    credits:
-      record.credits,
-
-    status:
-      record.status,
-
-    /*
-     * version 1이면 브라우저에서
-     * 복호화한 평문 성적,
-     *
-     * 기존 평문 데이터이면
-     * 원래 letter_grade가 들어간다.
-     *
-     * updateCourseRecord()가 이를
-     * FastAPI에 보내면 서버에서
-     * version 2로 암호화한다.
-     */
-    letterGrade,
-
-    isRetake:
-      record.is_retake,
-
-    note:
-      record.note,
-  }
-
-  return updateCourseRecord(
-    record.id,
-    input,
-    record.user_id,
-  )
 }
 
 export async function createCourseRecord(
