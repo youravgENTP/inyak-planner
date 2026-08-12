@@ -132,14 +132,6 @@ function CalendarHalf({
                   month,
                 )
 
-              const monthEvents =
-                events.filter(
-                  (event) =>
-                    event.startDate.startsWith(
-                      monthKey,
-                    ),
-                )
-
               const monthKey =
                 `${year}-${String(
                   month,
@@ -147,6 +139,14 @@ function CalendarHalf({
                   2,
                   '0',
                 )}`
+
+              const monthEvents =
+                events.filter(
+                  (event) =>
+                    event.startDate.startsWith(
+                      monthKey,
+                    ),
+                )
 
               return (
                 <div
