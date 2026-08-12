@@ -383,14 +383,76 @@ function CalendarHalf({
                       lane,
                     }
                   })
-              const laneCount =
-                laneEndDays.length
+              const laneHeights =
+                Array.from(
+                  {
+                    length:
+                      laneEndDays.length,
+                  },
+                  () => 24,
+                )
+
+              positionedMonthEvents.forEach(
+                ({
+                  event,
+                  lane,
+                }) => {
+                  const isSingleDay =
+                    event.startDate ===
+                    event.endDate
+
+                  const displayHeight =
+                    isSingleDay
+                      ? Math.max(
+                          24,
+                          Math.max(
+                            ...splitSingleDayEventTitle(
+                              event.title,
+                            ).map(
+                              (titlePart) =>
+                                titlePart.replace(
+                                  /\s/g,
+                                  '',
+                                ).length,
+                            ),
+                          ) *
+                            10 +
+                            4,
+                        )
+                      : 24
+
+                  laneHeights[lane] =
+                    Math.max(
+                      laneHeights[lane],
+                      displayHeight,
+                    )
+                },
+              )
+
+              const laneGap = 4
+
+              const eventAreaHeight =
+                laneHeights.reduce(
+                  (
+                    totalHeight,
+                    laneHeight,
+                  ) =>
+                    totalHeight +
+                    laneHeight,
+                  0,
+                ) +
+                Math.max(
+                  0,
+                  laneHeights.length -
+                    1,
+                ) *
+                  laneGap
 
               const monthRowHeight =
                 Math.max(
                   132,
-                  84 +
-                    laneCount * 32,
+                  56 +
+                    eventAreaHeight,
                 )
 
               return (
@@ -476,7 +538,18 @@ function CalendarHalf({
                       )}
                     </div>
 
-                    <div className="academic-calendar-horizontal-events">
+                    <div
+                      className="academic-calendar-horizontal-events"
+                      style={{
+                        gridTemplateRows:
+                          laneHeights
+                            .map(
+                              (height) =>
+                                `${height}px`,
+                            )
+                            .join(' '),
+                      }}
+                    >
                       {positionedMonthEvents.map(
                         (
                           {

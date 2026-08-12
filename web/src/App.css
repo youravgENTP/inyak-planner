@@ -2237,7 +2237,7 @@ h1 {
 
 .academic-calendar-horizontal-event--single {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   justify-self: center;
