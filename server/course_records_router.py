@@ -26,6 +26,7 @@ from server.auth_router import (
 )
 
 from server.grade_crypto import (
+    decrypt_letter_grade,
     encrypt_letter_grade,
 )
 
@@ -582,6 +583,73 @@ def validate_course_record_request(
             ),
         )
 
+def serialize_course_record(
+    record: dict[str, Any],
+) -> dict[str, Any]:
+    """
+    DB 수강기록을 API 응답 형태로 변환한다.
+
+    version 1은 기존 브라우저 암호화 데이터이므로
+    전환 기간 동안 그대로 클라이언트에 전달한다.
+
+    version 2는 서버 암호화 데이터이므로
+    FastAPI에서 복호화하고 평문 성적만 응답한다.
+    """
+    response_record = dict(record)
+
+    crypto_version = (
+        response_record.get(
+            "letter_grade_crypto_version"
+        )
+    )
+
+    if crypto_version != 2:
+        return response_record
+
+    ciphertext = response_record.get(
+        "letter_grade_ciphertext"
+    )
+
+    iv = response_record.get(
+        "letter_grade_iv"
+    )
+
+    if (
+        not isinstance(ciphertext, str)
+        or not isinstance(iv, str)
+    ):
+        raise RuntimeError(
+            "서버 암호화 성적 데이터가 "
+            "올바르지 않습니다."
+        )
+
+    letter_grade = (
+        decrypt_letter_grade(
+            ciphertext=ciphertext,
+            iv=iv,
+            crypto_version=crypto_version,
+        )
+    )
+
+    response_record["letter_grade"] = (
+        letter_grade
+    )
+
+    response_record[
+        "letter_grade_ciphertext"
+    ] = None
+
+    response_record[
+        "letter_grade_iv"
+    ] = None
+
+    response_record[
+        "letter_grade_crypto_version"
+    ] = None
+
+    return response_record
+
+
 @router.get("")
 def read_course_records(
     session_token: Optional[str] = Cookie(
@@ -600,9 +668,13 @@ def read_course_records(
 
     return {
         "count": len(records),
-        "records": records,
+        "records": [
+            serialize_course_record(
+                record
+            )
+            for record in records
+        ],
     }
-
 
 @router.post(
     "",
@@ -632,7 +704,10 @@ def create_course_record(
     )
 
     return {
-        "record": record,
+        "record": 
+            serialize_course_record(
+                record
+            ),
     }
 
 
@@ -671,7 +746,10 @@ def update_course_record(
         )
 
     return {
-        "record": record,
+        "record": 
+            serialize_course_record(
+                record
+            ),
     }
 
 
