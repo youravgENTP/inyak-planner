@@ -2091,7 +2091,7 @@ h1 {
 
   overflow-x: auto;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid #b8c5d3;
   border-radius: 10px;
   background: #ffffff;
 }
@@ -2104,7 +2104,7 @@ h1 {
   display: grid;
   grid-template-columns: 120px 1fr;
   min-height: 72px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #aebdcd;
 }
 
 .academic-calendar-horizontal-month:last-child {
@@ -2116,7 +2116,7 @@ h1 {
   align-items: center;
   gap: 8px;
   padding: 0 14px;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #b8c5d3;
   background: #fafafa;
 }
 
@@ -2148,7 +2148,7 @@ h1 {
   min-height: 88px;
   padding-top: 4px;
 
-  border-right: 1px solid #eef0f3;
+  border-right: 1px solid #cfd8e3;
 
   color: #183b64;
   font-variant-numeric: tabular-nums;
@@ -2325,7 +2325,7 @@ h1 {
   margin: 0 6px;
   padding: 4px 8px;
 
-  border-radius: 7px;
+  border-radius: 3px;
 
   background: #214d7b;
   color: #ffffff;
