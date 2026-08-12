@@ -1,3 +1,7 @@
+import {
+  useState,
+} from 'react'
+
 interface HorizontalAcademicCalendarProps {
   academicYear: number
 }
@@ -194,24 +198,53 @@ function CalendarHalf({
 export function HorizontalAcademicCalendar({
   academicYear,
 }: HorizontalAcademicCalendarProps) {
+  const [half, setHalf] =
+    useState<'front' | 'back'>(
+      'front',
+    )
+
+  const months =
+    half === 'front'
+      ? getFrontHalfMonths(
+          academicYear,
+        )
+      : getBackHalfMonths(
+          academicYear,
+        )
+
+  const title =
+    half === 'front'
+      ? `${academicYear}학년도 상반기`
+      : `${academicYear}학년도 하반기`
+
   return (
     <div className="academic-calendar-horizontal">
-      <CalendarHalf
-        title={`${academicYear}학년도 전반기`}
-        months={
-          getFrontHalfMonths(
-            academicYear,
-          )
-        }
-      />
+      <div className="academic-calendar-horizontal-controls">
+        <label>
+          <select
+            value={half}
+            onChange={(event) =>
+              setHalf(
+                event.target.value as
+                  | 'front'
+                  | 'back',
+              )
+            }
+          >
+            <option value="front">
+              상반기
+            </option>
+
+            <option value="back">
+              하반기
+            </option>
+          </select>
+        </label>
+      </div>
 
       <CalendarHalf
-        title={`${academicYear}학년도 후반기`}
-        months={
-          getBackHalfMonths(
-            academicYear,
-          )
-        }
+        title={title}
+        months={months}
       />
     </div>
   )

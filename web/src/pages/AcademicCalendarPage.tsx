@@ -147,33 +147,34 @@ export function AcademicCalendarPage() {
         <h1>학사일정</h1>
 
         <div className="academic-calendar-year-control">
-          <button
-            type="button"
-            aria-label="이전 연도"
-            onClick={() =>
+          <select
+            value={selectedYear}
+            onChange={(event) =>
               setSelectedYear(
-                (year) => year - 1,
+                Number(
+                  event.target.value,
+                ),
               )
             }
           >
-            ‹
-          </button>
+            {[
+              2024,
+              2025,
+              2026,
+              2027,
+            ].map((year) => (
+              <option
+                key={year}
+                value={year}
+              >
+                {year}
+              </option>
+            ))}
+          </select>
 
-          <strong>
-            {selectedYear}학년도
-          </strong>
-
-          <button
-            type="button"
-            aria-label="다음 연도"
-            onClick={() =>
-              setSelectedYear(
-                (year) => year + 1,
-              )
-            }
-          >
-            ›
-          </button>
+          <span>
+            학년도
+          </span>
         </div>
       </header>
 

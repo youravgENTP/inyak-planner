@@ -1922,21 +1922,19 @@ h1 {
   gap: 14px;
 }
 
-.academic-calendar-year-control button {
-  width: 36px;
-  height: 36px;
+.academic-calendar-year-control select {
+  height: 40px;
+  padding: 0 34px 0 12px;
   border: 1px solid #d7dce3;
   border-radius: 8px;
   background: #ffffff;
-  cursor: pointer;
-  font-size: 20px;
-  line-height: 1;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.academic-calendar-year-control strong {
-  min-width: 96px;
-  text-align: center;
+.academic-calendar-year-control span {
   font-size: 16px;
+  font-weight: 600;
 }
 
 .academic-calendar-message {
@@ -2155,4 +2153,20 @@ h1 {
 .academic-calendar-horizontal-day--empty {
   background: #fafafa;
   color: transparent;
+}
+
+.academic-calendar-horizontal-controls {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.academic-calendar-horizontal-controls select {
+  height: 40px;
+  padding: 0 34px 0 12px;
+  border: 1px solid #d7dce3;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
 }
