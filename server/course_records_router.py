@@ -108,10 +108,29 @@ class CourseRecordRequest(BaseModel):
         le=30,
     )
     status: CourseRecordStatus
+
+    # 기존 평문 성적.
+    # 암호화 전환 기간 동안에만 유지한다.
     letter_grade: Optional[str] = Field(
         default=None,
         max_length=10,
     )
+
+    # 브라우저에서 AES-GCM으로 암호화한 성적.
+    letter_grade_ciphertext: Optional[str] = Field(
+        default=None,
+        max_length=4096,
+    )
+    letter_grade_iv: Optional[str] = Field(
+        default=None,
+        max_length=256,
+    )
+    letter_grade_crypto_version: Optional[int] = Field(
+        default=None,
+        ge=1,
+        le=1,
+    )
+
     is_retake: bool = False
     note: Optional[str] = Field(
         default=None,
@@ -179,6 +198,16 @@ def get_request_values(
             normalize_optional_text(
                 request.letter_grade
             ),
+        "letter_grade_ciphertext":
+            normalize_optional_text(
+                request.letter_grade_ciphertext
+            ),
+        "letter_grade_iv":
+            normalize_optional_text(
+                request.letter_grade_iv
+            ),
+        "letter_grade_crypto_version":
+            request.letter_grade_crypto_version,
         "is_retake":
             request.is_retake,
         "note":
@@ -207,6 +236,46 @@ def validate_course_record_request(
     공식 요건 ID는 대체 인정 등 명시적인
     연결이 필요한 경우에만 사용한다.
     """
+    encrypted_grade_values = (
+        request.letter_grade_ciphertext,
+        request.letter_grade_iv,
+        request.letter_grade_crypto_version,
+    )
+
+    has_any_encrypted_grade_value = any(
+        value is not None
+        for value in encrypted_grade_values
+    )
+
+    has_all_encrypted_grade_values = all(
+        value is not None
+        for value in encrypted_grade_values
+    )
+
+    if (
+        has_any_encrypted_grade_value
+        and not has_all_encrypted_grade_values
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "암호화된 성적을 저장하려면 "
+                "ciphertext, IV, crypto version을 "
+                "모두 전달해야 합니다."
+            ),
+        )
+
+    if (
+        request.letter_grade is not None
+        and has_any_encrypted_grade_value
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "평문 성적과 암호화된 성적을 "
+                "동시에 저장할 수 없습니다."
+            ),
+        )
     entry_year = user.get("entry_year")
     student_type = user.get(
         "student_type"

@@ -445,6 +445,9 @@ def create_user_course_record(
     credits: float,
     status: str,
     letter_grade: str | None,
+    letter_grade_ciphertext: str | None,
+    letter_grade_iv: str | None,
+    letter_grade_crypto_version: int | None,
     is_retake: bool,
     note: str | None,
 ) -> dict[str, Any]:
@@ -472,14 +475,19 @@ def create_user_course_record(
                 credits,
                 status,
                 letter_grade,
+                letter_grade_ciphertext,
+                letter_grade_iv,
+                letter_grade_crypto_version,
                 is_retake,
+                note,
                 note,
                 created_at,
                 updated_at
             )
             VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s
             )
             """,
             (
@@ -503,6 +511,9 @@ def create_user_course_record(
                 credits,
                 status,
                 letter_grade,
+                letter_grade_ciphertext,
+                letter_grade_iv,
+                letter_grade_crypto_version,
                 is_retake,
                 (
                     note.strip()
@@ -548,6 +559,12 @@ def create_user_course_record(
             status,
         "letter_grade":
             letter_grade,
+        "letter_grade_ciphertext":
+            letter_grade_ciphertext,
+        "letter_grade_iv":
+            letter_grade_iv,
+        "letter_grade_crypto_version":
+            letter_grade_crypto_version,
         "is_retake":
             is_retake,
         "note": (
@@ -587,6 +604,9 @@ def get_user_course_records(
                 credits,
                 status,
                 letter_grade,
+                letter_grade_ciphertext,
+                letter_grade_iv,
+                letter_grade_crypto_version,
                 is_retake,
                 note,
                 created_at,
@@ -636,6 +656,9 @@ def update_user_course_record(
     credits: float,
     status: str,
     letter_grade: str | None,
+    letter_grade_ciphertext: str | None,
+    letter_grade_iv: str | None,
+    letter_grade_crypto_version: int | None,
     is_retake: bool,
     note: str | None,
 ) -> dict[str, Any] | None:
@@ -661,6 +684,9 @@ def update_user_course_record(
                 credits = %s,
                 status = %s,
                 letter_grade = %s,
+                letter_grade_ciphertext = %s,
+                letter_grade_iv = %s,
+                letter_grade_crypto_version = %s,
                 is_retake = %s,
                 note = %s,
                 updated_at = %s
@@ -686,6 +712,9 @@ def update_user_course_record(
                 credits,
                 status,
                 letter_grade,
+                letter_grade_ciphertext,
+                letter_grade_iv,
+                letter_grade_crypto_version,
                 is_retake,
                 (
                     note.strip()
@@ -720,6 +749,9 @@ def update_user_course_record(
                 credits,
                 status,
                 letter_grade,
+                letter_grade_ciphertext,
+                letter_grade_iv,
+                letter_grade_crypto_version,
                 is_retake,
                 note,
                 created_at,
