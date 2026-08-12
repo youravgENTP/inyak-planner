@@ -1,16 +1,32 @@
-import {
-  useState,
+import type {
+  RefObject,
 } from 'react'
 
 import type {
   AcademicCalendarEvent,
 } from '../../domain/academic-calendar/types'
 
+export type AcademicCalendarHalf =
+  | 'front'
+  | 'back'
+
 interface HorizontalAcademicCalendarProps {
   academicYear: number
   events: AcademicCalendarEvent[]
+
+  half:
+    AcademicCalendarHalf
+
+  calendarRef:
+    RefObject<HTMLElement | null>
+
   onAcademicYearChange: (
     year: number,
+  ) => void
+
+  onHalfChange: (
+    half:
+      AcademicCalendarHalf,
   ) => void
 }
 
@@ -373,10 +389,14 @@ function CalendarHalf({
   title,
   months,
   events,
+  calendarRef,
 }: {
   title: string
   months: CalendarMonth[]
   events: AcademicCalendarEvent[]
+
+  calendarRef:
+    RefObject<HTMLElement | null>
 }) {
   const monthLayouts =
     months.map(
@@ -746,7 +766,10 @@ function CalendarHalf({
     )
 
   return (
-    <section className="academic-calendar-horizontal-half">
+    <section
+      className="academic-calendar-horizontal-half"
+      ref={calendarRef}
+    >
       <h2>
         {title}
       </h2>
@@ -979,13 +1002,11 @@ function CalendarHalf({
 export function HorizontalAcademicCalendar({
   academicYear,
   events,
+  half,
+  calendarRef,
   onAcademicYearChange,
+  onHalfChange,
 }: HorizontalAcademicCalendarProps) {
-  const [half, setHalf] =
-    useState<'front' | 'back'>(
-      'front',
-    )
-
   const months =
     half === 'front'
       ? getFrontHalfMonths(
@@ -1037,10 +1058,9 @@ export function HorizontalAcademicCalendar({
         <select
           value={half}
           onChange={(event) =>
-            setHalf(
+            onHalfChange(
               event.target.value as
-                | 'front'
-                | 'back',
+                AcademicCalendarHalf,
             )
           }
         >
@@ -1058,6 +1078,7 @@ export function HorizontalAcademicCalendar({
         title={title}
         months={months}
         events={events}
+        calendarRef={calendarRef}
       />
     </div>
   )

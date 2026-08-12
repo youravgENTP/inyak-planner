@@ -1,6 +1,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 
@@ -9,7 +10,12 @@ import {
 } from '../domain/academic-calendar/api'
 
 import {
+  downloadAcademicCalendarPdf,
+} from '../domain/academic-calendar/pdf'
+
+import {
   HorizontalAcademicCalendar,
+  type AcademicCalendarHalf,
 } from '../components/academic-calendar/HorizontalAcademicCalendar'
 
 import type {
@@ -57,6 +63,25 @@ export function AcademicCalendarPage() {
   const [viewMode, setViewMode] =
     useState<'list' | 'horizontal'>(
       'list',
+    )
+
+  const [
+    selectedHalf,
+    setSelectedHalf,
+  ] =
+    useState<AcademicCalendarHalf>(
+      'front',
+    )
+
+  const [
+    isDownloadingPdf,
+    setIsDownloadingPdf,
+  ] =
+    useState(false)
+
+  const calendarPdfRef =
+    useRef<HTMLElement | null>(
+      null,
     )
 
   const [calendar, setCalendar] =
@@ -141,6 +166,33 @@ export function AcademicCalendarPage() {
     return grouped
   }, [calendar])
 
+  async function handlePdfDownload() {
+    if (
+      calendarPdfRef.current ===
+      null
+    ) {
+      return
+    }
+
+    setIsDownloadingPdf(true)
+
+    try {
+      await downloadAcademicCalendarPdf(
+        calendarPdfRef.current,
+        selectedYear,
+        selectedHalf,
+      )
+    } catch (error) {
+      window.alert(
+        error instanceof Error
+          ? error.message
+          : 'PDF를 생성하지 못했습니다.',
+      )
+    } finally {
+      setIsDownloadingPdf(false)
+    }
+  }
+
   return (
     <section className="academic-calendar-page">
       <header className="academic-calendar-header">
@@ -185,10 +237,20 @@ export function AcademicCalendarPage() {
         <button
           className="academic-calendar-pdf-button"
           type="button"
-          disabled
-          title="PDF 다운로드 기능 준비 중"
+          disabled={
+            viewMode !==
+              'horizontal' ||
+            isLoading ||
+            calendar === null ||
+            isDownloadingPdf
+          }
+          onClick={() => {
+            void handlePdfDownload()
+          }}
         >
-          PDF 다운로드
+          {isDownloadingPdf
+            ? 'PDF 생성 중...'
+            : 'PDF 다운로드'}
         </button>
       </div>
 
@@ -204,8 +266,15 @@ export function AcademicCalendarPage() {
         <HorizontalAcademicCalendar
           academicYear={selectedYear}
           events={calendar.events}
+          half={selectedHalf}
+          calendarRef={
+            calendarPdfRef
+          }
           onAcademicYearChange={
             setSelectedYear
+          }
+          onHalfChange={
+            setSelectedHalf
           }
         />
       ) : (

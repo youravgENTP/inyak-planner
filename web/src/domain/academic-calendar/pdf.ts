@@ -109,14 +109,16 @@ function addImageToPdfPage(
 
 
 export async function downloadAcademicCalendarPdf(
-  elements: HTMLElement[],
+  element: HTMLElement,
   academicYear: number,
+  half:
+    | 'front'
+    | 'back',
 ): Promise<void> {
-  if (elements.length === 0) {
-    throw new Error(
-      'PDF로 저장할 학사일정을 찾지 못했습니다.',
+  const imageDataUrl =
+    await renderElementToPng(
+      element,
     )
-  }
 
   const pdf =
     new jsPDF({
@@ -127,35 +129,19 @@ export async function downloadAcademicCalendarPdf(
       compress: true,
     })
 
-  for (
-    let index = 0;
-    index < elements.length;
-    index += 1
-  ) {
-    const element =
-      elements[index]
+  addImageToPdfPage(
+    pdf,
+    imageDataUrl,
+    element.scrollWidth,
+    element.scrollHeight,
+  )
 
-    const imageDataUrl =
-      await renderElementToPng(
-        element,
-      )
-
-    if (index > 0) {
-      pdf.addPage(
-        'a4',
-        'landscape',
-      )
-    }
-
-    addImageToPdfPage(
-      pdf,
-      imageDataUrl,
-      element.scrollWidth,
-      element.scrollHeight,
-    )
-  }
+  const halfLabel =
+    half === 'front'
+      ? '상반기'
+      : '하반기'
 
   pdf.save(
-    `${academicYear}학년도_학사일정.pdf`,
+    `${academicYear}학년도_${halfLabel}_학사일정.pdf`,
   )
 }
