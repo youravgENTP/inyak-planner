@@ -444,7 +444,6 @@ def create_user_course_record(
     completion_type: str,
     credits: float,
     status: str,
-    letter_grade: str | None,
     letter_grade_ciphertext: str | None,
     letter_grade_iv: str | None,
     letter_grade_crypto_version: int | None,
@@ -474,7 +473,6 @@ def create_user_course_record(
                 completion_type,
                 credits,
                 status,
-                letter_grade,
                 letter_grade_ciphertext,
                 letter_grade_iv,
                 letter_grade_crypto_version,
@@ -486,7 +484,7 @@ def create_user_course_record(
             VALUES (
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                %s, %s, %s
+                %s, %s
             )
             """,
             (
@@ -509,7 +507,6 @@ def create_user_course_record(
                 completion_type,
                 credits,
                 status,
-                letter_grade,
                 letter_grade_ciphertext,
                 letter_grade_iv,
                 letter_grade_crypto_version,
@@ -556,8 +553,6 @@ def create_user_course_record(
             credits,
         "status":
             status,
-        "letter_grade":
-            letter_grade,
         "letter_grade_ciphertext":
             letter_grade_ciphertext,
         "letter_grade_iv":
@@ -602,7 +597,6 @@ def get_user_course_records(
                 completion_type,
                 credits,
                 status,
-                letter_grade,
                 letter_grade_ciphertext,
                 letter_grade_iv,
                 letter_grade_crypto_version,
@@ -654,7 +648,6 @@ def update_user_course_record(
     completion_type: str,
     credits: float,
     status: str,
-    letter_grade: str | None,
     letter_grade_ciphertext: str | None,
     letter_grade_iv: str | None,
     letter_grade_crypto_version: int | None,
@@ -682,7 +675,6 @@ def update_user_course_record(
                 completion_type = %s,
                 credits = %s,
                 status = %s,
-                letter_grade = %s,
                 letter_grade_ciphertext = %s,
                 letter_grade_iv = %s,
                 letter_grade_crypto_version = %s,
@@ -710,7 +702,6 @@ def update_user_course_record(
                 completion_type,
                 credits,
                 status,
-                letter_grade,
                 letter_grade_ciphertext,
                 letter_grade_iv,
                 letter_grade_crypto_version,
@@ -747,7 +738,6 @@ def update_user_course_record(
                 completion_type,
                 credits,
                 status,
-                letter_grade,
                 letter_grade_ciphertext,
                 letter_grade_iv,
                 letter_grade_crypto_version,

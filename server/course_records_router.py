@@ -220,8 +220,6 @@ def get_request_values(
             request.credits,
         "status":
             request.status,
-        "letter_grade":
-            None,
         "letter_grade_ciphertext":
             letter_grade_ciphertext,
         "letter_grade_iv":
@@ -512,13 +510,15 @@ def serialize_course_record(
     """
     DB 수강기록을 API 응답 형태로 변환한다.
 
-    version 1은 기존 브라우저 암호화 데이터이므로
-    전환 기간 동안 그대로 클라이언트에 전달한다.
+    성적이 없는 기록은 letter_grade를
+    None으로 반환한다.
 
-    version 2는 서버 암호화 데이터이므로
-    FastAPI에서 복호화하고 평문 성적만 응답한다.
+    version 2 암호화 성적은 서버에서
+    복호화한 뒤 평문 성적만 API 응답에 포함한다.
     """
     response_record = dict(record)
+
+    response_record["letter_grade"] = None
 
     crypto_version = (
         response_record.get(
@@ -526,8 +526,14 @@ def serialize_course_record(
         )
     )
 
-    if crypto_version != 2:
+    if crypto_version is None:
         return response_record
+
+    if crypto_version != 2:
+        raise RuntimeError(
+            "지원하지 않는 성적 암호화 "
+            "버전입니다."
+        )
 
     ciphertext = response_record.get(
         "letter_grade_ciphertext"
@@ -546,12 +552,10 @@ def serialize_course_record(
             "올바르지 않습니다."
         )
 
-    letter_grade = (
-        decrypt_letter_grade(
-            ciphertext=ciphertext,
-            iv=iv,
-            crypto_version=crypto_version,
-        )
+    letter_grade = decrypt_letter_grade(
+        ciphertext=ciphertext,
+        iv=iv,
+        crypto_version=crypto_version,
     )
 
     response_record["letter_grade"] = (
@@ -571,7 +575,6 @@ def serialize_course_record(
     ] = None
 
     return response_record
-
 
 @router.get("")
 def read_course_records(
