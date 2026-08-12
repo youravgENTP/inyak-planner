@@ -69,6 +69,142 @@ function getWeekdayLabel(
   ][weekday]
 }
 
+function splitSingleDayEventTitle(
+  title: string,
+): string[] {
+  const normalizedTitle =
+    title.trim()
+
+  const compactLength =
+    normalizedTitle.replace(
+      /\s/g,
+      '',
+    ).length
+
+  if (compactLength <= 8) {
+    return [
+      normalizedTitle,
+    ]
+  }
+
+  const parenthesisIndex =
+    normalizedTitle.indexOf('(')
+
+  if (parenthesisIndex > 0) {
+    const firstPart =
+      normalizedTitle
+        .slice(
+          0,
+          parenthesisIndex,
+        )
+        .trim()
+
+    const secondPart =
+      normalizedTitle
+        .slice(
+          parenthesisIndex,
+        )
+        .trim()
+
+    if (
+      firstPart.length > 0 &&
+      secondPart.length > 0
+    ) {
+      return [
+        firstPart,
+        secondPart,
+      ]
+    }
+  }
+
+  const words =
+    normalizedTitle
+      .split(/\s+/)
+      .filter(Boolean)
+
+  if (words.length > 1) {
+    let bestSplitIndex = 1
+    let smallestDifference =
+      Number.POSITIVE_INFINITY
+
+    for (
+      let index = 1;
+      index < words.length;
+      index += 1
+    ) {
+      const firstPart =
+        words
+          .slice(
+            0,
+            index,
+          )
+          .join(' ')
+
+      const secondPart =
+        words
+          .slice(index)
+          .join(' ')
+
+      const firstLength =
+        firstPart.replace(
+          /\s/g,
+          '',
+        ).length
+
+      const secondLength =
+        secondPart.replace(
+          /\s/g,
+          '',
+        ).length
+
+      const difference =
+        Math.abs(
+          firstLength -
+            secondLength,
+        )
+
+      if (
+        difference <
+        smallestDifference
+      ) {
+        smallestDifference =
+          difference
+        bestSplitIndex =
+          index
+      }
+    }
+
+    return [
+      words
+        .slice(
+          0,
+          bestSplitIndex,
+        )
+        .join(' '),
+      words
+        .slice(
+          bestSplitIndex,
+        )
+        .join(' '),
+    ]
+  }
+
+  const middleIndex =
+    Math.ceil(
+      normalizedTitle.length / 2,
+    )
+
+  return [
+    normalizedTitle.slice(
+      0,
+      middleIndex,
+    ),
+    normalizedTitle.slice(
+      middleIndex,
+    ),
+  ]
+}
+
 function getFrontHalfMonths(
   academicYear: number,
 ): CalendarMonth[] {
@@ -355,6 +491,13 @@ function CalendarHalf({
                             event.startDate ===
                             event.endDate
 
+                          const singleDayTitleParts =
+                            isSingleDay
+                              ? splitSingleDayEventTitle(
+                                  event.title,
+                                )
+                              : []
+
                           return (
                             <div
                               className={[
@@ -378,7 +521,24 @@ function CalendarHalf({
                               }}
                               title={event.title}
                             >
-                              {event.title}
+                              {isSingleDay
+                                ? singleDayTitleParts.map(
+                                    (
+                                      titlePart,
+                                      partIndex,
+                                    ) => (
+                                      <span
+                                        className="academic-calendar-horizontal-event-single-column"
+                                        key={
+                                          `${titlePart}-` +
+                                          `${partIndex}`
+                                        }
+                                      >
+                                        {titlePart}
+                                      </span>
+                                    ),
+                                  )
+                                : event.title}
                             </div>
                           )
                         },

@@ -2236,7 +2236,12 @@ h1 {
 }
 
 .academic-calendar-horizontal-event--single {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  justify-content: center;
   justify-self: center;
+  gap: 3px;
 
   overflow: visible;
 
@@ -2245,12 +2250,13 @@ h1 {
 
   background: transparent;
 
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
+}
 
-  white-space: normal;
+.academic-calendar-horizontal-event-single-column {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
 }
