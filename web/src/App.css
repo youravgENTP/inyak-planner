@@ -2133,13 +2133,17 @@ h1 {
 
 .academic-calendar-horizontal-day {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 72px;
-  padding-top: 7px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+
+  min-height: 88px;
+  padding-top: 4px;
+
   border-right: 1px solid #eef0f3;
-  color: #4b5563;
-  font-size: 11px;
+
+  color: #183b64;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2190,7 +2194,7 @@ h1 {
 
 .academic-calendar-horizontal-events {
   position: absolute;
-  top: 30px;
+  top: 48px;
   right: 0;
   left: 0;
 

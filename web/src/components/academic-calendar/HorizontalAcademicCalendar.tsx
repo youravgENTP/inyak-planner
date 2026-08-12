@@ -47,6 +47,27 @@ function isWeekend(
   return weekday === 0 || weekday === 6
 }
 
+function getWeekdayLabel(
+  year: number,
+  month: number,
+  day: number,
+): string {
+  const weekday = new Date(
+    year,
+    month - 1,
+    day,
+  ).getDay()
+
+  return [
+    '일',
+    '월',
+    '화',
+    '수',
+    '목',
+    '금',
+    '토',
+  ][weekday]
+}
 
 function getFrontHalfMonths(
   academicYear: number,
@@ -231,8 +252,8 @@ function CalendarHalf({
 
               const monthRowHeight =
                 Math.max(
-                  72,
-                  42 +
+                  88,
+                  58 +
                     laneCount * 30,
                 )
 
@@ -298,9 +319,21 @@ function CalendarHalf({
                                 .join(' ')}
                               key={day}
                             >
-                              {exists
-                                ? day
-                                : ''}
+                              {exists ? (
+                                <>
+                                  <span className="academic-calendar-horizontal-day-number">
+                                    {day}
+                                  </span>
+
+                                  <span className="academic-calendar-horizontal-day-weekday">
+                                    {getWeekdayLabel(
+                                      year,
+                                      month,
+                                      day,
+                                    )}
+                                  </span>
+                                </>
+                              ) : null}
                             </div>
                           )
                         },
