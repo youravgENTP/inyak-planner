@@ -2128,6 +2128,7 @@ h1 {
     31,
     minmax(32px, 1fr)
   );
+  height: 100%;
 }
 
 .academic-calendar-horizontal-day {
@@ -2189,8 +2190,8 @@ h1 {
 
 .academic-calendar-horizontal-events {
   position: absolute;
+  top: 30px;
   right: 0;
-  bottom: 8px;
   left: 0;
 
   display: grid;
@@ -2198,6 +2199,7 @@ h1 {
     31,
     minmax(32px, 1fr)
   );
+  row-gap: 4px;
 
   pointer-events: none;
 }

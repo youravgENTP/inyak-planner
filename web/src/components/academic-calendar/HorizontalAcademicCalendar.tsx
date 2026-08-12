@@ -226,6 +226,15 @@ function CalendarHalf({
                       lane,
                     }
                   })
+              const laneCount =
+                laneEndDays.length
+
+              const monthRowHeight =
+                Math.max(
+                  72,
+                  42 +
+                    laneCount * 30,
+                )
 
               return (
                 <div
@@ -234,6 +243,10 @@ function CalendarHalf({
                     monthEvents.length
                   }
                   key={`${year}-${month}`}
+                  style={{
+                    minHeight:
+                      `${monthRowHeight}px`,
+                  }}
                 >
                   <div className="academic-calendar-horizontal-month-label">
                     <span className="academic-calendar-horizontal-year">
