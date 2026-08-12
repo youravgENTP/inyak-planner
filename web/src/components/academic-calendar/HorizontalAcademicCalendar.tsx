@@ -243,6 +243,77 @@ function splitSingleDayEventTitle(
   ]
 }
 
+function getSingleDayTitleParts(
+  displayTitles: string[],
+): string[][] {
+  if (displayTitles.length === 1) {
+    return [
+      splitSingleDayEventTitle(
+        displayTitles[0],
+      ),
+    ]
+  }
+
+  if (displayTitles.length === 2) {
+    const splitTitles =
+      displayTitles.map(
+        (title) =>
+          splitSingleDayEventTitle(
+            title,
+          ),
+      )
+
+    const totalColumnCount =
+      splitTitles.reduce(
+        (
+          columnCount,
+          titleParts,
+        ) =>
+          columnCount +
+          titleParts.length,
+        0,
+      )
+
+    if (totalColumnCount <= 3) {
+      return splitTitles
+    }
+
+    const displayLengths =
+      displayTitles.map(
+        (title) =>
+          getVerticalDisplayLength(
+            title,
+          ),
+      )
+
+    const splitIndex =
+      displayLengths[0] >=
+      displayLengths[1]
+        ? 0
+        : 1
+
+    return displayTitles.map(
+      (
+        title,
+        index,
+      ) =>
+        index === splitIndex
+          ? splitSingleDayEventTitle(
+              title,
+            )
+          : [
+              title,
+            ],
+    )
+  }
+
+  return displayTitles.map(
+    (title) => [
+      title,
+    ],
+  )
+}
+
 function getFrontHalfMonths(
   academicYear: number,
 ): CalendarMonth[] {
@@ -298,7 +369,6 @@ function getBackHalfMonths(
   ]
 }
 
-
 function CalendarHalf({
   title,
   months,
@@ -308,6 +378,373 @@ function CalendarHalf({
   months: CalendarMonth[]
   events: AcademicCalendarEvent[]
 }) {
+  const monthLayouts =
+    months.map(
+      ({
+        year,
+        month,
+      }) => {
+        const daysInMonth =
+          getDaysInMonth(
+            year,
+            month,
+          )
+
+        const monthKey =
+          `${year}-${String(
+            month,
+          ).padStart(
+            2,
+            '0',
+          )}`
+
+        const monthStart =
+          `${monthKey}-01`
+
+        const monthEnd =
+          `${monthKey}-${String(
+            daysInMonth,
+          ).padStart(
+            2,
+            '0',
+          )}`
+
+        const monthEvents =
+          events.filter(
+            (event) =>
+              event.startDate <=
+                monthEnd &&
+              event.endDate >=
+                monthStart,
+          )
+
+        const singleDayEventMap =
+          new Map<
+            number,
+            Array<{
+              event:
+                AcademicCalendarEvent
+              displayTitle: string
+            }>
+          >()
+
+        const rangeLaneEndDays:
+          number[] = []
+
+        const rangeEvents =
+          monthEvents
+            .map((event) => {
+              const startDay =
+                event.startDate <
+                monthStart
+                  ? 1
+                  : Number(
+                      event.startDate.slice(
+                        8,
+                        10,
+                      ),
+                    )
+
+              const endDay =
+                event.endDate >
+                monthEnd
+                  ? daysInMonth
+                  : Number(
+                      event.endDate.slice(
+                        8,
+                        10,
+                      ),
+                    )
+
+              const displayTitle =
+                normalizeAcademicCalendarEventTitle(
+                  event.title,
+                )
+
+              return {
+                event,
+                displayTitle,
+                startDay,
+                endDay,
+              }
+            })
+            .filter(
+              (
+                positionedEvent,
+              ) => {
+                const isSingleDay =
+                  positionedEvent
+                    .event
+                    .startDate ===
+                  positionedEvent
+                    .event
+                    .endDate
+
+                if (!isSingleDay) {
+                  return true
+                }
+
+                const existing =
+                  singleDayEventMap.get(
+                    positionedEvent
+                      .startDay,
+                  )
+
+                const singleEvent = {
+                  event:
+                    positionedEvent
+                      .event,
+                  displayTitle:
+                    positionedEvent
+                      .displayTitle,
+                }
+
+                if (
+                  existing !==
+                  undefined
+                ) {
+                  existing.push(
+                    singleEvent,
+                  )
+                } else {
+                  singleDayEventMap.set(
+                    positionedEvent
+                      .startDay,
+                    [
+                      singleEvent,
+                    ],
+                  )
+                }
+
+                return false
+              },
+            )
+            .sort(
+              (left, right) =>
+                left.startDay -
+                  right.startDay ||
+                left.endDay -
+                  right.endDay,
+            )
+            .map(
+              (
+                positionedEvent,
+              ) => {
+                let lane =
+                  rangeLaneEndDays
+                    .findIndex(
+                      (
+                        laneEndDay,
+                      ) =>
+                        laneEndDay <
+                        positionedEvent
+                          .startDay,
+                    )
+
+                if (lane === -1) {
+                  lane =
+                    rangeLaneEndDays
+                      .length
+
+                  rangeLaneEndDays
+                    .push(
+                      positionedEvent
+                        .endDay,
+                    )
+                } else {
+                  rangeLaneEndDays[
+                    lane
+                  ] =
+                    positionedEvent
+                      .endDay
+                }
+
+                return {
+                  ...positionedEvent,
+                  lane,
+                }
+              },
+            )
+
+        const singleDayGroups =
+          Array.from(
+            singleDayEventMap
+              .entries(),
+          )
+            .sort(
+              (
+                [leftDay],
+                [rightDay],
+              ) =>
+                leftDay -
+                rightDay,
+            )
+            .map(
+              ([
+                day,
+                dayEvents,
+              ]) => {
+                const titleParts =
+                  getSingleDayTitleParts(
+                    dayEvents.map(
+                      ({
+                        displayTitle,
+                      }) =>
+                        displayTitle,
+                    ),
+                  )
+
+                const renderedEvents =
+                  dayEvents.map(
+                    (
+                      dayEvent,
+                      index,
+                    ) => ({
+                      ...dayEvent,
+                      titleParts:
+                        titleParts[
+                          index
+                        ],
+                    }),
+                  )
+
+                const eventHeights =
+                  renderedEvents.map(
+                    ({
+                      titleParts:
+                        eventTitleParts,
+                    }) =>
+                      Math.max(
+                        24,
+                        Math.max(
+                          ...eventTitleParts.map(
+                            (
+                              titlePart,
+                            ) =>
+                              getVerticalDisplayLength(
+                                titlePart,
+                              ) *
+                                10 +
+                              4,
+                          ),
+                        ),
+                      ),
+                  )
+
+                let groupHeight = 0
+
+                for (
+                  let index = 0;
+                  index <
+                  eventHeights.length;
+                  index += 3
+                ) {
+                  const rowHeights =
+                    eventHeights.slice(
+                      index,
+                      index + 3,
+                    )
+
+                  groupHeight +=
+                    Math.max(
+                      ...rowHeights,
+                    )
+
+                  if (
+                    index + 3 <
+                    eventHeights.length
+                  ) {
+                    groupHeight += 4
+                  }
+                }
+
+                return {
+                  day,
+                  events:
+                    renderedEvents,
+                  height:
+                    groupHeight,
+                }
+              },
+            )
+
+        const singleAreaHeight =
+          Math.max(
+            0,
+            ...singleDayGroups.map(
+              ({ height }) =>
+                height,
+            ),
+          )
+
+        return {
+          year,
+          month,
+          daysInMonth,
+          monthEvents,
+          singleDayGroups,
+          singleAreaHeight,
+          rangeEvents,
+          rangeLaneCount:
+            rangeLaneEndDays
+              .length,
+        }
+      },
+    )
+
+  const commonSingleAreaHeight =
+    Math.max(
+      72,
+      ...monthLayouts.map(
+        ({
+          singleAreaHeight,
+        }) =>
+          singleAreaHeight,
+      ),
+    )
+
+  const commonRangeLaneCount =
+    Math.max(
+      0,
+      ...monthLayouts.map(
+        ({
+          rangeLaneCount,
+        }) =>
+          rangeLaneCount,
+      ),
+    )
+
+  const rangeLaneHeight = 24
+  const rangeLaneGap = 4
+
+  const commonRangeAreaHeight =
+    commonRangeLaneCount === 0
+      ? 0
+      : commonRangeLaneCount *
+          rangeLaneHeight +
+        (
+          commonRangeLaneCount -
+          1
+        ) *
+          rangeLaneGap
+
+  const singleRangeGap =
+    commonRangeLaneCount > 0
+      ? 12
+      : 0
+
+  const monthBottomPadding = 8
+
+  const commonMonthRowHeight =
+    Math.max(
+      132,
+      48 +
+        commonSingleAreaHeight +
+        singleRangeGap +
+        commonRangeAreaHeight +
+        monthBottomPadding,
+    )
+
   return (
     <section className="academic-calendar-horizontal-half">
       <h2>
@@ -316,331 +753,139 @@ function CalendarHalf({
 
       <div className="academic-calendar-horizontal-scroll">
         <div className="academic-calendar-horizontal-grid">
-          {months.map(
+          {monthLayouts.map(
             ({
               year,
               month,
-            }) => {
-              const daysInMonth =
-                getDaysInMonth(
-                  year,
-                  month,
-                )
+              daysInMonth,
+              monthEvents,
+              singleDayGroups,
+              rangeEvents,
+            }) => (
+              <div
+                className="academic-calendar-horizontal-month"
+                data-event-count={
+                  monthEvents.length
+                }
+                key={`${year}-${month}`}
+                style={{
+                  height:
+                    `${commonMonthRowHeight}px`,
+                }}
+              >
+                <div className="academic-calendar-horizontal-month-label">
+                  <span className="academic-calendar-horizontal-year">
+                    {year}
+                  </span>
 
-              const monthKey =
-                `${year}-${String(
-                  month,
-                ).padStart(
-                  2,
-                  '0',
-                )}`
+                  <strong>
+                    {month}월
+                  </strong>
+                </div>
 
-              const monthStart =
-                `${monthKey}-01`
+                <div className="academic-calendar-horizontal-days-wrapper">
+                  <div className="academic-calendar-horizontal-days">
+                    {Array.from(
+                      {
+                        length: 31,
+                      },
+                      (
+                        _,
+                        index,
+                      ) => {
+                        const day =
+                          index + 1
 
-              const monthEnd =
-                `${monthKey}-${String(
-                  daysInMonth,
-                ).padStart(
-                  2,
-                  '0',
-                )}`
+                        const exists =
+                          day <=
+                          daysInMonth
 
-              const monthEvents =
-                events.filter(
-                  (event) =>
-                    event.startDate <=
-                      monthEnd &&
-                    event.endDate >=
-                      monthStart,
-                )
-
-              const laneEndDays: number[] =
-                []
-
-              const positionedMonthEvents =
-                monthEvents
-                  .map((event) => {
-                    const startDay =
-                      event.startDate <
-                      monthStart
-                        ? 1
-                        : Number(
-                            event.startDate.slice(
-                              8,
-                              10,
-                            ),
+                        const weekend =
+                          exists &&
+                          isWeekend(
+                            year,
+                            month,
+                            day,
                           )
 
-                    const endDay =
-                      event.endDate >
-                      monthEnd
-                        ? daysInMonth
-                        : Number(
-                            event.endDate.slice(
-                              8,
-                              10,
-                            ),
-                          )
+                        return (
+                          <div
+                            className={[
+                              'academic-calendar-horizontal-day',
+                              weekend
+                                ? 'academic-calendar-horizontal-day--weekend'
+                                : '',
+                              !exists
+                                ? 'academic-calendar-horizontal-day--empty'
+                                : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            key={day}
+                          >
+                            {exists ? (
+                              <>
+                                <span className="academic-calendar-horizontal-day-number">
+                                  {day}
+                                </span>
 
-                    const displayTitle =
-                      normalizeAcademicCalendarEventTitle(
-                        event.title,
-                      )
-
-                    return {
-                      event,
-                      displayTitle,
-                      startDay,
-                      endDay,
-                    }
-                  })
-                  .sort(
-                    (left, right) =>
-                      left.startDay -
-                        right.startDay ||
-                      left.endDay -
-                        right.endDay,
-                  )
-                  .map((positionedEvent) => {
-                    let lane =
-                      laneEndDays.findIndex(
-                        (laneEndDay) =>
-                          laneEndDay <
-                          positionedEvent.startDay,
-                      )
-
-                    if (lane === -1) {
-                      lane =
-                        laneEndDays.length
-
-                      laneEndDays.push(
-                        positionedEvent.endDay,
-                      )
-                    } else {
-                      laneEndDays[lane] =
-                        positionedEvent.endDay
-                    }
-
-                    return {
-                      ...positionedEvent,
-                      lane,
-                    }
-                  })
-              const laneHeights =
-                Array.from(
-                  {
-                    length:
-                      laneEndDays.length,
-                  },
-                  () => 24,
-                )
-
-              positionedMonthEvents.forEach(
-                ({
-                  event,
-                  displayTitle,
-                  lane,
-                }) => {
-                  const isSingleDay =
-                    event.startDate ===
-                    event.endDate
-
-                  const displayHeight =
-                    isSingleDay
-                      ? Math.max(
-                          24,
-                          Math.max(
-                            ...splitSingleDayEventTitle(
-                              displayTitle,
-                            ).map(
-                              (titlePart) =>
-                                getVerticalDisplayLength(
-                                  titlePart,
-                                ),
-                            ),
-                          ) *
-                            10 +
-                            4,
+                                <span className="academic-calendar-horizontal-day-weekday">
+                                  {getWeekdayLabel(
+                                    year,
+                                    month,
+                                    day,
+                                  )}
+                                </span>
+                              </>
+                            ) : null}
+                          </div>
                         )
-                      : 24
-
-                  laneHeights[lane] =
-                    Math.max(
-                      laneHeights[lane],
-                      displayHeight,
-                    )
-                },
-              )
-
-              const laneGap = 4
-
-              const eventAreaHeight =
-                laneHeights.reduce(
-                  (
-                    totalHeight,
-                    laneHeight,
-                  ) =>
-                    totalHeight +
-                    laneHeight,
-                  0,
-                ) +
-                Math.max(
-                  0,
-                  laneHeights.length -
-                    1,
-                ) *
-                  laneGap
-
-              const monthRowHeight =
-                Math.max(
-                  132,
-                  56 +
-                    eventAreaHeight,
-                )
-
-              return (
-                <div
-                  className="academic-calendar-horizontal-month"
-                  data-event-count={
-                    monthEvents.length
-                  }
-                  key={`${year}-${month}`}
-                  style={{
-                    minHeight:
-                      `${monthRowHeight}px`,
-                  }}
-                >
-                  <div className="academic-calendar-horizontal-month-label">
-                    <span className="academic-calendar-horizontal-year">
-                      {year}
-                    </span>
-
-                    <strong>
-                      {month}월
-                    </strong>
+                      },
+                    )}
                   </div>
 
-                  <div className="academic-calendar-horizontal-days-wrapper">
-                    <div className="academic-calendar-horizontal-days">
-                      {Array.from(
-                        {
-                          length: 31,
-                        },
-                        (
-                          _,
-                          index,
-                        ) => {
-                          const day =
-                            index + 1
-
-                          const exists =
-                            day <=
-                            daysInMonth
-
-                          const weekend =
-                            exists &&
-                            isWeekend(
-                              year,
-                              month,
-                              day,
-                            )
-
-                          return (
-                            <div
-                              className={[
-                                'academic-calendar-horizontal-day',
-                                weekend
-                                  ? 'academic-calendar-horizontal-day--weekend'
-                                  : '',
-                                !exists
-                                  ? 'academic-calendar-horizontal-day--empty'
-                                  : '',
-                              ]
-                                .filter(Boolean)
-                                .join(' ')}
-                              key={day}
-                            >
-                              {exists ? (
-                                <>
-                                  <span className="academic-calendar-horizontal-day-number">
-                                    {day}
-                                  </span>
-
-                                  <span className="academic-calendar-horizontal-day-weekday">
-                                    {getWeekdayLabel(
-                                      year,
-                                      month,
-                                      day,
-                                    )}
-                                  </span>
-                                </>
-                              ) : null}
-                            </div>
-                          )
-                        },
-                      )}
-                    </div>
-
-                    <div
-                      className="academic-calendar-horizontal-events"
-                      style={{
-                        gridTemplateRows:
-                          laneHeights
-                            .map(
-                              (height) =>
-                                `${height}px`,
-                            )
-                            .join(' '),
-                      }}
-                    >
-                      {positionedMonthEvents.map(
-                        (
-                          {
-                            event,
-                            displayTitle,
-                            startDay,
-                            endDay,
-                            lane,
-                          },
-                          index,
-                        ) => {
-                          const isSingleDay =
-                            event.startDate ===
-                            event.endDate
-
-                          const singleDayTitleParts =
-                            isSingleDay
-                              ? splitSingleDayEventTitle(
-                                  displayTitle,
-                                )
-                              : []
-
-                          return (
-                            <div
-                              className={[
-                                'academic-calendar-horizontal-event',
-                                isSingleDay
-                                  ? 'academic-calendar-horizontal-event--single'
-                                  : 'academic-calendar-horizontal-event--range',
-                              ].join(' ')}
-                              key={
-                                `${event.startDate}-` +
-                                `${event.endDate}-` +
-                                `${event.title}-` +
-                                `${index}`
-                              }
-                              style={{
-                                gridColumn:
-                                  `${startDay} / ` +
-                                  `${endDay + 1}`,
-                                gridRow:
-                                  lane + 1,
-                              }}
-                              title={event.title}
-                            >
-                              {isSingleDay ? (
-                                singleDayTitleParts.map(
+                  <div
+                    className="academic-calendar-horizontal-single-events"
+                    style={{
+                      height:
+                        `${commonSingleAreaHeight}px`,
+                    }}
+                  >
+                    {singleDayGroups.map(
+                      ({
+                        day,
+                        events:
+                          dayEvents,
+                      }) => (
+                        <div
+                          className="academic-calendar-horizontal-single-day-group"
+                          key={day}
+                          style={{
+                            gridColumn:
+                              `${day} / ` +
+                              `${day + 1}`,
+                          }}
+                        >
+                          {dayEvents.map(
+                            (
+                              {
+                                event,
+                                titleParts,
+                              },
+                              eventIndex,
+                            ) => (
+                              <div
+                                className="academic-calendar-horizontal-event academic-calendar-horizontal-event--single"
+                                key={
+                                  `${event.startDate}-` +
+                                  `${event.title}-` +
+                                  `${eventIndex}`
+                                }
+                                title={
+                                  event.title
+                                }
+                              >
+                                {titleParts.map(
                                   (
                                     titlePart,
                                     partIndex,
@@ -657,34 +902,83 @@ function CalendarHalf({
                                       )}
                                     </span>
                                   ),
-                                )
-                              ) : (
-                                <div className="academic-calendar-horizontal-range-track">
-                                  <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--start" />
+                                )}
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      ),
+                    )}
+                  </div>
 
-                                  <span className="academic-calendar-horizontal-range-label">
-                                    {displayTitle}
-                                  </span>
+                  {commonRangeLaneCount >
+                    0 && (
+                    <div
+                      className="academic-calendar-horizontal-range-events"
+                      style={{
+                        height:
+                          `${commonRangeAreaHeight}px`,
+                        gridTemplateRows:
+                          `repeat(` +
+                          `${commonRangeLaneCount}, ` +
+                          `${rangeLaneHeight}px)`,
+                      }}
+                    >
+                      {rangeEvents.map(
+                        (
+                          {
+                            event,
+                            displayTitle,
+                            startDay,
+                            endDay,
+                            lane,
+                          },
+                          index,
+                        ) => (
+                          <div
+                            className="academic-calendar-horizontal-event academic-calendar-horizontal-event--range"
+                            key={
+                              `${event.startDate}-` +
+                              `${event.endDate}-` +
+                              `${event.title}-` +
+                              `${index}`
+                            }
+                            style={{
+                              gridColumn:
+                                `${startDay} / ` +
+                                `${endDay + 1}`,
+                              gridRow:
+                                lane + 1,
+                            }}
+                            title={
+                              event.title
+                            }
+                          >
+                            <div className="academic-calendar-horizontal-range-track">
+                              <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--start" />
 
-                                  <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--end" />
-                                </div>
-                              )}
+                              <span className="academic-calendar-horizontal-range-label">
+                                {
+                                  displayTitle
+                                }
+                              </span>
+
+                              <span className="academic-calendar-horizontal-range-line academic-calendar-horizontal-range-line--end" />
                             </div>
-                          )
-                        },
+                          </div>
+                        ),
                       )}
                     </div>
-                  </div>
+                  )}
                 </div>
-              )
-            },
+              </div>
+            ),
           )}
         </div>
       </div>
     </section>
   )
 }
-
 
 export function HorizontalAcademicCalendar({
   academicYear,
