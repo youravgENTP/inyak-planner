@@ -69,6 +69,77 @@ function getWeekdayLabel(
   ][weekday]
 }
 
+function normalizeAcademicCalendarEventTitle(
+  title: string,
+): string {
+  return title
+    .replace(
+      /\(보강실시\)/g,
+      '',
+    )
+    .replace(
+      /^\d{1,2}\([일월화수목금토]\)\s*/,
+      '',
+    )
+    .replace(
+      /\(계절\)/g,
+      ' 계절',
+    )
+    .replace(
+      /\s+/g,
+      ' ',
+    )
+    .trim()
+}
+
+
+function getVerticalDisplayLength(
+  text: string,
+): number {
+  return text
+    .replace(
+      /\d+\/\d+/g,
+      '□',
+    )
+    .replace(
+      /\s/g,
+      '',
+    ).length
+}
+
+
+function renderVerticalTitlePart(
+  titlePart: string,
+) {
+  return titlePart
+    .split(
+      /(\d+\/\d+)/g,
+    )
+    .filter(Boolean)
+    .map(
+      (
+        segment,
+        segmentIndex,
+      ) =>
+        /^\d+\/\d+$/.test(
+          segment,
+        ) ? (
+          <span
+            className="academic-calendar-horizontal-event-fraction"
+            key={
+              `${segment}-` +
+              `${segmentIndex}`
+            }
+          >
+            {segment}
+          </span>
+        ) : (
+          segment
+        ),
+    )
+}
+
+
 function splitSingleDayEventTitle(
   title: string,
 ): string[] {
@@ -76,45 +147,14 @@ function splitSingleDayEventTitle(
     title.trim()
 
   const compactLength =
-    normalizedTitle.replace(
-      /\s/g,
-      '',
-    ).length
+    getVerticalDisplayLength(
+      normalizedTitle,
+    )
 
   if (compactLength <= 8) {
     return [
       normalizedTitle,
     ]
-  }
-
-  const parenthesisIndex =
-    normalizedTitle.indexOf('(')
-
-  if (parenthesisIndex > 0) {
-    const firstPart =
-      normalizedTitle
-        .slice(
-          0,
-          parenthesisIndex,
-        )
-        .trim()
-
-    const secondPart =
-      normalizedTitle
-        .slice(
-          parenthesisIndex,
-        )
-        .trim()
-
-    if (
-      firstPart.length > 0 &&
-      secondPart.length > 0
-    ) {
-      return [
-        firstPart,
-        secondPart,
-      ]
-    }
   }
 
   const words =
@@ -146,16 +186,14 @@ function splitSingleDayEventTitle(
           .join(' ')
 
       const firstLength =
-        firstPart.replace(
-          /\s/g,
-          '',
-        ).length
+        getVerticalDisplayLength(
+          firstPart,
+        )
 
       const secondLength =
-        secondPart.replace(
-          /\s/g,
-          '',
-        ).length
+        getVerticalDisplayLength(
+          secondPart,
+        )
 
       const difference =
         Math.abs(
@@ -345,8 +383,14 @@ function CalendarHalf({
                             ),
                           )
 
+                    const displayTitle =
+                      normalizeAcademicCalendarEventTitle(
+                        event.title,
+                      )
+
                     return {
                       event,
+                      displayTitle,
                       startDay,
                       endDay,
                     }
@@ -395,6 +439,7 @@ function CalendarHalf({
               positionedMonthEvents.forEach(
                 ({
                   event,
+                  displayTitle,
                   lane,
                 }) => {
                   const isSingleDay =
@@ -407,13 +452,12 @@ function CalendarHalf({
                           24,
                           Math.max(
                             ...splitSingleDayEventTitle(
-                              event.title,
+                              displayTitle,
                             ).map(
                               (titlePart) =>
-                                titlePart.replace(
-                                  /\s/g,
-                                  '',
-                                ).length,
+                                getVerticalDisplayLength(
+                                  titlePart,
+                                ),
                             ),
                           ) *
                             10 +
@@ -554,6 +598,7 @@ function CalendarHalf({
                         (
                           {
                             event,
+                            displayTitle,
                             startDay,
                             endDay,
                             lane,
@@ -567,7 +612,7 @@ function CalendarHalf({
                           const singleDayTitleParts =
                             isSingleDay
                               ? splitSingleDayEventTitle(
-                                  event.title,
+                                  displayTitle,
                                 )
                               : []
 
@@ -607,11 +652,13 @@ function CalendarHalf({
                                           `${partIndex}`
                                         }
                                       >
-                                        {titlePart}
+                                        {renderVerticalTitlePart(
+                                          titlePart,
+                                        )}
                                       </span>
                                     ),
                                   )
-                                : event.title}
+                                : displayTitle}
                             </div>
                           )
                         },

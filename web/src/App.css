@@ -2090,7 +2090,7 @@ h1 {
 }
 
 .academic-calendar-horizontal-grid {
-  min-width: 1180px;
+  min-width: 1608px;
 }
 
 .academic-calendar-horizontal-month {
@@ -2126,7 +2126,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(
     31,
-    minmax(32px, 1fr)
+    minmax(48px, 1fr)
   );
   height: 100%;
 }
@@ -2201,7 +2201,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(
     31,
-    minmax(32px, 1fr)
+    minmax(48px, 1fr)
   );
   row-gap: 4px;
 
@@ -2259,4 +2259,8 @@ h1 {
   writing-mode: vertical-rl;
   text-orientation: upright;
   white-space: nowrap;
+}
+
+.academic-calendar-horizontal-event-fraction {
+  text-combine-upright: all;
 }
