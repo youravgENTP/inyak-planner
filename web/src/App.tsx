@@ -21,6 +21,7 @@ import type {
 } from './domain/saved-timetables'
 
 import { AccountPage } from './pages/AccountPage'
+import { AcademicCalendarPage } from './pages/AcademicCalendarPage'
 import { AuthPage } from './pages/AuthPage'
 import { CurriculumPage } from './pages/CurriculumPage'
 import { GpaCalculatorPage } from './pages/GpaCalculatorPage'
@@ -220,6 +221,8 @@ function App() {
           void handleLogout()
         }}
       />
+    ) : currentPage === 'academicCalendar' ? (
+      <AcademicCalendarPage />
     ) : currentPage === 'curriculum' ? (
       <CurriculumPage />
     ) : currentPage === 'progress' ? (

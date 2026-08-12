@@ -12,6 +12,7 @@ import {
 export type AppNavigationPage =
   | 'timetable'
   | 'timetableComparison'
+  | 'academicCalendar'
   | 'curriculum'
   | 'progress'
   | 'gpa'
@@ -267,13 +268,32 @@ export function AppShell({
           </div>
 
           <div className="nav-section">
-            <button
-              className="nav-item"
-              disabled
-              type="button"
-            >
-              수강편람
-            </button>
+            <div className="nav-group">
+              <div className="nav-group-title">
+                학사 정보
+              </div>
+
+              <div className="nav-submenu">
+                <button
+                  className={
+                    `nav-subitem${
+                      activePage ===
+                      'academicCalendar'
+                        ? ' nav-subitem--active'
+                        : ''
+                    }`
+                  }
+                  type="button"
+                  onClick={() =>
+                    onNavigate(
+                      'academicCalendar',
+                    )
+                  }
+                >
+                  학사일정
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="nav-section">
