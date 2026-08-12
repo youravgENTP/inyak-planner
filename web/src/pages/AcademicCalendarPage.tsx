@@ -173,8 +173,6 @@ export function AcademicCalendarPage() {
         </div>
       </header>
 
-      </header>
-
       <div className="academic-calendar-toolbar">
         <div
           className="academic-calendar-view-switch"
@@ -219,10 +217,6 @@ export function AcademicCalendarPage() {
           PDF 다운로드
         </button>
       </div>
-        </div>
-      </header>
-
-      <div className="academic-calendar-toolbar"></div>
 
       {loadingError !== null ? (
         <p className="academic-calendar-message">
