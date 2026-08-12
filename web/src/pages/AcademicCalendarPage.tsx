@@ -332,9 +332,17 @@ export function AcademicCalendarPage() {
                 previousYear !==
                   year
 
+              const isYearStart =
+                monthIndex > 0 &&
+                showYear
+
               return (
                 <section
-                  className="academic-calendar-month"
+                  className={
+                    isYearStart
+                      ? 'academic-calendar-month academic-calendar-month--year-start'
+                      : 'academic-calendar-month'
+                  }
                   key={monthKey}
                 >
                   <h2>

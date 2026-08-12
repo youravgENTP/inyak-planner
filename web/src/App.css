@@ -1955,6 +1955,10 @@ h1 {
   border-top: 1px solid #e5e7eb;
 }
 
+.academic-calendar-month--year-start {
+  grid-column: 1;
+}
+
 .academic-calendar-month:nth-child(-n + 2) {
   border-top: 0;
 }
@@ -1999,14 +2003,15 @@ h1 {
 }
 
 .academic-calendar-event--current {
-  background: #edf6f0;
-  color: var(--navy-900);
+  background: var(--navy-950);
+  color: #ffffff;
 }
 
 .academic-calendar-event--current
   .academic-calendar-event-date,
 .academic-calendar-event--current
   .academic-calendar-event-title {
+  color: #ffffff;
   font-weight: 600;
 }
 
