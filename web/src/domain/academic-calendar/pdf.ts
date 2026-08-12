@@ -11,12 +11,19 @@ const PDF_MARGIN_MM = 8
 const PDF_PIXEL_RATIO = 2
 
 
+interface RenderedCalendarImage {
+  dataUrl: string
+  width: number
+  height: number
+}
+
+
 async function renderElementToPng(
   element: HTMLElement,
-): Promise<string> {
-  const scrollContainer =
+): Promise<RenderedCalendarImage> {
+  const titleElement =
     element.querySelector<HTMLElement>(
-      '.academic-calendar-horizontal-scroll',
+      'h2',
     )
 
   const calendarGrid =
@@ -25,7 +32,7 @@ async function renderElementToPng(
     )
 
   if (
-    scrollContainer === null ||
+    titleElement === null ||
     calendarGrid === null
   ) {
     throw new Error(
@@ -33,62 +40,108 @@ async function renderElementToPng(
     )
   }
 
-  const captureWidth =
-    calendarGrid.offsetWidth
+  const captureRoot =
+    document.createElement('div')
 
-  const captureHeight =
-    element.scrollHeight
+  const titleClone =
+    titleElement.cloneNode(
+      true,
+    ) as HTMLElement
 
-  const originalOverflow =
-    scrollContainer.style.overflow
+  const gridClone =
+    calendarGrid.cloneNode(
+      true,
+    ) as HTMLElement
 
-  const originalWidth =
-    scrollContainer.style.width
+  const gridWidth =
+    calendarGrid.scrollWidth
 
-  const originalMaxWidth =
-    scrollContainer.style.maxWidth
+  captureRoot.style.position =
+    'fixed'
+
+  captureRoot.style.top =
+    '-100000px'
+
+  captureRoot.style.left =
+    '0'
+
+  captureRoot.style.width =
+    `${gridWidth}px`
+
+  captureRoot.style.maxWidth =
+    'none'
+
+  captureRoot.style.background =
+    '#ffffff'
+
+  captureRoot.style.pointerEvents =
+    'none'
+
+  captureRoot.style.zIndex =
+    '-1'
+
+  titleClone.style.margin =
+    '0 0 16px'
+
+  gridClone.style.width =
+    `${gridWidth}px`
+
+  gridClone.style.minWidth =
+    `${gridWidth}px`
+
+  gridClone.style.maxWidth =
+    'none'
+
+  captureRoot.appendChild(
+    titleClone,
+  )
+
+  captureRoot.appendChild(
+    gridClone,
+  )
+
+  document.body.appendChild(
+    captureRoot,
+  )
 
   try {
-    scrollContainer.style.overflow =
-      'visible'
+    await document.fonts.ready
 
-    scrollContainer.style.width =
-      `${captureWidth}px`
+    const captureWidth =
+      captureRoot.scrollWidth
 
-    scrollContainer.style.maxWidth =
-      'none'
+    const captureHeight =
+      captureRoot.scrollHeight
 
-    return await toPng(
-      element,
-      {
-        backgroundColor:
-          '#ffffff',
-        cacheBust: true,
-        pixelRatio:
-          PDF_PIXEL_RATIO,
+    const dataUrl =
+      await toPng(
+        captureRoot,
+        {
+          backgroundColor:
+            '#ffffff',
 
-        width:
-          captureWidth,
+          cacheBust: true,
 
-        height:
-          captureHeight,
+          pixelRatio:
+            PDF_PIXEL_RATIO,
 
-        style: {
           width:
-            `${captureWidth}px`,
-          maxWidth: 'none',
+            captureWidth,
+
+          height:
+            captureHeight,
         },
-      },
-    )
+      )
+
+    return {
+      dataUrl,
+      width:
+        captureWidth,
+      height:
+        captureHeight,
+    }
   } finally {
-    scrollContainer.style.overflow =
-      originalOverflow
-
-    scrollContainer.style.width =
-      originalWidth
-
-    scrollContainer.style.maxWidth =
-      originalMaxWidth
+    captureRoot.remove()
   }
 }
 
@@ -178,7 +231,7 @@ export async function downloadAcademicCalendarPdf(
     | 'front'
     | 'back',
 ): Promise<void> {
-  const imageDataUrl =
+  const renderedImage =
     await renderElementToPng(
       element,
     )
@@ -194,9 +247,9 @@ export async function downloadAcademicCalendarPdf(
 
   addImageToPdfPage(
     pdf,
-    imageDataUrl,
-    element.scrollWidth,
-    element.scrollHeight,
+    renderedImage.dataUrl,
+    renderedImage.width,
+    renderedImage.height,
   )
 
   const halfLabel =
