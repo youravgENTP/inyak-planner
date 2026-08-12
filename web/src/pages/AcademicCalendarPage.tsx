@@ -141,7 +141,7 @@ export function AcademicCalendarPage() {
 
   const eventsByMonth = useMemo(() => {
     const grouped = new Map<
-      number,
+      string,
       AcademicCalendarEvent[]
     >()
 
@@ -150,14 +150,20 @@ export function AcademicCalendarPage() {
     }
 
     for (const event of calendar.events) {
+      const monthKey =
+        event.startDate.slice(
+          0,
+          7,
+        )
+
       const existing =
-        grouped.get(event.month)
+        grouped.get(monthKey)
 
       if (existing !== undefined) {
         existing.push(event)
       } else {
         grouped.set(
-          event.month,
+          monthKey,
           [event],
         )
       }
@@ -283,55 +289,112 @@ export function AcademicCalendarPage() {
           {Array.from(
             eventsByMonth.entries(),
           ).map(
-            ([month, events]) => (
-              <section
-                className="academic-calendar-month"
-                key={month}
-              >
-                <h2>
-                  {month}월
-                </h2>
+            (
+              [
+                monthKey,
+                events,
+              ],
+              monthIndex,
+            ) => {
+              const [
+                yearText,
+                monthText,
+              ] =
+                monthKey.split(
+                  '-',
+                )
 
-                <ul>
-                  {events.map(
-                    (
-                      event,
-                      index,
-                    ) => {
-                      const isPast =
-                        event.endDate <
-                        todayIsoDate
+              const year =
+                Number(yearText)
 
-                      return (
-                        <li
-                          className={
-                            isPast
-                              ? 'academic-calendar-event academic-calendar-event--past'
+              const month =
+                Number(monthText)
+
+              const previousMonthKey =
+                monthIndex > 0
+                  ? Array.from(
+                      eventsByMonth.keys(),
+                    )[monthIndex - 1]
+                  : null
+
+              const previousYear =
+                previousMonthKey === null
+                  ? null
+                  : Number(
+                      previousMonthKey.slice(
+                        0,
+                        4,
+                      ),
+                    )
+
+              const showYear =
+                monthIndex === 0 ||
+                previousYear !==
+                  year
+
+              return (
+                <section
+                  className="academic-calendar-month"
+                  key={monthKey}
+                >
+                  <h2>
+                    {showYear
+                      ? `${year}년 ${month}월`
+                      : `${month}월`}
+                  </h2>
+
+                  <ul>
+                    {events.map(
+                      (
+                        event,
+                        index,
+                      ) => {
+                        const isPast =
+                          event.endDate <
+                          todayIsoDate
+
+                        const isCurrent =
+                          event.startDate <=
+                            todayIsoDate &&
+                          event.endDate >=
+                            todayIsoDate
+
+                        const eventClassName =
+                          isPast
+                            ? 'academic-calendar-event academic-calendar-event--past'
+                            : isCurrent
+                              ? 'academic-calendar-event academic-calendar-event--current'
                               : 'academic-calendar-event'
-                          }
-                          key={
-                            `${event.startDate}-` +
-                            `${event.endDate}-` +
-                            `${event.title}-` +
-                            `${index}`
-                          }
-                        >
-                          <span className="academic-calendar-event-date">
-                            {formatEventDate(
-                              event,
-                            )}
-                          </span>
 
-                          <span className="academic-calendar-event-title">
-                            {event.title}
-                          </span>
-                        </li>
-                      )
-                    },
-                  )}
-                </ul>
-              </section>
-            ),
+                        return (
+                          <li
+                            className={
+                              eventClassName
+                            }
+                            key={
+                              `${event.startDate}-` +
+                              `${event.endDate}-` +
+                              `${event.title}-` +
+                              `${index}`
+                            }
+                          >
+                            <span className="academic-calendar-event-date">
+                              {formatEventDate(
+                                event,
+                              )}
+                            </span>
+
+                            <span className="academic-calendar-event-title">
+                              {event.title}
+                            </span>
+                          </li>
+                        )
+                      },
+                    )}
+                  </ul>
+                </section>
+              )
+            },
           )}
         </div>
       )}
