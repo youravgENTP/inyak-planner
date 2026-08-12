@@ -160,6 +160,73 @@ function CalendarHalf({
                       monthStart,
                 )
 
+              const laneEndDays: number[] =
+                []
+
+              const positionedMonthEvents =
+                monthEvents
+                  .map((event) => {
+                    const startDay =
+                      event.startDate <
+                      monthStart
+                        ? 1
+                        : Number(
+                            event.startDate.slice(
+                              8,
+                              10,
+                            ),
+                          )
+
+                    const endDay =
+                      event.endDate >
+                      monthEnd
+                        ? daysInMonth
+                        : Number(
+                            event.endDate.slice(
+                              8,
+                              10,
+                            ),
+                          )
+
+                    return {
+                      event,
+                      startDay,
+                      endDay,
+                    }
+                  })
+                  .sort(
+                    (left, right) =>
+                      left.startDay -
+                        right.startDay ||
+                      left.endDay -
+                        right.endDay,
+                  )
+                  .map((positionedEvent) => {
+                    let lane =
+                      laneEndDays.findIndex(
+                        (laneEndDay) =>
+                          laneEndDay <
+                          positionedEvent.startDay,
+                      )
+
+                    if (lane === -1) {
+                      lane =
+                        laneEndDays.length
+
+                      laneEndDays.push(
+                        positionedEvent.endDay,
+                      )
+                    } else {
+                      laneEndDays[lane] =
+                        positionedEvent.endDay
+                    }
+
+                    return {
+                      ...positionedEvent,
+                      lane,
+                    }
+                  })
+
               return (
                 <div
                   className="academic-calendar-horizontal-month"
@@ -228,33 +295,16 @@ function CalendarHalf({
                     </div>
 
                     <div className="academic-calendar-horizontal-events">
-                      {monthEvents.map(
+                      {positionedMonthEvents.map(
                         (
-                          event,
+                          {
+                            event,
+                            startDay,
+                            endDay,
+                            lane,
+                          },
                           index,
                         ) => {
-                          const startDay =
-                            event.startDate <
-                            monthStart
-                              ? 1
-                              : Number(
-                                  event.startDate.slice(
-                                    8,
-                                    10,
-                                  ),
-                                )
-
-                          const endDay =
-                            event.endDate >
-                            monthEnd
-                              ? daysInMonth
-                              : Number(
-                                  event.endDate.slice(
-                                    8,
-                                    10,
-                                  ),
-                                )
-
                           return (
                             <div
                               className="academic-calendar-horizontal-event"
@@ -268,6 +318,8 @@ function CalendarHalf({
                                 gridColumn:
                                   `${startDay} / ` +
                                   `${endDay + 1}`,
+                                gridRow:
+                                  lane + 1,
                               }}
                               title={event.title}
                             >
