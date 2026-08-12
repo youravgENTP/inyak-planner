@@ -4,6 +4,9 @@ import {
 
 interface HorizontalAcademicCalendarProps {
   academicYear: number
+  onAcademicYearChange: (
+    year: number,
+  ) => void
 }
 
 
@@ -197,6 +200,7 @@ function CalendarHalf({
 
 export function HorizontalAcademicCalendar({
   academicYear,
+  onAcademicYearChange,
 }: HorizontalAcademicCalendarProps) {
   const [half, setHalf] =
     useState<'front' | 'back'>(
@@ -219,28 +223,57 @@ export function HorizontalAcademicCalendar({
 
   return (
     <div className="academic-calendar-horizontal">
-      <div className="academic-calendar-horizontal-controls">
-        <label>
-          <select
+        <div className="academic-calendar-horizontal-controls">
+        <div className="academic-calendar-horizontal-year-select">
+            <select
+            value={academicYear}
+            onChange={(event) =>
+                onAcademicYearChange(
+                Number(
+                    event.target.value,
+                ),
+                )
+            }
+            >
+            {[
+                2024,
+                2025,
+                2026,
+                2027,
+            ].map((year) => (
+                <option
+                key={year}
+                value={year}
+                >
+                {year}
+                </option>
+            ))}
+            </select>
+
+            <span>
+            학년도
+            </span>
+        </div>
+
+        <select
             value={half}
             onChange={(event) =>
-              setHalf(
+            setHalf(
                 event.target.value as
-                  | 'front'
-                  | 'back',
-              )
+                | 'front'
+                | 'back',
+            )
             }
-          >
+        >
             <option value="front">
-              상반기
+            상반기
             </option>
 
             <option value="back">
-              하반기
+            하반기
             </option>
-          </select>
-        </label>
-      </div>
+        </select>
+        </div>
 
       <CalendarHalf
         title={title}

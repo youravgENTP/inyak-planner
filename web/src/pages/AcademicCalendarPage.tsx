@@ -145,37 +145,6 @@ export function AcademicCalendarPage() {
     <section className="academic-calendar-page">
       <header className="academic-calendar-header">
         <h1>학사일정</h1>
-
-        <div className="academic-calendar-year-control">
-          <select
-            value={selectedYear}
-            onChange={(event) =>
-              setSelectedYear(
-                Number(
-                  event.target.value,
-                ),
-              )
-            }
-          >
-            {[
-              2024,
-              2025,
-              2026,
-              2027,
-            ].map((year) => (
-              <option
-                key={year}
-                value={year}
-              >
-                {year}
-              </option>
-            ))}
-          </select>
-
-          <span>
-            학년도
-          </span>
-        </div>
       </header>
 
       <div className="academic-calendar-toolbar">
@@ -234,6 +203,9 @@ export function AcademicCalendarPage() {
       ) : viewMode === 'horizontal' ? (
         <HorizontalAcademicCalendar
           academicYear={selectedYear}
+          onAcademicYearChange={
+            setSelectedYear
+          }
         />
       ) : (
         <div className="academic-calendar-month-list">

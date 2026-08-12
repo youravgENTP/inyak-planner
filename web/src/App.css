@@ -2157,8 +2157,20 @@ h1 {
 
 .academic-calendar-horizontal-controls {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+.academic-calendar-horizontal-year-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.academic-calendar-horizontal-year-select span {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .academic-calendar-horizontal-controls select {
