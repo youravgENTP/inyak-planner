@@ -9,12 +9,43 @@ import {
 
 const PDF_MARGIN_MM = 8
 const PDF_PIXEL_RATIO = 2
+const TITLE_GAP_PX = 16
 
 
 interface RenderedCalendarImage {
   dataUrl: string
   width: number
   height: number
+}
+
+
+function loadImage(
+  dataUrl: string,
+): Promise<HTMLImageElement> {
+  return new Promise(
+    (
+      resolve,
+      reject,
+    ) => {
+      const image =
+        new Image()
+
+      image.onload = () => {
+        resolve(image)
+      }
+
+      image.onerror = () => {
+        reject(
+          new Error(
+            'PDF 이미지를 불러오지 못했습니다.',
+          ),
+        )
+      }
+
+      image.src =
+        dataUrl
+    },
+  )
 }
 
 
@@ -40,108 +71,146 @@ async function renderElementToPng(
     )
   }
 
-  const captureRoot =
-    document.createElement('div')
-
-  const titleClone =
-    titleElement.cloneNode(
-      true,
-    ) as HTMLElement
-
-  const gridClone =
-    calendarGrid.cloneNode(
-      true,
-    ) as HTMLElement
+  await document.fonts.ready
 
   const gridWidth =
     calendarGrid.scrollWidth
 
-  captureRoot.style.position =
-    'fixed'
+  const gridHeight =
+    calendarGrid.scrollHeight
 
-  captureRoot.style.top =
-    '-100000px'
+  const titleWidth =
+    titleElement.scrollWidth
 
-  captureRoot.style.left =
-    '0'
+  const titleHeight =
+    titleElement.scrollHeight
 
-  captureRoot.style.width =
-    `${gridWidth}px`
+  const titleDataUrl =
+    await toPng(
+      titleElement,
+      {
+        backgroundColor:
+          '#ffffff',
 
-  captureRoot.style.maxWidth =
-    'none'
+        cacheBust: true,
 
-  captureRoot.style.background =
+        pixelRatio:
+          PDF_PIXEL_RATIO,
+
+        width:
+          titleWidth,
+
+        height:
+          titleHeight,
+      },
+    )
+
+  const gridDataUrl =
+    await toPng(
+      calendarGrid,
+      {
+        backgroundColor:
+          '#ffffff',
+
+        cacheBust: true,
+
+        pixelRatio:
+          PDF_PIXEL_RATIO,
+
+        width:
+          gridWidth,
+
+        height:
+          gridHeight,
+
+        style: {
+          width:
+            `${gridWidth}px`,
+
+          minWidth:
+            `${gridWidth}px`,
+
+          maxWidth:
+            'none',
+        },
+      },
+    )
+
+  const [
+    titleImage,
+    gridImage,
+  ] =
+    await Promise.all([
+      loadImage(
+        titleDataUrl,
+      ),
+      loadImage(
+        gridDataUrl,
+      ),
+    ])
+
+  const gapPx =
+    TITLE_GAP_PX *
+    PDF_PIXEL_RATIO
+
+  const canvas =
+    document.createElement(
+      'canvas',
+    )
+
+  canvas.width =
+    gridImage.naturalWidth
+
+  canvas.height =
+    titleImage.naturalHeight +
+    gapPx +
+    gridImage.naturalHeight
+
+  const context =
+    canvas.getContext(
+      '2d',
+    )
+
+  if (context === null) {
+    throw new Error(
+      'PDF 캔버스를 생성하지 못했습니다.',
+    )
+  }
+
+  context.fillStyle =
     '#ffffff'
 
-  captureRoot.style.pointerEvents =
-    'none'
-
-  captureRoot.style.zIndex =
-    '-1'
-
-  titleClone.style.margin =
-    '0 0 16px'
-
-  gridClone.style.width =
-    `${gridWidth}px`
-
-  gridClone.style.minWidth =
-    `${gridWidth}px`
-
-  gridClone.style.maxWidth =
-    'none'
-
-  captureRoot.appendChild(
-    titleClone,
+  context.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height,
   )
 
-  captureRoot.appendChild(
-    gridClone,
+  context.drawImage(
+    titleImage,
+    0,
+    0,
   )
 
-  document.body.appendChild(
-    captureRoot,
+  context.drawImage(
+    gridImage,
+    0,
+    titleImage.naturalHeight +
+      gapPx,
   )
 
-  try {
-    await document.fonts.ready
+  return {
+    dataUrl:
+      canvas.toDataURL(
+        'image/png',
+      ),
 
-    const captureWidth =
-      captureRoot.scrollWidth
+    width:
+      canvas.width,
 
-    const captureHeight =
-      captureRoot.scrollHeight
-
-    const dataUrl =
-      await toPng(
-        captureRoot,
-        {
-          backgroundColor:
-            '#ffffff',
-
-          cacheBust: true,
-
-          pixelRatio:
-            PDF_PIXEL_RATIO,
-
-          width:
-            captureWidth,
-
-          height:
-            captureHeight,
-        },
-      )
-
-    return {
-      dataUrl,
-      width:
-        captureWidth,
-      height:
-        captureHeight,
-    }
-  } finally {
-    captureRoot.remove()
+    height:
+      canvas.height,
   }
 }
 
