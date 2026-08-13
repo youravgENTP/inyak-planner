@@ -168,7 +168,11 @@ def verify_postgres_schema(
     ).fetchall()
 
     actual_columns = {
-        row[0]
+        (
+            row["column_name"]
+            if isinstance(row, dict)
+            else row[0]
+        )
         for row in rows
     }
 
