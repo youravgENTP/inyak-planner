@@ -26,6 +26,16 @@ function mapCurriculumCourseApiItem(
       item.completion_type,
     credits: item.credits,
     notes: item.notes,
+    changeGroup:
+      item.change_group,
+    changeType:
+      item.change_type,
+    changeRole:
+      item.change_role,
+    changeEffectiveYear:
+      item.change_effective_year,
+    changeNote:
+      item.change_note,
   }
 }
 

@@ -42,6 +42,11 @@ class CurriculumCourse:
     completion_type: str
     credits: float | None
     notes: str | None
+    change_group: str | None
+    change_type: str | None
+    change_role: str
+    change_effective_year: int | None
+    change_note: str | None
 
 
 def clean_optional_text(value: str | None) -> str | None:
@@ -62,7 +67,6 @@ def parse_optional_float(value: str | None) -> float | None:
     except ValueError as exc:
         raise ValueError(f"학점이 숫자가 아닙니다: {cleaned}") from exc
 
-
 def parse_row(
     row: dict[str, str],
     *,
@@ -74,27 +78,152 @@ def parse_row(
         semester = int(row["semester"])
     except ValueError as exc:
         raise ValueError(
-            f"{row_number}행의 entry_year, grade, semester를 확인하세요."
+            f"{row_number}행의 entry_year, "
+            "grade, semester를 확인하세요."
         ) from exc
 
     course_name = row["course_name"].strip()
-    completion_type = row["completion_type"].strip()
+    completion_type = (
+        row["completion_type"].strip()
+    )
+
+    change_group = clean_optional_text(
+        row.get("change_group")
+    )
+
+    change_type = clean_optional_text(
+        row.get("change_type")
+    )
+
+    change_role = (
+        clean_optional_text(
+            row.get("change_role")
+        )
+        or "current"
+    )
+
+    change_effective_year_text = (
+        clean_optional_text(
+            row.get(
+                "change_effective_year"
+            )
+        )
+    )
+
+    change_effective_year = None
+
+    if change_effective_year_text is not None:
+        try:
+            change_effective_year = int(
+                change_effective_year_text
+            )
+        except ValueError as exc:
+            raise ValueError(
+                f"{row_number}행의 "
+                "change_effective_year가 "
+                "정수가 아닙니다: "
+                f"{change_effective_year_text}"
+            ) from exc
+
+    change_note = clean_optional_text(
+        row.get("change_note")
+    )
 
     if not course_name:
-        raise ValueError(f"{row_number}행의 course_name이 비어 있습니다.")
+        raise ValueError(
+            f"{row_number}행의 "
+            "course_name이 비어 있습니다."
+        )
 
     if not 1 <= grade <= 6:
-        raise ValueError(f"{row_number}행의 학년 범위가 잘못됐습니다: {grade}")
+        raise ValueError(
+            f"{row_number}행의 학년 범위가 "
+            f"잘못됐습니다: {grade}"
+        )
 
     if semester not in (1, 2):
         raise ValueError(
-            f"{row_number}행의 학기는 1 또는 2여야 합니다: {semester}"
+            f"{row_number}행의 학기는 "
+            f"1 또는 2여야 합니다: {semester}"
         )
 
-    if completion_type not in {"전필", "전선"}:
+    if completion_type not in {
+        "전필",
+        "전선",
+    }:
         raise ValueError(
-            f"{row_number}행의 이수구분이 잘못됐습니다: "
-            f"{completion_type}"
+            f"{row_number}행의 이수구분이 "
+            f"잘못됐습니다: {completion_type}"
+        )
+
+    if change_role not in {
+        "current",
+        "legacy",
+    }:
+        raise ValueError(
+            f"{row_number}행의 change_role이 "
+            f"잘못됐습니다: {change_role}"
+        )
+
+    if (
+        change_type is not None
+        and change_type not in {
+            "1:1",
+            "1:N",
+            "N:1",
+            "N:M",
+        }
+    ):
+        raise ValueError(
+            f"{row_number}행의 change_type이 "
+            f"잘못됐습니다: {change_type}"
+        )
+
+    if change_group is None:
+        if change_type is not None:
+            raise ValueError(
+                f"{row_number}행은 "
+                "change_group 없이 "
+                "change_type을 지정할 수 없습니다."
+            )
+
+        if change_role != "current":
+            raise ValueError(
+                f"{row_number}행의 일반 과목은 "
+                "change_role=current여야 합니다."
+            )
+
+        if (
+            change_effective_year is not None
+            or change_note is not None
+        ):
+            raise ValueError(
+                f"{row_number}행은 "
+                "change_group 없이 변경 메타데이터를 "
+                "지정할 수 없습니다."
+            )
+
+    else:
+        if change_type is None:
+            raise ValueError(
+                f"{row_number}행은 "
+                "change_group이 있으므로 "
+                "change_type도 필요합니다."
+            )
+
+    if (
+        change_effective_year is not None
+        and not (
+            2000
+            <= change_effective_year
+            <= 2100
+        )
+    ):
+        raise ValueError(
+            f"{row_number}행의 "
+            "change_effective_year 범위가 "
+            f"잘못됐습니다: "
+            f"{change_effective_year}"
         )
 
     return CurriculumCourse(
@@ -102,12 +231,24 @@ def parse_row(
         grade=grade,
         semester=semester,
         course_name=course_name,
-        course_code=clean_optional_text(row["course_code"]),
+        course_code=clean_optional_text(
+            row["course_code"]
+        ),
         completion_type=completion_type,
-        credits=parse_optional_float(row["credits"]),
-        notes=clean_optional_text(row["notes"]),
+        credits=parse_optional_float(
+            row["credits"]
+        ),
+        notes=clean_optional_text(
+            row["notes"]
+        ),
+        change_group=change_group,
+        change_type=change_type,
+        change_role=change_role,
+        change_effective_year=(
+            change_effective_year
+        ),
+        change_note=change_note,
     )
-
 
 def load_csv(csv_path: Path) -> list[CurriculumCourse]:
     with csv_path.open(
@@ -142,14 +283,33 @@ def load_csv(csv_path: Path) -> list[CurriculumCourse]:
             f"{sorted(entry_years)}"
         )
 
-    duplicate_keys: set[tuple[int, int, str]] = set()
-    seen_keys: set[tuple[int, int, str]] = set()
+    duplicate_keys: set[
+        tuple[
+            int,
+            int,
+            str,
+            str | None,
+            str,
+        ]
+    ] = set()
+
+    seen_keys: set[
+        tuple[
+            int,
+            int,
+            str,
+            str | None,
+            str,
+        ]
+    ] = set()
 
     for course in courses:
         key = (
             course.grade,
             course.semester,
             course.course_name,
+            course.course_code,
+            course.change_role,
         )
 
         if key in seen_keys:
@@ -162,6 +322,92 @@ def load_csv(csv_path: Path) -> list[CurriculumCourse]:
             "중복 교육과정 과목이 있습니다: "
             f"{sorted(duplicate_keys)}"
         )
+
+    change_groups: dict[
+        str,
+        list[CurriculumCourse],
+    ] = {}
+
+    for course in courses:
+        if course.change_group is None:
+            continue
+
+        change_groups.setdefault(
+            course.change_group,
+            [],
+        ).append(course)
+
+    for (
+        change_group,
+        group_courses,
+    ) in change_groups.items():
+        change_types = {
+            course.change_type
+            for course in group_courses
+        }
+
+        if len(change_types) != 1:
+            raise ValueError(
+                f"변경 그룹 {change_group}의 "
+                "change_type이 서로 다릅니다."
+            )
+
+        change_type = next(
+            iter(change_types)
+        )
+
+        legacy_count = sum(
+            course.change_role == "legacy"
+            for course in group_courses
+        )
+
+        current_count = sum(
+            course.change_role == "current"
+            for course in group_courses
+        )
+
+        expected_shape = {
+            "1:1": (
+                legacy_count == 1
+                and current_count == 1
+            ),
+            "1:N": (
+                legacy_count == 1
+                and current_count >= 2
+            ),
+            "N:1": (
+                legacy_count >= 2
+                and current_count == 1
+            ),
+            "N:M": (
+                legacy_count >= 2
+                and current_count >= 2
+            ),
+        }
+
+        if not expected_shape.get(
+            change_type,
+            False,
+        ):
+            raise ValueError(
+                f"변경 그룹 {change_group}의 "
+                f"{change_type} 구성이 "
+                "올바르지 않습니다. "
+                f"legacy={legacy_count}, "
+                f"current={current_count}"
+            )
+
+        effective_years = {
+            course.change_effective_year
+            for course in group_courses
+        }
+
+        if len(effective_years) != 1:
+            raise ValueError(
+                f"변경 그룹 {change_group}의 "
+                "change_effective_year가 "
+                "서로 다릅니다."
+            )
 
     return courses
 
@@ -182,9 +428,17 @@ def import_courses(
         course_code,
         completion_type,
         credits,
-        notes
+        notes,
+        change_group,
+        change_type,
+        change_role,
+        change_effective_year,
+        change_note
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?
+    )
     """
 
     rows = [
@@ -197,6 +451,11 @@ def import_courses(
             course.completion_type,
             course.credits,
             course.notes,
+            course.change_group,
+            course.change_type,
+            course.change_role,
+            course.change_effective_year,
+            course.change_note,
         )
         for course in courses
     ]
@@ -231,7 +490,7 @@ def import_courses(
 
         connection.executemany(insert_sql, rows)
 
-# legacy 과목의 (현재 괌고, 전필 학점) 미포함
+# legacy 과목은 현재 과목 수와 전필·전선 학점 합계에서 제외
 
 def print_summary(
     courses: list[CurriculumCourse],

@@ -216,7 +216,12 @@ def get_curriculum_courses(
                 course_code,
                 completion_type,
                 credits,
-                notes
+                notes,
+                change_group,
+                change_type,
+                change_role,
+                change_effective_year,
+                change_note
             FROM curriculum_courses
             WHERE entry_year = %s
             ORDER BY
@@ -225,6 +230,11 @@ def get_curriculum_courses(
                 CASE completion_type
                     WHEN '전필' THEN 1
                     WHEN '전선' THEN 2
+                    ELSE 3
+                END,
+                CASE change_role
+                    WHEN 'current' THEN 1
+                    WHEN 'legacy' THEN 2
                     ELSE 3
                 END,
                 course_name
@@ -402,7 +412,12 @@ def get_curriculum_course_by_id(
                 course_code,
                 completion_type,
                 credits,
-                notes
+                notes,
+                change_group,
+                change_type,
+                change_role,
+                change_effective_year,
+                change_note
             FROM curriculum_courses
             WHERE id = %s
             """,

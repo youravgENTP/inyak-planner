@@ -61,6 +61,11 @@ EXPECTED_COLUMNS = {
         "completion_type",
         "credits",
         "notes",
+        "change_group",
+        "change_type",
+        "change_role",
+        "change_effective_year",
+        "change_note",
     ],
     "graduation_requirements": [
         "id",

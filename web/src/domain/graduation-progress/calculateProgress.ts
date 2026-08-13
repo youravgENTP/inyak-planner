@@ -252,8 +252,10 @@ function createMajorProgress(
   const officialCourses =
     curriculum.courses.filter(
       (course) =>
+        course.changeRole ===
+          'current' &&
         course.completionType ===
-        completionType,
+          completionType,
     )
 
   /*

@@ -51,6 +51,29 @@ function normalizeCourseCode(
     : normalizedCourseCode
 }
 
+function recordUsesLegacyCourseCode(
+  curriculum: Curriculum,
+  record: CourseRecord,
+): boolean {
+  const recordCourseCode =
+    normalizeCourseCode(
+      record.courseCode,
+    )
+
+  if (recordCourseCode === null) {
+    return false
+  }
+
+  return curriculum.courses.some(
+    (course) =>
+      course.changeRole === 'legacy' &&
+      normalizeCourseCode(
+        course.courseCode,
+      ) === recordCourseCode,
+  )
+}
+
+
 
 function findExplicitCurriculumCourse(
   curriculum: Curriculum,
@@ -65,8 +88,10 @@ function findExplicitCurriculumCourse(
   return (
     curriculum.courses.find(
       (course) =>
+        course.changeRole ===
+          'current' &&
         course.id ===
-        record.curriculumCourseId,
+          record.curriculumCourseId,
     ) ?? null
   )
 }
@@ -88,6 +113,8 @@ function findCourseCodeMatch(
   const candidates =
     curriculum.courses.filter(
       (course) =>
+        course.changeRole ===
+          'current' &&
         normalizeCourseCode(
           course.courseCode,
         ) === recordCourseCode,
@@ -117,6 +144,8 @@ function findCourseNameMatch(
   const candidates =
     curriculum.courses.filter(
       (course) =>
+        course.changeRole ===
+          'current' &&
         normalizeCourseName(
           course.courseName,
         ) === recordCourseName,
@@ -143,14 +172,21 @@ function findMatchingCurriculumCourse(
    * 대체 인정처럼 사용자가 공식 과목을
    * 명시적으로 연결한 기록을 가장 우선합니다.
    */
-  const explicitCourse =
-    findExplicitCurriculumCourse(
+  /*
+   * curriculumCourseId가 명시된 기록은
+   * 해당 연결만 사용합니다.
+   *
+   * legacy 과목을 가리키는 경우
+   * current 과목으로 자동 fallback하지
+   * 않습니다.
+   */
+  if (
+    record.curriculumCourseId !== null
+  ) {
+    return findExplicitCurriculumCourse(
       curriculum,
       record,
     )
-
-  if (explicitCourse !== null) {
-    return explicitCourse
   }
 
   const courseCodeMatch =
@@ -161,6 +197,20 @@ function findMatchingCurriculumCourse(
 
   if (courseCodeMatch !== null) {
     return courseCodeMatch
+  }
+
+  /*
+   * 변경 전 학정번호가 명확히 확인되는
+   * 수강기록은 과목명 fallback으로
+   * current 과목에 자동 연결하지 않습니다.
+   */
+  if (
+    recordUsesLegacyCourseCode(
+      curriculum,
+      record,
+    )
+  ) {
+    return null
   }
 
   return findCourseNameMatch(

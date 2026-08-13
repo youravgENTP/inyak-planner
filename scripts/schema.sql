@@ -137,7 +137,9 @@ CREATE TABLE IF NOT EXISTS curriculum_courses (
         entry_year,
         grade,
         semester,
-        course_name
+        course_name,
+        course_code,
+        change_role
     )
 );
 
