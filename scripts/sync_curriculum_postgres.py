@@ -279,6 +279,7 @@ def build_unique_csv_map(
 
 def build_unique_db_map(
     rows: list[dict[str, Any]],
+    courses: list[CurriculumCourse],
 ) -> dict[
     tuple[object, ...],
     dict[str, Any],
@@ -291,6 +292,48 @@ def build_unique_db_map(
     for row in rows:
         key = db_key(row)
 
+        # 기존 DB에는 학정번호가 없지만
+        # CSV에 새로 학정번호가 확인된 경우,
+        # 학년·학기·과목명이 정확히 일치하는
+        # 단 하나의 과목에 한해 같은 행으로
+        # 간주하여 기존 ID를 보존한다.
+        if key[0] == "fallback":
+            matches = [
+                course
+                for course in courses
+                if (
+                    course.grade
+                    == row["grade"]
+                    and course.semester
+                    == row["semester"]
+                    and normalize_course_name(
+                        course.course_name
+                    )
+                    == normalize_course_name(
+                        row["course_name"]
+                    )
+                )
+            ]
+
+            if len(matches) > 1:
+                raise RuntimeError(
+                    "학정번호가 없는 PostgreSQL "
+                    "기존 행과 일치하는 CSV 과목이 "
+                    "여러 개입니다: "
+                    f"{key}"
+                )
+
+            if len(matches) == 1:
+                matched_key = csv_key(
+                    matches[0]
+                )
+
+                if (
+                    matched_key[0]
+                    == "course_code"
+                ):
+                    key = matched_key
+
         if key in result:
             raise RuntimeError(
                 "PostgreSQL에서 sync 키가 "
@@ -301,7 +344,6 @@ def build_unique_db_map(
         result[key] = row
 
     return result
-
 
 def course_to_dict(
     course: CurriculumCourse,
@@ -498,7 +540,8 @@ def main() -> None:
         )
 
         db_map = build_unique_db_map(
-            existing_rows
+            existing_rows,
+            courses,
         )
 
         missing_from_csv = (
