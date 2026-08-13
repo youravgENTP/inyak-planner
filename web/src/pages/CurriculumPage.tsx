@@ -138,11 +138,48 @@ function getCurrentCurriculumCourses(
 function getOriginalCurriculumCourses(
   courses: readonly CurriculumCourse[],
 ): CurriculumCourse[] {
-  return courses.filter(
-    (course) =>
-      course.changeGroup === null ||
-      course.changeRole === 'legacy',
-  )
+  const originalCourses:
+    CurriculumCourse[] = []
+
+  for (const course of courses) {
+    if (course.changeRole === 'legacy') {
+      originalCourses.push(course)
+      continue
+    }
+
+    if (course.changeGroup !== null) {
+      continue
+    }
+
+    const hasAttributeChange =
+      course.previousCredits !== null ||
+      course.previousCompletionType !== null ||
+      course.previousGrade !== null ||
+      course.previousSemester !== null
+
+    if (!hasAttributeChange) {
+      originalCourses.push(course)
+      continue
+    }
+
+    originalCourses.push({
+      ...course,
+      credits:
+        course.previousCredits ??
+        course.credits,
+      completionType:
+        course.previousCompletionType ??
+        course.completionType,
+      grade:
+        course.previousGrade ??
+        course.grade,
+      semester:
+        course.previousSemester ??
+        course.semester,
+    })
+  }
+
+  return originalCourses
 }
 
 function createChangeGroups(
