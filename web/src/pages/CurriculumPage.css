@@ -351,6 +351,350 @@
 }
 
 /* =========================================================
+   Curriculum changes
+   ========================================================= */
+
+.curriculum-major-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.curriculum-change-panel {
+  overflow: hidden;
+
+  border: 1px solid #e4e4e4;
+  border-radius: 16px;
+
+  background: #fff;
+}
+
+.curriculum-change-panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  padding: 15px 18px;
+
+  cursor: pointer;
+  list-style: none;
+}
+
+.curriculum-change-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.curriculum-change-panel > summary > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.curriculum-change-panel > summary strong {
+  font-size: 14px;
+  color: #304238;
+}
+
+.curriculum-change-panel > summary > div > span {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #7a817d;
+}
+
+.curriculum-change-count {
+  flex: 0 0 auto;
+
+  padding: 4px 8px;
+
+  border-radius: 999px;
+
+  background: #f1f4f2;
+
+  font-size: 11px;
+  font-weight: 700;
+  color: #66736b;
+}
+
+.curriculum-change-panel-body {
+  padding: 0 18px 18px;
+
+  border-top: 1px solid #ededed;
+}
+
+.curriculum-change-overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  padding-top: 16px;
+}
+
+.curriculum-change-overview > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #e8ece9;
+  border-radius: 12px;
+
+  background: #fafbfa;
+}
+
+.curriculum-change-overview span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #78817b;
+}
+
+.curriculum-change-overview strong {
+  font-size: 13px;
+  color: #34483b;
+}
+
+.curriculum-change-overview small {
+  font-size: 11px;
+  color: #707873;
+}
+
+.curriculum-change-guidance {
+  margin: 12px 0 0;
+
+  font-size: 11px;
+  line-height: 1.55;
+  color: #7a817d;
+}
+
+.curriculum-change-empty {
+  margin: 14px 0 0;
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background: #fafafa;
+
+  font-size: 12px;
+  color: #777;
+}
+
+.curriculum-change-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-top: 14px;
+}
+
+.curriculum-change-item {
+  padding: 14px;
+
+  border: 1px solid #ececec;
+  border-radius: 12px;
+
+  background: #fff;
+}
+
+.curriculum-change-item > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.curriculum-change-item > header strong {
+  font-size: 13px;
+  color: #394b40;
+}
+
+.curriculum-change-item > header span {
+  font-size: 11px;
+  color: #888;
+}
+
+.curriculum-change-course-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.curriculum-change-course-map > div {
+  padding: 10px 12px;
+
+  border-radius: 10px;
+
+  background: #f8f9f8;
+}
+
+.curriculum-change-course-map span {
+  display: block;
+  margin-bottom: 7px;
+
+  font-size: 10px;
+  font-weight: 700;
+  color: #858b87;
+}
+
+.curriculum-change-course-map ul {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.curriculum-change-course-map li {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #555f59;
+}
+
+.curriculum-change-reason {
+  margin: 10px 0 0;
+
+  font-size: 11px;
+  line-height: 1.55;
+  color: #707772;
+}
+
+
+/* =========================================================
+   Top horizontal scrollbar
+   ========================================================= */
+
+.curriculum-top-scroll {
+  width: 100%;
+  height: 17px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.curriculum-top-scroll-spacer {
+  height: 1px;
+}
+
+
+/* =========================================================
+   Changed curriculum courses
+   ========================================================= */
+
+.curriculum-course-item {
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.curriculum-course-title {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.curriculum-course-title > strong {
+  min-width: 0;
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.curriculum-course-change-badge {
+  flex: 0 0 auto;
+
+  padding: 2px 6px;
+
+  border-radius: 6px;
+
+  background: #fde7e7;
+
+  font-size: 9px;
+  font-weight: 700;
+  color: #ad5656;
+}
+
+.curriculum-course-item--legacy {
+  background: #fafafa;
+}
+
+.curriculum-course-item--legacy
+.curriculum-course-title > strong {
+  color: #a0a5a2;
+}
+
+.curriculum-course-item--legacy
+.curriculum-course-meta {
+  color: #a4a8a5;
+}
+
+.curriculum-course-item--change-highlighted {
+  background: #fff8e8;
+
+  box-shadow:
+    inset 3px 0 0
+    #d4b25d;
+}
+
+.curriculum-course-item:focus-visible {
+  outline: 2px solid #8da998;
+  outline-offset: -2px;
+}
+
+.curriculum-course-change-note {
+  padding: 8px 10px;
+
+  border-radius: 8px;
+
+  background: #faf8f4;
+}
+
+.curriculum-course-change-details {
+  margin-top: 10px;
+  padding-top: 10px;
+
+  border-top: 1px solid #ededed;
+}
+
+.curriculum-course-change-details > strong {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 10px;
+  color: #747c77;
+}
+
+.curriculum-course-change-details ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.curriculum-course-change-details li {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #5e6761;
+}
+
+.curriculum-course-item--legacy
+.curriculum-course-change-details li {
+  color: #777e79;
+}
+
+/* =========================================================
    Responsive adjustment
    ========================================================= */
 
@@ -368,6 +712,15 @@
 @media (max-width: 720px) {
   .curriculum-overview {
     grid-template-columns: 1fr;
+  }
+
+  .curriculum-change-overview,
+  .curriculum-change-course-map {
+    grid-template-columns: 1fr;
+  }
+
+  .curriculum-change-panel > summary {
+    align-items: flex-start;
   }
 
   .curriculum-semester-card {
