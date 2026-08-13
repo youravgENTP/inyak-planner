@@ -95,6 +95,7 @@
 }
 
 .graduation-progress-bar {
+  display: flex;
   height: 8px;
   margin-top: 18px;
   overflow: hidden;
@@ -104,9 +105,16 @@
 
 .graduation-progress-bar-value {
   height: 100%;
-  border-radius: inherit;
-  background: #3f7f64;
+  flex: 0 0 auto;
   transition: width 180ms ease;
+}
+
+.graduation-progress-bar-value--completed {
+  background: #3f7f64;
+}
+
+.graduation-progress-bar-value--scheduled {
+  background: #a8cdbd;
 }
 
 

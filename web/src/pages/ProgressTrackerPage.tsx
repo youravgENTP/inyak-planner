@@ -97,21 +97,48 @@ function getProgressPercent(
   )
 }
 
-
 function ProgressBar({
   progress,
 }: {
   progress: CreditProgress
 }) {
-  const progressPercent =
+  const completedPercent =
     getProgressPercent(progress)
+
+  const scheduledCredits =
+    progress.inProgressCredits +
+    progress.plannedCredits
+
+  const scheduledPercent =
+    progress.requiredCredits === 0
+      ? 0
+      : Math.min(
+          (
+            scheduledCredits /
+            progress.requiredCredits
+          ) * 100,
+          100 - completedPercent,
+        )
 
   return (
     <div className="graduation-progress-bar">
       <div
-        className="graduation-progress-bar-value"
+        className={
+          'graduation-progress-bar-value ' +
+          'graduation-progress-bar-value--completed'
+        }
         style={{
-          width: `${progressPercent}%`,
+          width: `${completedPercent}%`,
+        }}
+      />
+
+      <div
+        className={
+          'graduation-progress-bar-value ' +
+          'graduation-progress-bar-value--scheduled'
+        }
+        style={{
+          width: `${scheduledPercent}%`,
         }}
       />
     </div>
