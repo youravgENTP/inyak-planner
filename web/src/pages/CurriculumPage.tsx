@@ -299,8 +299,7 @@ function formatCourseReference(
   )
 }
 
-function formatCourseState(
-  *,
+function formatCourseState({
   grade,
   semester,
   completionType,
