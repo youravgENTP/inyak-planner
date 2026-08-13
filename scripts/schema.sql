@@ -77,6 +77,59 @@ CREATE TABLE IF NOT EXISTS curriculum_courses (
      */
     notes TEXT,
 
+    /*
+     * 교육과정 개편으로 서로 연결된
+     * 과목들을 묶는 그룹 식별자
+     */
+    change_group TEXT,
+
+    /*
+     * 과목 변경 관계
+     * 예: 1:N, N:1
+     */
+    change_type TEXT
+        CHECK (
+            change_type IS NULL
+            OR change_type IN (
+                '1:1',
+                '1:N',
+                'N:1',
+                'N:M'
+            )
+        ),
+
+    /*
+     * current:
+     * 현재 졸업요건 계산에 사용하는 과목
+     *
+     * legacy:
+     * 변경 이전 과목.
+     * UI에는 표시하지만 졸업요건 계산에서는 제외
+     */
+    change_role TEXT NOT NULL
+        DEFAULT 'current'
+        CHECK (
+            change_role IN (
+                'current',
+                'legacy'
+            )
+        ),
+
+    /*
+     * 변경 내용이 실제 교육과정에 반영된 학년도
+     */
+    change_effective_year INTEGER
+        CHECK (
+            change_effective_year IS NULL
+            OR change_effective_year
+                BETWEEN 2000 AND 2100
+        ),
+
+    /*
+     * 변경 관계에 대한 설명
+     */
+    change_note TEXT,
+
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -104,6 +157,14 @@ ON curriculum_courses (
 CREATE INDEX IF NOT EXISTS idx_curriculum_courses_code
 ON curriculum_courses (
     course_code
+);
+
+/* 교육과정 변경 그룹 검색 */
+
+CREATE INDEX IF NOT EXISTS idx_curriculum_courses_change_group
+ON curriculum_courses (
+    entry_year,
+    change_group
 );
 
 

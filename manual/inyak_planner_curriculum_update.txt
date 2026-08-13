@@ -1,0 +1,1205 @@
+==================================================
+0. 전체 작업 순서
+==================================================
+
+1) dev 브랜치 최신화
+2) 공식 교육과정 자료 확보
+3) 새 학번 전공 교육과정 CSV 작성
+4) 실제 수강편람 데이터와 대조
+5) 전공 교육과정 SQLite import
+6) 교육과정 audit 실행
+7) 전공 졸업 최소학점 추가
+8) 졸업요건 SQLite import
+9) 교양 졸업요건 CSV 2개 작성
+10) 교양요건 SQLite import
+11) SQLite에서 직접 확인
+12) 백엔드 실행 확인
+13) 프론트에서 새 학번 확인
+14) npm run build
+15) Git 변경사항 확인
+16) 관련 파일만 commit/push
+17) Supabase 반영 여부 별도 확인
+
+
+==================================================
+1. 작업 시작 전 dev 브랜치 최신화
+==================================================
+
+==================================================
+2. 새 학번 추가 시 필요한 파일
+==================================================
+
+예시: 2027학번
+
+
+새로 만들 파일:
+
+data/seed/curriculum_2027.csv
+
+data/seed/general_education_requirements_2027.csv
+
+data/seed/general_education_areas_2027.csv
+
+
+수정할 기존 파일:
+
+data/reference/graduation_requirements.csv
+
+
+현재 전공 교육과정 importer:
+
+scripts/import_curriculum.py
+
+
+현재 전공 교육과정 검증 스크립트:
+
+scripts/audit_curriculum_credits.py
+
+
+현재 졸업요건 importer:
+
+scripts/load_graduation_requirements.py
+
+
+현재 교양 importer:
+
+scripts/import_general_education.py
+
+
+==================================================
+3. 공식 교육과정 자료 확보
+==================================================
+
+==================================================
+4. 전공 교육과정 CSV 만들기
+==================================================
+
+만들어야하는 파일 : data/seed/curriculum_학년도.csv
+
+==================================================
+5. curriculum_2027.csv 형식
+==================================================
+
+첫 줄 헤더:
+
+entry_year,grade,semester,course_name,course_code,completion_type,credits,notes
+
+
+예시:
+
+2027,1,1,해부생리학1,ADB101,전선,2,
+
+2027,1,1,약학기초생물학1,ADB002,전선,3,
+
+
+각 컬럼 의미:
+
+entry_year
+→ 입학연도
+
+grade
+→ 1~6학년
+
+semester
+→ 1 또는 2
+
+course_name
+→ 공식 과목명
+
+course_code
+→ 대표 학정번호
+→ 확실하지 않으면 빈칸 가능
+
+completion_type
+→ 전필 또는 전선
+
+credits
+→ 공식 학점
+→ 확실하지 않으면 빈칸 가능
+
+notes
+→ 판단 근거
+→ 학정번호 출처
+→ 과목명 변경 여부
+→ 학점 변경 여부 등을 기록
+
+
+현재 importer가 검사하는 조건:
+
+grade는 1~6만 허용
+
+semester는 1 또는 2만 허용
+
+completion_type은 전필 또는 전선만 허용
+
+한 CSV에는 하나의 entry_year만 허용
+
+동일한 grade + semester + course_name 중복 금지
+
+credits는 숫자 또는 빈 값
+
+
+==================================================
+6. 학정번호와 학점 보강
+==================================================
+
+공식 교육과정 자료만으로 학정번호나 학점이 애매할 경우
+실제 수강편람 데이터를 참고한다.
+
+
+현재 과거 수강편람 이력 파일:
+
+data/2022_2026_pharmacy_course_history.csv
+
+
+파일 열기:
+
+code data/2022_2026_pharmacy_course_history.csv
+
+
+또는 SQLite DB에서 직접 검색한다.
+
+
+실행:
+
+sqlite3 data/db/inyak.db
+
+
+예시 SQL:
+
+SELECT
+    academic_year,
+    semester,
+    course_code,
+    course_name,
+    completion_type,
+    credits
+FROM courses
+WHERE course_name LIKE '%독성학%'
+ORDER BY academic_year, semester;
+
+
+종료:
+
+.quit
+
+
+==================================================
+7. 교육과정과 실제 수강편람이 다를 때
+==================================================
+
+바로 실제 수강편람 값으로 덮어쓰지 않는다.
+
+
+먼저 확인할 것:
+
+1) 정말 같은 과목인지
+
+2) 학정번호가 변경된 것인지
+
+3) 과목명이 변경된 것인지
+
+4) 교육과정 개편으로 학점이 바뀐 것인지
+
+5) 같은 이름의 다른 과목인지
+
+6) 교육과정 PDF 표기 문제인지
+
+
+애매하면 notes에 근거를 남긴다.
+
+
+==================================================
+8. 전공 교육과정 SQLite import
+==================================================
+
+현재 이 스크립트는 로컬 SQLite DB를 수정한다.
+
+대상 DB:
+
+data/db/inyak.db
+
+
+DB 존재 확인:
+
+ls -lh data/db/inyak.db
+
+
+20nn학번 import:
+
+python scripts/import_curriculum.py data/seed/curriculum_20nn.csv
+
+
+정상 출력 예시:
+
+2027학번 교육과정 import 완료
+과목 수: ...
+전필 학점: ...
+전선 개설학점: ...
+대표 학정번호 미지정: ...
+DB: .../data/db/inyak.db
+
+
+이 스크립트의 동작:
+
+curriculum_courses에서
+해당 entry_year 데이터만 삭제한 뒤 다시 입력한다.
+
+courses 테이블은 건드리지 않는다.
+
+
+즉 CSV를 수정한 뒤 다시 실행해도 된다.
+
+
+==================================================
+9. 전공 교육과정 import 결과 확인
+==================================================
+
+실행:
+
+sqlite3 data/db/inyak.db
+
+
+전체 과목 확인:
+
+SELECT
+    entry_year,
+    grade,
+    semester,
+    completion_type,
+    course_code,
+    course_name,
+    credits
+FROM curriculum_courses
+WHERE entry_year = 2022
+ORDER BY grade, semester, completion_type, course_name;
+
+
+과목 수 확인:
+
+SELECT COUNT(*)
+FROM curriculum_courses
+WHERE entry_year = 2027;
+
+
+전필/전선 개설학점 합계 확인:
+
+SELECT
+    completion_type,
+    COUNT(*) AS course_count,
+    SUM(COALESCE(credits, 0)) AS credits
+FROM curriculum_courses
+WHERE entry_year = 2022
+GROUP BY completion_type;
+
+
+종료:
+
+.quit
+
+
+주의:
+
+curriculum_courses 안의 전필/전선 학점 합계와
+공식 졸업 최소학점은 반드시 같을 필요가 없다.
+
+공식 최소 이수학점은 graduation_requirements에서 따로 관리한다.
+
+
+==================================================
+10. 교육과정 audit 실행
+==================================================
+
+실행:
+
+python scripts/audit_curriculum_credits.py
+
+
+이 스크립트는 현재 DB에 들어 있는 모든 curriculum_courses를
+실제 courses 데이터와 비교한다.
+
+
+주요 출력:
+
+
+[CREDIT_MISMATCH]
+
+→ 교육과정상의 학점과 실제 수강편람 학점이 다름
+
+
+[NOT_FOUND]
+
+→ 학정번호로 실제 개설 과목을 찾지 못함
+
+이 경우 같은 학기 또는 같은 학년도에서
+이름 기준 후보를 같이 보여준다.
+
+
+[SECTION_CREDIT_CONFLICT]
+
+→ 같은 학정번호인데 분반별 학점이 서로 다름
+
+
+마지막 요약:
+
+교육과정 과목 수
+현재 검증 가능
+아직 검증 불가
+학점 일치
+학점 불일치
+학정번호로 찾지 못함
+분반 간 학점 충돌
+
+
+==================================================
+11. 아직 검증 불가 과목 처리
+==================================================
+
+==================================================
+12. 전공 졸업 최소학점 추가
+==================================================
+
+파일:
+
+data/reference/graduation_requirements.csv
+
+
+열기:
+
+code data/reference/graduation_requirements.csv
+
+
+헤더:
+
+entry_year,major_required_credits,major_elective_credits,notes
+
+
+새 학번 행을 마지막에 추가한다.
+
+
+형식 예시:
+
+2027,전필최소학점,전선최소학점,2027학년도 공식 교육과정 기준
+
+
+숫자는 반드시 공식 자료에서 확인한 값만 입력한다.
+
+추측해서 넣지 않는다.
+
+
+==================================================
+13. 졸업요건 SQLite import
+==================================================
+
+실행:
+
+python scripts/load_graduation_requirements.py
+
+
+이 스크립트는 별도 파일 경로 인자를 받지 않는다.
+
+항상 다음 파일을 읽는다:
+
+data/reference/graduation_requirements.csv
+
+
+대상 DB:
+
+data/db/inyak.db
+
+
+정상 출력 예시:
+
+졸업요건 적재 완료: N개 학번
+SQLite DB: .../data/db/inyak.db
+
+
+==================================================
+14. 졸업요건 확인
+==================================================
+
+실행:
+
+sqlite3 data/db/inyak.db
+
+
+SQL:
+
+SELECT
+    entry_year,
+    major_required_credits,
+    major_elective_credits,
+    notes
+FROM graduation_requirements
+ORDER BY entry_year;
+
+
+종료:
+
+.quit
+
+
+==================================================
+15. 교양 졸업요건 파일 만들기
+==================================================
+
+필요한 새 파일:
+
+data/seed/general_education_requirements_2027.csv
+
+data/seed/general_education_areas_2027.csv
+
+
+형식 참고용 복사:
+
+cp   data/seed/general_education_requirements_2024.csv   data/seed/general_education_requirements_2027.csv
+
+
+cp   data/seed/general_education_areas_2024.csv   data/seed/general_education_areas_2027.csv
+
+
+파일 열기:
+
+code data/seed/general_education_requirements_2027.csv
+
+code data/seed/general_education_areas_2027.csv
+
+
+==================================================
+16. general_education_requirements_2027.csv 형식
+==================================================
+
+헤더:
+
+entry_year,category,minimum_credits,minimum_area_count,notes,display_order
+
+
+현재 importer가 허용하는 category:
+
+기초교양
+
+균형교양
+
+
+예시 형식:
+
+2027,기초교양,18,,기초교양 총 18학점 이상 이수,1
+
+2027,균형교양,18,3,총 18학점 이상을 3개 이상의 세부 영역에서 이수,2
+
+
+주의:
+
+위 숫자는 예시일 뿐이다.
+
+실제 2027 공식 교양요건을 확인해서 입력한다.
+
+
+==================================================
+17. general_education_areas_2027.csv 형식
+==================================================
+
+헤더:
+
+entry_year,category,area_name,minimum_credits,is_required,notes,display_order
+
+
+컬럼 의미:
+
+entry_year
+→ 입학연도
+
+category
+→ 기초교양 또는 균형교양
+
+area_name
+→ 세부 영역 이름
+
+minimum_credits
+→ 해당 영역 최소학점
+→ 없으면 빈칸
+
+is_required
+→ 필수 영역이면 1
+→ 선택 영역이면 0
+
+notes
+→ 추가 조건
+
+display_order
+→ 화면 표시 순서
+
+
+형식 예시:
+
+2027,기초교양,사고,2,1,,1
+
+2027,기초교양,언어와 표현,2,1,글쓰기 영역,2
+
+2027,균형교양,인간과 예술,,0,,1
+
+
+==================================================
+18. 교양 졸업요건 SQLite import
+==================================================
+
+실행:
+
+python scripts/import_general_education.py   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv
+
+
+대상 DB:
+
+data/db/inyak.db
+
+
+이 스크립트는
+해당 학번의 교양 requirement / area 데이터를 교체한다.
+
+
+==================================================
+19. 교양 import 결과 확인
+==================================================
+
+실행:
+
+sqlite3 data/db/inyak.db
+
+
+교양 대분류:
+
+SELECT *
+FROM general_education_requirements
+WHERE entry_year = 2027
+ORDER BY display_order;
+
+
+교양 세부 영역:
+
+SELECT
+    ger.entry_year,
+    ger.category,
+    gea.area_name,
+    gea.minimum_credits,
+    gea.is_required,
+    gea.display_order
+FROM general_education_areas AS gea
+JOIN general_education_requirements AS ger
+    ON ger.id = gea.requirement_id
+WHERE ger.entry_year = 2027
+ORDER BY ger.display_order, gea.display_order;
+
+
+종료:
+
+.quit
+
+
+==================================================
+20. 교양 과목별 영역 매핑
+==================================================
+
+현재 별도 파일:
+
+data/general_education_course_mappings.csv
+
+
+관련 스크립트:
+
+scripts/import_general_education_course_mappings.py
+
+
+이 데이터는 교양 졸업요건 자체가 아니라
+
+“실제 어떤 교양 과목이 어떤 교양 영역으로 인정되는가”
+
+를 연결하는 데이터다.
+
+
+따라서 새 학번 추가 시 항상 수정할 필요는 없다.
+
+
+다음 경우에만 별도 검토:
+
+새 학번에서 교양 영역 체계가 바뀐 경우
+
+실제 인정 과목 목록이 바뀐 경우
+
+과목-영역 매핑이 새로 필요한 경우
+
+
+==================================================
+21. 전체 로컬 DB 확인
+==================================================
+
+실행:
+
+sqlite3 data/db/inyak.db
+
+
+교육과정 학번 목록:
+
+SELECT DISTINCT entry_year
+FROM curriculum_courses
+ORDER BY entry_year;
+
+
+전공 졸업요건 학번 목록:
+
+SELECT entry_year
+FROM graduation_requirements
+ORDER BY entry_year;
+
+
+교양 졸업요건 학번 목록:
+
+SELECT DISTINCT entry_year
+FROM general_education_requirements
+ORDER BY entry_year;
+
+
+새 학번이 세 곳에 모두 존재하는지 확인한다.
+
+
+2027 전공 과목 수:
+
+SELECT COUNT(*)
+FROM curriculum_courses
+WHERE entry_year = 2027;
+
+
+2027 교양 대분류 수:
+
+SELECT COUNT(*)
+FROM general_education_requirements
+WHERE entry_year = 2027;
+
+
+2027 교양 세부 영역 수:
+
+SELECT COUNT(*)
+FROM general_education_areas AS gea
+JOIN general_education_requirements AS ger
+    ON ger.id = gea.requirement_id
+WHERE ger.entry_year = 2027;
+
+
+종료:
+
+.quit
+
+
+==================================================
+22. audit 다시 실행
+==================================================
+
+실행:
+
+python scripts/audit_curriculum_credits.py
+
+
+특히 확인할 출력:
+
+[CREDIT_MISMATCH]
+
+[NOT_FOUND]
+
+[SECTION_CREDIT_CONFLICT]
+
+
+미래 학기 때문에 발생한
+“아직 검증 불가”는 정상일 수 있다.
+
+
+==================================================
+23. 백엔드 실행 확인
+==================================================
+
+프로젝트 루트:
+
+cd /Users/younyung.gene/inyak-planner
+
+
+Python 의존성이 없다면:
+
+python -m pip install -r requirements.txt
+
+
+백엔드 실행:
+
+uvicorn server.main:app --reload --port 8000
+
+
+정상 기동 여부를 확인한다.
+
+
+종료:
+
+Ctrl + C
+
+
+==================================================
+24. 프론트엔드 실행 확인
+==================================================
+
+이동:
+
+cd /Users/younyung.gene/inyak-planner/web
+
+
+필요한 경우:
+
+npm install
+
+
+개발 서버 실행:
+
+npm run dev
+
+
+브라우저에서 확인할 것:
+
+새 학번이 정상 처리되는지
+
+학년/학기별 전필이 보이는지
+
+전선 과목이 보이는지
+
+전필 최소학점이 맞는지
+
+전선 최소학점이 맞는지
+
+교양 대분류가 맞는지
+
+교양 세부 영역이 맞는지
+
+수강이력 입력 & GPA 계산 화면이 정상인지
+
+편입생 모드에서도 오류가 없는지
+
+
+종료:
+
+Ctrl + C
+
+
+==================================================
+25. 프론트 build 확인
+==================================================
+
+위치:
+
+cd /Users/younyung.gene/inyak-planner/web
+
+
+실행:
+
+npm run build
+
+
+TypeScript 오류 없이
+Vite build까지 완료되는지 확인한다.
+
+
+==================================================
+26. Git 변경사항 확인
+==================================================
+
+프로젝트 루트:
+
+cd /Users/younyung.gene/inyak-planner
+
+
+실행:
+
+git status
+
+
+예상 변경 파일:
+
+data/seed/curriculum_2027.csv
+
+data/seed/general_education_requirements_2027.csv
+
+data/seed/general_education_areas_2027.csv
+
+data/reference/graduation_requirements.csv
+
+
+기존 파일 diff:
+
+git diff -- data/reference/graduation_requirements.csv
+
+
+새 파일 직접 확인:
+
+cat data/seed/curriculum_2027.csv
+
+
+또는:
+
+code data/seed/curriculum_2027.csv
+
+
+==================================================
+27. Git stage
+==================================================
+
+관련 파일만 stage한다.
+
+
+실행:
+
+git add --   data/seed/curriculum_2027.csv   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv   data/reference/graduation_requirements.csv
+
+
+확인:
+
+git status
+
+
+staged diff:
+
+git diff --cached
+
+
+==================================================
+28. Commit
+==================================================
+
+예시:
+
+git commit -m "2027학번 교육과정 및 졸업요건 추가"
+
+
+확인:
+
+git status
+
+
+==================================================
+29. Push
+==================================================
+
+dev 브랜치인지 확인:
+
+git branch --show-current
+
+
+push:
+
+git push origin dev
+
+
+==================================================
+30. 매우 중요: Supabase 반영
+==================================================
+
+현재 다음 importer들은 모두
+로컬 SQLite인 data/db/inyak.db만 수정한다.
+
+
+scripts/import_curriculum.py
+
+scripts/load_graduation_requirements.py
+
+scripts/import_general_education.py
+
+
+즉 이 세 개를 실행했다고 해서
+Supabase 개발 DB나 배포 DB가 자동으로 바뀌지 않는다.
+
+
+==================================================
+31. migrate_inyak_to_postgres.py 주의
+==================================================
+
+현재 존재하는 스크립트:
+
+scripts/migrate_inyak_to_postgres.py
+
+
+이 스크립트의 목적:
+
+로컬 SQLite의 공용 데이터를
+비어 있는 PostgreSQL DB로 최초 이전
+
+
+복사 대상 테이블:
+
+courses
+
+curriculum_courses
+
+graduation_requirements
+
+general_education_requirements
+
+general_education_areas
+
+
+중요:
+
+대상 PostgreSQL 테이블에 이미 데이터가 있으면
+안전장치 때문에 실행이 중단된다.
+
+
+따라서 이미 사용 중인 Supabase DB에
+새 학번 하나만 추가하려고
+이 스크립트를 실행하면 안 된다.
+
+
+잘못된 용도:
+
+python scripts/migrate_inyak_to_postgres.py
+
+
+이것은 연례 교육과정 증분 업데이트용 스크립트가 아니다.
+
+
+==================================================
+32. 현재 필요한 후속 개발
+==================================================
+
+향후에는 기존 Supabase DB에
+특정 학번만 안전하게 넣는 전용 스크립트가 필요하다.
+
+
+예시 이름:
+
+scripts/sync_cohort_to_postgres.py
+
+
+필요한 기능:
+
+DATABASE_URL 확인
+
+연결 대상 DB 표시
+
+개발 DB / 배포 DB 구분 확인
+
+입력할 entry_year 표시
+
+해당 학번 데이터만 처리
+
+다른 학번 데이터는 절대 삭제하지 않음
+
+transaction 사용
+
+실패 시 rollback
+
+import 전후 row count 출력
+
+가능하면 --dry-run 지원
+
+
+이 기능이 생기기 전까지는
+
+“로컬 SQLite import 완료”
+
+와
+
+“Supabase 반영 완료”
+
+를 같은 것으로 보면 안 된다.
+
+
+==================================================
+33. 현재 dev 기준 데이터 상태
+==================================================
+
+현재 GitHub dev의 data/seed에서 확인되는 파일:
+
+data/seed/curriculum_2023.csv
+
+data/seed/curriculum_2024.csv
+
+data/seed/general_education_requirements_2023.csv
+
+data/seed/general_education_requirements_2024.csv
+
+data/seed/general_education_areas_2023.csv
+
+data/seed/general_education_areas_2024.csv
+
+
+현재 graduation_requirements.csv에는
+2023, 2024, 2025, 2026 행이 존재한다.
+
+
+즉 현재 dev에서는
+
+2025/2026 전공 curriculum seed
+
+2025/2026 교양 seed
+
+가 보이지 않는다.
+
+
+따라서 나중에
+2025/2026 데이터가 어떤 경로로 DB에 들어갔는지 확인하고
+
+seed 파일을 source-of-truth로 맞추는 정리 작업이 필요하다.
+
+
+==================================================
+34. 작업 종료 전 최종 점검
+==================================================
+
+아래를 전부 확인한다.
+
+
+최신 dev를 반영했는가
+
+공식 교육과정 자료를 확보했는가
+
+6년제 교육체계이수도를 기준으로 학년을 판정했는가
+
+curriculum_YYYY.csv를 만들었는가
+
+entry_year가 모두 새 학번으로 되어 있는가
+
+semester가 1 또는 2인가
+
+completion_type이 전필 또는 전선인가
+
+중복 과목이 없는가
+
+학정번호 근거를 확인했는가
+
+학점 근거를 확인했는가
+
+미래 과목을 검증 불가라는 이유로 삭제하지 않았는가
+
+import_curriculum.py가 성공했는가
+
+audit 결과를 검토했는가
+
+공식 전필 최소학점을 확인했는가
+
+공식 전선 최소학점을 확인했는가
+
+graduation_requirements.csv에 새 학번을 추가했는가
+
+load_graduation_requirements.py가 성공했는가
+
+교양 대분류 요건을 확인했는가
+
+교양 세부 영역 요건을 확인했는가
+
+교양 CSV 두 개를 만들었는가
+
+import_general_education.py가 성공했는가
+
+SQLite에서 새 학번 데이터를 직접 조회했는가
+
+백엔드가 정상 실행되는가
+
+프론트에서 새 학번이 정상 표시되는가
+
+npm run build가 성공하는가
+
+git diff에 예상하지 않은 변경이 없는가
+
+필요한 파일만 stage했는가
+
+commit 후 dev에 push했는가
+
+Supabase 반영 여부를 별도로 확인했는가
+
+migrate_inyak_to_postgres.py를 증분 업데이트 용도로 실행하지 않았는가
+
+
+==================================================
+35. 자주 쓰는 커맨드만 모아서 보기
+==================================================
+
+프로젝트 루트:
+
+cd /Users/younyung.gene/inyak-planner
+
+
+dev 최신화:
+
+git switch dev
+
+git fetch origin
+
+git pull --ff-only origin dev
+
+git status
+
+
+전공 교육과정 import:
+
+python scripts/import_curriculum.py data/seed/curriculum_2027.csv
+
+
+교육과정 audit:
+
+python scripts/audit_curriculum_credits.py
+
+
+졸업요건 import:
+
+python scripts/load_graduation_requirements.py
+
+
+교양요건 import:
+
+python scripts/import_general_education.py   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv
+
+
+SQLite 확인:
+
+sqlite3 data/db/inyak.db
+
+
+백엔드:
+
+uvicorn server.main:app --reload --port 8000
+
+
+프론트:
+
+cd /Users/younyung.gene/inyak-planner/web
+
+npm run dev
+
+
+빌드:
+
+npm run build
+
+
+Git 확인:
+
+cd /Users/younyung.gene/inyak-planner
+
+git status
+
+git diff
+
+git diff --cached
+
+
+==================================================
+36. 이 작업에서 지켜야 할 원칙
+==================================================
+
+1) 공식 교육과정 자료가 기준이다.
+
+2) 실제 수강편람은 검증 자료다.
+
+3) 미래 학년 과목은 실제 개설 데이터가 없어도
+   공식 교육과정에 있으면 유지한다.
+
+4) 전공 교육과정 개설학점 합계와
+   공식 졸업 최소학점을 같은 값으로 취급하지 않는다.
+
+5) 로컬 SQLite import와
+   Supabase 반영은 현재 서로 다른 단계다.
+
+6) 기존 학번 데이터를 건드리지 않고
+   새 학번 데이터만 추가 또는 교체하는 방향으로 작업한다.
+
