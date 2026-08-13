@@ -441,6 +441,76 @@ export function CurriculumPage() {
     [curriculum],
   )
 
+  const attributeChanges = useMemo(
+    () =>
+      (curriculum?.courses ?? [])
+        .filter(
+          (course) =>
+            course.changeRole ===
+              'current' &&
+            course.changeGroup === null &&
+            (
+              course.previousCredits !==
+                null ||
+              course.previousCompletionType !==
+                null ||
+              course.previousGrade !==
+                null ||
+              course.previousSemester !==
+                null
+            ),
+        )
+        .sort(
+          (
+            firstCourse,
+            secondCourse,
+          ) => {
+            const firstYear =
+              firstCourse
+                .attributeChangeEffectiveYear ??
+              Number.MAX_SAFE_INTEGER
+
+            const secondYear =
+              secondCourse
+                .attributeChangeEffectiveYear ??
+              Number.MAX_SAFE_INTEGER
+
+            if (firstYear !== secondYear) {
+              return firstYear - secondYear
+            }
+
+            if (
+              firstCourse.grade !==
+              secondCourse.grade
+            ) {
+              return (
+                firstCourse.grade -
+                secondCourse.grade
+              )
+            }
+
+            if (
+              firstCourse.semester !==
+              secondCourse.semester
+            ) {
+              return (
+                firstCourse.semester -
+                secondCourse.semester
+              )
+            }
+
+            return firstCourse.courseName.localeCompare(
+              secondCourse.courseName,
+            )
+          },
+        ),
+    [curriculum],
+  )
+
+  const changeCount =
+    changeGroups.length +
+    attributeChanges.length
+
   const curriculumComparison = useMemo(
     () => ({
       originalRequired:
@@ -703,7 +773,7 @@ export function CurriculumPage() {
                 </div>
 
                 <span className="curriculum-change-count">
-                  {changeGroups.length}건
+                  {changeCount}건
                 </span>
               </summary>
 
@@ -786,7 +856,7 @@ export function CurriculumPage() {
                   기준으로 합니다.
                 </p>
 
-                {changeGroups.length === 0 ? (
+                {changeCount === 0 ? (
                   <p className="curriculum-change-empty">
                     현재 등록된 과목 변경
                     관계가 없습니다.
