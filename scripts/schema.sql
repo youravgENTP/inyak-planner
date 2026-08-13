@@ -130,6 +130,56 @@ CREATE TABLE IF NOT EXISTS curriculum_courses (
      */
     change_note TEXT,
 
+    /*
+     * 동일 과목의 속성 변경 이전 학점
+     */
+    previous_credits REAL,
+
+    /*
+     * 동일 과목의 속성 변경 이전 이수구분
+     */
+    previous_completion_type TEXT
+        CHECK (
+            previous_completion_type IS NULL
+            OR previous_completion_type IN (
+                '전필',
+                '전선'
+            )
+        ),
+
+    /*
+     * 동일 과목의 속성 변경 이전 권장 학년
+     */
+    previous_grade INTEGER
+        CHECK (
+            previous_grade IS NULL
+            OR previous_grade BETWEEN 1 AND 6
+        ),
+
+    /*
+     * 동일 과목의 속성 변경 이전 권장 학기
+     */
+    previous_semester INTEGER
+        CHECK (
+            previous_semester IS NULL
+            OR previous_semester IN (1, 2)
+        ),
+
+    /*
+     * 동일 과목의 속성 변경이 적용된 학년도
+     */
+    attribute_change_effective_year INTEGER
+        CHECK (
+            attribute_change_effective_year IS NULL
+            OR attribute_change_effective_year
+                BETWEEN 2000 AND 2100
+        ),
+
+    /*
+     * 학점·이수구분·학년·학기 변경 설명
+     */
+    attribute_change_note TEXT,
+
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
