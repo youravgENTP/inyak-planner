@@ -231,6 +231,7 @@ def import_courses(
 
         connection.executemany(insert_sql, rows)
 
+# legacy 과목의 (현재 괌고, 전필 학점) 미포함
 
 def print_summary(
     courses: list[CurriculumCourse],
@@ -243,28 +244,54 @@ def print_summary(
         summary = connection.execute(
             """
             SELECT
-                COUNT(*) AS course_count,
+                COUNT(*) AS total_row_count,
+
                 SUM(
                     CASE
-                        WHEN completion_type = '전필'
+                        WHEN change_role = 'current'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS current_course_count,
+
+                SUM(
+                    CASE
+                        WHEN change_role = 'legacy'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS legacy_course_count,
+
+                SUM(
+                    CASE
+                        WHEN
+                            change_role = 'current'
+                            AND completion_type = '전필'
                         THEN COALESCE(credits, 0)
                         ELSE 0
                     END
                 ) AS required_credits,
+
                 SUM(
                     CASE
-                        WHEN completion_type = '전선'
+                        WHEN
+                            change_role = 'current'
+                            AND completion_type = '전선'
                         THEN COALESCE(credits, 0)
                         ELSE 0
                     END
                 ) AS elective_credits,
+
                 SUM(
                     CASE
-                        WHEN course_code IS NULL
+                        WHEN
+                            change_role = 'current'
+                            AND course_code IS NULL
                         THEN 1
                         ELSE 0
                     END
                 ) AS missing_code_count
+
             FROM curriculum_courses
             WHERE entry_year = ?
             """,
@@ -273,12 +300,19 @@ def print_summary(
 
     print()
     print(f"{entry_year}학번 교육과정 import 완료")
-    print(f"과목 수: {summary[0]}개")
-    print(f"전필 학점: {summary[1]:g}")
-    print(f"전선 개설학점: {summary[2]:g}")
-    print(f"대표 학정번호 미지정: {summary[3]}개")
+    print(f"전체 행: {summary[0]}개")
+    print(f"현재 과목: {summary[1]}개")
+    print(f"변경 전 과목: {summary[2]}개")
+    print(f"현재 전필 학점: {summary[3]:g}")
+    print(
+        f"현재 전선 개설학점: "
+        f"{summary[4]:g}"
+    )
+    print(
+        f"현재 과목 중 대표 학정번호 미지정: "
+        f"{summary[5]}개"
+    )
     print(f"DB: {db_path}")
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
