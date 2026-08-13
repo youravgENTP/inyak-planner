@@ -299,6 +299,30 @@ function formatCourseReference(
   )
 }
 
+function formatCourseState(
+  *,
+  grade,
+  semester,
+  completionType,
+  credits,
+}: {
+  grade: number
+  semester: number
+  completionType:
+    CurriculumCompletionType
+  credits: number | null
+}): string {
+  return (
+    `${grade}학년 ${semester}학기 · ` +
+    `${completionType} · ` +
+    (
+      credits === null
+        ? '학점 미확정'
+        : `${credits}학점`
+    )
+  )
+}
+
 export function CurriculumPage() {
   const [
     selectedEntryYear,
@@ -942,6 +966,85 @@ export function CurriculumPage() {
                         </article>
                       ),
                     )}
+                  {attributeChanges.map(
+                    (course) => (
+                      <article
+                        className="curriculum-change-item"
+                        key={`attribute-${course.id}`}
+                      >
+                        <header>
+                          <strong>
+                            속성 변경
+                          </strong>
+
+                          <span>
+                            {course
+                              .attributeChangeEffectiveYear ===
+                            null
+                              ? '적용 학년도 미정'
+                              : `${course.attributeChangeEffectiveYear}학년도 반영`}
+                          </span>
+                        </header>
+
+                        <strong>
+                          {course.courseName}
+                        </strong>
+
+                        <div className="curriculum-change-course-map">
+                          <div>
+                            <span>
+                              변경 전
+                            </span>
+
+                            <ul>
+                              <li>
+                                {formatCourseState({
+                                  grade:
+                                    course.previousGrade ??
+                                    course.grade,
+                                  semester:
+                                    course.previousSemester ??
+                                    course.semester,
+                                  completionType:
+                                    course
+                                      .previousCompletionType ??
+                                    course.completionType,
+                                  credits:
+                                    course.previousCredits ??
+                                    course.credits,
+                                })}
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div>
+                            <span>
+                              현재 적용
+                            </span>
+
+                            <ul>
+                              <li>
+                                {formatCourseState({
+                                  grade: course.grade,
+                                  semester:
+                                    course.semester,
+                                  completionType:
+                                    course.completionType,
+                                  credits:
+                                    course.credits,
+                                })}
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <p className="curriculum-change-reason">
+                          {course.attributeChangeNote ??
+                            '동일 과목의 교육과정 속성이 변경되었습니다.'}
+                        </p>
+                      </article>
+                    ),
+                  )}
                   </div>
                 )}
               </div>
