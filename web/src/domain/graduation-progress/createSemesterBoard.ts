@@ -58,6 +58,8 @@ function createSemesterCard(
   const officialCourses =
     curriculum.courses.filter(
       (course) =>
+        course.changeRole ===
+          'current' &&
         course.grade === grade &&
         course.semester === semester,
     )
@@ -298,6 +300,8 @@ function createYearSemesterBoard(
     curriculum.courses
       .filter(
         (course) =>
+          course.changeRole ===
+            'current' &&
           course.grade === grade &&
           course.semester === semester &&
           course.completionType ===
