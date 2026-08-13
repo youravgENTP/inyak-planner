@@ -36,6 +36,18 @@ function mapCurriculumCourseApiItem(
       item.change_effective_year,
     changeNote:
       item.change_note,
+    previousCredits:
+      item.previous_credits,
+    previousCompletionType:
+      item.previous_completion_type,
+    previousGrade:
+      item.previous_grade,
+    previousSemester:
+      item.previous_semester,
+    attributeChangeEffectiveYear:
+      item.attribute_change_effective_year,
+    attributeChangeNote:
+      item.attribute_change_note,
   }
 }
 

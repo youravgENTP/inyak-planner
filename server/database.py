@@ -221,7 +221,13 @@ def get_curriculum_courses(
                 change_type,
                 change_role,
                 change_effective_year,
-                change_note
+                change_note,
+                previous_credits,
+                previous_completion_type,
+                previous_grade,
+                previous_semester,
+                attribute_change_effective_year,
+                attribute_change_note
             FROM curriculum_courses
             WHERE entry_year = %s
             ORDER BY

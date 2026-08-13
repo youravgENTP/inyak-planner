@@ -31,6 +31,15 @@ export interface CurriculumCourse {
   changeEffectiveYear:
     number | null
   changeNote: string | null
+
+  previousCredits: number | null
+  previousCompletionType:
+    CurriculumCompletionType | null
+  previousGrade: number | null
+  previousSemester: number | null
+  attributeChangeEffectiveYear:
+    number | null
+  attributeChangeNote: string | null
 }
 
 export interface CurriculumCourseApiItem {
@@ -52,6 +61,15 @@ export interface CurriculumCourseApiItem {
   change_effective_year:
     number | null
   change_note: string | null
+
+  previous_credits: number | null
+  previous_completion_type:
+    CurriculumCompletionType | null
+  previous_grade: number | null
+  previous_semester: number | null
+  attribute_change_effective_year:
+    number | null
+  attribute_change_note: string | null
 }
 
 export interface CurriculumApiResponse {

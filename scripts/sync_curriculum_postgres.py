@@ -60,7 +60,13 @@ SELECT
     change_type,
     change_role,
     change_effective_year,
-    change_note
+    change_note,
+    previous_credits,
+    previous_completion_type,
+    previous_grade,
+    previous_semester,
+    attribute_change_effective_year,
+    attribute_change_note
 FROM public.curriculum_courses
 WHERE entry_year = %s
 ORDER BY id
@@ -81,7 +87,13 @@ SET
     change_type = %s,
     change_role = %s,
     change_effective_year = %s,
-    change_note = %s
+    change_note = %s,
+    previous_credits = %s,
+    previous_completion_type = %s,
+    previous_grade = %s,
+    previous_semester = %s,
+    attribute_change_effective_year = %s,
+    attribute_change_note = %s
 WHERE id = %s
 """
 
@@ -100,12 +112,19 @@ INSERT INTO public.curriculum_courses (
     change_type,
     change_role,
     change_effective_year,
-    change_note
+    change_note,
+    previous_credits,
+    previous_completion_type,
+    previous_grade,
+    previous_semester,
+    attribute_change_effective_year,
+    attribute_change_note
 )
 VALUES (
     %s, %s, %s, %s, %s,
     %s, %s, %s, %s, %s,
-    %s, %s, %s
+    %s, %s, %s, %s, %s,
+    %s, %s, %s, %s
 )
 """
 
@@ -123,6 +142,12 @@ COMPARISON_FIELDS = (
     "change_role",
     "change_effective_year",
     "change_note",
+    "previous_credits",
+    "previous_completion_type",
+    "previous_grade",
+    "previous_semester",
+    "attribute_change_effective_year",
+    "attribute_change_note",
 )
 
 
@@ -316,9 +341,14 @@ def create_update_values(
         course.change_role,
         course.change_effective_year,
         course.change_note,
+        course.previous_credits,
+        course.previous_completion_type,
+        course.previous_grade,
+        course.previous_semester,
+        course.attribute_change_effective_year,
+        course.attribute_change_note,
         row_id,
     )
-
 
 def create_insert_values(
     course: CurriculumCourse,
@@ -337,8 +367,13 @@ def create_insert_values(
         course.change_role,
         course.change_effective_year,
         course.change_note,
+        course.previous_credits,
+        course.previous_completion_type,
+        course.previous_grade,
+        course.previous_semester,
+        course.attribute_change_effective_year,
+        course.attribute_change_note,
     )
-
 
 def summarize_csv(
     courses: list[CurriculumCourse],

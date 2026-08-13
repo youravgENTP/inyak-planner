@@ -49,12 +49,19 @@ INSERT INTO public.curriculum_courses (
     change_type,
     change_role,
     change_effective_year,
-    change_note
+    change_note,
+    previous_credits,
+    previous_completion_type,
+    previous_grade,
+    previous_semester,
+    attribute_change_effective_year,
+    attribute_change_note
 )
 VALUES (
     %s, %s, %s, %s, %s,
     %s, %s, %s, %s, %s,
-    %s, %s, %s
+    %s, %s, %s, %s, %s,
+    %s, %s, %s, %s
 )
 """
 
@@ -73,6 +80,12 @@ REQUIRED_POSTGRES_COLUMNS = {
     "change_role",
     "change_effective_year",
     "change_note",
+    "previous_credits",
+    "previous_completion_type",
+    "previous_grade",
+    "previous_semester",
+    "attribute_change_effective_year",
+    "attribute_change_note",
 }
 
 
@@ -249,6 +262,12 @@ def create_insert_rows(
             course.change_role,
             course.change_effective_year,
             course.change_note,
+            course.previous_credits,
+            course.previous_completion_type,
+            course.previous_grade,
+            course.previous_semester,
+            course.attribute_change_effective_year,
+            course.attribute_change_note,
         )
         for course in courses
     ]

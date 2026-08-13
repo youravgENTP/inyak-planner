@@ -42,11 +42,19 @@ class CurriculumCourse:
     completion_type: str
     credits: float | None
     notes: str | None
+
     change_group: str | None
     change_type: str | None
     change_role: str
     change_effective_year: int | None
     change_note: str | None
+
+    previous_credits: float | None
+    previous_completion_type: str | None
+    previous_grade: int | None
+    previous_semester: int | None
+    attribute_change_effective_year: int | None
+    attribute_change_note: str | None
 
 
 def clean_optional_text(value: str | None) -> str | None:
@@ -127,6 +135,88 @@ def parse_row(
 
     change_note = clean_optional_text(
         row.get("change_note")
+    )
+
+    previous_credits = parse_optional_float(
+        row.get("previous_credits")
+    )
+
+    previous_completion_type = (
+        clean_optional_text(
+            row.get(
+                "previous_completion_type"
+            )
+        )
+    )
+
+    previous_grade_text = clean_optional_text(
+        row.get("previous_grade")
+    )
+
+    previous_grade = None
+
+    if previous_grade_text is not None:
+        try:
+            previous_grade = int(
+                previous_grade_text
+            )
+        except ValueError as exc:
+            raise ValueError(
+                f"{row_number}행의 "
+                "previous_grade가 "
+                "정수가 아닙니다: "
+                f"{previous_grade_text}"
+            ) from exc
+
+    previous_semester_text = (
+        clean_optional_text(
+            row.get("previous_semester")
+        )
+    )
+
+    previous_semester = None
+
+    if previous_semester_text is not None:
+        try:
+            previous_semester = int(
+                previous_semester_text
+            )
+        except ValueError as exc:
+            raise ValueError(
+                f"{row_number}행의 "
+                "previous_semester가 "
+                "정수가 아닙니다: "
+                f"{previous_semester_text}"
+            ) from exc
+
+    attribute_change_effective_year_text = (
+        clean_optional_text(
+            row.get(
+                "attribute_change_effective_year"
+            )
+        )
+    )
+
+    attribute_change_effective_year = None
+
+    if (
+        attribute_change_effective_year_text
+        is not None
+    ):
+        try:
+            attribute_change_effective_year = int(
+                attribute_change_effective_year_text
+            )
+        except ValueError as exc:
+            raise ValueError(
+                f"{row_number}행의 "
+                "attribute_change_effective_year가 "
+                "정수가 아닙니다: "
+                f"{attribute_change_effective_year_text}"
+            ) from exc
+
+    attribute_change_note = clean_optional_text(
+        row.get("attribute_change_note")
     )
 
     if not course_name:
@@ -226,6 +316,83 @@ def parse_row(
             f"{change_effective_year}"
         )
 
+    if (
+        previous_completion_type is not None
+        and previous_completion_type not in {
+            "전필",
+            "전선",
+        }
+    ):
+        raise ValueError(
+            f"{row_number}행의 "
+            "previous_completion_type이 "
+            "잘못됐습니다: "
+            f"{previous_completion_type}"
+        )
+
+    if (
+        previous_grade is not None
+        and not 1 <= previous_grade <= 6
+    ):
+        raise ValueError(
+            f"{row_number}행의 "
+            "previous_grade 범위가 "
+            f"잘못됐습니다: {previous_grade}"
+        )
+
+    if (
+        previous_semester is not None
+        and previous_semester not in (1, 2)
+    ):
+        raise ValueError(
+            f"{row_number}행의 "
+            "previous_semester는 "
+            "1 또는 2여야 합니다: "
+            f"{previous_semester}"
+        )
+
+    if (
+        attribute_change_effective_year
+        is not None
+        and not (
+            2000
+            <= attribute_change_effective_year
+            <= 2100
+        )
+    ):
+        raise ValueError(
+            f"{row_number}행의 "
+            "attribute_change_effective_year "
+            "범위가 잘못됐습니다: "
+            f"{attribute_change_effective_year}"
+        )
+
+    has_previous_attribute = any(
+        value is not None
+        for value in (
+            previous_credits,
+            previous_completion_type,
+            previous_grade,
+            previous_semester,
+        )
+    )
+
+    has_attribute_metadata = (
+        attribute_change_effective_year
+        is not None
+        or attribute_change_note is not None
+    )
+
+    if (
+        has_attribute_metadata
+        and not has_previous_attribute
+    ):
+        raise ValueError(
+            f"{row_number}행은 이전 속성 없이 "
+            "attribute change metadata를 "
+            "지정할 수 없습니다."
+        )
+
     return CurriculumCourse(
         entry_year=entry_year,
         grade=grade,
@@ -248,6 +415,18 @@ def parse_row(
             change_effective_year
         ),
         change_note=change_note,
+        previous_credits=previous_credits,
+        previous_completion_type=(
+            previous_completion_type
+        ),
+        previous_grade=previous_grade,
+        previous_semester=previous_semester,
+        attribute_change_effective_year=(
+            attribute_change_effective_year
+        ),
+        attribute_change_note=(
+            attribute_change_note
+        ),
     )
 
 def load_csv(csv_path: Path) -> list[CurriculumCourse]:
@@ -433,11 +612,18 @@ def import_courses(
         change_type,
         change_role,
         change_effective_year,
-        change_note
+        change_note,
+        previous_credits,
+        previous_completion_type,
+        previous_grade,
+        previous_semester,
+        attribute_change_effective_year,
+        attribute_change_note
     )
     VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?
     )
     """
 
@@ -456,6 +642,12 @@ def import_courses(
             course.change_role,
             course.change_effective_year,
             course.change_note,
+            course.previous_credits,
+            course.previous_completion_type,
+            course.previous_grade,
+            course.previous_semester,
+            course.attribute_change_effective_year,
+            course.attribute_change_note,
         )
         for course in courses
     ]
