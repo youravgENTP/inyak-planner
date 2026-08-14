@@ -807,4 +807,118 @@
   .gpa-semester-metrics article:last-child {
     border-bottom: 0;
   }
+
+  /* 모바일에서는 과목 표 헤더를 숨깁니다. */
+  .gpa-course-table-header {
+    display: none;
+  }
+
+  /* 가로 스크롤 대신 카드형 목록으로 표시합니다. */
+  .gpa-course-table {
+    display: grid;
+    gap: 10px;
+
+    overflow: visible;
+
+    padding: 12px;
+  }
+
+  /* 한 과목을 2열 카드로 재배치합니다. */
+  .gpa-course-row {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+    grid-template-areas:
+      "name menu"
+      "credits completion"
+      "grade grade";
+
+    min-width: 0;
+    min-height: 0;
+
+    gap: 8px 12px;
+
+    padding: 14px;
+
+    border: 1px solid #e1e8e3;
+    border-radius: 12px;
+
+    background: #ffffff;
+  }
+
+  .gpa-course-row:last-child {
+    border-bottom:
+      1px solid #e1e8e3;
+  }
+
+  .gpa-course-row--active {
+    background: #f7fbfd;
+  }
+
+  /* 과목명 */
+  .gpa-course-name-cell {
+    grid-area: name;
+
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .gpa-course-name-cell strong {
+    overflow: visible;
+
+    font-size: 15px;
+    line-height: 1.4;
+
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  /* 학점 */
+  .gpa-course-row > span:nth-of-type(1) {
+    grid-area: credits;
+
+    align-self: center;
+
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* 이수구분 */
+  .gpa-course-row > span:nth-of-type(2) {
+    grid-area: completion;
+
+    align-self: center;
+    justify-self: end;
+
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* 성적 선택 */
+  .gpa-course-grade-select {
+    grid-area: grade;
+
+    width: 100%;
+    height: 38px;
+
+    border-color: #dfe5e1;
+
+    background: #f8faf9;
+  }
+
+  /* 우측 상단 더보기 메뉴 */
+  .gpa-course-menu-container {
+    grid-area: menu;
+
+    align-self: start;
+    justify-self: end;
+  }
+
+  /* 모바일에서는 상태 변경 버튼을 항상 확인 가능하게 합니다. */
+  .gpa-course-status-toggle {
+    visibility: visible;
+
+    font-size: 11px;
+  }
 }
