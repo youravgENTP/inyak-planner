@@ -232,6 +232,11 @@
   background: rgba(197, 67, 67, 0.24);
 }
 
+/* 접힌 상태에서는 메뉴 버튼만 중앙에 표시 */
+.app-shell--sidebar-collapsed
+  .sidebar-profile {
+  justify-content: center;
+}
 
 /* =========================================================
    5. 사이드바 내비게이션
@@ -450,14 +455,14 @@
 /* PC 사이드바가 접혔을 때 전체 너비 */
 .app-shell--sidebar-collapsed {
   grid-template-columns:
-    82px minmax(0, 1fr);
+    56px minmax(0, 1fr);
 }
 
 /* 접힌 사이드바 */
 .app-shell--sidebar-collapsed
   .sidebar {
-  padding-right: 12px;
-  padding-left: 12px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 /* 접힌 상태에서 사용자 이름 숨김 */
@@ -474,11 +479,10 @@
   display: none;
 }
 
-/* 접힌 상태에서 프로필 버튼 크기 축소 */
+/* 접힌 상태에서는 프로필 버튼을 숨김 */
 .app-shell--sidebar-collapsed
   .sidebar-profile-button {
-  width: 42px;
-  padding: 0;
+  display: none;
 }
 
 /* 모바일 화면 뒤의 어두운 배경 */
@@ -2024,22 +2028,25 @@ h1 {
   .sidebar {
     position: fixed;
     z-index: 60;
-    top: 0;
-    bottom: 0;
+    top: 64px;
+    right: 0;
     left: 0;
 
-    width: min(320px, 86vw);
-    height: 100dvh;
+    width: 100%;
+    height: auto;
+    max-height: calc(100dvh - 64px);
 
-    padding: 22px 18px;
+    overflow-y: auto;
 
-    transform: translateX(-100%);
+    padding: 22px 18px 28px;
+
+    transform: translateY(-110%);
 
     transition: transform 180ms ease;
   }
 
   .sidebar--mobile-open {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .app-shell--sidebar-collapsed
