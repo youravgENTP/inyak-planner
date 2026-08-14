@@ -60,6 +60,23 @@ export function AppShell({
     setIsProfileMenuOpen,
   ] = useState(false)
 
+  const [
+    isProfileMenuOpen,
+    setIsProfileMenuOpen,
+  ] = useState(false)
+
+  const [
+    isSidebarCollapsed,
+    setIsSidebarCollapsed,
+  ] = useState(false)
+
+  const [
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+  ] = useState(false)
+
+  const profileAreaRef =
+
   const profileAreaRef =
     useRef<HTMLDivElement>(null)
 
@@ -147,9 +164,80 @@ export function AppShell({
     onLogout()
   }
 
+  function handleDesktopSidebarToggle() {
+    setIsProfileMenuOpen(false)
+
+    setIsSidebarCollapsed(
+      (currentValue) => !currentValue,
+    )
+  }
+
+  function handleMobileMenuToggle() {
+    setIsProfileMenuOpen(false)
+
+    setIsMobileMenuOpen(
+      (currentValue) => !currentValue,
+    )
+  }
+
+  function handleMobileMenuClose() {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
+    <div
+      className={
+        `app-shell${
+          isSidebarCollapsed
+            ? ' app-shell--sidebar-collapsed'
+            : ''
+        }`
+      }
+    >
+      <header className="mobile-header">
+        <button
+          className="
+            sidebar-menu-button
+            mobile-header-menu-button
+          "
+          type="button"
+          aria-label="메뉴 열기"
+          aria-expanded={isMobileMenuOpen}
+          onClick={handleMobileMenuToggle}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className="mobile-header-profile">
+          <span
+            className="mobile-header-avatar"
+            aria-hidden="true"
+          >
+            {profileImageUrl !== null ? (
+              <img
+                src={profileImageUrl}
+                alt=""
+              />
+            ) : (
+              profileInitial
+            )}
+          </span>
+
+          <strong>{username}</strong>
+        </div>
+      </header>
+
+      <aside
+        className={
+          `sidebar${
+            isMobileMenuOpen
+              ? ' sidebar--mobile-open'
+              : ''
+          }`
+        }
+      >
         <div
           className="sidebar-profile"
           ref={profileAreaRef}
@@ -182,6 +270,14 @@ export function AppShell({
               <span>내 계정</span>
             </span>
           </button>
+
+            <span className="sidebar-profile-text">
+              <strong>{username}</strong>
+              <span>내 계정</span>
+            </span>
+          </button>
+
+          {isProfileMenuOpen && (
 
           {isProfileMenuOpen && (
             <div
@@ -218,6 +314,7 @@ export function AppShell({
         <nav
           className="sidebar-nav"
           aria-label="주요 메뉴"
+          onClick={handleMobileMenuClose}
         >
           <div className="nav-section">
             <div className="nav-group">
@@ -362,6 +459,23 @@ export function AppShell({
           </strong>
         </div>
       </aside>
+
+      </aside>
+
+      <button
+        className={
+          `sidebar-backdrop${
+            isMobileMenuOpen
+              ? ' sidebar-backdrop--visible'
+              : ''
+          }`
+        }
+        type="button"
+        aria-label="메뉴 닫기"
+        onClick={handleMobileMenuClose}
+      />
+
+      <div className="app-main">
 
       <div className="app-main">
         <main className="page-content">

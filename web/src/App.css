@@ -34,7 +34,11 @@
 .app-shell {
   display: grid;
   min-height: 100vh;
-  grid-template-columns: 215px minmax(0, 1fr);
+  grid-template-columns:
+    215px minmax(0, 1fr);
+
+  transition:
+    grid-template-columns 180ms ease;
 }
 
 /* =========================================================
@@ -66,6 +70,11 @@
 /* 사용자 프로필과 드롭다운 메뉴를 감싸는 영역 */
 .sidebar-profile {
   position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
   margin-bottom: 28px;
 }
 
@@ -76,7 +85,10 @@
   align-items: center;
   gap: 12px;
 
-  width: 100%;
+  width: auto;
+  min-width: 0;
+  flex: 1;
+
   padding: 8px;
 
   border: 0;
@@ -374,6 +386,104 @@
 .sidebar-footer strong {
   font-size: 12px;
   line-height: 1.5;
+}
+
+/* =========================================================
+   7. 사이드바 접기와 모바일 메뉴
+   ========================================================= */
+
+/* 모바일 전용 상단 헤더 */
+.mobile-header {
+  display: none;
+}
+
+/* 사이드바 메뉴 제어 버튼 */
+.sidebar-menu-button {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 9px;
+
+  color: #dbe8ed;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+/* 햄버거 아이콘의 세 줄 */
+.sidebar-menu-button span {
+  display: block;
+  width: 17px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: currentColor;
+}
+
+/* 메뉴 버튼 hover */
+.sidebar-menu-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 메뉴 버튼 키보드 포커스 */
+.sidebar-menu-button:focus-visible {
+  outline: 2px solid #52c6be;
+  outline-offset: 2px;
+}
+
+/* PC에서는 모바일 닫기 버튼을 숨김 */
+.sidebar-mobile-close {
+  display: none;
+}
+
+/* PC 사이드바가 접혔을 때 전체 너비 */
+.app-shell--sidebar-collapsed {
+  grid-template-columns:
+    82px minmax(0, 1fr);
+}
+
+/* 접힌 사이드바 */
+.app-shell--sidebar-collapsed
+  .sidebar {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+/* 접힌 상태에서 사용자 이름 숨김 */
+.app-shell--sidebar-collapsed
+  .sidebar-profile-text {
+  display: none;
+}
+
+/* 접힌 상태에서 메뉴와 하단 정보 숨김 */
+.app-shell--sidebar-collapsed
+  .sidebar-nav,
+.app-shell--sidebar-collapsed
+  .sidebar-footer {
+  display: none;
+}
+
+/* 접힌 상태에서 프로필 버튼 크기 축소 */
+.app-shell--sidebar-collapsed
+  .sidebar-profile-button {
+  width: 42px;
+  padding: 0;
+}
+
+/* 모바일 화면 뒤의 어두운 배경 */
+.sidebar-backdrop {
+  display: none;
 }
 
 
@@ -1839,28 +1949,153 @@ h1 {
 }
 
 @media (max-width: 900px) {
-  .app-shell {
-    grid-template-columns: 1fr;
+  .app-shell,
+  .app-shell--sidebar-collapsed {
+    display: block;
+  }
+
+  .mobile-header {
+    position: sticky;
+    z-index: 40;
+    top: 0;
+
+    display: flex;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    border-bottom:
+      1px solid rgba(16, 39, 58, 0.1);
+
+    background: #ffffff;
+  }
+
+  .mobile-header-menu-button {
+    color: var(--navy-950);
+  }
+
+  .mobile-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    min-width: 0;
+
+    color: var(--navy-950);
+  }
+
+  .mobile-header-profile strong {
+    overflow: hidden;
+
+    max-width: 140px;
+
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-header-avatar {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+    background: var(--teal-600);
+
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .mobile-header-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
   }
 
   .sidebar {
-    position: static;
+    position: fixed;
+    z-index: 60;
+    top: 0;
+    bottom: 0;
+    left: 0;
 
-    height: auto;
-    padding: 14px 18px;
+    width: min(320px, 86vw);
+    height: 100dvh;
+
+    padding: 22px 18px;
+
+    transform: translateX(-100%);
+
+    transition: transform 180ms ease;
   }
 
-  .brand {
-    padding: 0;
+  .sidebar--mobile-open {
+    transform: translateX(0);
   }
 
-  .sidebar-nav,
-  .sidebar-footer {
+  .app-shell--sidebar-collapsed
+    .sidebar {
+    padding: 22px 18px;
+  }
+
+  .app-shell--sidebar-collapsed
+    .sidebar-profile-text {
+    display: grid;
+  }
+
+  .app-shell--sidebar-collapsed
+    .sidebar-nav {
+    display: grid;
+  }
+
+  .app-shell--sidebar-collapsed
+    .sidebar-footer {
+    display: grid;
+  }
+
+  .app-shell--sidebar-collapsed
+    .sidebar-profile-button {
+    width: auto;
+    padding: 8px;
+  }
+
+  .sidebar-desktop-toggle {
     display: none;
   }
 
-  .topbar {
-    padding: 0 20px;
+  .sidebar-mobile-close {
+    display: inline-flex;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    z-index: 50;
+    inset: 0;
+
+    display: block;
+
+    border: 0;
+
+    background: rgba(5, 18, 28, 0.46);
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 180ms ease;
+  }
+
+  .sidebar-backdrop--visible {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .page-content {
