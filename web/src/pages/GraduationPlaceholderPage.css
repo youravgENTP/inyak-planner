@@ -276,3 +276,44 @@
   }
 }
 
+/* =========================================================
+   개인 이수현황 다운로드
+   ========================================================= */
+
+.graduation-placeholder-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.graduation-export-button {
+  min-width: 132px;
+}
+
+.graduation-export-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.graduation-export-error {
+  margin: 10px 0 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #b42318;
+}
+
+@media (max-width: 720px) {
+
+  .graduation-placeholder-header-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .graduation-export-button {
+    width: 100%;
+  }
+}

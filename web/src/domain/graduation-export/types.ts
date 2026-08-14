@@ -60,28 +60,11 @@ export interface GraduationExportGeneralEducationRow {
 
   status: GraduationExportStatus
 
-  recordId: string
-}
-
-
-export interface GraduationExportGeneralEducationRequirementRow {
-  category: GeneralEducationCategory
-
   /*
-   * 필수 영역 미충족이면 실제 영역명,
-   * 최소 영역 수 미충족이면
-   * "이수 영역 수"가 들어갑니다.
+   * null이면 실제 CourseRecord가 아니라
+   * 교양 필수영역의 미이수 행입니다.
    */
-  requirementName: string
-
-  completedValue: number
-  requiredValue: number
-
-  unit:
-    | '학점'
-    | '개 영역'
-
-  status: '미이수'
+  recordId: string | null
 }
 
 
@@ -95,6 +78,4 @@ export interface GraduationExportData {
   generalEducation:
     GraduationExportGeneralEducationRow[]
 
-  unfulfilledGeneralEducationRequirements:
-    GraduationExportGeneralEducationRequirementRow[]
 }

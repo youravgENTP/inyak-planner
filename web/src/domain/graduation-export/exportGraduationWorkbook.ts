@@ -615,6 +615,19 @@ function createSummarySheet(
     },
   )
 
+  /*
+   * 일부 Excel 뷰어에서 마지막 진척도 셀의
+   * 표시값이 다음 빈 행에 잔존하는 현상을
+   * 방지합니다.
+   */
+  worksheet.getCell(
+    `F${lastSummaryRow + 1}`,
+  ).value = null
+
+  worksheet.getCell(
+    `F${lastSummaryRow + 1}`,
+  ).numFmt = 'General'
+
   const noteStartRow =
     lastSummaryRow + 3
 
@@ -1169,99 +1182,8 @@ function createGeneralEducationSheet(
     firstDataRow + 500,
   )
 
-  let nextRow =
+  const nextRow =
     lastDataRow + 3
-
-  /*
-   * 과목 목록과 별도로,
-   * 우리가 실제로 알고 있는
-   * 미충족 영역/영역 수만 표시합니다.
-   */
-  if (
-    data
-      .unfulfilledGeneralEducationRequirements
-      .length > 0
-  ) {
-    worksheet.mergeCells(
-      `A${nextRow}:H${nextRow}`,
-    )
-
-    const titleCell =
-      worksheet.getCell(
-        `A${nextRow}`,
-      )
-
-    titleCell.value =
-      '미충족 교양 요건'
-
-    titleCell.font = {
-      bold: true,
-      color: {
-        argb: COLORS.white,
-      },
-    }
-
-    titleCell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: {
-        argb: COLORS.darkGreen,
-      },
-    }
-
-    titleCell.alignment = {
-      vertical: 'middle',
-    }
-
-    nextRow += 1
-
-    const unmetHeaderRow =
-      worksheet.getRow(nextRow)
-
-    unmetHeaderRow.values = [
-      '구분',
-      '영역 / 요건',
-      '현재',
-      '필요',
-      '단위',
-      '상태',
-    ]
-
-    applyHeaderStyle(
-      unmetHeaderRow,
-      1,
-      6,
-    )
-
-    data
-      .unfulfilledGeneralEducationRequirements
-      .forEach(
-        (requirement) => {
-          const row =
-            worksheet.addRow([
-              requirement.category,
-              requirement.requirementName,
-              requirement.completedValue,
-              requirement.requiredValue,
-              requirement.unit,
-              requirement.status,
-            ])
-
-          applyStatusRowStyle(
-            row,
-            '미이수',
-            1,
-            6,
-          )
-        },
-      )
-
-    nextRow =
-      (
-        worksheet.lastRow?.number ??
-        nextRow
-      ) + 2
-  }
 
   worksheet.getCell(
     `F${nextRow}`,

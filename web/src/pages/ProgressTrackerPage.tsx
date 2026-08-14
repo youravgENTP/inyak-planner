@@ -31,6 +31,9 @@ import type {
   GeneralEducation,
 } from '../domain/general-education/types'
 import {
+  createGraduationExportData,
+} from '../domain/graduation-export/createGraduationExportData'
+import {
   fetchGraduationRequirements,
 } from '../domain/graduation-requirements/api'
 import type {
@@ -240,6 +243,16 @@ export function ProgressTrackerPage({
     setDataError,
   ] = useState<string | null>(null)
 
+  const [
+    isExporting,
+    setIsExporting,
+  ] = useState(false)
+
+  const [
+    exportError,
+    setExportError,
+  ] = useState<string | null>(null)
+
   const academicProfileIsComplete =
     user.entryYear !== null &&
     user.studentType !== null
@@ -340,6 +353,61 @@ export function ProgressTrackerPage({
       ],
     )
 
+  async function handleExcelExport() {
+    if (
+      isExporting ||
+      user.entryYear === null ||
+      curriculum === null ||
+      generalEducation === null ||
+      graduationProgress === null
+    ) {
+      return
+    }
+
+    setIsExporting(true)
+    setExportError(null)
+
+    try {
+      const exportData =
+        createGraduationExportData(
+          user,
+          curriculum,
+          generalEducation,
+          courseRecords,
+          lectures,
+          graduationProgress,
+        )
+
+      /*
+       * ExcelJS는 일반 화면 렌더링에는
+       * 필요하지 않은 비교적 큰 라이브러리입니다.
+       *
+       * 따라서 사용자가 실제로 다운로드 버튼을
+       * 눌렀을 때만 workbook 생성 모듈을
+       * 불러옵니다.
+       */
+      const {
+        exportGraduationWorkbook,
+      } = await import(
+        '../domain/graduation-export/exportGraduationWorkbook'
+      )
+
+      await exportGraduationWorkbook(
+        exportData,
+        user.entryYear,
+      )
+    } catch (error) {
+      setExportError(
+        error instanceof Error
+          ? error.message
+          : '엑셀 파일을 생성하지 못했습니다.',
+      )
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+
   if (!academicProfileIsComplete) {
     return (
       <section className="graduation-placeholder-page">
@@ -389,13 +457,39 @@ export function ProgressTrackerPage({
 
         <h1>개인 이수 현황</h1>
 
-        <span>
-          {user.entryYear}학번 ·{' '}
-          {getStudentTypeLabel(
-            user.studentType,
-          )}{' '}
-          기준으로 이수 현황을 확인합니다.
-        </span>
+          <span>
+            {user.entryYear}학번 ·{' '}
+            {getStudentTypeLabel(
+              user.studentType,
+            )}{' '}
+            기준으로 이수 현황을 확인합니다.
+          </span>
+
+          <div className="graduation-placeholder-header-actions">
+            <button
+              className="secondary-button graduation-export-button"
+              type="button"
+              disabled={
+                isExporting ||
+                graduationProgress === null ||
+                curriculum === null ||
+                generalEducation === null
+              }
+              onClick={() => {
+                void handleExcelExport()
+              }}
+            >
+              {isExporting
+                ? '엑셀 생성 중...'
+                : '엑셀 다운로드'}
+            </button>
+          </div>
+
+          {exportError !== null ? (
+            <p className="graduation-export-error">
+              {exportError}
+            </p>
+          ) : null}
       </header>
 
       {dataAreLoading ? (

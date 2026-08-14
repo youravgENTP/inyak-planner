@@ -23,7 +23,6 @@ import type {
 
 import type {
   GraduationExportData,
-  GraduationExportGeneralEducationRequirementRow,
   GraduationExportGeneralEducationRow,
   GraduationExportMajorRow,
   GraduationExportStatus,
@@ -289,6 +288,7 @@ function createGeneralEducationLookups(
 function createGeneralEducationRows(
   generalEducation: GeneralEducation,
   courseRecords: readonly CourseRecord[],
+  graduationProgress: GraduationProgress,
 ): GraduationExportGeneralEducationRow[] {
   const {
     requirementCategoryMap,
@@ -297,149 +297,124 @@ function createGeneralEducationRows(
     generalEducation,
   )
 
-  return courseRecords
-    .filter(
-      (record) =>
-        record.completionType === '교양' &&
-        !record.isRetake,
-    )
-    .map((record) => ({
-      grade:
-        record.grade,
+  /*
+   * 사용자가 실제로 입력한 교양 기록입니다.
+   */
+  const recordRows:
+    GraduationExportGeneralEducationRow[] =
+      courseRecords
+        .filter(
+          (record) =>
+            record.completionType === '교양' &&
+            !record.isRetake,
+        )
+        .map((record) => ({
+          grade:
+            record.grade,
 
-      semester:
-        record.semester,
+          semester:
+            record.semester,
 
-      category:
-        record.generalEducationRequirementId ===
-        null
-          ? null
-          : (
-            requirementCategoryMap.get(
-              record
-                .generalEducationRequirementId,
-            ) ?? null
-          ),
+          category:
+            record
+              .generalEducationRequirementId ===
+            null
+              ? null
+              : (
+                requirementCategoryMap.get(
+                  record
+                    .generalEducationRequirementId,
+                ) ?? null
+              ),
 
-      areaName:
-        record.generalEducationAreaId === null
-          ? null
-          : (
-            areaNameMap.get(
-              record.generalEducationAreaId,
-            ) ?? null
-          ),
+          areaName:
+            record.generalEducationAreaId ===
+            null
+              ? null
+              : (
+                areaNameMap.get(
+                  record.generalEducationAreaId,
+                ) ?? null
+              ),
 
-      courseCode:
-        record.courseCode,
+          courseCode:
+            record.courseCode,
 
-      /*
-       * 교양은 별도의 과목 catalog가 없으므로
-       * 사용자가 입력한 과목명을 그대로
-       * 사용합니다.
-       */
-      courseName:
-        record.courseName,
+          courseName:
+            record.courseName,
 
-      credits:
-        record.credits,
+          credits:
+            record.credits,
 
-      status:
-        getExportStatus(record),
+          status:
+            getExportStatus(record),
 
-      recordId:
-        record.id,
-    }))
-}
+          recordId:
+            record.id,
+        }))
 
-
-function createUnfulfilledGeneralEducationRows(
-  graduationProgress: GraduationProgress,
-): GraduationExportGeneralEducationRequirementRow[] {
-  const rows:
-    GraduationExportGeneralEducationRequirementRow[] =
+  /*
+   * 필수 교양 영역에서 아직 부족한 학점은
+   * 전필의 미이수 과목처럼 동일한 Table에
+   * 미이수 행으로 추가합니다.
+   *
+   * 특정 교양 과목 목록은 알 수 없으므로
+   * 과목 칸에는 영역명을 사용합니다.
+   */
+  const missingRows:
+    GraduationExportGeneralEducationRow[] =
       []
 
   graduationProgress.generalEducation.forEach(
     (requirement) => {
-      /*
-       * 필수 영역 중 아직 충족하지 않은
-       * 영역만 미이수로 표시합니다.
-       */
       requirement.areas.forEach((area) => {
         if (
           !area.isRequired ||
-          area.isSatisfied
+          area.isSatisfied ||
+          area.remainingCredits === null ||
+          area.remainingCredits <= 0
         ) {
           return
         }
 
-        /*
-         * minimumCredits가 null인 필수 영역은
-         * 현재 구조상 특정 학점 합계를
-         * 표현할 수 없으므로 별도 학점 행을
-         * 만들지 않습니다.
-         */
-        if (area.minimumCredits === null) {
-          return
-        }
+        missingRows.push({
+          grade: null,
+          semester: null,
 
-        rows.push({
           category:
             requirement.category,
 
-          requirementName:
+          areaName:
             area.areaName,
 
-          completedValue:
-            area.completedCredits,
+          courseCode:
+            null,
 
-          requiredValue:
-            area.minimumCredits,
+          courseName:
+            area.areaName,
 
-          unit: '학점',
-
-          status: '미이수',
-        })
-      })
-
-      /*
-       * 균형교양처럼
-       * "최소 N개 영역 이수" 조건이
-       * 부족한 경우 별도 요건 행을 만듭니다.
-       *
-       * 특정 영역 하나를 임의로
-       * 미이수 처리하지 않습니다.
-       */
-      if (
-        requirement.minimumAreaCount !== null &&
-        requirement.remainingAreaCount !== null &&
-        requirement.remainingAreaCount > 0
-      ) {
-        rows.push({
-          category:
-            requirement.category,
-
-          requirementName:
-            '이수 영역 수',
-
-          completedValue:
-            requirement.completedAreaCount,
-
-          requiredValue:
-            requirement.minimumAreaCount,
-
-          unit:
-            '개 영역',
+          /*
+           * 이미 일부 이수한 영역은
+           * 전체 필요학점이 아니라
+           * 실제 남은 학점만 표시합니다.
+           */
+          credits:
+            area.remainingCredits,
 
           status:
             '미이수',
+
+          recordId:
+            null,
         })
-      }
+      })
     },
   )
 
-  return rows
+  return [
+    ...recordRows,
+    ...missingRows,
+  ]
 }
 
 
@@ -469,10 +444,6 @@ export function createGraduationExportData(
       createGeneralEducationRows(
         generalEducation,
         courseRecords,
-      ),
-
-    unfulfilledGeneralEducationRequirements:
-      createUnfulfilledGeneralEducationRows(
         graduationProgress,
       ),
   }
