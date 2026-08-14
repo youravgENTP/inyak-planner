@@ -21,7 +21,7 @@
   line-height: 1.2;
 }
 
-.graduation-placeholder-header span {
+.graduation-placeholder-header > span {
   display: block;
   margin-top: 12px;
   line-height: 1.6;
@@ -290,7 +290,10 @@
 }
 
 .graduation-placeholder-meta-row > span {
+  display: block;
   margin-top: 0;
+  line-height: 1.6;
+  color: #666;
 }
 
 .graduation-export-button {
