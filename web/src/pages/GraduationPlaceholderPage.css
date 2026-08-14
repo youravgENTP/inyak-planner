@@ -280,21 +280,52 @@
    개인 이수현황 다운로드
    ========================================================= */
 
-.graduation-placeholder-header-actions {
+.graduation-placeholder-title-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  margin-top: 18px;
+  justify-content: space-between;
+  gap: 24px;
 }
 
-.graduation-export-button {
-  min-width: 132px;
+.graduation-export-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  flex: 0 0 auto;
+
+  padding: 7px 2px;
+
+  border: 0;
+
+  background: transparent;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  color: #4f6f60;
+
+  cursor: pointer;
 }
 
-.graduation-export-button:disabled {
+.graduation-export-link:hover:not(:disabled) {
+  color: #2f5d48;
+}
+
+.graduation-export-link:disabled {
   cursor: wait;
-  opacity: 0.65;
+  opacity: 0.55;
+}
+
+.graduation-export-link-arrow {
+  display: inline-block;
+
+  margin-top: -1px;
+
+  font-size: 17px;
+  line-height: 1;
 }
 
 .graduation-export-error {
@@ -308,12 +339,13 @@
 
 @media (max-width: 720px) {
 
-  .graduation-placeholder-header-actions {
-    align-items: stretch;
+  .graduation-placeholder-title-row {
+    align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
   }
 
-  .graduation-export-button {
-    width: 100%;
+  .graduation-export-link {
+    padding: 2px 0;
   }
 }

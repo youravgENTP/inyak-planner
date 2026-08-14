@@ -455,41 +455,50 @@ export function ProgressTrackerPage({
           졸업 요건 및 학점 계산기
         </p>
 
-        <h1>개인 이수 현황</h1>
+        <div className="graduation-placeholder-title-row">
+          <h1>개인 이수 현황</h1>
 
-          <span>
-            {user.entryYear}학번 ·{' '}
-            {getStudentTypeLabel(
-              user.studentType,
-            )}{' '}
-            기준으로 이수 현황을 확인합니다.
-          </span>
-
-          <div className="graduation-placeholder-header-actions">
-            <button
-              className="secondary-button graduation-export-button"
-              type="button"
-              disabled={
-                isExporting ||
-                graduationProgress === null ||
-                curriculum === null ||
-                generalEducation === null
-              }
-              onClick={() => {
-                void handleExcelExport()
-              }}
-            >
+          <button
+            className="graduation-export-link"
+            type="button"
+            disabled={
+              isExporting ||
+              graduationProgress === null ||
+              curriculum === null ||
+              generalEducation === null
+            }
+            onClick={() => {
+              void handleExcelExport()
+            }}
+          >
+            <span>
               {isExporting
                 ? '엑셀 생성 중...'
-                : '엑셀 다운로드'}
-            </button>
-          </div>
+                : '개인 이수 현황 엑셀'}
+            </span>
 
-          {exportError !== null ? (
-            <p className="graduation-export-error">
-              {exportError}
-            </p>
-          ) : null}
+            <span
+              aria-hidden="true"
+              className="graduation-export-link-arrow"
+            >
+              ↓
+            </span>
+          </button>
+        </div>
+
+        <span>
+          {user.entryYear}학번 ·{' '}
+          {getStudentTypeLabel(
+            user.studentType,
+          )}{' '}
+          기준으로 이수 현황을 확인합니다.
+        </span>
+
+        {exportError !== null ? (
+          <p className="graduation-export-error">
+            {exportError}
+          </p>
+        ) : null}
       </header>
 
       {dataAreLoading ? (
