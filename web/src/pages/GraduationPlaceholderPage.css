@@ -280,46 +280,64 @@
    개인 이수현황 다운로드
    ========================================================= */
 
-.graduation-placeholder-title-row {
+.graduation-placeholder-meta-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+
+  margin-top: 12px;
 }
 
-.graduation-export-link {
+.graduation-placeholder-meta-row > span {
+  margin-top: 0;
+}
+
+.graduation-export-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 
   flex: 0 0 auto;
 
-  padding: 7px 2px;
+  min-height: 40px;
+  padding: 9px 14px;
 
-  border: 0;
+  border: 1px solid #cfd8d3;
+  border-radius: 10px;
 
-  background: transparent;
+  background: #ffffff;
 
   font: inherit;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
 
-  color: #4f6f60;
+  color: #4f6258;
 
   cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
 }
 
-.graduation-export-link:hover:not(:disabled) {
-  color: #2f5d48;
+.graduation-export-button:hover:not(:disabled) {
+  border-color: #aebfb6;
+
+  background: #f6f9f7;
+
+  color: #315845;
 }
 
-.graduation-export-link:disabled {
+.graduation-export-button:disabled {
   cursor: wait;
   opacity: 0.55;
 }
 
-.graduation-export-link-arrow {
+.graduation-export-button-arrow {
   display: inline-block;
 
   margin-top: -1px;
@@ -339,13 +357,13 @@
 
 @media (max-width: 720px) {
 
-  .graduation-placeholder-title-row {
-    align-items: flex-start;
+  .graduation-placeholder-meta-row {
+    align-items: stretch;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
-  .graduation-export-link {
-    padding: 2px 0;
+  .graduation-export-button {
+    width: 100%;
   }
 }

@@ -455,11 +455,19 @@ export function ProgressTrackerPage({
           졸업 요건 및 학점 계산기
         </p>
 
-        <div className="graduation-placeholder-title-row">
-          <h1>개인 이수 현황</h1>
+        <h1>개인 이수 현황</h1>
+
+        <div className="graduation-placeholder-meta-row">
+          <span>
+            {user.entryYear}학번 ·{' '}
+            {getStudentTypeLabel(
+              user.studentType,
+            )}{' '}
+            기준으로 이수 현황을 확인합니다.
+          </span>
 
           <button
-            className="graduation-export-link"
+            className="graduation-export-button"
             type="button"
             disabled={
               isExporting ||
@@ -479,20 +487,12 @@ export function ProgressTrackerPage({
 
             <span
               aria-hidden="true"
-              className="graduation-export-link-arrow"
+              className="graduation-export-button-arrow"
             >
               ↓
             </span>
           </button>
         </div>
-
-        <span>
-          {user.entryYear}학번 ·{' '}
-          {getStudentTypeLabel(
-            user.studentType,
-          )}{' '}
-          기준으로 이수 현황을 확인합니다.
-        </span>
 
         {exportError !== null ? (
           <p className="graduation-export-error">
