@@ -22,6 +22,13 @@ import type {
 } from '../domain/general-education/types'
 import './CurriculumPage.css'
 
+import {
+  fetchGraduationRequirements,
+} from '../domain/graduation-requirements/api'
+import type {
+  GraduationRequirements,
+} from '../domain/graduation-requirements/types'
+
 const DEFAULT_ENTRY_YEAR = 2024
 
 const ENTRY_YEARS = [
@@ -386,11 +393,15 @@ export function CurriculumPage() {
         const [
           curriculumResult,
           generalEducationResult,
+          graduationRequirementsResult,
         ] = await Promise.all([
           fetchCurriculum(
             selectedEntryYear,
           ),
           fetchGeneralEducation(
+            selectedEntryYear,
+          ),
+          fetchGraduationRequirements(
             selectedEntryYear,
           ),
         ])
@@ -402,6 +413,9 @@ export function CurriculumPage() {
 
           setGeneralEducation(
             generalEducationResult,
+          )
+          setGraduationRequirements(
+            graduationRequirementsResult,
           )
         }
       } catch (error) {
@@ -563,6 +577,71 @@ export function CurriculumPage() {
     ],
   )
 
+  const generalEducationCredits =
+    useMemo(() => {
+      const basic =
+        generalEducation?.requirements.find(
+          (requirement) =>
+            requirement.category ===
+            '기초교양',
+        )?.minimumCredits ?? 0
+
+      const balanced =
+        generalEducation?.requirements.find(
+          (requirement) =>
+            requirement.category ===
+            '균형교양',
+        )?.minimumCredits ?? 0
+
+      return {
+        basic,
+        balanced,
+        total: basic + balanced,
+      }
+    }, [generalEducation])
+
+  const curriculumCreditComparison =
+    useMemo(() => {
+      const elective =
+        graduationRequirements
+          ?.majorElectiveCredits ?? 0
+
+      const originalRequired =
+        curriculumComparison
+          .originalRequired.credits
+
+      const currentRequired =
+        curriculumComparison
+          .currentRequired.credits
+
+      return {
+        original: {
+          required: originalRequired,
+          elective,
+          majorTotal:
+            originalRequired + elective,
+          total:
+            originalRequired +
+            elective +
+            generalEducationCredits.total,
+        },
+        current: {
+          required: currentRequired,
+          elective,
+          majorTotal:
+            currentRequired + elective,
+          total:
+            currentRequired +
+            elective +
+            generalEducationCredits.total,
+        },
+      }
+    }, [
+      curriculumComparison,
+      generalEducationCredits,
+      graduationRequirements,
+    ])
+
   useEffect(() => {
     if (activeSection !== 'major') {
       setSemesterScrollWidth(0)
@@ -639,7 +718,8 @@ export function CurriculumPage() {
 
   if (
     curriculum === null ||
-    generalEducation === null
+    generalEducation === null ||
+    graduationRequirements === null
   ) {
     return (
       <section className="curriculum-page">
