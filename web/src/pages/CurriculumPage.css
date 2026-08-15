@@ -593,6 +593,10 @@
   background: #f8f9f8;
 }
 
+.curriculum-change-course-map > div:last-of-type {
+  border: 2px solid #c8d9cf;
+}
+
 .curriculum-change-course-map > div > span {
   display: block;
   margin-bottom: 8px;
