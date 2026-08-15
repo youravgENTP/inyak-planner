@@ -615,6 +615,16 @@
   color: #7b877f;
 }
 
+.curriculum-change-course-name {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #34483b;
+}
+
 .curriculum-change-course-map ul {
   display: flex;
   flex-direction: column;

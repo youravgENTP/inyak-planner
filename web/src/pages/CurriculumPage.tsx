@@ -876,8 +876,8 @@ export function CurriculumPage() {
                   </strong>
 
                   <span>
-                    입학 당시 과목표와 현재
-                    적용 과목표를 비교합니다.
+                    입학 당시 졸업 요건과 현재
+                    적용 졸업 요건을 비교합니다.
                   </span>
                 </div>
 
@@ -889,7 +889,7 @@ export function CurriculumPage() {
               <div className="curriculum-change-panel-body">
                 <div className="curriculum-change-overview">
                   <section className="curriculum-change-summary">
-                    <h3>입학 당시 과목표</h3>
+                    <h3>입학 당시 졸업 요건</h3>
 
                     <div className="curriculum-change-table-wrap">
                       <table className="curriculum-change-table">
@@ -1009,7 +1009,7 @@ export function CurriculumPage() {
                   </section>
 
                   <section className="curriculum-change-summary">
-                    <h3>현재 적용 과목표</h3>
+                    <h3>현재 적용 졸업 요건</h3>
 
                     <div className="curriculum-change-table-wrap">
                       <table className="curriculum-change-table">
@@ -1130,11 +1130,9 @@ export function CurriculumPage() {
                 </div>
 
                 <p className="curriculum-change-guidance">
-                  이 비교는 교육과정 과목표의
-                  구성 변화를 보여줍니다.
-                  공식 최소 졸업학점 자체는
-                  별도의 졸업요건 데이터를
-                  기준으로 합니다.
+                  입학 당시와 현재
+                  적용되는 졸업 요건의 학점
+                  구성을 비교합니다.
                 </p>
 
                 {changeCount === 0 ? (
@@ -1238,7 +1236,17 @@ export function CurriculumPage() {
                       >
                         <header>
                           <strong>
-                            속성 변경
+                            {course.previousCredits !==
+                              null &&
+                            course
+                              .previousCompletionType ===
+                              null &&
+                            course.previousGrade ===
+                              null &&
+                            course.previousSemester ===
+                              null
+                              ? '학점 변경'
+                              : '속성 변경'}
                           </strong>
 
                           <span>
@@ -1250,15 +1258,15 @@ export function CurriculumPage() {
                           </span>
                         </header>
 
-                        <strong>
-                          {course.courseName}
-                        </strong>
-
                         <div className="curriculum-change-course-map">
                           <div>
                             <span>
                               변경 전
                             </span>
+
+                            <strong className="curriculum-change-course-name">
+                              {course.courseName}
+                            </strong>
 
                             <ul>
                               <li>
@@ -1281,8 +1289,6 @@ export function CurriculumPage() {
                             </ul>
                           </div>
 
-                          </div>
-
                           <span
                             aria-hidden="true"
                             className="curriculum-change-arrow"
@@ -1295,10 +1301,9 @@ export function CurriculumPage() {
                               현재 적용
                             </span>
 
-                          <div>
-                            <span>
-                              현재 적용
-                            </span>
+                            <strong className="curriculum-change-course-name">
+                              {course.courseName}
+                            </strong>
 
                             <ul>
                               <li>
