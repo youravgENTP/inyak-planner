@@ -67,6 +67,30 @@ VALUES (
 )
 """
 
+UPDATE_SQL = """
+UPDATE public.curriculum_courses
+SET
+    entry_year = %s,
+    grade = %s,
+    semester = %s,
+    course_name = %s,
+    course_code = %s,
+    completion_type = %s,
+    credits = %s,
+    notes = %s,
+    change_group = %s,
+    change_type = %s,
+    change_role = %s,
+    change_effective_year = %s,
+    change_note = %s,
+    previous_credits = %s,
+    previous_completion_type = %s,
+    previous_grade = %s,
+    previous_semester = %s,
+    attribute_change_effective_year = %s,
+    attribute_change_note = %s
+WHERE id = %s
+"""
 
 REQUIRED_POSTGRES_COLUMNS = {
     "entry_year",
@@ -284,6 +308,348 @@ def create_insert_rows(
         for course in courses
     ]
 
+def normalize_course_code(
+    course_code: str | None,
+) -> str | None:
+    if course_code is None:
+        return None
+
+    normalized = course_code.strip()
+
+    return normalized or None
+
+
+def plan_course_replace(
+    connection: psycopg.Connection,
+    courses: list[CurriculumCourse],
+    entry_year: int,
+) -> tuple[
+    list[tuple[int, CurriculumCourse]],
+    list[CurriculumCourse],
+    list[int],
+]:
+    """
+    기존 curriculum_courses의 id를 가능한 한
+    그대로 유지하면서 CSV와 동기화할 계획을 만듭니다.
+
+    매칭 우선순위:
+    1. 동일 course_code
+    2. 동일 course_name + change_role
+
+    어느 쪽으로도 안전하게 대응되지 않는 CSV 과목만
+    새 행으로 INSERT합니다.
+    """
+
+    rows = connection.execute(
+        """
+        SELECT
+            id,
+            course_name,
+            course_code,
+            change_role
+        FROM public.curriculum_courses
+        WHERE entry_year = %s
+        ORDER BY id
+        """,
+        (entry_year,),
+    ).fetchall()
+
+    existing_rows: list[
+        tuple[int, str, str | None, str]
+    ] = [
+        (
+            int(row[0]),
+            str(row[1]),
+            normalize_course_code(
+                row[2]
+            ),
+            str(row[3]),
+        )
+        for row in rows
+    ]
+
+    # CSV 내부에서 같은 학정번호가 여러 과목에
+    # 사용되면 자동 매칭하기 위험하므로 중단합니다.
+    incoming_codes = [
+        normalize_course_code(
+            course.course_code
+        )
+        for course in courses
+        if normalize_course_code(
+            course.course_code
+        ) is not None
+    ]
+
+    duplicate_incoming_codes = {
+        course_code
+        for course_code in incoming_codes
+        if incoming_codes.count(
+            course_code
+        ) > 1
+    }
+
+    if duplicate_incoming_codes:
+        raise RuntimeError(
+            "CSV에 중복 course_code가 있어 "
+            "기존 ID를 안전하게 보존할 수 없습니다: "
+            f"{sorted(duplicate_incoming_codes)}"
+        )
+
+    # 기존 DB의 course_code가 유일한 경우에만
+    # 자동 매칭 대상으로 사용합니다.
+    existing_ids_by_code: dict[
+        str,
+        list[int],
+    ] = {}
+
+    for (
+        existing_id,
+        _course_name,
+        course_code,
+        _change_role,
+    ) in existing_rows:
+        if course_code is None:
+            continue
+
+        existing_ids_by_code.setdefault(
+            course_code,
+            [],
+        ).append(existing_id)
+
+    unique_existing_id_by_code = {
+        course_code: ids[0]
+        for course_code, ids
+        in existing_ids_by_code.items()
+        if len(ids) == 1
+    }
+
+    # 학정번호가 바뀌었더라도
+    # 과목명 + 역할이 유일하게 일치하면
+    # 같은 과목으로 판단해 ID를 유지합니다.
+    existing_ids_by_name_role: dict[
+        tuple[str, str],
+        list[int],
+    ] = {}
+
+    for (
+        existing_id,
+        course_name,
+        _course_code,
+        change_role,
+    ) in existing_rows:
+        key = (
+            course_name.strip(),
+            change_role,
+        )
+
+        existing_ids_by_name_role.setdefault(
+            key,
+            [],
+        ).append(existing_id)
+
+    unique_existing_id_by_name_role = {
+        key: ids[0]
+        for key, ids
+        in existing_ids_by_name_role.items()
+        if len(ids) == 1
+    }
+
+    update_pairs: list[
+        tuple[int, CurriculumCourse]
+    ] = []
+
+    insert_courses: list[
+        CurriculumCourse
+    ] = []
+
+    used_existing_ids: set[int] = set()
+
+    for course in courses:
+        existing_id: int | None = None
+
+        course_code = normalize_course_code(
+            course.course_code
+        )
+
+        if course_code is not None:
+            candidate_id = (
+                unique_existing_id_by_code.get(
+                    course_code
+                )
+            )
+
+            if (
+                candidate_id is not None
+                and candidate_id
+                not in used_existing_ids
+            ):
+                existing_id = candidate_id
+
+        if existing_id is None:
+            fallback_key = (
+                course.course_name.strip(),
+                course.change_role,
+            )
+
+            candidate_id = (
+                unique_existing_id_by_name_role.get(
+                    fallback_key
+                )
+            )
+
+            if (
+                candidate_id is not None
+                and candidate_id
+                not in used_existing_ids
+            ):
+                existing_id = candidate_id
+
+        if existing_id is None:
+            insert_courses.append(
+                course
+            )
+            continue
+
+        used_existing_ids.add(
+            existing_id
+        )
+
+        update_pairs.append(
+            (
+                existing_id,
+                course,
+            )
+        )
+
+    delete_ids = [
+        existing_id
+        for (
+            existing_id,
+            _course_name,
+            _course_code,
+            _change_role,
+        ) in existing_rows
+        if existing_id
+        not in used_existing_ids
+    ]
+
+    return (
+        update_pairs,
+        insert_courses,
+        delete_ids,
+    )
+
+
+def ensure_delete_ids_are_unreferenced(
+    connection: psycopg.Connection,
+    delete_ids: list[int],
+) -> None:
+    """
+    CSV에서 사라진 curriculum row를 삭제하기 전에
+    사용자 기록이 해당 id를 참조하고 있지 않은지 확인합니다.
+
+    참조 중이면 DELETE하지 않고 전체 작업을 중단합니다.
+    """
+
+    if not delete_ids:
+        return
+
+    user_records_table = (
+        connection.execute(
+            """
+            SELECT to_regclass(
+                'public.user_course_records'
+            )
+            """
+        ).fetchone()[0]
+    )
+
+    if user_records_table is None:
+        return
+
+    referenced_rows = (
+        connection.execute(
+            """
+            SELECT
+                curriculum_course_id,
+                COUNT(*)
+            FROM public.user_course_records
+            WHERE curriculum_course_id
+                = ANY(%s)
+            GROUP BY curriculum_course_id
+            ORDER BY curriculum_course_id
+            """,
+            (delete_ids,),
+        ).fetchall()
+    )
+
+    if not referenced_rows:
+        return
+
+    details = ", ".join(
+        (
+            f"id={row[0]} "
+            f"({row[1]}개 사용자 기록)"
+        )
+        for row in referenced_rows
+    )
+
+    raise RuntimeError(
+        "CSV에서 삭제될 교육과정 과목을 "
+        "사용자 기록이 참조하고 있습니다.\n"
+        "고아 curriculum_course_id 생성을 막기 위해 "
+        "작업을 중단합니다.\n"
+        f"참조 중인 과목: {details}"
+    )
+
+
+def apply_course_replace(
+    connection: psycopg.Connection,
+    update_pairs: list[
+        tuple[int, CurriculumCourse]
+    ],
+    insert_courses: list[
+        CurriculumCourse
+    ],
+    delete_ids: list[int],
+) -> None:
+    with connection.cursor() as cursor:
+        if update_pairs:
+            update_rows = [
+                (
+                    *create_insert_rows(
+                        [course]
+                    )[0],
+                    existing_id,
+                )
+                for (
+                    existing_id,
+                    course,
+                ) in update_pairs
+            ]
+
+            cursor.executemany(
+                UPDATE_SQL,
+                update_rows,
+            )
+
+        if delete_ids:
+            cursor.execute(
+                """
+                DELETE
+                FROM public.curriculum_courses
+                WHERE id = ANY(%s)
+                """,
+                (delete_ids,),
+            )
+
+        if insert_courses:
+            cursor.executemany(
+                INSERT_SQL,
+                create_insert_rows(
+                    insert_courses
+                ),
+            )
 
 def main() -> None:
     args = parse_args()
@@ -371,6 +737,55 @@ def main() -> None:
                 "--replace를 지정하세요."
             )
 
+        update_pairs: list[
+            tuple[
+                int,
+                CurriculumCourse,
+            ]
+        ] = []
+
+        insert_courses: list[
+            CurriculumCourse
+        ] = courses
+
+        delete_ids: list[int] = []
+
+        if (
+            existing_count != 0
+            and args.replace
+        ):
+            (
+                update_pairs,
+                insert_courses,
+                delete_ids,
+            ) = plan_course_replace(
+                connection,
+                courses,
+                entry_year,
+            )
+
+            ensure_delete_ids_are_unreferenced(
+                connection,
+                delete_ids,
+            )
+
+            print()
+            print(
+                "기존 ID 보존 동기화 계획"
+            )
+            print(
+                f"  UPDATE: "
+                f"{len(update_pairs)}개"
+            )
+            print(
+                f"  INSERT: "
+                f"{len(insert_courses)}개"
+            )
+            print(
+                f"  DELETE: "
+                f"{len(delete_ids)}개"
+            )
+
         if not args.apply:
             print()
             print(
@@ -387,26 +802,23 @@ def main() -> None:
             existing_count != 0
             and args.replace
         ):
-            connection.execute(
-                """
-                DELETE FROM public.curriculum_courses
-                WHERE entry_year = %s
-                """,
-                (entry_year,),
+            apply_course_replace(
+                connection,
+                update_pairs,
+                insert_courses,
+                delete_ids,
             )
 
-            print(
-                f"기존 {entry_year}학번 "
-                f"{existing_count}개 행 삭제"
-            )
+        else:
+            with connection.cursor() as cursor:
+                cursor.executemany(
+                    INSERT_SQL,
+                    create_insert_rows(
+                        courses
+                    ),
+                )
 
-        with connection.cursor() as cursor:
-            cursor.executemany(
-                INSERT_SQL,
-                create_insert_rows(courses),
-            )
-
-        inserted_count = (
+        final_count = (
             connection.execute(
                 """
                 SELECT COUNT(*)
@@ -417,11 +829,11 @@ def main() -> None:
             ).fetchone()[0]
         )
 
-        if inserted_count != total_count:
+        if final_count != total_count:
             raise RuntimeError(
-                "삽입 후 행 수가 예상과 다릅니다: "
+                "동기화 후 행 수가 예상과 다릅니다: "
                 f"예상 {total_count}, "
-                f"실제 {inserted_count}"
+                f"실제 {final_count}"
             )
 
     print()
@@ -430,7 +842,7 @@ def main() -> None:
         "import 완료"
     )
     print(
-        f"삽입 행: {total_count}개"
+        f"최종 행: {total_count}개"
     )
 
 
