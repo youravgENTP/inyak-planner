@@ -5,6 +5,8 @@ import {
   useState,
 } from 'react'
 
+import { DownloadIcon } from '../components/DownloadIcon'
+
 import { CreateTimetableModal } from '../components/saved-timetables/CreateTimetableModal'
 import { SavedTimetablesModal } from '../components/saved-timetables/SavedTimetablesModal'
 import { RenameTimetableModal } from '../components/saved-timetables/RenameTimetableModal'
@@ -1830,10 +1832,11 @@ async function handleDownloadSyllabi() {
                     lectureLoadError !== null
                   }
                 >
-                  시간표 수정
+                  수정
                 </button>
 
                 <button
+                  aria-label="강의계획서 다운로드"
                   className="secondary-button"
                   type="button"
                   onClick={
@@ -1844,19 +1847,32 @@ async function handleDownloadSyllabi() {
                     isDownloadingSyllabi
                   }
                 >
-                  {isDownloadingSyllabi
-                    ? '다운로드 준비 중…'
-                    : '강의계획서 다운로드'}
+                  {isDownloadingSyllabi ? (
+                    '다운로드 준비 중…'
+                  ) : (
+                    <>
+                      <span>강의계획서</span>
+
+                      <DownloadIcon
+                        className="download-icon"
+                      />
+                    </>
+                  )}
                 </button>
 
                 <button
+                  aria-label="시간표 다운로드"
                   className="secondary-button"
                   type="button"
                   onClick={
                     handleOpenDownloadModal
                   }
                 >
-                  시간표 다운로드
+                  <span>시간표</span>
+
+                  <DownloadIcon
+                    className="download-icon"
+                  />
                 </button>
               </div>
             )}

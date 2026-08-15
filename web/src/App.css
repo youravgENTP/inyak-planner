@@ -771,6 +771,21 @@ h1 {
   gap: 10px;
 }
 
+/* 다운로드 버튼 안에서 사용하는 공용 아이콘 */
+.download-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+/* 아이콘이 들어간 보조 버튼의 내용 정렬 */
+.timetable-view-actions .secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
 /* 시간표 편집 버튼 */
 
 .timetable-edit-actions {

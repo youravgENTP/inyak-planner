@@ -5,6 +5,8 @@ import {
   useState,
 } from 'react'
 
+import { DownloadIcon } from '../components/DownloadIcon'
+
 import {
   GraduationSemesterBoard,
 } from '../components/GraduationSemesterBoard/GraduationSemesterBoard'
@@ -467,6 +469,7 @@ export function ProgressTrackerPage({
           </span>
 
           <button
+            aria-label="개인 이수 현황 엑셀 다운로드"
             className="graduation-export-button"
             type="button"
             disabled={
@@ -485,12 +488,11 @@ export function ProgressTrackerPage({
                 : '개인 이수 현황 엑셀'}
             </span>
 
-            <span
-              aria-hidden="true"
-              className="graduation-export-button-arrow"
-            >
-              ↓
-            </span>
+            {!isExporting && (
+              <DownloadIcon
+                className="download-icon"
+              />
+            )}
           </button>
         </div>
 
