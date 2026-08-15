@@ -20,14 +20,13 @@ import {
 import type {
   GeneralEducation,
 } from '../domain/general-education/types'
-import './CurriculumPage.css'
-
 import {
   fetchGraduationRequirements,
 } from '../domain/graduation-requirements/api'
 import type {
   GraduationRequirements,
 } from '../domain/graduation-requirements/types'
+import './CurriculumPage.css'
 
 const DEFAULT_ENTRY_YEAR = 2024
 
@@ -346,6 +345,13 @@ export function CurriculumPage() {
     generalEducation,
     setGeneralEducation,
   ] = useState<GeneralEducation | null>(
+    null,
+  )
+
+    const [
+    graduationRequirements,
+    setGraduationRequirements,
+  ] = useState<GraduationRequirements | null>(
     null,
   )
 
@@ -882,73 +888,245 @@ export function CurriculumPage() {
 
               <div className="curriculum-change-panel-body">
                 <div className="curriculum-change-overview">
-                  <div>
-                    <span>
-                      입학 당시 과목표
-                    </span>
+                  <section className="curriculum-change-summary">
+                    <h3>입학 당시 과목표</h3>
 
-                    <strong>
-                      전필{' '}
-                      {
-                        curriculumComparison
-                          .originalRequired
-                          .courseCount
-                      }
-                      과목 ·{' '}
-                      {formatCredits(
-                        curriculumComparison
-                          .originalRequired,
-                      )}
-                    </strong>
+                    <div className="curriculum-change-table-wrap">
+                      <table className="curriculum-change-table">
+                        <thead>
+                          <tr>
+                            <th scope="col">
+                              영역
+                            </th>
+                            <th scope="col">
+                              구분
+                            </th>
+                            <th scope="col">
+                              학점
+                            </th>
+                          </tr>
+                        </thead>
 
-                    <small>
-                      전선{' '}
-                      {
-                        curriculumComparison
-                          .originalElective
-                          .courseCount
-                      }
-                      과목 ·{' '}
-                      {formatCredits(
-                        curriculumComparison
-                          .originalElective,
-                      )}
-                    </small>
-                  </div>
+                        <tbody>
+                          <tr>
+                            <th
+                              rowSpan={3}
+                              scope="rowgroup"
+                            >
+                              전공
+                            </th>
 
-                  <div>
-                    <span>
-                      현재 적용 과목표
-                    </span>
+                            <td>전필</td>
 
-                    <strong>
-                      전필{' '}
-                      {
-                        curriculumComparison
-                          .currentRequired
-                          .courseCount
-                      }
-                      과목 ·{' '}
-                      {formatCredits(
-                        curriculumComparison
-                          .currentRequired,
-                      )}
-                    </strong>
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .original.required
+                              }
+                            </td>
+                          </tr>
 
-                    <small>
-                      전선{' '}
-                      {
-                        curriculumComparison
-                          .currentElective
-                          .courseCount
-                      }
-                      과목 ·{' '}
-                      {formatCredits(
-                        curriculumComparison
-                          .currentElective,
-                      )}
-                    </small>
-                  </div>
+                          <tr>
+                            <td>전선</td>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .original.elective
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-subtotal">
+                            <td>합계</td>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .original.majorTotal
+                              }
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <th
+                              rowSpan={3}
+                              scope="rowgroup"
+                            >
+                              교양
+                            </th>
+
+                            <td>기초교양</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .basic
+                              }
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>균형교양</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .balanced
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-subtotal">
+                            <td>합계</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .total
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-total">
+                            <th
+                              colSpan={2}
+                              scope="row"
+                            >
+                              총합계
+                            </th>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .original.total
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="curriculum-change-summary">
+                    <h3>현재 적용 과목표</h3>
+
+                    <div className="curriculum-change-table-wrap">
+                      <table className="curriculum-change-table">
+                        <thead>
+                          <tr>
+                            <th scope="col">
+                              영역
+                            </th>
+                            <th scope="col">
+                              구분
+                            </th>
+                            <th scope="col">
+                              학점
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr>
+                            <th
+                              rowSpan={3}
+                              scope="rowgroup"
+                            >
+                              전공
+                            </th>
+
+                            <td>전필</td>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .current.required
+                              }
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>전선</td>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .current.elective
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-subtotal">
+                            <td>합계</td>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .current.majorTotal
+                              }
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <th
+                              rowSpan={3}
+                              scope="rowgroup"
+                            >
+                              교양
+                            </th>
+
+                            <td>기초교양</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .basic
+                              }
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>균형교양</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .balanced
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-subtotal">
+                            <td>합계</td>
+
+                            <td>
+                              {
+                                generalEducationCredits
+                                  .total
+                              }
+                            </td>
+                          </tr>
+
+                          <tr className="curriculum-change-table-total">
+                            <th
+                              colSpan={2}
+                              scope="row"
+                            >
+                              총합계
+                            </th>
+
+                            <td>
+                              {
+                                curriculumCreditComparison
+                                  .current.total
+                              }
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
                 </div>
 
                 <p className="curriculum-change-guidance">
@@ -1012,6 +1190,13 @@ export function CurriculumPage() {
                                   )}
                               </ul>
                             </div>
+
+                            <span
+                              aria-hidden="true"
+                              className="curriculum-change-arrow"
+                            >
+                              ↓
+                            </span>
 
                             <div>
                               <span>
@@ -1095,6 +1280,20 @@ export function CurriculumPage() {
                               </li>
                             </ul>
                           </div>
+
+                          </div>
+
+                          <span
+                            aria-hidden="true"
+                            className="curriculum-change-arrow"
+                          >
+                            ↓
+                          </span>
+
+                          <div>
+                            <span>
+                              현재 적용
+                            </span>
 
                           <div>
                             <span>
