@@ -1,22 +1,24 @@
-"""Insert a new curriculum cohort into PostgreSQL.
+"""Import curriculum cohort data into PostgreSQL.
 
-This script is intentionally insert-only.
+By default, the script only inserts a cohort that does not
+already exist.
 
-It refuses to modify a cohort that already has rows in
-PostgreSQL so that existing curriculum_course_id values are
-not accidentally invalidated.
+Use --replace explicitly when an existing cohort should be
+replaced. Actual writes require --apply.
 
 Run a dry run first:
 
     python scripts/import_curriculum_postgres.py \
-        data/seed/curriculum_2022.csv \
-        --project-ref PROJECT_REF
+        data/seed/curriculum_2024.csv \
+        --project-ref PROJECT_REF \
+        --replace
 
 Then apply:
 
     python scripts/import_curriculum_postgres.py \
-        data/seed/curriculum_2022.csv \
+        data/seed/curriculum_2024.csv \
         --project-ref PROJECT_REF \
+        --replace \
         --apply
 """
 
@@ -111,6 +113,16 @@ def parse_args() -> argparse.Namespace:
             "DATABASE_URL 검증에 사용합니다."
         ),
     )
+
+    parser.add_argument(
+        "--replace",
+        action="store_true",
+        help=(
+            "해당 학번 데이터가 이미 있으면 "
+            "기존 행을 삭제하고 교체합니다."
+        ),
+    )
+
 
     parser.add_argument(
         "--apply",
@@ -347,14 +359,16 @@ def main() -> None:
             f"{existing_count}개"
         )
 
-        if existing_count != 0:
+        if (
+            existing_count != 0
+            and not args.replace
+        ):
             raise RuntimeError(
                 f"PostgreSQL에 이미 "
                 f"{entry_year}학번 교육과정이 "
                 f"{existing_count}개 있습니다.\n"
-                "이 스크립트는 신규 학번 "
-                "insert 전용이므로 "
-                "기존 데이터를 수정하지 않습니다."
+                "기존 학번을 교체하려면 "
+                "--replace를 지정하세요."
             )
 
         if not args.apply:
@@ -368,6 +382,23 @@ def main() -> None:
                 "다시 실행하세요."
             )
             return
+
+        if (
+            existing_count != 0
+            and args.replace
+        ):
+            connection.execute(
+                """
+                DELETE FROM public.curriculum_courses
+                WHERE entry_year = %s
+                """,
+                (entry_year,),
+            )
+
+            print(
+                f"기존 {entry_year}학번 "
+                f"{existing_count}개 행 삭제"
+            )
 
         with connection.cursor() as cursor:
             cursor.executemany(
