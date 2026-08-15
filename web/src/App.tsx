@@ -1,8 +1,10 @@
 import {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router'
 
 import './App.css'
 import {
@@ -29,18 +31,48 @@ import { ProgressTrackerPage } from './pages/ProgressTrackerPage'
 import { TimetableComparisonWorkspacePage } from './pages/TimetableComparisonWorkspacePage'
 import { TimetablePage } from './pages/TimetablePage'
 
-type AppPage =
-  | AppNavigationPage
-  | 'account'
+const PAGE_PATHS:
+  Record<AppNavigationPage, string> = {
+    timetable: '/timetable',
+    timetableComparison:
+      '/timetable/compare',
+    academicCalendar:
+      '/academic-calendar',
+    curriculum: '/curriculum',
+    progress: '/progress',
+    gpa: '/gpa',
+  }
+
+function getActiveNavigationPage(
+  pathname: string,
+): AppNavigationPage {
+  switch (pathname) {
+    case '/timetable/compare':
+      return 'timetableComparison'
+
+    case '/academic-calendar':
+      return 'academicCalendar'
+
+    case '/curriculum':
+      return 'curriculum'
+
+    case '/progress':
+      return 'progress'
+
+    case '/gpa':
+      return 'gpa'
+
+    case '/timetable':
+    default:
+      return 'timetable'
+  }
+}
 
 function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [currentUser, setCurrentUser] =
     useState<AuthUser | null>(null)
-
-  const [
-    currentPage,
-    setCurrentPage,
-  ] = useState<AppPage>('timetable')
 
   const [
     savedTimetables,
@@ -101,7 +133,10 @@ function App() {
 
       setSavedTimetables([])
       setCurrentUser(null)
-      setCurrentPage('timetable')
+      navigate(
+        '/timetable',
+        { replace: true },
+      )
     } catch (error) {
       if (error instanceof Error) {
         setAuthenticationError(
@@ -122,7 +157,6 @@ function App() {
   ) {
     setSavedTimetables([])
     setCurrentUser(user)
-    setCurrentPage('timetable')
   }
 
   const handleTimetableStateChange =
@@ -187,9 +221,11 @@ function App() {
 
   const activeNavigationPage:
     AppNavigationPage =
-      currentPage === 'account'
+      location.pathname === '/account'
         ? 'curriculum'
-        : currentPage
+        : getActiveNavigationPage(
+            location.pathname,
+          )
 
   return (
     <AppShell
@@ -199,60 +235,112 @@ function App() {
         currentUser.profileImageFilename
       }
       onNavigate={(page) =>
-        setCurrentPage(page)
+        navigate(PAGE_PATHS[page])
       }
       onOpenAccount={() =>
-        setCurrentPage('account')
+        navigate('/account')
       }
       onLogout={() => {
         void handleLogout()
       }}
     >
-    {currentPage === 'account' ? (
-      <AccountPage
-        user={currentUser}
-        onBack={() =>
-          setCurrentPage('timetable')
-        }
-        onUserUpdated={(updatedUser) =>
-          setCurrentUser(updatedUser)
-        }
-        onLogout={() => {
-          void handleLogout()
-        }}
-      />
-    ) : currentPage === 'academicCalendar' ? (
-      <AcademicCalendarPage />
-    ) : currentPage === 'curriculum' ? (
-      <CurriculumPage />
-    ) : currentPage === 'progress' ? (
-      <ProgressTrackerPage
-        user={currentUser}
-        onOpenAccount={()=>
-          setCurrentPage('account')
-        }
-      />
-    ) : currentPage === 'gpa' ? (
-      <GpaCalculatorPage 
-        user={currentUser}
-      />
-    ) : currentPage ===
-      'timetableComparison' ? (
-      <TimetableComparisonWorkspacePage
-        user={currentUser}
-        timetables={savedTimetables}
-      />
-    ) : (
-      <TimetablePage
-        onTimetableStateChange={
-          handleTimetableStateChange
-        }
-      />
-    )}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/timetable"
+              replace
+            />
+          }
+        />
 
+        <Route
+          path="/timetable"
+          element={
+            <TimetablePage
+              onTimetableStateChange={
+                handleTimetableStateChange
+              }
+            />
+          }
+        />
+
+        <Route
+          path="/timetable/compare"
+          element={
+            <TimetableComparisonWorkspacePage
+              user={currentUser}
+              timetables={savedTimetables}
+            />
+          }
+        />
+
+        <Route
+          path="/academic-calendar"
+          element={
+            <AcademicCalendarPage />
+          }
+        />
+
+        <Route
+          path="/curriculum"
+          element={<CurriculumPage />}
+        />
+
+        <Route
+          path="/gpa"
+          element={
+            <GpaCalculatorPage
+              user={currentUser}
+            />
+          }
+        />
+
+        <Route
+          path="/progress"
+          element={
+            <ProgressTrackerPage
+              user={currentUser}
+              onOpenAccount={() =>
+                navigate('/account')
+              }
+            />
+          }
+        />
+
+        <Route
+          path="/account"
+          element={
+            <AccountPage
+              user={currentUser}
+              onBack={() =>
+                navigate('/timetable')
+              }
+              onUserUpdated={(
+                updatedUser,
+              ) =>
+                setCurrentUser(updatedUser)
+              }
+              onLogout={() => {
+                void handleLogout()
+              }}
+            />
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/timetable"
+              replace
+            />
+          }
+        />
+      </Routes>
     </AppShell>
   )
-
 }
 
 export default App
