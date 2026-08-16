@@ -853,6 +853,7 @@ def audit_offerings_to_curriculum(
         )
     )
 
+    audited_count = 0
     mapped_count = 0
     moved_candidate_count = 0
     code_changed_candidate_count = 0
@@ -920,6 +921,8 @@ def audit_offerings_to_curriculum(
 
         if not active_cohorts:
             continue
+
+        audited_count += 1
 
         exact_matches: list[
             tuple[
@@ -1158,7 +1161,7 @@ def audit_offerings_to_curriculum(
     )
     print(
         "검사 대상 실제 개설 과목:",
-        len(offerings),
+        audited_count,
     )
     print(
         "교육과정 정확 대응:",
