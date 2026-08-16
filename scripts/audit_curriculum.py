@@ -319,6 +319,48 @@ def find_year_name_candidates(
         ),
     ).fetchall()
 
+def find_other_grade_code_candidates(
+    connection: sqlite3.Connection,
+    *,
+    academic_year: int,
+    expected_grade: int,
+    course_code: str | None,
+) -> list[sqlite3.Row]:
+    course_code = normalize_course_code(
+        course_code
+    )
+
+    if course_code is None:
+        return []
+
+    return connection.execute(
+        """
+        SELECT DISTINCT
+            semester,
+            recommended_year,
+            course_code,
+            course_name,
+            credits,
+            completion_type
+        FROM courses
+        WHERE
+            academic_year = ?
+            AND recommended_year IS NOT NULL
+            AND recommended_year != ?
+            AND UPPER(TRIM(course_code)) = ?
+        ORDER BY
+            recommended_year,
+            semester,
+            course_name,
+            credits
+        """,
+        (
+            academic_year,
+            expected_grade,
+            course_code,
+        ),
+    ).fetchall()
+
 
 # ============================================================
 # A. 교육과정 -> 실제 개설 이력
@@ -477,6 +519,49 @@ def audit_curriculum_to_offerings(
             else:
                 print(
                     "  같은 학년도 다른 학기 후보 없음"
+                )
+
+            other_grade_candidates = (
+                find_other_grade_code_candidates(
+                    connection,
+                    academic_year=actual_year,
+                    expected_grade=course.grade,
+                    course_code=course.course_code,
+                )
+            )
+
+            if other_grade_candidates:
+                print(
+                    "  다른 권장학년 동일 학정번호 개설:"
+                )
+
+                for candidate in (
+                    other_grade_candidates
+                ):
+                    print(
+                        "   -",
+                        (
+                            f"{actual_year}-"
+                            f'{candidate["semester"]}'
+                        ),
+                        (
+                            f'{candidate["recommended_year"]}'
+                            "학년"
+                        ),
+                        candidate["course_code"],
+                        candidate["course_name"],
+                        (
+                            f'{candidate["credits"]}'
+                            "학점"
+                        ),
+                        (
+                            candidate["completion_type"]
+                            or ""
+                        ),
+                    )
+            else:
+                print(
+                    "  다른 권장학년 동일 학정번호 개설 없음"
                 )
 
             continue
