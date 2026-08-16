@@ -577,7 +577,6 @@ def get_curriculum_prefixes(
 
     return prefixes
 
-
 def load_relevant_offerings(
     connection: sqlite3.Connection,
     curriculum_prefixes: set[str],
@@ -589,13 +588,17 @@ def load_relevant_offerings(
             semester,
             course_code,
             course_name,
-            credits
+            credits,
+            completion_type,
+            recommended_year
         FROM courses
         WHERE
             course_code IS NOT NULL
+            AND recommended_year IS NOT NULL
         ORDER BY
             academic_year,
             semester,
+            recommended_year,
             course_code,
             course_name,
             credits
@@ -893,12 +896,27 @@ def audit_offerings_to_curriculum(
             offering["course_name"]
         )
 
-        active_cohorts = (
-            get_active_cohorts(
+        recommended_year = int(
+            offering["recommended_year"]
+        )
+
+        active_cohorts = [
+            (
+                entry_year,
+                expected_grade,
+            )
+            for (
+                entry_year,
+                expected_grade,
+            ) in get_active_cohorts(
                 curriculum_courses,
                 academic_year=academic_year,
             )
-        )
+            if (
+                expected_grade
+                == recommended_year
+            )
+        ]
 
         if not active_cohorts:
             continue
