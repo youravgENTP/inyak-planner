@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import argparse
 import re
 import sqlite3
 from pathlib import Path
@@ -35,12 +37,35 @@ def connect_database() -> sqlite3.Connection:
     return connection
 
 
-def load_curriculum_courses() -> list[CurriculumCourse]:
-    csv_paths = sorted(
-        SEED_DIR.glob(
-            "curriculum_*.csv"
+# ============================================================
+# 교육과정 seed CSV
+# ============================================================
+
+def load_curriculum_courses(
+    entry_year: int | None = None,
+) -> list[CurriculumCourse]:
+    if entry_year is None:
+        csv_paths = sorted(
+            SEED_DIR.glob(
+                "curriculum_*.csv"
+            )
         )
-    )
+    else:
+        csv_path = (
+            SEED_DIR
+            / f"curriculum_{entry_year}.csv"
+        )
+
+        if not csv_path.exists():
+            raise RuntimeError(
+                "해당 학번의 교육과정 seed CSV를 "
+                "찾을 수 없습니다: "
+                f"{csv_path}"
+            )
+
+        csv_paths = [
+            csv_path
+        ]
 
     if not csv_paths:
         raise RuntimeError(
@@ -52,9 +77,7 @@ def load_curriculum_courses() -> list[CurriculumCourse]:
         CurriculumCourse
     ] = []
 
-    print(
-        "교육과정 seed CSV:"
-    )
+    print("교육과정 seed CSV:")
 
     for csv_path in csv_paths:
         courses = load_csv(
@@ -65,18 +88,31 @@ def load_curriculum_courses() -> list[CurriculumCourse]:
             courses
         )
 
-        entry_year = (
+        loaded_entry_year = (
             courses[0].entry_year
         )
 
         print(
             " -",
             csv_path.name,
-            f"({entry_year}학번, "
-            f"{len(courses)}행)",
+            (
+                f"({loaded_entry_year}학번, "
+                f"{len(courses)}행)"
+            ),
         )
 
+    print(
+        "교육과정 총 행:",
+        len(curriculum_courses),
+    )
+
     return curriculum_courses
+
+
+# ============================================================
+# 실제 개설 이력
+# ============================================================
+
 
 def load_available_terms(
     connection: sqlite3.Connection,
@@ -95,8 +131,8 @@ def load_available_terms(
 
     return {
         (
-            row["academic_year"],
-            row["semester"],
+            int(row["academic_year"]),
+            int(row["semester"]),
         )
         for row in rows
     }
@@ -122,7 +158,11 @@ def normalize_course_code(
     if course_code is None:
         return None
 
-    normalized = course_code.strip().upper()
+    normalized = (
+        course_code
+        .strip()
+        .upper()
+    )
 
     return normalized or None
 
@@ -168,7 +208,11 @@ def find_actual_course_credits(
     semester: int,
     course_code: str | None,
 ) -> list[float]:
-    if not course_code:
+    course_code = normalize_course_code(
+        course_code
+    )
+
+    if course_code is None:
         return []
 
     rows = connection.execute(
@@ -179,7 +223,7 @@ def find_actual_course_credits(
         WHERE
             academic_year = ?
             AND semester = ?
-            AND course_code = ?
+            AND UPPER(TRIM(course_code)) = ?
             AND credits IS NOT NULL
         ORDER BY credits
         """,
@@ -203,7 +247,7 @@ def find_name_candidates(
     semester: int,
     course_name: str,
 ) -> list[sqlite3.Row]:
-    rows = connection.execute(
+    return connection.execute(
         """
         SELECT DISTINCT
             course_code,
@@ -231,8 +275,6 @@ def find_name_candidates(
         ),
     ).fetchall()
 
-    return rows
-
 
 def find_year_name_candidates(
     connection: sqlite3.Connection,
@@ -240,7 +282,7 @@ def find_year_name_candidates(
     academic_year: int,
     course_name: str,
 ) -> list[sqlite3.Row]:
-    rows = connection.execute(
+    return connection.execute(
         """
         SELECT DISTINCT
             semester,
@@ -268,22 +310,17 @@ def find_year_name_candidates(
         ),
     ).fetchall()
 
-    return rows
+
+# ============================================================
+# A. 교육과정 -> 실제 개설 이력
+# ============================================================
 
 
 def audit_curriculum_to_offerings(
     connection: sqlite3.Connection,
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     available_terms: set[tuple[int, int]],
 ) -> None:
-    """
-    정방향 검사.
-
-    교육과정에 기록된 과목이
-    해당 학생이 실제 그 학년에 도달하는 연도/학기에
-    courses에 올바르게 존재하는지 확인한다.
-    """
-
     verifiable_count = 0
     unavailable_count = 0
 
@@ -306,14 +343,14 @@ def audit_curriculum_to_offerings(
     for course in curriculum_courses:
         actual_year = (
             get_actual_academic_year(
-                course["entry_year"],
-                course["grade"],
+                course.entry_year,
+                course.grade,
             )
         )
 
         actual_term = (
             actual_year,
-            course["semester"],
+            course.semester,
         )
 
         if actual_term not in available_terms:
@@ -326,13 +363,13 @@ def audit_curriculum_to_offerings(
             find_actual_course_credits(
                 connection,
                 academic_year=actual_year,
-                semester=course["semester"],
-                course_code=course["course_code"],
+                semester=course.semester,
+                course_code=course.course_code,
             )
         )
 
         curriculum_credits = (
-            course["credits"]
+            course.credits
         )
 
         if not actual_credits:
@@ -342,8 +379,8 @@ def audit_curriculum_to_offerings(
                 find_name_candidates(
                     connection,
                     academic_year=actual_year,
-                    semester=course["semester"],
-                    course_name=course["course_name"],
+                    semester=course.semester,
+                    course_name=course.course_name,
                 )
             )
 
@@ -351,7 +388,7 @@ def audit_curriculum_to_offerings(
                 find_year_name_candidates(
                     connection,
                     academic_year=actual_year,
-                    course_name=course["course_name"],
+                    course_name=course.course_name,
                 )
             )
 
@@ -360,27 +397,27 @@ def audit_curriculum_to_offerings(
                 for candidate
                 in year_name_candidates
                 if (
-                    candidate["semester"]
-                    != course["semester"]
+                    int(candidate["semester"])
+                    != course.semester
                 )
             ]
 
             print()
             print(
                 "[NOT_FOUND]",
-                course["entry_year"],
+                course.entry_year,
                 (
-                    f'{course["grade"]}-'
-                    f'{course["semester"]}'
+                    f"{course.grade}-"
+                    f"{course.semester}"
                 ),
-                course["course_code"],
-                course["course_name"],
+                course.course_code,
+                course.course_name,
                 "교육과정:",
                 curriculum_credits,
                 (
                     "실제 학기: "
                     f"{actual_year}-"
-                    f'{course["semester"]}'
+                    f"{course.semester}"
                 ),
             )
 
@@ -415,7 +452,7 @@ def audit_curriculum_to_offerings(
                     print(
                         "   -",
                         (
-                            f'{actual_year}-'
+                            f"{actual_year}-"
                             f'{candidate["semester"]}'
                         ),
                         candidate["course_code"],
@@ -438,13 +475,13 @@ def audit_curriculum_to_offerings(
             print()
             print(
                 "[SECTION_CREDIT_CONFLICT]",
-                course["entry_year"],
+                course.entry_year,
                 (
-                    f'{course["grade"]}-'
-                    f'{course["semester"]}'
+                    f"{course.grade}-"
+                    f"{course.semester}"
                 ),
-                course["course_code"],
-                course["course_name"],
+                course.course_code,
+                course.course_name,
                 "교육과정:",
                 curriculum_credits,
                 "실제:",
@@ -453,7 +490,9 @@ def audit_curriculum_to_offerings(
 
             continue
 
-        actual_credit = actual_credits[0]
+        actual_credit = (
+            actual_credits[0]
+        )
 
         if (
             curriculum_credits is not None
@@ -467,20 +506,20 @@ def audit_curriculum_to_offerings(
             print()
             print(
                 "[CREDIT_MISMATCH]",
-                course["entry_year"],
+                course.entry_year,
                 (
-                    f'{course["grade"]}-'
-                    f'{course["semester"]}'
+                    f"{course.grade}-"
+                    f"{course.semester}"
                 ),
-                course["course_code"],
-                course["course_name"],
+                course.course_code,
+                course.course_name,
                 "교육과정:",
                 curriculum_credits,
                 "실제:",
                 actual_credit,
                 (
                     f"({actual_year}-"
-                    f'{course["semester"]})'
+                    f"{course.semester})"
                 ),
             )
 
@@ -518,14 +557,19 @@ def audit_curriculum_to_offerings(
     )
 
 
+# ============================================================
+# B. 실제 개설 이력 -> 교육과정
+# ============================================================
+
+
 def get_curriculum_prefixes(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
 ) -> set[str]:
     prefixes: set[str] = set()
 
     for course in curriculum_courses:
         prefix = get_course_code_prefix(
-            course["course_code"]
+            course.course_code
         )
 
         if prefix is not None:
@@ -538,14 +582,6 @@ def load_relevant_offerings(
     connection: sqlite3.Connection,
     curriculum_prefixes: set[str],
 ) -> list[sqlite3.Row]:
-    """
-    교육과정에 등장하는 학정번호 prefix와 같은
-    실제 개설 과목만 역방향 audit 대상으로 삼는다.
-
-    현재 데이터라면 ADA / ADB 계열이 자연스럽게
-    대상이 된다.
-    """
-
     rows = connection.execute(
         """
         SELECT DISTINCT
@@ -555,7 +591,8 @@ def load_relevant_offerings(
             course_name,
             credits
         FROM courses
-        WHERE course_code IS NOT NULL
+        WHERE
+            course_code IS NOT NULL
         ORDER BY
             academic_year,
             semester,
@@ -565,7 +602,9 @@ def load_relevant_offerings(
         """
     ).fetchall()
 
-    relevant_rows: list[sqlite3.Row] = []
+    relevant_rows: list[
+        sqlite3.Row
+    ] = []
 
     for row in rows:
         prefix = get_course_code_prefix(
@@ -576,28 +615,23 @@ def load_relevant_offerings(
             prefix is not None
             and prefix in curriculum_prefixes
         ):
-            relevant_rows.append(row)
+            relevant_rows.append(
+                row
+            )
 
     return relevant_rows
 
 
 def get_active_cohorts(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     *,
     academic_year: int,
 ) -> list[tuple[int, int]]:
-    """
-    해당 실제 학년도에 1~6학년에 해당하는
-    교육과정 cohort만 반환한다.
-
-    반환:
-        [(entry_year, expected_grade), ...]
-    """
-
     entry_years = sorted(
         {
-            int(course["entry_year"])
-            for course in curriculum_courses
+            course.entry_year
+            for course
+            in curriculum_courses
         }
     )
 
@@ -623,29 +657,31 @@ def get_active_cohorts(
 
 
 def exact_reverse_matches(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     *,
     entry_year: int,
     grade: int,
     semester: int,
     course_code: str,
-) -> list[sqlite3.Row]:
-    normalized_code = normalize_course_code(
-        course_code
+) -> list[CurriculumCourse]:
+    normalized_code = (
+        normalize_course_code(
+            course_code
+        )
     )
 
     return [
         course
         for course in curriculum_courses
         if (
-            int(course["entry_year"])
+            course.entry_year
             == entry_year
-            and int(course["grade"])
+            and course.grade
             == grade
-            and int(course["semester"])
+            and course.semester
             == semester
             and normalize_course_code(
-                course["course_code"]
+                course.course_code
             )
             == normalized_code
         )
@@ -653,31 +689,32 @@ def exact_reverse_matches(
 
 
 def same_code_other_position_matches(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     *,
     entry_year: int,
     grade: int,
     semester: int,
     course_code: str,
-) -> list[sqlite3.Row]:
-    normalized_code = normalize_course_code(
-        course_code
+) -> list[CurriculumCourse]:
+    normalized_code = (
+        normalize_course_code(
+            course_code
+        )
     )
 
     return [
         course
         for course in curriculum_courses
         if (
-            int(course["entry_year"])
+            course.entry_year
             == entry_year
             and normalize_course_code(
-                course["course_code"]
+                course.course_code
             )
             == normalized_code
             and (
-                int(course["grade"])
-                != grade
-                or int(course["semester"])
+                course.grade != grade
+                or course.semester
                 != semester
             )
         )
@@ -685,20 +722,24 @@ def same_code_other_position_matches(
 
 
 def same_name_expected_position_matches(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     *,
     entry_year: int,
     grade: int,
     semester: int,
     course_name: str,
     course_code: str,
-) -> list[sqlite3.Row]:
-    normalized_name = normalize_course_name(
-        course_name
+) -> list[CurriculumCourse]:
+    normalized_name = (
+        normalize_course_name(
+            course_name
+        )
     )
 
-    normalized_code = normalize_course_code(
-        course_code
+    normalized_code = (
+        normalize_course_code(
+            course_code
+        )
     )
 
     if not normalized_name:
@@ -708,18 +749,18 @@ def same_name_expected_position_matches(
         course
         for course in curriculum_courses
         if (
-            int(course["entry_year"])
+            course.entry_year
             == entry_year
-            and int(course["grade"])
+            and course.grade
             == grade
-            and int(course["semester"])
+            and course.semester
             == semester
             and normalize_course_name(
-                course["course_name"]
+                course.course_name
             )
             == normalized_name
             and normalize_course_code(
-                course["course_code"]
+                course.course_code
             )
             != normalized_code
         )
@@ -727,18 +768,22 @@ def same_name_expected_position_matches(
 
 
 def same_name_any_position_matches(
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
     *,
     entry_year: int,
     course_name: str,
     course_code: str,
-) -> list[sqlite3.Row]:
-    normalized_name = normalize_course_name(
-        course_name
+) -> list[CurriculumCourse]:
+    normalized_name = (
+        normalize_course_name(
+            course_name
+        )
     )
 
-    normalized_code = normalize_course_code(
-        course_code
+    normalized_code = (
+        normalize_course_code(
+            course_code
+        )
     )
 
     if not normalized_name:
@@ -748,14 +793,14 @@ def same_name_any_position_matches(
         course
         for course in curriculum_courses
         if (
-            int(course["entry_year"])
+            course.entry_year
             == entry_year
             and normalize_course_name(
-                course["course_name"]
+                course.course_name
             )
             == normalized_name
             and normalize_course_code(
-                course["course_code"]
+                course.course_code
             )
             != normalized_code
         )
@@ -765,24 +810,24 @@ def same_name_any_position_matches(
 def print_curriculum_candidate(
     *,
     entry_year: int,
-    course: sqlite3.Row,
+    course: CurriculumCourse,
 ) -> None:
     print(
         "   -",
         (
             f"{entry_year}학번 "
-            f'{course["grade"]}-'
-            f'{course["semester"]}'
+            f"{course.grade}-"
+            f"{course.semester}"
         ),
-        course["course_code"],
-        course["course_name"],
+        course.course_code,
+        course.course_name,
         (
-            f'{course["credits"]}'
+            f"{course.credits}"
             "학점"
         ),
         (
-            f'role={course["change_role"]}'
-            if course["change_role"]
+            f"role={course.change_role}"
+            if course.change_role
             else ""
         ),
     )
@@ -790,30 +835,25 @@ def print_curriculum_candidate(
 
 def audit_offerings_to_curriculum(
     connection: sqlite3.Connection,
-    curriculum_courses: list[sqlite3.Row],
+    curriculum_courses: list[CurriculumCourse],
 ) -> None:
-    """
-    역방향 검사.
-
-    실제 개설된 전공계열 과목이 해당 연도에
-    재학 중인 어느 cohort의 교육과정으로
-    설명 가능한지 확인한다.
-    """
-
     curriculum_prefixes = (
         get_curriculum_prefixes(
             curriculum_courses
         )
     )
 
-    offerings = load_relevant_offerings(
-        connection,
-        curriculum_prefixes,
+    offerings = (
+        load_relevant_offerings(
+            connection,
+            curriculum_prefixes,
+        )
     )
 
     mapped_count = 0
     moved_candidate_count = 0
     code_changed_candidate_count = 0
+    code_and_position_changed_count = 0
     unmapped_count = 0
 
     print()
@@ -830,7 +870,9 @@ def audit_offerings_to_curriculum(
     print(
         "검사 학정번호 prefix:",
         ", ".join(
-            sorted(curriculum_prefixes)
+            sorted(
+                curriculum_prefixes
+            )
         ),
     )
 
@@ -843,11 +885,11 @@ def audit_offerings_to_curriculum(
             offering["semester"]
         )
 
-        course_code = (
+        course_code = str(
             offering["course_code"]
         )
 
-        course_name = (
+        course_name = str(
             offering["course_name"]
         )
 
@@ -862,31 +904,45 @@ def audit_offerings_to_curriculum(
             continue
 
         exact_matches: list[
-            tuple[int, sqlite3.Row]
+            tuple[
+                int,
+                CurriculumCourse,
+            ]
         ] = []
 
         moved_matches: list[
-            tuple[int, sqlite3.Row]
+            tuple[
+                int,
+                CurriculumCourse,
+            ]
         ] = []
 
         code_changed_matches: list[
-            tuple[int, sqlite3.Row]
+            tuple[
+                int,
+                CurriculumCourse,
+            ]
         ] = []
 
         name_other_position_matches: list[
-            tuple[int, sqlite3.Row]
+            tuple[
+                int,
+                CurriculumCourse,
+            ]
         ] = []
 
         for (
             entry_year,
             expected_grade,
         ) in active_cohorts:
-            exact = exact_reverse_matches(
-                curriculum_courses,
-                entry_year=entry_year,
-                grade=expected_grade,
-                semester=semester,
-                course_code=course_code,
+            exact = (
+                exact_reverse_matches(
+                    curriculum_courses,
+                    entry_year=entry_year,
+                    grade=expected_grade,
+                    semester=semester,
+                    course_code=course_code,
+                )
             )
 
             for course in exact:
@@ -951,6 +1007,8 @@ def audit_offerings_to_curriculum(
                     )
                 )
 
+        # 어느 cohort 하나라도 정확히 설명되면
+        # 해당 실제 개설 과목 자체는 정상 매핑으로 본다.
         if exact_matches:
             mapped_count += 1
             continue
@@ -1022,7 +1080,7 @@ def audit_offerings_to_curriculum(
             continue
 
         if name_other_position_matches:
-            moved_candidate_count += 1
+            code_and_position_changed_count += 1
 
             print()
             print(
@@ -1080,41 +1138,77 @@ def audit_offerings_to_curriculum(
     print(
         "--- 역방향 검증 결과 ---"
     )
-
     print(
         "검사 대상 실제 개설 과목:",
         len(offerings),
     )
-
     print(
         "교육과정 정확 대응:",
         mapped_count,
     )
-
     print(
         "학년/학기 이동 후보:",
         moved_candidate_count,
     )
-
     print(
         "학정번호 변경 후보:",
         code_changed_candidate_count,
     )
-
+    print(
+        "학정번호+위치 변경 후보:",
+        code_and_position_changed_count,
+    )
     print(
         "교육과정 미매핑:",
         unmapped_count,
     )
 
 
+# ============================================================
+# Main
+# ============================================================
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "교육과정 seed CSV와 실제 개설 이력을 "
+            "양방향으로 검증합니다."
+        )
+    )
+
+    parser.add_argument(
+        "--entry-year",
+        type=int,
+        help=(
+            "특정 입학년도만 검증합니다. "
+            "예: --entry-year 2023. "
+            "생략하면 모든 curriculum_*.csv를 검증합니다."
+        ),
+    )
+
+    return parser.parse_args()
+
+
 def main() -> None:
-    with connect_database() as connection:
-        curriculum_courses = (
-            load_curriculum_courses(
-                connection
-            )
+    args = parse_args()
+
+    curriculum_courses = (
+        load_curriculum_courses(
+            entry_year=args.entry_year,
+        )
+    )
+
+    if args.entry_year is None:
+        print(
+            "검증 범위: 전체 학번"
+        )
+    else:
+        print(
+            "검증 범위:",
+            f"{args.entry_year}학번"
         )
 
+    with connect_database() as connection:
         available_terms = (
             load_available_terms(
                 connection
