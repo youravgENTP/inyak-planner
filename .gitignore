@@ -23,3 +23,5 @@ data/uploads/
 
 # Local database backups
 backups/
+# Private project configuration
+config/private/
