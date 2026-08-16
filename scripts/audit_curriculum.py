@@ -206,6 +206,7 @@ def find_actual_course_credits(
     *,
     academic_year: int,
     semester: int,
+    recommended_year: int,
     course_code: str | None,
 ) -> list[float]:
     course_code = normalize_course_code(
@@ -223,6 +224,7 @@ def find_actual_course_credits(
         WHERE
             academic_year = ?
             AND semester = ?
+            AND recommended_year = ?
             AND UPPER(TRIM(course_code)) = ?
             AND credits IS NOT NULL
         ORDER BY credits
@@ -230,6 +232,7 @@ def find_actual_course_credits(
         (
             academic_year,
             semester,
+            recommended_year,
             course_code,
         ),
     ).fetchall()
@@ -245,6 +248,7 @@ def find_name_candidates(
     *,
     academic_year: int,
     semester: int,
+    recommended_year: int,
     course_name: str,
 ) -> list[sqlite3.Row]:
     return connection.execute(
@@ -257,6 +261,7 @@ def find_name_candidates(
         WHERE
             academic_year = ?
             AND semester = ?
+            AND recommended_year = ?
             AND (
                 course_name = ?
                 OR course_name LIKE ?
@@ -269,6 +274,7 @@ def find_name_candidates(
         (
             academic_year,
             semester,
+            recommended_year,
             course_name,
             f"%{course_name}%",
             course_name,
@@ -280,6 +286,7 @@ def find_year_name_candidates(
     connection: sqlite3.Connection,
     *,
     academic_year: int,
+    recommended_year: int,
     course_name: str,
 ) -> list[sqlite3.Row]:
     return connection.execute(
@@ -292,6 +299,7 @@ def find_year_name_candidates(
         FROM courses
         WHERE
             academic_year = ?
+            AND recommended_year = ?
             AND (
                 course_name = ?
                 OR course_name LIKE ?
@@ -304,6 +312,7 @@ def find_year_name_candidates(
         """,
         (
             academic_year,
+            recommended_year,
             course_name,
             f"%{course_name}%",
             course_name,
@@ -364,6 +373,7 @@ def audit_curriculum_to_offerings(
                 connection,
                 academic_year=actual_year,
                 semester=course.semester,
+                recommended_year=course.grade,
                 course_code=course.course_code,
             )
         )
@@ -380,6 +390,7 @@ def audit_curriculum_to_offerings(
                     connection,
                     academic_year=actual_year,
                     semester=course.semester,
+                    recommended_year=course.grade,
                     course_name=course.course_name,
                 )
             )
@@ -388,6 +399,7 @@ def audit_curriculum_to_offerings(
                 find_year_name_candidates(
                     connection,
                     academic_year=actual_year,
+                    recommended_year=course.grade,
                     course_name=course.course_name,
                 )
             )
