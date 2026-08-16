@@ -835,6 +835,75 @@ def print_curriculum_candidate(
         ),
     )
 
+def get_attribute_changes(
+    *,
+    candidate: CurriculumCourse,
+    actual_grade: int,
+    actual_semester: int,
+    actual_credits: float | None,
+    actual_completion_type: str | None,
+) -> list[str]:
+    changes: list[str] = []
+
+    if candidate.grade != actual_grade:
+        changes.append(
+            "grade: "
+            f"{candidate.grade} → "
+            f"{actual_grade}"
+        )
+
+    if candidate.semester != actual_semester:
+        changes.append(
+            "semester: "
+            f"{candidate.semester} → "
+            f"{actual_semester}"
+        )
+
+    curriculum_credits = (
+        candidate.credits
+    )
+
+    credits_changed = False
+
+    if (
+        curriculum_credits is None
+        and actual_credits is not None
+    ):
+        credits_changed = True
+
+    elif (
+        curriculum_credits is not None
+        and actual_credits is None
+    ):
+        credits_changed = True
+
+    elif (
+        curriculum_credits is not None
+        and actual_credits is not None
+        and float(curriculum_credits)
+        != float(actual_credits)
+    ):
+        credits_changed = True
+
+    if credits_changed:
+        changes.append(
+            "credits: "
+            f"{curriculum_credits} → "
+            f"{actual_credits}"
+        )
+
+    if (
+        candidate.completion_type
+        != actual_completion_type
+    ):
+        changes.append(
+            "completion_type: "
+            f"{candidate.completion_type} → "
+            f"{actual_completion_type}"
+        )
+
+    return changes
+
 
 def audit_offerings_to_curriculum(
     connection: sqlite3.Connection,
@@ -855,6 +924,7 @@ def audit_offerings_to_curriculum(
 
     audited_count = 0
     mapped_count = 0
+    attribute_changed_count = 0
     moved_candidate_count = 0
     code_changed_candidate_count = 0
     code_and_position_changed_count = 0
@@ -1028,10 +1098,91 @@ def audit_offerings_to_curriculum(
                     )
                 )
 
-        # 어느 cohort 하나라도 정확히 설명되면
-        # 해당 실제 개설 과목 자체는 정상 매핑으로 본다.
+        # 학정번호·학년·학기가 모두 같아도
+        # 학점이나 이수구분이 달라졌을 수 있다.
         if exact_matches:
-            mapped_count += 1
+            exact_attribute_changes: list[
+                tuple[
+                    int,
+                    CurriculumCourse,
+                    list[str],
+                ]
+            ] = []
+
+            has_fully_exact_match = False
+
+            for (
+                entry_year,
+                candidate,
+            ) in exact_matches:
+                changes = (
+                    get_attribute_changes(
+                        candidate=candidate,
+                        actual_grade=recommended_year,
+                        actual_semester=semester,
+                        actual_credits=offering["credits"],
+                        actual_completion_type=(
+                            offering["completion_type"]
+                        ),
+                    )
+                )
+
+                if changes:
+                    exact_attribute_changes.append(
+                        (
+                            entry_year,
+                            candidate,
+                            changes,
+                        )
+                    )
+                else:
+                    has_fully_exact_match = True
+
+            if has_fully_exact_match:
+                mapped_count += 1
+                continue
+
+            attribute_changed_count += 1
+
+            print()
+            print(
+                "[ATTRIBUTE_CHANGED_CANDIDATE]",
+                (
+                    f"{academic_year}-"
+                    f"{semester}"
+                ),
+                course_code,
+                course_name,
+                (
+                    f'{offering["credits"]}'
+                    "학점"
+                ),
+            )
+
+            for (
+                entry_year,
+                candidate,
+                changes,
+            ) in exact_attribute_changes:
+                print(
+                    "  교육과정 후보:"
+                )
+
+                print_curriculum_candidate(
+                    entry_year=entry_year,
+                    course=candidate,
+                )
+
+                print(
+                    "  변경:"
+                )
+
+                for change in changes:
+                    print(
+                        "   -",
+                        change,
+                    )
+
             continue
 
         if moved_matches:
@@ -1052,18 +1203,40 @@ def audit_offerings_to_curriculum(
                 ),
             )
 
-            print(
-                "  동일 학정번호 교육과정 후보:"
-            )
-
             for (
                 entry_year,
                 candidate,
             ) in moved_matches:
+                changes = (
+                    get_attribute_changes(
+                        candidate=candidate,
+                        actual_grade=recommended_year,
+                        actual_semester=semester,
+                        actual_credits=offering["credits"],
+                        actual_completion_type=(
+                            offering["completion_type"]
+                        ),
+                    )
+                )
+
+                print(
+                    "  교육과정 후보:"
+                )
+
                 print_curriculum_candidate(
                     entry_year=entry_year,
                     course=candidate,
                 )
+
+                print(
+                    "  변경:"
+                )
+
+                for change in changes:
+                    print(
+                        "   -",
+                        change,
+                    )
 
             continue
 
@@ -1166,6 +1339,10 @@ def audit_offerings_to_curriculum(
     print(
         "교육과정 정확 대응:",
         mapped_count,
+    )
+    print(
+        "속성 변경 후보:",
+        attribute_changed_count,
     )
     print(
         "학년/학기 이동 후보:",
