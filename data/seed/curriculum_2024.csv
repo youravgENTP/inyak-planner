@@ -1,4 +1,4 @@
-entry_year,grade,semester,course_name,course_code,completion_type,credits,notes,change_group,change_type,change_role,change_effective_year,change_note,previous_credits,previous_completion_type,previous_grade,previous_semester,attribute_change_effective_year,attribute_change_note
+﻿entry_year,grade,semester,course_name,course_code,completion_type,credits,notes,change_group,change_type,change_role,change_effective_year,change_note,previous_credits,previous_completion_type,previous_grade,previous_semester,attribute_change_effective_year,attribute_change_note
 2024,1,1,해부생리학1,ADB101,전선,2,대표 학정번호 ADB101: 2026-1 개설 이력 기준.,,,current,,,,,,,,
 2024,1,1,약학기초생물학1,ADB002,전선,3,대표 학정번호 ADB002: 2026-1 개설 이력 기준.,,,current,,,,,,,,
 2024,1,1,약학기초화학1,ADB003,전선,3,대표 학정번호 ADB003: 2026-1 개설 이력 기준.,,,current,,,,,,,,
@@ -31,6 +31,7 @@ entry_year,grade,semester,course_name,course_code,completion_type,credits,notes,
 2024,3,1,의약품기기분석학1,ADB030,전필,2,대표 학정번호 ADB030: 2026-1 개설 이력 기준.,,,current,,,,,,,,
 2024,3,1,제제과학1,ADB027,전필,3,"대표 학정번호 ADB027: 2026-1 개설 이력 기준. 이전 확인 코드: ADA186(2023-1, 제제과학 1).",,,current,,,,,,,,
 2024,3,1,보건사회약학,ADB029,전필,3,"대표 학정번호 ADB029: 2026-1 개설 이력 기준. 이전 확인 코드: ADA193(2024-1, 보건사회약학).",,,current,,,,,,,,
+2024,3,1,생약학개론,ADB112,전선,2,2026학년도 3학년 1학기 신규 전공선택 과목. 대표 학정번호 ADB112: 2026-1 개설 이력 기준.,,,current,,,,,,,,
 2024,3,2,약물학2,ADB033,전필,3,"대표 학정번호 ADB033: 2026-2 개설 이력 기준. 이전 확인 코드: ADA001(2024-2, 약물학 2).",,,current,,,,,,,,
 2024,3,2,약학용어,ADB076,전필,1,대표 학정번호 ADB076: 2026-2 개설 이력 기준.,,,current,,,,,,,,
 2024,3,2,감염성미생물학,ADB034,전필,2,대표 학정번호 ADB034: 2026-2 개설 이력 기준.,,,current,,,,,,,,
@@ -51,7 +52,7 @@ entry_year,grade,semester,course_name,course_code,completion_type,credits,notes,
 2024,4,1,예방약학1,ADB044,전필,3,"대표 학정번호 ADB044: 2026-1 개설 이력 기준. 이전 확인 코드: ADA132(2025-1, 예방약학 1).",,,current,,,,,,,,
 2024,4,1,나노약학,,전선,2,2024학번 이수체계도상 4학년 1학기 전선 2학점. 2022-1~2026-2 현재 수집된 수강편람 데이터에서는 동일하거나 유사한 과목명과 학정번호를 확인하지 못함. 2022-1~2026-2 수강편람 데이터에서 일치하는 개설 이력을 확인하지 못함.,,,current,,,,,,,,
 2024,4,1,의약화학1,ADB047,전필,2,"사용자 확정: 2024학번 기준 전필 2학점. 대표 학정번호는 가장 최근 개설 이력을 사용. 대표 학정번호 ADB047: 2026-1 개설 이력 기준. 이전 확인 코드: ADA102(2024-1, 의약화학 1).",,,current,,,,,,,,
-2024,4,1,천연물의약품학,ADB048,전선,2,"대표 학정번호 ADB048: 2026-1 개설 이력 기준. 이전 확인 코드: ADA122(2024-1, 천연물의약품학).",,,current,,,,,,,,
+2024,3,1,천연물의약품학,ADB048,전선,2,"대표 학정번호 ADB048: 2026-1 개설 이력 기준. 이전 확인 코드: ADA122(2024-1, 천연물의약품학).",,,current,,,,,4,,2026,"2024학번 교육과정에서는 천연물의약품학이 4학년 1학기 과목으로 기재되었으나, 2026학년도에는 3학년 1학기 과목으로 개설이 확인됨."
 2024,4,1,제제과학 실험,ADB051,전필,2,대표 학정번호 ADB051: 2026-1 개설 이력 기준.,,,current,,,,,,,,
 2024,4,1,향장품학,ADB043,전선,2,"대표 학정번호 ADB043: 2026-1 개설 이력 기준. 이전 확인 코드: ADA120(2024-1, 향장품학).",,,current,,,,,,,,
 2024,4,2,감염성 질환 약물치료학,ADA147,전필,2,대표 학정번호 ADA147: 2026-2 개설 이력 기준.,,,current,,,,,,,,
