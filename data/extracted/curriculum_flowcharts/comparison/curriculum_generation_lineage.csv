@@ -1,0 +1,135 @@
+﻿academic_year,grade,semester,course_name,course_code,completion_type,credits,group_size,partner_codes,previous_year,previous_generation,next_year,next_generation,previous_direct_four_year,previous_direct_six_year,next_direct_four_year,next_direct_six_year,row_lineage_candidate,pair_status,lineage_reason
+2022,4,1,건강기능식품학,ADB050,전선,2,2,ADA182,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,건강기능식품학,ADA182,전선,2,2,ADB050,,,2024,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,의약화학 1,ADA102,전필,2,2,ADB047,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,의약화학1,ADB047,전선,2,2,ADA102,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,천연물의약품학,ADB048,전선,2,2,ADA122,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,천연물의약품학,ADA122,전선,2,2,ADB048,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,향장품학,ADA120,전선,2,2,ADB043,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,1,향장품학,ADB043,전선,2,2,ADA120,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,2,생물약제학,ADB057,전선,2,2,ADA033,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,2,생물약제학,ADA033,전선,2,2,ADB057,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,2,약물동태학,ADA086,전선,2,2,ADB058,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,4,2,약물동태학,ADB058,전선,3,2,ADA086,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,1,의약품제조관리학,ADB072,전선,3,2,ADA171,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,1,의약품제조관리학,ADA171,전선,3,2,ADB072,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,1,지역약국 예비실무실습,ADA115,전필,2,2,ADB075,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,1,지역약국 예비실무실습,ADB075,전필,2,2,ADA115,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,동물용의약품학,ADA121,전선,1,2,ADB089,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,동물용의약품학,ADB089,전선,2,2,ADA121,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,약무행정실무필수실습,ADA174,전필,1,2,ADB087,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,약무행정실무필수실습,ADB087,전필,1,2,ADA174,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,약전 및 품질관리학,ADA167,전선,3,2,ADB081,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,약전 및 품질관리학,ADB081,전선,3,2,ADA167,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,한약제제학,ADB080,전필,2,2,ADA140,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,5,2,한약제제학,ADA140,전필,2,2,ADB080,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습 1,ADA213,전필,3,2,ADB093,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습1,ADB093,전필,3,2,ADA213,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습 2,ADA214,전필,2,2,ADB094,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습2,ADB094,전필,2,2,ADA214,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습 3,ADA215,전필,3,2,ADB095,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습3,ADB095,전필,3,2,ADA215,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습 4,ADA216,전필,2,2,ADB096,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,의료기관약국 필수실무실습4,ADB096,전필,2,2,ADA216,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,제약산업 필수실무실습,ADB097,전필,2,2,ADA218,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,제약산업 필수실무실습,ADA218,전필,2,2,ADB097,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,지역약국 필수실무실습 1,ADA219,전필,2,2,ADB092,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,1,지역약국 필수실무실습1,ADB092,전필,2,2,ADA219,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,심화실습 1,ADA226,전필,5,2,ADB099,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,심화실습 1,ADB099,전필,5,2,ADA226,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,심화실습 2,ADB100,전필,5,2,ADA227,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,심화실습 2,ADA227,전필,5,2,ADB100,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,지역약국 필수실무실습 2,ADA220,전필,3,2,ADB098,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2022,6,2,지역약국 필수실무실습2,ADB098,전필,3,2,ADA220,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,건강기능식품학,ADB050,전선,2,2,ADA182,,,2025,six_year,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2023,4,1,건강기능식품학,ADA182,전선,2,2,ADB050,,,2024,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2023,4,1,나노약학,ADA229,전선,2,2,ADB054,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2023,4,1,나노약학,ADB054,전선,2,2,ADA229,2022,six_year,,,no,yes,no,no,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2023,4,1,의약화학 1,ADA102,전필,2,2,ADB047,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,의약화학1,ADB047,전선,2,2,ADA102,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,천연물의약품학,ADB048,전선,2,2,ADA122,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,천연물의약품학,ADA122,전선,2,2,ADB048,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,향장품학,ADB043,전선,2,2,ADA120,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,1,향장품학,ADA120,전선,2,2,ADB043,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,법과학,ADA230,전선,2,2,ADB061,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2023,4,2,법과학,ADB061,전선,2,2,ADA230,2022,six_year,,,no,yes,no,no,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2023,4,2,생물약제학,ADB057,전선,2,2,ADA033,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,생물약제학,ADA033,전선,2,2,ADB057,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,약물동태학,ADA086,전선,2,2,ADB058,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,약물동태학,ADB058,전선,3,2,ADA086,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,의약화학 2,ADA103,전필,2,2,ADB059,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,4,2,의약화학2,ADB059,전선,2,2,ADA103,2022,both,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,1,의약품제조관리학,ADA171,전선,3,2,ADB072,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,1,의약품제조관리학,ADB072,전선,3,2,ADA171,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,1,지역약국 예비실무실습,ADA115,전필,2,2,ADB075,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,1,지역약국 예비실무실습,ADB075,전필,2,2,ADA115,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,동물용의약품학,ADA121,전선,1,2,ADB089,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,동물용의약품학,ADB089,전선,2,2,ADA121,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,약무행정실무필수실습,ADB087,전필,1,2,ADA174,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,약무행정실무필수실습,ADA174,전필,1,2,ADB087,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,약전 및 품질관리학,ADA167,전선,3,2,ADB081,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,약전 및 품질관리학,ADB081,전선,3,2,ADA167,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,한약제제학,ADA140,전필,2,2,ADB080,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,5,2,한약제제학,ADB080,전필,2,2,ADA140,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습 1,ADA213,전필,3,2,ADB093,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습1,ADB093,전필,3,2,ADA213,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습 2,ADA214,전필,2,2,ADB094,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습2,ADB094,전필,2,2,ADA214,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습 3,ADA215,전필,3,2,ADB095,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습3,ADB095,전필,3,2,ADA215,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습 4,ADA216,전필,2,2,ADB096,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,의료기관약국 필수실무실습4,ADB096,전필,2,2,ADA216,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,제약산업 필수실무실습,ADB097,전필,2,2,ADA218,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,제약산업 필수실무실습,ADA218,전필,2,2,ADB097,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,지역약국 필수실무실습 1,ADA219,전필,2,2,ADB092,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,1,지역약국 필수실무실습1,ADB092,전필,2,2,ADA219,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,심화실습 1,ADA226,전필,5,2,ADB099,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,심화실습 1,ADB099,전필,5,2,ADA226,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,심화실습 2,ADB100,전필,5,2,ADA227,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,심화실습 2,ADA227,전필,5,2,ADB100,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,지역약국 필수실무실습 2,ADA220,전필,3,2,ADB098,,,2025,six_year,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2023,6,2,지역약국 필수실무실습2,ADB098,전필,3,2,ADA220,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,4,1,나노약학,ADA229,전선,2,2,ADB054,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,4,1,나노약학,ADB054,전선,2,2,ADA229,2022,six_year,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,4,1,의약화학 1,ADA102,전필,2,2,ADB047,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,4,1,의약화학1,ADB047,전선,2,2,ADA102,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,4,1,천연물의약품학,ADB048,전선,2,2,ADA122,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,4,1,천연물의약품학,ADA122,전선,2,2,ADB048,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,4,1,향장품학,ADA120,전선,2,2,ADB043,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,4,1,향장품학,ADB043,전선,2,2,ADA120,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,4,2,생물약제학,ADB057,전선,2,2,ADA033,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,4,2,생물약제학,ADA033,전선,2,2,ADB057,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,4,2,약물동태학,ADA086,전선,2,2,ADB058,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,4,2,약물동태학,ADB058,전선,3,2,ADA086,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,4,2,의약화학 2,ADA103,전필,2,2,ADB059,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,4,2,의약화학2,ADB059,전선,2,2,ADA103,2022,both,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,5,1,의약품제조관리학,ADA171,전선,3,2,ADB072,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,5,1,의약품제조관리학,ADB072,전선,3,2,ADA171,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,5,1,지역약국 예비실무실습,ADA115,전필,2,2,ADB075,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,5,1,지역약국 예비실무실습,ADB075,전필,2,2,ADA115,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,5,2,동물용의약품학,ADA121,전선,1,2,ADB089,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,5,2,동물용의약품학,ADB089,전선,2,2,ADA121,,,,,no,no,no,no,unresolved,unresolved,no_adjacent_year_direct_generation_evidence
+2024,5,2,약무행정실무필수실습,ADA174,전필,1,2,ADB087,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,5,2,약무행정실무필수실습,ADB087,전필,1,2,ADA174,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,5,2,약전 및 품질관리학,ADA167,전선,3,2,ADB081,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,5,2,약전 및 품질관리학,ADB081,전선,3,2,ADA167,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,5,2,한약제제학,ADB080,전필,2,2,ADA140,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,5,2,한약제제학,ADA140,전필,2,2,ADB080,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,의료기관약국 필수실무실습 1,ADA213,전필,3,2,ADB093,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,의료기관약국 필수실무실습1,ADB093,전필,3,2,ADA213,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,1,의료기관약국 필수실무실습 2,ADA214,전필,2,2,ADB094,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,의료기관약국 필수실무실습2,ADB094,전필,2,2,ADA214,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,1,의료기관약국 필수실무실습 3,ADA215,전필,3,2,ADB095,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,의료기관약국 필수실무실습3,ADB095,전필,3,2,ADA215,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,1,의료기관약국 필수실무실습 4,ADA216,전필,2,2,ADB096,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,의료기관약국 필수실무실습4,ADB096,전필,2,2,ADA216,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,1,제약산업 필수실무실습,ADB097,전필,2,2,ADA218,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,1,제약산업 필수실무실습,ADA218,전필,2,2,ADB097,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,지역약국 필수실무실습 1,ADA219,전필,2,2,ADB092,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,1,지역약국 필수실무실습1,ADB092,전필,2,2,ADA219,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,2,심화실습 1,ADA226,전필,5,2,ADB099,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,2,심화실습 1,ADB099,전필,5,2,ADA226,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,2,심화실습 2,ADB100,전필,5,2,ADA227,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence
+2024,6,2,심화실습 2,ADA227,전필,5,2,ADB100,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,2,지역약국 필수실무실습 2,ADA220,전필,3,2,ADB098,,,2025,six_year,no,no,no,yes,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence
+2024,6,2,지역약국 필수실무실습2,ADB098,전필,3,2,ADA220,,,,,no,no,no,no,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence

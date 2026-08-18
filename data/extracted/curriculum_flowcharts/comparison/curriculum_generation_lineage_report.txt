@@ -1,0 +1,240 @@
+Curriculum generation lineage report
+=============================================
+
+ambiguous rows analyzed: 134
+ambiguous groups analyzed: 67
+
+Group summary
+-------------
+complementary_pair_candidate: 0
+one_sided_candidate: 22
+conflict: 0
+unresolved: 45
+
+COMPLEMENTARY_PAIR_CANDIDATE
+----------------------------
+count: 0
+
+ONE_SIDED_CANDIDATE
+-------------------
+count: 22
+2023 | 4-1 | 건강기능식품학
+  ADB050 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA182 | candidate=six_year | prev=- | next=2024:six_year
+2023 | 4-1 | 나노약학
+  ADA229 | candidate=unresolved | prev=- | next=-
+  ADB054 | candidate=six_year | prev=2022:six_year | next=-
+2023 | 4-2 | 법과학
+  ADA230 | candidate=unresolved | prev=- | next=-
+  ADB061 | candidate=six_year | prev=2022:six_year | next=-
+2024 | 4-1 | 의약화학 1
+  ADA102 | candidate=unresolved | prev=- | next=-
+  ADB047 | candidate=six_year | prev=- | next=2025:six_year
+2024 | 4-1 | 천연물의약품학
+  ADB048 | candidate=six_year | prev=- | next=2025:six_year
+  ADA122 | candidate=unresolved | prev=- | next=-
+2024 | 4-2 | 생물약제학
+  ADB057 | candidate=six_year | prev=- | next=2025:six_year
+  ADA033 | candidate=unresolved | prev=- | next=-
+2024 | 4-2 | 약물동태학
+  ADA086 | candidate=unresolved | prev=- | next=-
+  ADB058 | candidate=six_year | prev=- | next=2025:six_year
+2024 | 4-2 | 의약화학 2
+  ADA103 | candidate=unresolved | prev=- | next=-
+  ADB059 | candidate=six_year | prev=2022:both | next=2025:six_year
+2024 | 5-1 | 의약품제조관리학
+  ADA171 | candidate=six_year | prev=- | next=2025:six_year
+  ADB072 | candidate=unresolved | prev=- | next=-
+2024 | 5-1 | 지역약국 예비실무실습
+  ADA115 | candidate=six_year | prev=- | next=2025:six_year
+  ADB075 | candidate=unresolved | prev=- | next=-
+2024 | 5-2 | 약무행정실무필수실습
+  ADA174 | candidate=six_year | prev=- | next=2025:six_year
+  ADB087 | candidate=unresolved | prev=- | next=-
+2024 | 5-2 | 약전 및 품질관리학
+  ADA167 | candidate=six_year | prev=- | next=2025:six_year
+  ADB081 | candidate=unresolved | prev=- | next=-
+2024 | 5-2 | 한약제제학
+  ADB080 | candidate=unresolved | prev=- | next=-
+  ADA140 | candidate=six_year | prev=- | next=2025:six_year
+2024 | 6-1 | 의료기관약국 필수실무실습 1
+  ADA213 | candidate=six_year | prev=- | next=2025:six_year
+  ADB093 | candidate=unresolved | prev=- | next=-
+2024 | 6-1 | 의료기관약국 필수실무실습 2
+  ADA214 | candidate=six_year | prev=- | next=2025:six_year
+  ADB094 | candidate=unresolved | prev=- | next=-
+2024 | 6-1 | 의료기관약국 필수실무실습 3
+  ADA215 | candidate=six_year | prev=- | next=2025:six_year
+  ADB095 | candidate=unresolved | prev=- | next=-
+2024 | 6-1 | 의료기관약국 필수실무실습 4
+  ADA216 | candidate=six_year | prev=- | next=2025:six_year
+  ADB096 | candidate=unresolved | prev=- | next=-
+2024 | 6-1 | 제약산업 필수실무실습
+  ADB097 | candidate=unresolved | prev=- | next=-
+  ADA218 | candidate=six_year | prev=- | next=2025:six_year
+2024 | 6-1 | 지역약국 필수실무실습 1
+  ADA219 | candidate=six_year | prev=- | next=2025:six_year
+  ADB092 | candidate=unresolved | prev=- | next=-
+2024 | 6-2 | 심화실습 1
+  ADA226 | candidate=six_year | prev=- | next=2025:six_year
+  ADB099 | candidate=unresolved | prev=- | next=-
+2024 | 6-2 | 심화실습 2
+  ADB100 | candidate=unresolved | prev=- | next=-
+  ADA227 | candidate=six_year | prev=- | next=2025:six_year
+2024 | 6-2 | 지역약국 필수실무실습 2
+  ADA220 | candidate=six_year | prev=- | next=2025:six_year
+  ADB098 | candidate=unresolved | prev=- | next=-
+
+CONFLICT
+--------
+count: 0
+
+UNRESOLVED
+----------
+count: 45
+2022 | 4-1 | 건강기능식품학
+  ADB050 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA182 | candidate=unresolved | prev=- | next=2024:six_year
+2022 | 4-1 | 의약화학 1
+  ADA102 | candidate=unresolved | prev=- | next=-
+  ADB047 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 4-1 | 천연물의약품학
+  ADB048 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA122 | candidate=unresolved | prev=- | next=-
+2022 | 4-1 | 향장품학
+  ADA120 | candidate=unresolved | prev=- | next=-
+  ADB043 | candidate=unresolved | prev=- | next=-
+2022 | 4-2 | 생물약제학
+  ADB057 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA033 | candidate=unresolved | prev=- | next=-
+2022 | 4-2 | 약물동태학
+  ADA086 | candidate=unresolved | prev=- | next=-
+  ADB058 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 5-1 | 의약품제조관리학
+  ADB072 | candidate=unresolved | prev=- | next=-
+  ADA171 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 5-1 | 지역약국 예비실무실습
+  ADA115 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB075 | candidate=unresolved | prev=- | next=-
+2022 | 5-2 | 동물용의약품학
+  ADA121 | candidate=unresolved | prev=- | next=-
+  ADB089 | candidate=unresolved | prev=- | next=-
+2022 | 5-2 | 약무행정실무필수실습
+  ADA174 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB087 | candidate=unresolved | prev=- | next=-
+2022 | 5-2 | 약전 및 품질관리학
+  ADA167 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB081 | candidate=unresolved | prev=- | next=-
+2022 | 5-2 | 한약제제학
+  ADB080 | candidate=unresolved | prev=- | next=-
+  ADA140 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 6-1 | 의료기관약국 필수실무실습 1
+  ADA213 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB093 | candidate=unresolved | prev=- | next=-
+2022 | 6-1 | 의료기관약국 필수실무실습 2
+  ADA214 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB094 | candidate=unresolved | prev=- | next=-
+2022 | 6-1 | 의료기관약국 필수실무실습 3
+  ADA215 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB095 | candidate=unresolved | prev=- | next=-
+2022 | 6-1 | 의료기관약국 필수실무실습 4
+  ADA216 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB096 | candidate=unresolved | prev=- | next=-
+2022 | 6-1 | 제약산업 필수실무실습
+  ADB097 | candidate=unresolved | prev=- | next=-
+  ADA218 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 6-1 | 지역약국 필수실무실습 1
+  ADA219 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB092 | candidate=unresolved | prev=- | next=-
+2022 | 6-2 | 심화실습 1
+  ADA226 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB099 | candidate=unresolved | prev=- | next=-
+2022 | 6-2 | 심화실습 2
+  ADB100 | candidate=unresolved | prev=- | next=-
+  ADA227 | candidate=unresolved | prev=- | next=2025:six_year
+2022 | 6-2 | 지역약국 필수실무실습 2
+  ADA220 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB098 | candidate=unresolved | prev=- | next=-
+2023 | 4-1 | 의약화학 1
+  ADA102 | candidate=unresolved | prev=- | next=-
+  ADB047 | candidate=unresolved | prev=- | next=2025:six_year
+2023 | 4-1 | 천연물의약품학
+  ADB048 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA122 | candidate=unresolved | prev=- | next=-
+2023 | 4-1 | 향장품학
+  ADB043 | candidate=unresolved | prev=- | next=-
+  ADA120 | candidate=unresolved | prev=- | next=-
+2023 | 4-2 | 생물약제학
+  ADB057 | candidate=unresolved | prev=- | next=2025:six_year
+  ADA033 | candidate=unresolved | prev=- | next=-
+2023 | 4-2 | 약물동태학
+  ADA086 | candidate=unresolved | prev=- | next=-
+  ADB058 | candidate=unresolved | prev=- | next=2025:six_year
+2023 | 4-2 | 의약화학 2
+  ADA103 | candidate=unresolved | prev=- | next=-
+  ADB059 | candidate=unresolved | prev=2022:both | next=2025:six_year
+2023 | 5-1 | 의약품제조관리학
+  ADA171 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB072 | candidate=unresolved | prev=- | next=-
+2023 | 5-1 | 지역약국 예비실무실습
+  ADA115 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB075 | candidate=unresolved | prev=- | next=-
+2023 | 5-2 | 동물용의약품학
+  ADA121 | candidate=unresolved | prev=- | next=-
+  ADB089 | candidate=unresolved | prev=- | next=-
+2023 | 5-2 | 약무행정실무필수실습
+  ADB087 | candidate=unresolved | prev=- | next=-
+  ADA174 | candidate=unresolved | prev=- | next=2025:six_year
+2023 | 5-2 | 약전 및 품질관리학
+  ADA167 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB081 | candidate=unresolved | prev=- | next=-
+2023 | 5-2 | 한약제제학
+  ADA140 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB080 | candidate=unresolved | prev=- | next=-
+2023 | 6-1 | 의료기관약국 필수실무실습 1
+  ADA213 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB093 | candidate=unresolved | prev=- | next=-
+2023 | 6-1 | 의료기관약국 필수실무실습 2
+  ADA214 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB094 | candidate=unresolved | prev=- | next=-
+2023 | 6-1 | 의료기관약국 필수실무실습 3
+  ADA215 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB095 | candidate=unresolved | prev=- | next=-
+2023 | 6-1 | 의료기관약국 필수실무실습 4
+  ADA216 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB096 | candidate=unresolved | prev=- | next=-
+2023 | 6-1 | 제약산업 필수실무실습
+  ADB097 | candidate=unresolved | prev=- | next=-
+  ADA218 | candidate=unresolved | prev=- | next=2025:six_year
+2023 | 6-1 | 지역약국 필수실무실습 1
+  ADA219 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB092 | candidate=unresolved | prev=- | next=-
+2023 | 6-2 | 심화실습 1
+  ADA226 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB099 | candidate=unresolved | prev=- | next=-
+2023 | 6-2 | 심화실습 2
+  ADB100 | candidate=unresolved | prev=- | next=-
+  ADA227 | candidate=unresolved | prev=- | next=2025:six_year
+2023 | 6-2 | 지역약국 필수실무실습 2
+  ADA220 | candidate=unresolved | prev=- | next=2025:six_year
+  ADB098 | candidate=unresolved | prev=- | next=-
+2024 | 4-1 | 나노약학
+  ADA229 | candidate=unresolved | prev=- | next=-
+  ADB054 | candidate=unresolved | prev=2022:six_year | next=-
+2024 | 4-1 | 향장품학
+  ADA120 | candidate=unresolved | prev=- | next=-
+  ADB043 | candidate=unresolved | prev=- | next=-
+2024 | 5-2 | 동물용의약품학
+  ADA121 | candidate=unresolved | prev=- | next=-
+  ADB089 | candidate=unresolved | prev=- | next=-
+
+Rules
+-----
+1. Only rows already classified as ambiguous are analyzed.
+2. Same course_code is never globally assigned to one generation.
+3. Only direct evidence from an immediately adjacent academic year is used for a row candidate.
+4. Non-adjacent evidence is shown for reference but does not assign a candidate.
+5. Evidence of both generations for the same ambiguous row is classified as conflict.
+6. complementary_pair_candidate requires exactly two ambiguous rows and opposite four-year/six-year row candidates.
+7. Candidate results are diagnostic evidence only and must not be written into baseline automatically.
+8. Course-code prefixes are never used as generation evidence.
