@@ -23,4 +23,25 @@ invalid credits: 0
 missing source pages: 0
 duplicate extracted rows: 0
 
+Rows by page
+------------
+page 4: 16
+page 5: 18
+page 6: 17
+page 7: 18
+page 8: 17
+page 9: 16
+page 10: 17
+page 11: 14
+page 12: 15
+page 13: 16
+page 14: 14
+page 15: 11
+
+Credit summary
+--------------
+all extracted credits: 432
+required credits: 227
+elective credits: 205
+
 RESULT: PASS

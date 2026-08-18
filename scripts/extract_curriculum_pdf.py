@@ -454,6 +454,18 @@ def validate_courses(
     )
 
 
+def count_rows_by_page(
+    rows: list[CourseRow],
+) -> dict[int, int]:
+    counts: dict[int, int] = {}
+
+    for row in rows:
+        counts[row.page] = (
+            counts.get(row.page, 0) + 1
+        )
+
+    return counts
+
 def write_courses_csv(
     year: int,
     pdf_path: Path,
@@ -540,6 +552,27 @@ def write_report(
         / "extraction_report.txt"
     )
 
+    page_counts = count_rows_by_page(
+        rows
+    )
+
+    total_credits = sum(
+        row.credits
+        for row in rows
+    )
+
+    required_credits = sum(
+        row.credits
+        for row in rows
+        if row.completion_type == "전필"
+    )
+
+    elective_credits = sum(
+        row.credits
+        for row in rows
+        if row.completion_type == "전선"
+    )
+
     lines = [
         "Curriculum extraction report",
         "============================",
@@ -557,12 +590,15 @@ def write_report(
             "course rows extracted: "
             f"{len(rows)}"
         ),
-        f"parser warnings: {len(warnings)}",
+        (
+            "parser warnings: "
+            f"{len(warnings)}"
+        ),
         "",
         "Validation",
         "----------",
         (
-            f"rows: "
+            "rows: "
             f"{validation.total_rows}"
         ),
         (
@@ -602,19 +638,51 @@ def write_report(
             f"{len(validation.duplicate_rows)}"
         ),
         "",
-        (
-            "RESULT: "
-            + (
-                "PASS"
-                if (
-                    validation.passed
-                    and not warnings
-                )
-                else "REVIEW REQUIRED"
-            )
-        ),
-        "",
+        "Rows by page",
+        "------------",
     ]
+
+    for page_number in range(
+        start_page,
+        end_page + 1,
+    ):
+        lines.append(
+            f"page {page_number}: "
+            f"{page_counts.get(page_number, 0)}"
+        )
+
+    lines.extend(
+        [
+            "",
+            "Credit summary",
+            "--------------",
+            (
+                "all extracted credits: "
+                f"{total_credits:g}"
+            ),
+            (
+                "required credits: "
+                f"{required_credits:g}"
+            ),
+            (
+                "elective credits: "
+                f"{elective_credits:g}"
+            ),
+            "",
+            (
+                "RESULT: "
+                + (
+                    "PASS"
+                    if (
+                        validation.passed
+                        and not warnings
+                    )
+                    else "REVIEW REQUIRED"
+                )
+            ),
+            "",
+        ]
+    )
 
     problem_groups = [
         (
@@ -660,7 +728,9 @@ def write_report(
             continue
 
         lines.append(title)
-        lines.append("-" * len(title))
+        lines.append(
+            "-" * len(title)
+        )
 
         for problem in problems:
             lines.append(problem)
@@ -673,6 +743,7 @@ def write_report(
     )
 
     return output_path
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
