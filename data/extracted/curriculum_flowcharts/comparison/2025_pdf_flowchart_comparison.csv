@@ -1,0 +1,97 @@
+﻿academic_year,pdf_grade,pdf_semester,pdf_course_name,pdf_course_code,pdf_completion_type,pdf_credits,4year_same_position,4year_same_name_elsewhere,4year_positions,6year_same_position,6year_same_name_elsewhere,6year_positions,evidence_summary
+2025,1,1,약학기초생물학1,ADB002,전선,3,,,,yes,no,1-1,same_position_6year
+2025,1,1,약학기초화학1,ADB003,전선,3,,,,yes,no,1-1,same_position_6year
+2025,1,1,해부생리학1,ADB101,전선,2,,,,yes,no,1-1,same_position_6year
+2025,1,2,약학기초생물학2,ADB005,전선,3,,,,yes,no,1-2,same_position_6year
+2025,1,2,약학기초화학2,ADB006,전선,3,,,,yes,no,1-2,same_position_6year
+2025,1,2,해부생리학2,ADB102,전선,2,,,,yes,no,1-2,same_position_6year
+2025,2,1,물리약학1,ADB010,전필,3,,,,yes,no,2-1,same_position_6year
+2025,2,1,약용식물학,ADB049,전필,2,,,,yes,no,2-1,same_position_6year
+2025,2,1,약품생화학1,ADB008,전필,3,,,,yes,no,2-1,same_position_6year
+2025,2,1,약학실험1,ADB013,전필,2,,,,yes,no,2-1,same_position_6year
+2025,2,1,약학통계,ADB012,전필,2,,,,yes,no,2-1,same_position_6year
+2025,2,1,약화학 1,ADB009,전필,3,,,,yes,no,2-1,same_position_6year
+2025,2,1,의약품분석학1,ADB011,전필,2,,,,yes,no,2-1,same_position_6year
+2025,2,1,병태생리학1,ADB007,전선,2,,,,yes,no,2-1,same_position_6year
+2025,2,2,물리약학2,ADB019,전필,3,,,,yes,no,2-2,same_position_6year
+2025,2,2,약품면역학,ADB021,전필,2,,,,yes,no,2-2,same_position_6year
+2025,2,2,약품생화학2,ADB016,전필,3,,,,yes,no,2-2,same_position_6year
+2025,2,2,약학실험2,ADB022,전필,2,,,,yes,no,2-2,same_position_6year
+2025,2,2,의약품분석학2,ADB020,전필,2,,,,yes,no,2-2,same_position_6year
+2025,2,2,병태생리학2,ADB015,전선,2,,,,yes,no,2-2,same_position_6year
+2025,2,2,약화학 2,ADB018,전선,3,,,,yes,no,2-2,same_position_6year
+2025,2,2,의약분자생물학,ADB017,전선,2,,,,yes,no,2-2,same_position_6year
+2025,2,2,의약품개발사,ADB105,전선,2,,,,yes,no,2-2,same_position_6year
+2025,3,1,보건사회약학,ADB029,전필,3,,,,yes,no,3-1,same_position_6year
+2025,3,1,생약학1,ADB026,전필,2,,,,yes,no,3-1,same_position_6year
+2025,3,1,약물학1,ADB024,전필,3,,,,yes,no,3-1,same_position_6year
+2025,3,1,약품미생물학,ADB025,전필,3,,,,yes,no,3-1,same_position_6year
+2025,3,1,약학실험3,ADB031,전필,2,,,,yes,no,3-1,same_position_6year
+2025,3,1,의약품기기분석학1,ADB030,전필,2,,,,yes,no,3-1,same_position_6year
+2025,3,1,제제과학1,ADB027,전필,3,,,,yes,no,3-1,same_position_6year
+2025,3,1,생약학개론,ADB112,전선,2,,,,yes,no,3-1,same_position_6year
+2025,3,1,약물유전체학,ADB085,전선,3,,,,yes,no,3-1;5-1,same_position_6year
+2025,3,1,천연물의약품학,ADB048,전선,2,,,,yes,no,3-1,same_position_6year
+2025,3,2,감염성미생물학,ADB034,전필,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,생약학2,ADB036,전필,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,약물학2,ADB033,전필,3,,,,yes,no,3-2,same_position_6year
+2025,3,2,약학실험4,ADB041,전필,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,약학용어,ADB076,전필,1,,,,yes,no,3-2,same_position_6year
+2025,3,2,의약품기기분석학2,ADB040,전필,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,의약품합성학,ADA198,전필,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,제제과학2,ADB037,전필,3,,,,yes,no,3-2,same_position_6year
+2025,3,2,법화학,ADB106,전선,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,약사 커뮤니케이션,ADB039,전선,2,,,,yes,no,3-2,same_position_6year
+2025,3,2,유용천연물소재학,ADB113,전선,3,,,,yes,no,3-2,same_position_6year
+2025,3,2,임상면역학,ADB035,전선,2,,,,yes,no,3-2,same_position_6year
+2025,4,1,감염질환을 위한 항생물질학,ADB045,전필,2,,,,yes,no,4-1,same_position_6year
+2025,4,1,예방약학1,ADB044,전필,3,,,,yes,no,4-1,same_position_6year
+2025,4,1,의약화학1,ADB047,전필,2,,,,yes,no,4-1,same_position_6year
+2025,4,1,정신신경계질환 약물치료학,ADB109,전필,2,,,,no,no,,no_flowchart_match
+2025,4,1,제제과학의실습,ADB111,전필,2,,,,yes,no,4-1,same_position_6year
+2025,4,1,바이오의약품 분석,ADB060,전선,2,,,,yes,no,4-1,same_position_6year
+2025,4,1,의약품설계학,ADB066,전선,2,,,,yes,no,4-1,same_position_6year
+2025,4,1,임상미생물학,ADB046,전선,3,,,,yes,no,4-1,same_position_6year
+2025,4,1,임상영양학,ADA233,전선,2,,,,yes,no,4-1,same_position_6year
+2025,4,2,보건의약관계법규,ADB064,전필,2,,,,yes,no,4-2,same_position_6year
+2025,4,2,약학실험5,ADB067,전필,1,,,,yes,no,4-2,same_position_6year
+2025,4,2,예방약학2,ADB055,전필,2,,,,yes,no,4-2,same_position_6year
+2025,4,2,임상약학 해설,ADB083,전필,1,,,,no,no,,no_flowchart_match
+2025,4,2,건강기능식품학,ADB050,전선,2,,,,yes,no,4-2,same_position_6year
+2025,4,2,생물약제학,ADB057,전선,2,,,,yes,no,4-2,same_position_6year
+2025,4,2,심혈관계 질환 약물치료학,ADB082,전선,3,,,,no,no,,no_flowchart_match
+2025,4,2,약물동태학,ADB058,전선,3,,,,yes,no,4-2,same_position_6year
+2025,4,2,약사윤리,ADB065,전선,1,,,,yes,no,4-2,same_position_6year
+2025,4,2,의약화학2,ADB059,전선,2,,,,yes,no,4-2,same_position_6year
+2025,5,1,감염질환을 위한 항생물질학,ADA209,전필,2,,,,no,yes,4-1,name_elsewhere_6year
+2025,5,1,신장질환약물치료학,ADB108,전필,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,의료기관약국 예비실무실습,ADA217,전필,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,의약품 경제성평가,ADA206,전필,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,제제과학실습,ADA200,전필,2,,,,no,no,,no_flowchart_match
+2025,5,1,지역약국 예비실무실습,ADA115,전필,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,항암약물요법1,ADB103,전필,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,신경정신계질환 약물치료학,ADB104,전선,2,,,,yes,no,5-1,same_position_6year
+2025,5,1,예방약학 1,ADA132,전선,2,,,,no,yes,4-1,name_elsewhere_6year
+2025,5,1,의약품제조관리학,ADA171,전선,3,,,,yes,no,5-1,same_position_6year
+2025,5,1,일반의약품학,ADB084,전선,3,,,,yes,no,5-1,same_position_6year
+2025,5,1,호흡기계 및 소화기계 질환 약물치료학,ADA145,전선,2,,,,yes,no,5-1,same_position_6year
+2025,5,2,감염성 질환 약물치료학,ADA147,전필,2,,,,yes,no,5-2,same_position_6year
+2025,5,2,내분비계 및 류마티스 질환 약물치료학,ADA148,전필,2,,,,yes,no,5-2,same_position_6year
+2025,5,2,보건의약관계법규,ADA194,전필,2,,,,no,yes,4-2,name_elsewhere_6year
+2025,5,2,약무행정실무필수실습,ADA174,전필,1,,,,yes,no,5-2,same_position_6year
+2025,5,2,임상면역학,ADA190,전필,3,,,,no,yes,3-2,name_elsewhere_6year
+2025,5,2,한약제제학,ADA140,전필,2,,,,yes,no,5-2,same_position_6year
+2025,5,2,생물의약품학,ADA107,전선,2,,,,yes,no,5-2,same_position_6year
+2025,5,2,약업경영학,ADA118,전선,2,,,,yes,no,5-2,same_position_6year
+2025,5,2,약전 및 품질관리학,ADA167,전선,3,,,,yes,no,5-2,same_position_6year
+2025,5,2,예방약학 2,ADA109,전선,3,,,,no,yes,4-2,name_elsewhere_6year
+2025,5,2,항암약물요법2,ADB107,전선,2,,,,yes,no,5-2,same_position_6year
+2025,6,1,의료기관약국 필수실무실습 1,ADA213,전필,3,,,,yes,no,6-1,same_position_6year
+2025,6,1,의료기관약국 필수실무실습 2,ADA214,전필,2,,,,yes,no,6-1,same_position_6year
+2025,6,1,의료기관약국 필수실무실습 3,ADA215,전필,3,,,,yes,no,6-1,same_position_6year
+2025,6,1,의료기관약국 필수실무실습 4,ADA216,전필,2,,,,yes,no,6-1,same_position_6year
+2025,6,1,제약산업 필수실무실습,ADA218,전필,2,,,,yes,no,6-1,same_position_6year
+2025,6,1,지역약국 필수실무실습 1,ADA219,전필,2,,,,yes,no,6-1,same_position_6year
+2025,6,2,심화실습 1,ADA226,전필,5,,,,yes,no,6-2,same_position_6year
+2025,6,2,심화실습 2,ADA227,전필,5,,,,yes,no,6-2,same_position_6year
+2025,6,2,지역약국 필수실무실습 2,ADA220,전필,3,,,,yes,no,6-2,same_position_6year

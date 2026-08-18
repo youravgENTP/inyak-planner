@@ -1,0 +1,114 @@
+Curriculum PDF / flowchart comparison report
+=============================================
+
+academic year: 2024
+PDF course rows: 189
+available flowcharts: 6year
+
+PDF row evidence summary
+------------------------
+same_position_both: 0
+same_position_4year: 0
+same_position_6year: 113
+name_elsewhere_both: 0
+name_elsewhere_4year: 0
+name_elsewhere_6year: 38
+no_flowchart_match: 38
+
+6year flowchart rows missing from PDF at same position
+----------------------------------------
+count: 6
+4-1 | 내분비계 및 류마터스질환 약물치료학
+4-1 | 조제학
+4-1 | 방제학
+4-2 | 심혈관계질환 및 약물치료학
+5-2 | 의료기관약국예바실습
+5-2 | 종양생물학
+
+PDF rows requiring review
+-------------------------
+count: 76
+1-1 | 해부생리학 | ADB001 | no_flowchart_match | 4year=- | 6year=-
+1-2 | 신경생리학 | ADB004 | no_flowchart_match | 4year=- | 6year=-
+2-2 | 조제학 | ADB077 | name_elsewhere_6year | 4year=- | 6year=4-1
+2-2 | 종양생물학 | ADB091 | name_elsewhere_6year | 4year=- | 6year=5-2
+3-1 | 면역학 | ADA002 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 물리약학 1 | ADA076 | name_elsewhere_6year | 4year=- | 6year=2-1
+3-1 | 약품분석화학 1 | ADA031 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 약품생화학 1 | ADA042 | name_elsewhere_6year | 4year=- | 6year=2-1
+3-1 | 약학실험 1 | ADA201 | name_elsewhere_6year | 4year=- | 6year=2-1
+3-1 | 의약품합성학1 | ADB028 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 무기 및 방사성 의약품학 | ADA199 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 약사윤리와 진로 적응 | ADA212 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 약용식물학 | ADA203 | name_elsewhere_6year | 4year=- | 6year=2-1
+3-1 | 약학통계 | ADA051 | name_elsewhere_6year | 4year=- | 6year=2-1
+3-1 | 약화학 | ADA080 | no_flowchart_match | 4year=- | 6year=-
+3-1 | 해부생리학 | ADA022 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 물리약학 2 | ADA041 | name_elsewhere_6year | 4year=- | 6year=2-2
+3-2 | 약품분석화학 2 | ADA074 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 약품생화학 2 | ADA012 | name_elsewhere_6year | 4year=- | 6year=2-2
+3-2 | 약학실험 2 | ADA195 | name_elsewhere_6year | 4year=- | 6year=2-2
+3-2 | 의약품합성학2 | ADB038 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 바이러스학 | ADA189 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 병태생리학 | ADA006 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 신경생리학 | ADA092 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 약품기기분석학 | ADA196 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 의약분자생물학 | ADA181 | name_elsewhere_6year | 4year=- | 6year=2-2
+3-2 | 의약품설계학 | ADA197 | name_elsewhere_6year | 4year=- | 6year=4-2
+4-1 | 보건사회약학 | ADA193 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | 생약학 1 | ADA065 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | 약물학 1 | ADA030 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | 약품 미생물학 | ADA104 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | 약학실험 3 | ADA184 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | 제제과학 1 | ADA186 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-1 | AI 의료약학빅데이터 | ADB053 | no_flowchart_match | 4year=- | 6year=-
+4-1 | 건강기능식품학 | ADB050 | name_elsewhere_6year | 4year=- | 6year=5-2
+4-1 | 내분비계 및 류마티스 질환 약물치료 | ADB063 | no_flowchart_match | 4year=- | 6year=-
+4-1 | 무기방사성 의약품학 | ADB052 | no_flowchart_match | 4year=- | 6year=-
+4-1 | 약물유전체학 | ADA063 | name_elsewhere_6year | 4year=- | 6year=3-1
+4-2 | 감염미생물학 | ADA208 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 생약학 2 | ADA055 | name_elsewhere_6year | 4year=- | 6year=3-2
+4-2 | 약물학 2 | ADA001 | name_elsewhere_6year | 4year=- | 6year=3-2
+4-2 | 약학실험 4 | ADA192 | name_elsewhere_6year | 4year=- | 6year=3-2
+4-2 | 약학실험5 | ADB067 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 제제과학 2 | ADA187 | name_elsewhere_6year | 4year=- | 6year=3-2
+4-2 | 법과학 | ADA230 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 법과학 | ADB061 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 심혈관계 질환 약물치료학 | ADA136 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 의약정보학과 커뮤니케이션 | ADA204 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 임상생화학 | ADA183 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 임상약학 해설 | ADA137 | name_elsewhere_6year | 4year=- | 6year=5-2
+4-2 | 임상의약정보학 | ADA232 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 감염질환을 위한 항생물질학 | ADA209 | name_elsewhere_6year | 4year=- | 6year=4-1
+5-1 | 신경정신계 및 신장 질환 약물치료학 | ADB062 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 의료기관약국 예비실무실습 | ADA217 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 의약품 경제성평가 | ADA206 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 제제과학실습 | ADA200 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 항암약물요법 | ADB070 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 항암약물요법 및 일반의약품약물요법 | ADA202 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 방제학 | ADB078 | name_elsewhere_6year | 4year=- | 6year=4-1
+5-1 | 신경정신계질환 및 신장질환 약물치료학 | ADA144 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 예방약학 1 | ADA132 | name_elsewhere_6year | 4year=- | 6year=4-1
+5-1 | 임상미생물학 | ADA211 | name_elsewhere_6year | 4year=- | 6year=4-1
+5-1 | 임상약물동태학 | ADA150 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 호흡기계 및 소화기계 질환 약물치료학 | ADA145 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 감염성 질환 약물치료학 | ADA147 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 내분비계 및 류마티스 질환 약물치료학 | ADA148 | no_flowchart_match | 4year=- | 6year=-
+5-2 | 보건의약관계법규 | ADA194 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 의료기관약국예비실습 | ADB086 | no_flowchart_match | 4year=- | 6year=-
+5-2 | 임상면역학 | ADA190 | name_elsewhere_6year | 4year=- | 6year=3-2
+5-2 | 독성학 | ADA045 | name_elsewhere_6year | 4year=- | 6year=3-2
+5-2 | 바이오의약품학 | ADA225 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 신약개발임상시험 | ADA191 | no_flowchart_match | 4year=- | 6year=-
+5-2 | 심혈관계 질환 약물치료학 | ADB082 | no_flowchart_match | 4year=- | 6year=-
+5-2 | 약업경영학 | ADA118 | name_elsewhere_6year | 4year=- | 6year=5-1
+5-2 | 예방약학 2 | ADA109 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 조제학 | ADA053 | name_elsewhere_6year | 4year=- | 6year=4-1
+
+Notes
+-----
+Course-name normalization removes whitespace only.
+No fuzzy matching, prefix matching, or automatic course-name correction is performed.
+same_position means the normalized course name, grade, and semester all match.
+same_name_elsewhere means the same normalized name exists in that flowchart, but not at the PDF grade/semester.
+Flowchart duplicate boxes are preserved in source CSVs but deduplicated in the missing-from-PDF review section.

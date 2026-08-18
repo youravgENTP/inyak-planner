@@ -1,0 +1,76 @@
+Curriculum PDF / flowchart comparison report
+=============================================
+
+academic year: 2023
+PDF course rows: 180
+available flowcharts: 4year, 6year
+
+PDF row evidence summary
+------------------------
+same_position_both: 24
+same_position_4year: 51
+same_position_6year: 87
+name_elsewhere_both: 2
+name_elsewhere_4year: 4
+name_elsewhere_6year: 6
+no_flowchart_match: 6
+
+4year flowchart rows missing from PDF at same position
+----------------------------------------
+count: 14
+3-1 | 신경생리학
+4-2 | 약용식물학
+4-2 | 감염성미생물학
+5-1 | 종양생물학
+5-2 | 생물의약품학
+6-1 | 지역약국실무필수실습 1
+6-1 | 의료기관약국실무필수실습 1
+6-1 | 의료기관약국실무필수실습 2
+6-1 | 의료기관약국실무필수실습 3
+6-1 | 의료기관약국실무필수실습 4
+6-1 | 제약산업실무필수실습
+6-2 | 지역약국실무필수실습 2
+6-2 | 캡스톤디자인심화실습 1
+6-2 | 캡스톤디자인심화실습 2
+
+6year flowchart rows missing from PDF at same position
+----------------------------------------
+count: 8
+4-1 | 내분비계 및 류마티스질환 약물치료학
+4-1 | 약학용어
+4-1 | 조제학
+4-1 | 방제학
+4-2 | 일반의약품학
+5-2 | 심혈관계질환 및 약물치료학
+5-2 | 의료기관약국예바실습
+5-2 | 종양생물학
+
+PDF rows requiring review
+-------------------------
+count: 18
+1-1 | 해부생리학 | ADB001 | name_elsewhere_4year | 4year=3-1 | 6year=-
+1-2 | 신경생리학 | ADB004 | name_elsewhere_4year | 4year=3-1 | 6year=-
+2-2 | 약학용어 | ADB076 | name_elsewhere_6year | 4year=- | 6year=4-1
+2-2 | 일반의약품학 | ADB084 | name_elsewhere_6year | 4year=- | 6year=4-2
+2-2 | 조제학 | ADB077 | name_elsewhere_6year | 4year=- | 6year=4-1
+2-2 | 종양생물학 | ADB091 | name_elsewhere_both | 4year=5-1 | 6year=5-2
+3-1 | 약용식물학 | ADA203 | name_elsewhere_both | 4year=4-2 | 6year=4-1
+3-2 | 바이러스학 | ADA189 | no_flowchart_match | 4year=- | 6year=-
+3-2 | 신경생리학 | ADA092 | name_elsewhere_4year | 4year=3-1 | 6year=-
+3-2 | 자원생약학 | ADA228 | no_flowchart_match | 4year=- | 6year=-
+4-1 | 내분비계 및 류마티스 질환 약물치료 | ADB063 | no_flowchart_match | 4year=- | 6year=-
+4-1 | 약물유전체학 | ADA063 | name_elsewhere_6year | 4year=- | 6year=5-2
+4-2 | 감염미생물학 | ADA208 | no_flowchart_match | 4year=- | 6year=-
+4-2 | 약학실험5 | ADB067 | no_flowchart_match | 4year=- | 6year=-
+5-1 | 방제학 | ADB078 | name_elsewhere_6year | 4year=- | 6year=4-1
+5-2 | 의료기관약국예비실습 | ADB086 | no_flowchart_match | 4year=- | 6year=-
+5-2 | 바이오의약품학 | ADA225 | name_elsewhere_6year | 4year=- | 6year=4-2
+5-2 | 심혈관계 질환 약물치료학 | ADB082 | name_elsewhere_4year | 4year=4-2 | 6year=-
+
+Notes
+-----
+Course-name normalization removes whitespace only.
+No fuzzy matching, prefix matching, or automatic course-name correction is performed.
+same_position means the normalized course name, grade, and semester all match.
+same_name_elsewhere means the same normalized name exists in that flowchart, but not at the PDF grade/semester.
+Flowchart duplicate boxes are preserved in source CSVs but deduplicated in the missing-from-PDF review section.
