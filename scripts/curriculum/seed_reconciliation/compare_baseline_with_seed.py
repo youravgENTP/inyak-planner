@@ -8,6 +8,7 @@ from pathlib import Path
 from scripts.common.data_paths import (
     CURRICULUM_SEED_DIR,
     EXTRACTED_CURRICULUM_FLOWCHARTS_DIR,
+    PROJECT_ROOT,
 )
 
 
@@ -51,10 +52,12 @@ def comparison_directory() -> Path:
     )
 
 
-def provisional_baseline_directory() -> Path:
+def baseline_directory() -> Path:
     return (
-        comparison_directory()
-        / "curriculum_provisional_baseline"
+        PROJECT_ROOT
+        / "data"
+        / "baseline"
+        / "curriculum"
     )
 
 
@@ -62,7 +65,7 @@ def baseline_path(
     year: int,
 ) -> Path:
     return (
-        provisional_baseline_directory()
+        baseline_directory()
         / f"curriculum_{year}.csv"
     )
 
@@ -79,21 +82,21 @@ def seed_path(
 def output_directory() -> Path:
     return (
         comparison_directory()
-        / "provisional_baseline_seed_diff"
+        / "baseline_seed_diff"
     )
 
 
 def diff_csv_path() -> Path:
     return (
         output_directory()
-        / "provisional_baseline_seed_diff.csv"
+        / "baseline_seed_diff.csv"
     )
 
 
 def report_path() -> Path:
     return (
         output_directory()
-        / "provisional_baseline_seed_diff_report.txt"
+        / "baseline_seed_diff_report.txt"
     )
 
 

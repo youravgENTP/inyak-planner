@@ -54,15 +54,15 @@ def comparison_directory() -> Path:
 def diff_path() -> Path:
     return (
         comparison_directory()
-        / "provisional_baseline_seed_diff"
-        / "provisional_baseline_seed_diff.csv"
+        / "baseline_seed_diff"
+        / "baseline_seed_diff.csv"
     )
 
 
 def pair_audit_directory() -> Path:
     return (
         comparison_directory()
-        / "provisional_baseline_seed_code_pair_audit"
+        / "baseline_seed_code_pair_audit"
     )
 
 

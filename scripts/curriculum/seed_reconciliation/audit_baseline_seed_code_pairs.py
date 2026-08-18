@@ -70,15 +70,15 @@ def comparison_directory() -> Path:
 def diff_path() -> Path:
     return (
         comparison_directory()
-        / "provisional_baseline_seed_diff"
-        / "provisional_baseline_seed_diff.csv"
+        / "baseline_seed_diff"
+        / "baseline_seed_diff.csv"
     )
 
 
 def output_directory() -> Path:
     return (
         comparison_directory()
-        / "provisional_baseline_seed_code_pair_audit"
+        / "baseline_seed_code_pair_audit"
     )
 
 
@@ -1669,7 +1669,7 @@ def main() -> None:
             "먼저 다음을 실행하세요:\n"
             "python -m "
             "scripts.curriculum."
-            "compare_provisional_baseline_with_seed\n"
+            "compare_baseline_with_seed\n"
             f"path: {source_diff_path}"
         )
 
