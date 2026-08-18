@@ -21,6 +21,7 @@ missing course names: 0
 invalid credits: 0
 duplicate rows: 0
 low confidence rows: 0
+suspicious course names: 0
 
 Rows by page
 ------------

@@ -36,6 +36,13 @@ FLOAT_RE = re.compile(
     r"(?<!\d)(\d+(?:\.\d+)?)(?!\d)"
 )
 
+KNOWN_COURSE_NAME_OCR_CORRECTIONS = {
+    "ADA174": (
+        "약무행정실부필수실습",
+        "약무행정실무필수실습",
+    ),
+}
+
 OUTPUT_COLUMNS = [
     "entry_year",
     "grade",
@@ -88,6 +95,7 @@ class ValidationResult:
     invalid_credits: list[str]
     duplicate_rows: list[str]
     low_confidence_rows: list[str]
+    suspicious_course_names: list[str]
 
     @property
     def passed(self) -> bool:
@@ -101,6 +109,7 @@ class ValidationResult:
                 self.invalid_credits,
                 self.duplicate_rows,
                 self.low_confidence_rows,
+                self.suspicious_course_names,
             ]
         )
 
@@ -642,6 +651,32 @@ def recover_course_name_terminal_number(
         + recovered_number
     )
 
+def apply_known_course_name_correction(
+    course_code: str,
+    course_name: str,
+) -> str:
+    correction = (
+        KNOWN_COURSE_NAME_OCR_CORRECTIONS.get(
+            course_code
+        )
+    )
+
+    if correction is None:
+        return course_name
+
+    (
+        observed_name,
+        corrected_name,
+    ) = correction
+
+    if (
+        course_name
+        != observed_name
+    ):
+        return course_name
+
+    return corrected_name
+
 def extract_credit_from_vision(
     observations: list[
         VisionObservation
@@ -984,6 +1019,13 @@ def extract_page_rows(
             )
         )
 
+        course_name = (
+            apply_known_course_name_correction(
+                anchor.code,
+                course_name,
+            )
+        )
+
         vision_credit = (
             extract_credit_from_vision(
                 row_observations
@@ -1199,6 +1241,71 @@ def extract_courses(
     )
 
 
+def compact_course_name(
+    course_name: str,
+) -> str:
+    return re.sub(
+        r"\s+",
+        "",
+        course_name,
+    )
+
+
+def course_name_character_distance(
+    left: str,
+    right: str,
+) -> int | None:
+    left_compact = (
+        compact_course_name(
+            left
+        )
+    )
+
+    right_compact = (
+        compact_course_name(
+            right
+        )
+    )
+
+    if (
+        len(left_compact)
+        != len(right_compact)
+    ):
+        return None
+
+    if (
+        len(left_compact)
+        < 8
+    ):
+        return None
+
+    if (
+        re.search(
+            r"\d",
+            left_compact,
+        )
+        or re.search(
+            r"\d",
+            right_compact,
+        )
+    ):
+        return None
+
+    distance = sum(
+        left_character
+        != right_character
+        for (
+            left_character,
+            right_character,
+        ) in zip(
+            left_compact,
+            right_compact,
+        )
+    )
+
+    return distance
+
+
 def validate_courses(
     rows: list[
         CourseRow
@@ -1233,6 +1340,10 @@ def validate_courses(
     ] = []
 
     low_confidence_rows: list[
+        str
+    ] = []
+
+    suspicious_course_names: list[
         str
     ] = []
 
@@ -1325,6 +1436,42 @@ def validate_courses(
                 row_key
             )
 
+    for left_index, left in enumerate(
+        rows
+    ):
+        for right in rows[
+            left_index + 1:
+        ]:
+            if (
+                left.grade
+                != right.grade
+                or left.semester
+                != right.semester
+            ):
+                continue
+
+            distance = (
+                course_name_character_distance(
+                    left.course_name,
+                    right.course_name,
+                )
+            )
+
+            if distance != 1:
+                continue
+
+            suspicious_course_names.append(
+                (
+                    f"page {left.page} / "
+                    f"{left.course_code} "
+                    f"{left.course_name!r} "
+                    "<-> "
+                    f"page {right.page} / "
+                    f"{right.course_code} "
+                    f"{right.course_name!r}"
+                )
+            )
+
     return ValidationResult(
         total_rows=len(
             rows
@@ -1353,8 +1500,10 @@ def validate_courses(
         low_confidence_rows=(
             low_confidence_rows
         ),
+        suspicious_course_names=(
+            suspicious_course_names
+        ),
     )
-
 
 def count_rows_by_page(
     rows: list[
@@ -1584,6 +1733,10 @@ def write_report(
             "low confidence rows: "
             f"{len(validation.low_confidence_rows)}"
         ),
+        (
+            "suspicious course names: "
+            f"{len(validation.suspicious_course_names)}"
+        ),
         "",
         "Rows by page",
         "------------",
@@ -1674,8 +1827,8 @@ def write_report(
             validation.duplicate_rows,
         ),
         (
-            "Low confidence rows",
-            validation.low_confidence_rows,
+            "Suspicious course names",
+            validation.suspicious_course_names,
         ),
     ]
 
