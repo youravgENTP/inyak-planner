@@ -1,0 +1,75 @@
+Curriculum generation anchor report
+=============================================
+
+source years: 2022, 2023, 2024, 2025
+course codes observed: 196
+
+Generation summary
+------------------
+four_year: 46
+six_year: 104
+conflict: 8
+unresolved: 38
+
+CONFLICT
+--------
+count: 8
+ADA118 | 약업경영학 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADA145 | 호흡기계 및 소화기계 질환 약물치료학 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADA147 | 감염성 질환 약물치료학 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADA148 | 내분비계 및 류마티스 질환 약물치료학 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADA198 | 의약품합성학 | years=2022;2023;2024;2025 | four=2022;2023 | six=2024;2025 | grade1-2=-
+ADA206 | 의약품 경제성평가 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADA217 | 의료기관약국 예비실무실습 | years=2022;2023;2024;2025 | four=2022;2023 | six=2025 | grade1-2=-
+ADB059 | 의약화학2 | years=2022;2023;2024;2025 | four=2022 | six=2022;2025 | grade1-2=-
+
+UNRESOLVED
+----------
+count: 38
+ADA033 | 생물약제학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA053 | 조제학 | years=2024 | four=- | six=- | grade1-2=-
+ADA063 | 약물유전체학 | years=2023;2024 | four=- | six=- | grade1-2=-
+ADA086 | 약물동태학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA092 | 신경생리학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA102 | 의약화학 1 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA103 | 의약화학 2 | years=2023;2024 | four=- | six=- | grade1-2=-
+ADA120 | 향장품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA121 | 동물용의약품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA122 | 천연물의약품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA208 | 감염미생물학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA223 | 상담지도 1 | years=2022 | four=- | six=- | grade1-2=-
+ADA224 | 상담지도 II | years=2022 | four=- | six=- | grade1-2=-
+ADA225 | 바이오의약품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADA229 | 나노약학 | years=2023;2024 | four=- | six=- | grade1-2=-
+ADA230 | 법과학 | years=2023;2024 | four=- | six=- | grade1-2=-
+ADA232 | 임상의약정보학 | years=2024 | four=- | six=- | grade1-2=-
+ADB043 | 향장품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB063 | 내분비계 및 류마티스 질환 약물치료 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB072 | 의약품제조관리학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB075 | 지역약국 예비실무실습 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB078 | 방제학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB080 | 한약제제학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB081 | 약전 및 품질관리학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB082 | 심혈관계 질환 약물치료학 | years=2022;2023;2024;2025 | four=- | six=- | grade1-2=-
+ADB086 | 의료기관약국예비실습 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB087 | 약무행정실무필수실습 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB089 | 동물용의약품학 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB092 | 지역약국 필수실무실습1 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB093 | 의료기관약국 필수실무실습1 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB094 | 의료기관약국 필수실무실습2 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB095 | 의료기관약국 필수실무실습3 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB096 | 의료기관약국 필수실무실습4 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB097 | 제약산업 필수실무실습 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB098 | 지역약국 필수실무실습2 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB099 | 심화실습 1 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB100 | 심화실습 2 | years=2022;2023;2024 | four=- | six=- | grade1-2=-
+ADB109 | 정신신경계질환 약물치료학 | years=2025 | four=- | six=- | grade1-2=-
+
+Rules
+-----
+1. Grade 1-2 PDF rows are six-year evidence.
+2. A flowchart direct anchor is created only when exactly one PDF row matches the normalized course name, grade, and semester.
+3. Whitespace is the only course-name normalization.
+4. Course-code prefixes are not used as generation evidence.
+5. Evidence is propagated across years only through the exact same course_code.
+6. Evidence for both generations produces conflict; it is not automatically resolved.

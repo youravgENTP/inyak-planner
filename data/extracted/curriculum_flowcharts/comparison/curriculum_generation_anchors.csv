@@ -1,0 +1,197 @@
+﻿course_code,course_names,years_seen,grades_seen,semesters_seen,four_year_anchor_years,six_year_anchor_years,grade_1_2_years,four_year_evidence_count,six_year_evidence_count,anchor_generation,evidence_summary
+ADA001,약물학 2,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA002,면역학,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA006,병태생리학,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA012,약품생화학 2,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA022,해부생리학,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA030,약물학 1,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA031,약품분석화학 1,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA033,생물약제학,2022;2023;2024,4,2,,,,0,0,unresolved,
+ADA041,물리약학 2,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA042,약품생화학 1,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA045,독성학,2022;2023;2024,5,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA051,약학통계,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA053,조제학,2024,5,2,,,,0,0,unresolved,
+ADA055,생약학 2,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA063,약물유전체학,2023;2024,4,1,,,,0,0,unresolved,
+ADA065,생약학 1,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA074,약품분석화학 2,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA076,물리약학 1,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA080,약화학,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA086,약물동태학,2022;2023;2024,4,2,,,,0,0,unresolved,
+ADA092,신경생리학,2022;2023;2024,3,2,,,,0,0,unresolved,
+ADA102,의약화학 1,2022;2023;2024,4,1,,,,0,0,unresolved,
+ADA103,의약화학 2,2023;2024,4,2,,,,0,0,unresolved,
+ADA104,약품 미생물학,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA107,생물의약품학,2025,5,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA109,예방약학 2,2022;2023;2024;2025,5,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA115,지역약국 예비실무실습,2022;2023;2024;2025,5,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA118,약업경영학,2022;2023;2024;2025,5,2,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA120,향장품학,2022;2023;2024,4,1,,,,0,0,unresolved,
+ADA121,동물용의약품학,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADA122,천연물의약품학,2022;2023;2024,4,1,,,,0,0,unresolved,
+ADA132,예방약학 1,2022;2023;2024;2025,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA136,심혈관계 질환 약물치료학,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA137,임상약학 해설,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA140,한약제제학,2022;2023;2024;2025,5,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA144,신경정신계질환 및 신장질환 약물치료학,2022;2023;2024,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA145,호흡기계 및 소화기계 질환 약물치료학,2022;2023;2024;2025,5,1,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA147,감염성 질환 약물치료학,2022;2023;2024;2025,5,2,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA148,내분비계 및 류마티스 질환 약물치료학,2022;2023;2024;2025,5,2,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA150,임상약물동태학,2022;2023;2024,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA167,약전 및 품질관리학,2022;2023;2024;2025,5,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA171,의약품제조관리학,2022;2023;2024;2025,5,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA174,약무행정실무필수실습,2022;2023;2024;2025,5,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA181,의약분자생물학,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA182,건강기능식품학,2022;2023;2024,4;5,1;2,,2024,,0,1,six_year,unique_6year_flowchart_match:2024
+ADA183,임상생화학,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA184,약학실험 3,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA186,제제과학 1,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA187,제제과학 2,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA189,바이러스학,2022;2023;2024,3,2,2022,,,1,0,four_year,unique_4year_flowchart_match:2022
+ADA190,임상면역학,2022;2023;2024;2025,5,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA191,신약개발임상시험,2022;2023;2024,5,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA192,약학실험 4,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA193,보건사회약학,2022;2023;2024,4,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA194,보건의약관계법규,2022;2023;2024;2025,5,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA195,약학실험 2,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA196,약품기기분석학,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA197,의약품설계학,2022;2023;2024,3,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA198,의약품합성학,2022;2023;2024;2025,3,2,2022;2023,2024;2025,,2,2,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2024;2025
+ADA199,무기 및 방사성 의약품학,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA200,제제과학실습,2022;2023;2024;2025,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA201,약학실험 1,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA202,항암약물요법 및 일반의약품약물요법,2022;2023;2024,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA203,약용식물학,2022;2023;2024,3;4,1;2,2022,,,1,0,four_year,unique_4year_flowchart_match:2022
+ADA204,의약정보학과 커뮤니케이션,2022;2023;2024,4,2,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA206,의약품 경제성평가,2022;2023;2024;2025,5,1,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA208,감염미생물학,2022;2023;2024,4,2,,,,0,0,unresolved,
+ADA209,감염질환을 위한 항생물질학,2022;2023;2024;2025,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA211,임상미생물학,2022;2023;2024,5,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA212,약사윤리와 진로 적응,2022;2023;2024,3,1,2022;2023,,,2,0,four_year,unique_4year_flowchart_match:2022;2023
+ADA213,의료기관약국 필수실무실습 1,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA214,의료기관약국 필수실무실습 2,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA215,의료기관약국 필수실무실습 3,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA216,의료기관약국 필수실무실습 4,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA217,의료기관약국 예비실무실습,2022;2023;2024;2025,5,1,2022;2023,2025,,2,1,conflict,unique_4year_flowchart_match:2022;2023;unique_6year_flowchart_match:2025
+ADA218,제약산업 필수실무실습,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA219,지역약국 필수실무실습 1,2022;2023;2024;2025,6,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA220,지역약국 필수실무실습 2,2022;2023;2024;2025,6,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA223,상담지도 1,2022,3,1,,,,0,0,unresolved,
+ADA224,상담지도 II,2022,3,2,,,,0,0,unresolved,
+ADA225,바이오의약품학,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADA226,심화실습 1,2022;2023;2024;2025,6,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA227,심화실습 2,2022;2023;2024;2025,6,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADA228,자원생약학,2023;2024,3,1;2,,2024,,0,1,six_year,unique_6year_flowchart_match:2024
+ADA229,나노약학,2023;2024,4,1,,,,0,0,unresolved,
+ADA230,법과학,2023;2024,4,2,,,,0,0,unresolved,
+ADA232,임상의약정보학,2024,4,2,,,,0,0,unresolved,
+ADA233,임상영양학,2024;2025,4,1;2,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB001,해부생리학,2022;2023;2024,1,1,,,2022;2023;2024,0,3,six_year,grade_1_2_rule:2022;2023;2024
+ADB002,약학기초생물학1,2022;2023;2024;2025,1,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB003,약학기초화학1,2022;2023;2024;2025,1,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB004,신경생리학,2022;2023;2024,1,2,,,2022;2023;2024,0,3,six_year,grade_1_2_rule:2022;2023;2024
+ADB005,약학기초생물학2,2022;2023;2024;2025,1,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB006,약학기초화학2,2022;2023;2024;2025,1,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB007,병태생리학1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB008,약품생화학1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB009,약화학 1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB010,물리약학1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB011,의약품분석학1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB012,약학통계,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB013,약학실험1,2022;2023;2024;2025,2,1,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB015,병태생리학2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB016,약품생화학2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB017,의약분자생물학,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB018,약화학 2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB019,물리약학2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB020,의약품분석학2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB021,약품면역학,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB022,약학실험2,2022;2023;2024;2025,2,2,,2022;2023;2024;2025,2022;2023;2024;2025,0,8,six_year,grade_1_2_rule:2022;2023;2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB024,약물학1,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB025,약품미생물학,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB026,생약학1,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB027,제제과학1,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB028,의약품합성학1,2022;2023;2024,3,1,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB029,보건사회약학,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB030,의약품기기분석학1,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB031,약학실험3,2022;2023;2024;2025,3,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB033,약물학2,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB034,감염성미생물학,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB035,임상면역학,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB036,생약학2,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB037,제제과학2,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB038,의약품합성학2,2022;2023;2024,3,2,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB039,약사 커뮤니케이션,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB040,의약품기기분석학2,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB041,약학실험4,2022;2023;2024;2025,3,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB043,향장품학,2022;2023;2024,4,1,,,,0,0,unresolved,
+ADB044,예방약학1,2022;2023;2024;2025,4,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB045,감염질환을 위한 항생물질학,2022;2023;2024;2025,4,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB046,임상미생물학,2022;2023;2024;2025,4,1,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB047,의약화학1,2022;2023;2024;2025,4,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB048,천연물의약품학,2022;2023;2024;2025,3;4,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB049,약용식물학,2022;2023;2024;2025,2;4,1,,2022;2023;2024;2025,2024;2025,0,6,six_year,grade_1_2_rule:2024;2025;unique_6year_flowchart_match:2022;2023;2024;2025
+ADB050,건강기능식품학,2022;2023;2024;2025,4,1;2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB051,제제과학 실험,2022;2023;2024,4,1,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB052,무기방사성 의약품학,2022;2023;2024,4,1,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB053,AI 의료약학빅데이터,2022;2023;2024,4,1,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB054,나노약학,2022;2023;2024,4,1,,2022,,0,1,six_year,unique_6year_flowchart_match:2022
+ADB055,예방약학2,2022;2023;2024;2025,4,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB056,바이오의약품학,2022;2023;2024,4,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB057,생물약제학,2022;2023;2024;2025,4,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB058,약물동태학,2022;2023;2024;2025,4,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB059,의약화학2,2022;2023;2024;2025,4,2,2022,2022;2025,,1,2,conflict,unique_4year_flowchart_match:2022;unique_6year_flowchart_match:2022;2025
+ADB060,바이오의약품 분석,2022;2023;2024;2025,4,1;2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB061,법과학,2022;2023;2024,4,2,,2022,,0,1,six_year,unique_6year_flowchart_match:2022
+ADB062,신경정신계 및 신장 질환 약물치료학,2022;2023;2024,5,1,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB063,내분비계 및 류마티스 질환 약물치료,2022;2023;2024,4,1,,,,0,0,unresolved,
+ADB064,보건의약관계법규,2022;2023;2024;2025,4,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB065,약사윤리,2022;2023;2024;2025,4,2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB066,의약품설계학,2022;2023;2024;2025,4,1;2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB067,약학실험5,2022;2023;2024;2025,4,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB068,독성학,2022;2023;2024,3;5,1;2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB069,감염성 질환 약물치료학,2022;2023;2024,4,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB070,항암약물요법,2022;2023;2024,5,1,,2022;2023,,0,2,six_year,unique_6year_flowchart_match:2022;2023
+ADB071,호흡기계 및 소화기계 질환 약물치료학,2022;2023;2024,4,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB072,의약품제조관리학,2022;2023;2024,5,1,,,,0,0,unresolved,
+ADB073,의약정보학과 경제성평가,2022;2023;2024,4;5,1;2,,2023;2024,,0,2,six_year,unique_6year_flowchart_match:2023;2024
+ADB074,약업경영학,2022;2023;2024,5,1,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB075,지역약국 예비실무실습,2022;2023;2024,5,1,,,,0,0,unresolved,
+ADB076,약학용어,2022;2023;2024;2025,2;3;5,1;2,,2024;2025,2023,0,3,six_year,grade_1_2_rule:2023;unique_6year_flowchart_match:2024;2025
+ADB077,조제학,2022;2023;2024,2;5,1;2,,,2023;2024,0,2,six_year,grade_1_2_rule:2023;2024
+ADB078,방제학,2022;2023;2024,5,1,,,,0,0,unresolved,
+ADB079,약물신호전달학,2022;2023;2024,5,1,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB080,한약제제학,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADB081,약전 및 품질관리학,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADB082,심혈관계 질환 약물치료학,2022;2023;2024;2025,4;5,2,,,,0,0,unresolved,
+ADB083,임상약학 해설,2022;2023;2024;2025,4;5,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB084,일반의약품학,2022;2023;2024;2025,2;5,1;2,,2024;2025,2023,0,3,six_year,grade_1_2_rule:2023;unique_6year_flowchart_match:2024;2025
+ADB085,약물유전체학,2022;2023;2024;2025,3;5,1;2,,2022;2023;2024;2025,,0,4,six_year,unique_6year_flowchart_match:2022;2023;2024;2025
+ADB086,의료기관약국예비실습,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADB087,약무행정실무필수실습,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADB088,의약품허가,2022;2023;2024,5,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB089,동물용의약품학,2022;2023;2024,5,2,,,,0,0,unresolved,
+ADB090,신약개발정보학,2022;2023;2024,5,2,,2022;2023;2024,,0,3,six_year,unique_6year_flowchart_match:2022;2023;2024
+ADB091,종양생물학,2022;2023;2024,2;5,2,,2022,2023;2024,0,3,six_year,grade_1_2_rule:2023;2024;unique_6year_flowchart_match:2022
+ADB092,지역약국 필수실무실습1,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB093,의료기관약국 필수실무실습1,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB094,의료기관약국 필수실무실습2,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB095,의료기관약국 필수실무실습3,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB096,의료기관약국 필수실무실습4,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB097,제약산업 필수실무실습,2022;2023;2024,6,1,,,,0,0,unresolved,
+ADB098,지역약국 필수실무실습2,2022;2023;2024,6,2,,,,0,0,unresolved,
+ADB099,심화실습 1,2022;2023;2024,6,2,,,,0,0,unresolved,
+ADB100,심화실습 2,2022;2023;2024,6,2,,,,0,0,unresolved,
+ADB101,해부생리학1,2023;2024;2025,1,1,,2023;2024;2025,2023;2024;2025,0,6,six_year,grade_1_2_rule:2023;2024;2025;unique_6year_flowchart_match:2023;2024;2025
+ADB102,해부생리학2,2023;2024;2025,1,2,,2023;2024;2025,2023;2024;2025,0,6,six_year,grade_1_2_rule:2023;2024;2025;unique_6year_flowchart_match:2023;2024;2025
+ADB103,항암약물요법1,2024;2025,5,1,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB104,신경정신계질환 약물치료학,2024;2025,5,1,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB105,의약품개발사,2024;2025,2,2,,2024;2025,2024;2025,0,4,six_year,grade_1_2_rule:2024;2025;unique_6year_flowchart_match:2024;2025
+ADB106,법화학,2024;2025,3,2,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB107,항암약물요법2,2024;2025,5,2,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB108,신장질환약물치료학,2024;2025,5,1,,2024;2025,,0,2,six_year,unique_6year_flowchart_match:2024;2025
+ADB109,정신신경계질환 약물치료학,2025,4,1,,,,0,0,unresolved,
+ADB111,제제과학의실습,2025,4,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB112,생약학개론,2025,3,1,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
+ADB113,유용천연물소재학,2025,3,2,,2025,,0,1,six_year,unique_6year_flowchart_match:2025
