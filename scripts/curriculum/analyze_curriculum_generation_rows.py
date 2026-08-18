@@ -41,6 +41,10 @@ OUTPUT_COLUMNS = [
     "direct_6year_evidence",
     "generation_evidence",
     "evidence_reason",
+    "near_generation_evidence",
+    "near_match_name",
+    "near_match_type",
+    "near_edit_distance",
 ]
 
 
@@ -231,6 +235,106 @@ def load_flowchart_keys(
         )
 
     return keys
+
+
+def near_audit_path() -> Path:
+    return (
+        output_directory()
+        / "curriculum_near_name_audit.csv"
+    )
+
+
+def near_evidence_key(
+    course: PdfCourse,
+) -> tuple[
+    int,
+    int,
+    int,
+    str,
+    str,
+]:
+    return (
+        course.academic_year,
+        course.grade,
+        course.semester,
+        course.course_code,
+        normalize_course_name(
+            course.course_name
+        ),
+    )
+
+
+def load_near_evidence_index(
+    year: int,
+) -> dict[
+    tuple[
+        int,
+        int,
+        int,
+        str,
+        str,
+    ],
+    dict[str, str],
+]:
+    path = near_audit_path()
+
+    if not path.exists():
+        raise FileNotFoundError(
+            "near-name audit 결과가 없습니다: "
+            f"{path}\n"
+            "먼저 다음 명령을 실행하세요:\n"
+            "python -m "
+            "scripts.curriculum."
+            "audit_curriculum_near_name_matches"
+        )
+
+    rows = read_csv_rows(
+        path
+    )
+
+    index: dict[
+        tuple[
+            int,
+            int,
+            int,
+            str,
+            str,
+        ],
+        dict[str, str],
+    ] = {}
+
+    for row in rows:
+        row_year = int(
+            row["academic_year"]
+        )
+
+        if row_year != year:
+            continue
+
+        key = (
+            row_year,
+            int(
+                row["grade"]
+            ),
+            int(
+                row["semester"]
+            ),
+            row.get(
+                "pdf_course_code",
+                "",
+            ).strip(),
+            normalize_course_name(
+                row[
+                    "pdf_course_name"
+                ]
+            ),
+        )
+
+        index[
+            key
+        ] = row
+
+    return index
 
 
 def course_key(
@@ -434,6 +538,12 @@ def analyze_year(
         )
     )
 
+    near_evidence_index = (
+        load_near_evidence_index(
+            year
+        )
+    )
+
     output_rows: list[
         dict[str, str]
     ] = []
@@ -459,6 +569,14 @@ def analyze_year(
             in keys_6year
         )
 
+        near_evidence = (
+            near_evidence_index.get(
+                near_evidence_key(
+                    course
+                )
+            )
+        )
+
         (
             generation,
             reason,
@@ -471,6 +589,78 @@ def analyze_year(
             in_4year=in_4year,
             in_6year=in_6year,
         )
+
+        near_generation = ""
+        near_match_name = ""
+        near_match_type = ""
+        near_edit_distance = ""
+
+        if near_evidence:
+            near_generation = (
+                near_evidence.get(
+                    "near_one_sided_generation",
+                    "",
+                ).strip()
+            )
+
+            if near_generation == "four_year":
+                near_match_name = (
+                    near_evidence.get(
+                        "4year_near_match_name",
+                        "",
+                    ).strip()
+                )
+                near_match_type = (
+                    near_evidence.get(
+                        "4year_near_match_type",
+                        "",
+                    ).strip()
+                )
+                near_edit_distance = (
+                    near_evidence.get(
+                        "4year_near_edit_distance",
+                        "",
+                    ).strip()
+                )
+
+            elif near_generation == "six_year":
+                near_match_name = (
+                    near_evidence.get(
+                        "6year_near_match_name",
+                        "",
+                    ).strip()
+                )
+                near_match_type = (
+                    near_evidence.get(
+                        "6year_near_match_type",
+                        "",
+                    ).strip()
+                )
+                near_edit_distance = (
+                    near_evidence.get(
+                        "6year_near_edit_distance",
+                        "",
+                    ).strip()
+                )
+
+        if (
+            generation == "unresolved"
+            and group_size == 1
+            and near_generation
+            in {
+                "four_year",
+                "six_year",
+            }
+        ):
+            generation = (
+                near_generation
+            )
+
+            reason = (
+                "unique_pdf_row_matches_"
+                f"{near_generation.replace('_', '')}_"
+                "flowchart_near_name"
+            )
 
         output_rows.append(
             {
@@ -536,6 +726,18 @@ def analyze_year(
                 ),
                 "evidence_reason": (
                     reason
+                ),
+                "near_generation_evidence": (
+                    near_generation
+                ),
+                "near_match_name": (
+                    near_match_name
+                ),
+                "near_match_type": (
+                    near_match_type
+                ),
+                "near_edit_distance": (
+                    near_edit_distance
                 ),
             }
         )

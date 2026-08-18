@@ -5,11 +5,11 @@ rows analyzed: 640
 
 Generation evidence
 -------------------
-four_year: 104
-six_year: 299
+four_year: 106
+six_year: 303
 both: 1
 ambiguous: 134
-unresolved: 102
+unresolved: 96
 
 Integrated evidence
 -------------------
@@ -20,9 +20,9 @@ rows with official course relation: 100
 
 Review priority
 ---------------
-high: 72
-medium: 164
-low: 404
+high: 70
+medium: 160
+low: 410
 
 AMBIGUOUS GROUPS WITH PARTNER RELATION
 --------------------------------------
@@ -34,14 +34,12 @@ count: 0
 
 HIGH PRIORITY ROWS
 ------------------
-count: 72
-2022 | 4-2 | ADA208 | 감염미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+count: 70
 2022 | 5-2 | ADA225 | 바이오의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation
 2023 | 4-1 | ADB050 | 건강기능식품학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
 2023 | 4-1 | ADA182 | 건강기능식품학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
 2023 | 4-1 | ADA229 | 나노약학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
 2023 | 4-1 | ADB054 | 나노약학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
-2023 | 4-2 | ADA208 | 감염미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
 2023 | 4-2 | ADA230 | 법과학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
 2023 | 4-2 | ADB061 | 법과학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
 2023 | 5-2 | ADA225 | 바이오의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation

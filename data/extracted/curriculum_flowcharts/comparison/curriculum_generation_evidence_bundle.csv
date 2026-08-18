@@ -74,7 +74,7 @@
 2022,4,1,건강기능식품학,ADB050,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADA182,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,2025,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2022,4,1,건강기능식품학,ADA182,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB050,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,2024,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2022,4,1,나노약학,ADB054,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
-2022,4,1,내분비계 및 류마티스 질환 약물치료,ADB063,전선,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,no_direct_generation,medium
+2022,4,1,내분비계 및 류마티스 질환 약물치료,ADB063,전선,2,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,4,1,무기방사성 의약품학,ADB052,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,4,1,약용식물학,ADB049,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,4,1,의약화학1,ADB047,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADA102,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,2025,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
@@ -83,7 +83,7 @@
 2022,4,1,천연물의약품학,ADA122,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB048,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2022,4,1,향장품학,ADA120,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB043,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2022,4,1,향장품학,ADB043,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADA120,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
-2022,4,2,감염미생물학,ADA208,전필,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,2,equivalent;substitute,ADA105,감염성 미생물학,2019,2023,no,no,,,,,no_direct_generation;official_course_relation,high
+2022,4,2,감염미생물학,ADA208,전필,2,four_year,unique_pdf_row_matches_fouryear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,2,equivalent;substitute,ADA105,감염성 미생물학,2019,2023,no,no,,,,,direct_generation_evidence;official_course_relation,low
 2022,4,2,감염성 질환 약물치료학,ADB069,전필,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,4,2,보건의약관계법규,ADB064,전필,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,4,2,생약학 2,ADA055,전필,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
@@ -147,7 +147,7 @@
 2022,5,2,바이오의약품학,ADA225,전선,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,1,equivalent,ADA107,생물의약품학,2021,2023,no,no,,,,,no_direct_generation;official_course_relation,high
 2022,5,2,신약개발임상시험,ADA191,전선,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,5,2,신약개발정보학,ADB090,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
-2022,5,2,심혈관계 질환 약물치료학,ADB082,전선,3,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,no_direct_generation,medium
+2022,5,2,심혈관계 질환 약물치료학,ADB082,전선,3,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,5,2,약물유전체학,ADB085,전선,3,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,5,2,약업경영학,ADA118,전선,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2022,5,2,약전 및 품질관리학,ADA167,전선,3,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB081,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,2025,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
@@ -256,7 +256,7 @@
 2023,4,1,건강기능식품학,ADA182,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB050,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence,,,2024,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate,high
 2023,4,1,나노약학,ADA229,전선,2,ambiguous,multiple_pdf_rows_match_6year_flowchart,no,yes,no,no,no,2,ADB054,unresolved,one_sided_candidate,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position;lineage_pair_one_sided_candidate,high
 2023,4,1,나노약학,ADB054,전선,2,ambiguous,multiple_pdf_rows_match_6year_flowchart,no,yes,no,no,no,2,ADA229,six_year,one_sided_candidate,adjacent_year_same_code_has_six_year_direct_evidence,2022,six_year,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate,high
-2023,4,1,내분비계 및 류마티스 질환 약물치료,ADB063,전선,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,no_direct_generation,medium
+2023,4,1,내분비계 및 류마티스 질환 약물치료,ADB063,전선,2,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,4,1,무기방사성 의약품학,ADB052,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,4,1,약물유전체학,ADA063,전선,3,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,no_direct_generation,medium
 2023,4,1,약용식물학,ADB049,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
@@ -266,7 +266,7 @@
 2023,4,1,천연물의약품학,ADA122,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB048,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2023,4,1,향장품학,ADB043,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADA120,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
 2023,4,1,향장품학,ADA120,전선,2,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB043,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
-2023,4,2,감염미생물학,ADA208,전필,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,2,equivalent;substitute,ADA105,감염성 미생물학,2019,2023,no,no,,,,,no_direct_generation;official_course_relation,high
+2023,4,2,감염미생물학,ADA208,전필,2,four_year,unique_pdf_row_matches_fouryear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,2,equivalent;substitute,ADA105,감염성 미생물학,2019,2023,no,no,,,,,direct_generation_evidence;official_course_relation,low
 2023,4,2,감염성 질환 약물치료학,ADB069,전필,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,4,2,보건의약관계법규,ADB064,전필,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,4,2,생약학 2,ADA055,전필,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
@@ -329,7 +329,7 @@
 2023,5,2,바이오의약품학,ADA225,전선,2,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,1,equivalent,ADA107,생물의약품학,2021,2023,no,no,,,,,no_direct_generation;official_course_relation,high
 2023,5,2,신약개발임상시험,ADA191,전선,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,5,2,신약개발정보학,ADB090,전선,2,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
-2023,5,2,심혈관계 질환 약물치료학,ADB082,전선,3,unresolved,no_direct_flowchart_evidence,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,no_direct_generation,medium
+2023,5,2,심혈관계 질환 약물치료학,ADB082,전선,3,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,no,no,no,no,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,5,2,약물유전체학,ADB085,전선,3,six_year,unique_pdf_row_matches_6year_flowchart,no,yes,no,no,yes,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,5,2,약업경영학,ADA118,전선,2,four_year,unique_pdf_row_matches_4year_flowchart,yes,no,no,yes,no,1,,,,,,,,,,,,,,,,,,,,0,0,,,,,,,no,,,,,direct_generation_evidence,low
 2023,5,2,약전 및 품질관리학,ADA167,전선,3,ambiguous,multiple_pdf_rows_match_both_flowcharts,yes,yes,no,no,no,2,ADB081,unresolved,unresolved,no_adjacent_year_direct_generation_evidence,,,2025,six_year,,,,,,,,,,,,0,0,,,,,,,no,,,,,ambiguous_position,medium
