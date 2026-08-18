@@ -13,6 +13,7 @@ from server.database import (
 
 from scripts.common.data_paths import (
     GENERAL_EDUCATION_COURSE_MAPPINGS_PATH,
+    PROJECT_ROOT,
 )
 
 DEFAULT_INPUT_PATH = (
