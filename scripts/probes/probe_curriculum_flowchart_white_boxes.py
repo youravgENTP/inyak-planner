@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import re
 import tempfile
 from dataclasses import dataclass
@@ -8,26 +9,21 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from scripts.common.curriculum_flowchart_vision import (
+    find_curriculum_flowchart_image,
+)
 from scripts.common.curriculum_vision import (
-    VisionObservation,
     recognize_image,
 )
-from scripts.common.data_paths import (
-    RAW_CURRICULUM_FLOWCHARTS_DIR,
-)
 
-
-FLOWCHART_IMAGE_SUFFIXES = {
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".webp",
-}
 
 WHITE_MIN = 245
 
 COURSE_AREA_TOP_RATIO = 0.85
 COURSE_AREA_BOTTOM_RATIO = 0.04
+
+MIN_WIDTH_RATIO = 0.040
+MAX_WIDTH_RATIO = 0.090
 
 MIN_HEIGHT_RATIO = 0.010
 MAX_HEIGHT_RATIO = 0.060
@@ -71,115 +67,6 @@ class NormalizedBox:
     center_y: float
 
 
-@dataclass
-class FlowchartCourse:
-    grade: int
-    semester: int
-    course_name: str
-    confidence: float
-    box_x: float
-    box_y: float
-    box_width: float
-    box_height: float
-    column_distance: float
-
-
-def validate_program_years(
-    program_years: int,
-) -> None:
-    if program_years not in {
-        4,
-        6,
-    }:
-        raise ValueError(
-            "program-years는 "
-            "4 또는 6이어야 합니다."
-        )
-
-
-def flowchart_source_dir(
-    year: int,
-    program_years: int,
-) -> Path:
-    validate_program_years(
-        program_years
-    )
-
-    return (
-        RAW_CURRICULUM_FLOWCHARTS_DIR
-        / str(year)
-        / f"{program_years}year"
-    )
-
-
-def find_curriculum_flowchart_image(
-    year: int,
-    program_years: int,
-) -> Path:
-    source_dir = (
-        flowchart_source_dir(
-            year,
-            program_years,
-        )
-    )
-
-    if not source_dir.exists():
-        raise FileNotFoundError(
-            (
-                "교과이수체계도 디렉터리가 "
-                "없습니다: "
-                f"{source_dir}"
-            )
-        )
-
-    images = sorted(
-        path
-        for path in source_dir.iterdir()
-        if (
-            path.is_file()
-            and path.suffix.lower()
-            in FLOWCHART_IMAGE_SUFFIXES
-        )
-    )
-
-    if len(images) != 1:
-        raise RuntimeError(
-            (
-                f"{year}학년도 "
-                f"{program_years}년제 "
-                "교과이수체계도 이미지가 "
-                "정확히 1개여야 합니다: "
-                f"{images}"
-            )
-        )
-
-    return images[0]
-
-
-def recognize_curriculum_flowchart(
-    year: int,
-    program_years: int,
-) -> tuple[
-    Path,
-    list[VisionObservation],
-]:
-    image_path = (
-        find_curriculum_flowchart_image(
-            year,
-            program_years,
-        )
-    )
-
-    observations = recognize_image(
-        image_path
-    )
-
-    return (
-        image_path,
-        observations,
-    )
-
-
 def normalize_header_text(
     text: str,
 ) -> str:
@@ -188,26 +75,6 @@ def normalize_header_text(
         "",
         text,
     )
-
-
-def clean_course_text(
-    text: str,
-) -> str:
-    cleaned = text.strip()
-
-    cleaned = re.sub(
-        r"^[\[\](){}|:;•·ㆍ/\-\\\s]+",
-        "",
-        cleaned,
-    )
-
-    cleaned = re.sub(
-        r"\s+",
-        " ",
-        cleaned,
-    )
-
-    return cleaned.strip()
 
 
 def find_semester_columns(
@@ -278,12 +145,6 @@ def find_semester_columns(
         SemesterColumn
     ] = []
 
-    starting_grade = (
-        1
-        if program_years == 6
-        else 3
-    )
-
     for (
         index,
         (
@@ -296,8 +157,8 @@ def find_semester_columns(
         columns.append(
             SemesterColumn(
                 grade=(
-                    starting_grade
-                    + index // 2
+                    index // 2
+                    + 1
                 ),
                 semester=(
                     index % 2
@@ -335,7 +196,6 @@ def nearest_column(
         distance,
     )
 
-
 def build_white_mask(
     image: np.ndarray,
 ) -> np.ndarray:
@@ -362,11 +222,8 @@ def build_white_mask(
         lower,
         upper,
     )
-
-
 def detect_white_boxes(
     image_path: Path,
-    program_years: int,
 ) -> tuple[
     list[WhiteBox],
     int,
@@ -392,13 +249,6 @@ def detect_white_boxes(
         image_width
         * image_height
     )
-
-    if program_years == 6:
-        min_width_ratio = 0.040
-        max_width_ratio = 0.090
-    else:
-        min_width_ratio = 0.065
-        max_width_ratio = 0.145
 
     mask = build_white_mask(
         image
@@ -492,9 +342,9 @@ def detect_white_boxes(
         )
 
         if not (
-            min_width_ratio
+            MIN_WIDTH_RATIO
             <= width_ratio
-            <= max_width_ratio
+            <= MAX_WIDTH_RATIO
         ):
             continue
 
@@ -677,6 +527,26 @@ def crop_box(
         )
 
 
+def clean_ocr_text(
+    text: str,
+) -> str:
+    text = text.strip()
+
+    text = re.sub(
+        r"^[\[\](){}|:;•·ㆍ/\-\\\s]+",
+        "",
+        text,
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text,
+    )
+
+    return text.strip()
+
+
 def recognize_box(
     crop_path: Path,
 ) -> tuple[
@@ -710,7 +580,7 @@ def recognize_box(
         text,
         confidence,
     ) in ordered:
-        cleaned = clean_course_text(
+        cleaned = clean_ocr_text(
             text
         )
 
@@ -746,26 +616,50 @@ def recognize_box(
     )
 
 
-def extract_flowchart_courses(
-    year: int,
-    program_years: int,
-) -> tuple[
-    Path,
-    list[SemesterColumn],
-    list[FlowchartCourse],
-    int,
-]:
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description=(
+            "교과이수체계도의 "
+            "순백색 과목 박스 내부를 "
+            "검출하고 OCR 결과를 "
+            "확인합니다."
+        )
+    )
+
+    parser.add_argument(
+        "--year",
+        type=int,
+        required=True,
+    )
+
+    parser.add_argument(
+        "--program-years",
+        type=int,
+        choices=[
+            4,
+            6,
+        ],
+        required=True,
+    )
+
+    parser.add_argument(
+        "--save-crops",
+        action="store_true",
+    )
+
+    args = parser.parse_args()
+
     image_path = (
         find_curriculum_flowchart_image(
-            year,
-            program_years,
+            args.year,
+            args.program_years,
         )
     )
 
     columns = (
         find_semester_columns(
             image_path,
-            program_years,
+            args.program_years,
         )
     )
 
@@ -774,19 +668,84 @@ def extract_flowchart_courses(
         image_width,
         image_height,
     ) = detect_white_boxes(
-        image_path,
-        program_years,
+        image_path
     )
 
-    courses: list[
-        FlowchartCourse
-    ] = []
+    print()
+    print(
+        "Curriculum flowchart white-box probe"
+    )
+    print(
+        "------------------------------------"
+    )
+    print(
+        f"year: {args.year}"
+    )
+    print(
+        "program years: "
+        f"{args.program_years}"
+    )
+    print(
+        f"source: {image_path}"
+    )
+    print(
+        "image size: "
+        f"{image_width}x{image_height}"
+    )
+    print(
+        "detected white boxes: "
+        f"{len(boxes)}"
+    )
+    print()
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(
-            temp_dir
+    print(
+        "Semester columns"
+    )
+    print(
+        "----------------"
+    )
+
+    for column in columns:
+        print(
+            f"{column.grade}-"
+            f"{column.semester} "
+            f"x={column.x:0.4f}"
         )
 
+    print()
+
+    if args.save_crops:
+        working_dir = (
+            Path("/tmp")
+            / (
+                "curriculum_flowchart_"
+                f"{args.year}_"
+                f"{args.program_years}year_"
+                "white_boxes"
+            )
+        )
+
+        working_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        temp_context = None
+
+        print(
+            f"crop dir: {working_dir}"
+        )
+        print()
+    else:
+        temp_context = (
+            tempfile.TemporaryDirectory()
+        )
+
+        working_dir = Path(
+            temp_context.name
+        )
+
+    try:
         for (
             index,
             box,
@@ -810,15 +769,11 @@ def extract_flowchart_courses(
                 columns,
             )
 
-            if (
-                column_distance
-                > MAX_COLUMN_DISTANCE
-            ):
-                continue
-
             crop_path = (
-                temp_path
-                / f"box_{index:03d}.png"
+                working_dir
+                / (
+                    f"box_{index:03d}.png"
+                )
             )
 
             crop_box(
@@ -828,43 +783,43 @@ def extract_flowchart_courses(
             )
 
             (
-                course_name,
+                text,
                 confidence,
             ) = recognize_box(
                 crop_path
             )
 
-            if not course_name:
-                continue
-
-            courses.append(
-                FlowchartCourse(
-                    grade=column.grade,
-                    semester=column.semester,
-                    course_name=course_name,
-                    confidence=confidence,
-                    box_x=normalized.x,
-                    box_y=normalized.y,
-                    box_width=normalized.width,
-                    box_height=normalized.height,
-                    column_distance=(
-                        column_distance
-                    ),
+            assignment = (
+                (
+                    f"{column.grade}-"
+                    f"{column.semester}"
                 )
+                if (
+                    column_distance
+                    <= MAX_COLUMN_DISTANCE
+                )
+                else "?"
             )
 
-    courses.sort(
-        key=lambda course: (
-            course.grade,
-            course.semester,
-            -course.box_y,
-            course.box_x,
-        )
-    )
+            print(
+                f"{index:03d} "
+                f"{assignment} "
+                f"x={normalized.x:0.4f} "
+                f"cx={normalized.center_x:0.4f} "
+                f"y={normalized.y:0.4f} "
+                f"w={normalized.width:0.4f} "
+                f"h={normalized.height:0.4f} "
+                f"d={column_distance:0.4f} "
+                f"conf={confidence:0.3f} "
+                f"| {text}"
+            )
+    finally:
+        if (
+            temp_context
+            is not None
+        ):
+            temp_context.cleanup()
 
-    return (
-        image_path,
-        columns,
-        courses,
-        len(boxes),
-    )
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,43 @@
+Curriculum flowchart Vision extraction report
+=============================================
+
+academic year: 2023
+program years: 4
+source image: 23_4년제.jpg
+
+Extraction
+----------
+detected white boxes: 82
+course rows extracted: 82
+low confidence rows: 1
+duplicate position/name rows: 5
+
+Rows by semester
+----------------
+3-1: 11
+3-2: 10
+4-1: 11
+4-2: 14
+5-1: 12
+5-2: 13
+6-1: 6
+6-2: 5
+
+Duplicate position/name rows
+----------------------------
+3-2 | 약학실험 2 | count=2
+4-1 | 약학실험 3 | count=2
+4-2 | 약학실험 4 | count=2
+6-2 | 캡스톤디자인심화실습 1 | count=2
+6-2 | 캡스톤디자인심화실습 2 | count=2
+
+Low confidence rows
+-------------------
+3-1 | 약학통겨 | confidence=0.300
+
+Notes
+-----
+Duplicate rows are preserved because the source flowchart may show the same course in multiple prerequisite groups.
+Course names are OCR results from the flowchart itself and are not corrected from seed or curriculum course data.
+
+RESULT: PASS

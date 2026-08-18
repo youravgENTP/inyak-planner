@@ -1,0 +1,42 @@
+Curriculum flowchart Vision extraction report
+=============================================
+
+academic year: 2025
+program years: 6
+source image: 25_6년제.png
+
+Extraction
+----------
+detected white boxes: 100
+course rows extracted: 100
+low confidence rows: 0
+duplicate position/name rows: 4
+
+Rows by semester
+----------------
+1-1: 3
+1-2: 3
+2-1: 9
+2-2: 10
+3-1: 12
+3-2: 14
+4-1: 11
+4-2: 11
+5-1: 11
+5-2: 11
+6-1: 3
+6-2: 2
+
+Duplicate position/name rows
+----------------------------
+2-1 | 약학실험1 | count=2
+2-2 | 약학실험2 | count=2
+3-1 | 약학실험3 | count=2
+3-2 | 약학실험4 | count=2
+
+Notes
+-----
+Duplicate rows are preserved because the source flowchart may show the same course in multiple prerequisite groups.
+Course names are OCR results from the flowchart itself and are not corrected from seed or curriculum course data.
+
+RESULT: PASS
