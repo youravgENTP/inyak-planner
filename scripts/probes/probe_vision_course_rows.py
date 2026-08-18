@@ -1,25 +1,19 @@
 from __future__ import annotations
 
-def find_pdf(
-    year: int,
-) -> Path:
-    year_dir = (
-        RAW_CURRICULUM_DIR
-        / str(year)
-    )
+import argparse
+import re
+import tempfile
+from pathlib import Path
 
-    pdfs = sorted(
-        year_dir.glob("*.pdf")
-    )
+import fitz
 
-    if len(pdfs) != 1:
-        raise RuntimeError(
-            f"{year}학년도 PDF가 "
-            f"정확히 1개여야 합니다: "
-            f"{pdfs}"
-        )
+from scripts.common.curriculum_vision import (
+    VisionObservation,
+    find_curriculum_pdf,
+    recognize_image,
+    render_page,
+)
 
-    return pdfs[0]
 
 COURSE_CODE_RE = re.compile(
     r"\b(?:ADA|ADB)\d{3}\b"
@@ -32,28 +26,6 @@ GRADE_SEMESTER_RE = re.compile(
 HANGUL_RE = re.compile(
     r"[가-힣]"
 )
-
-
-def find_pdf(
-    year: int,
-) -> Path:
-    year_dir = (
-        RAW_CURRICULUM_DIR
-        / str(year)
-    )
-
-    pdfs = sorted(
-        year_dir.glob("*.pdf")
-    )
-
-    if len(pdfs) != 1:
-        raise RuntimeError(
-            f"{year}학년도 PDF가 "
-            f"정확히 1개여야 합니다: "
-            f"{pdfs}"
-        )
-
-    return pdfs[0]
 
 
 def clean_text(
@@ -85,12 +57,7 @@ def extract_code(
 
 def find_course_anchors(
     observations: list[
-        tuple[
-            float,
-            float,
-            str,
-            float,
-        ]
+        VisionObservation
     ],
 ) -> list[
     tuple[
@@ -151,27 +118,20 @@ def find_course_anchors(
 
 def get_row_observations(
     observations: list[
-        tuple[
-            float,
-            float,
-            str,
-            float,
-        ]
+        VisionObservation
     ],
     anchor_y: float,
     previous_y: float | None,
     next_y: float | None,
 ) -> list[
-    tuple[
-        float,
-        float,
-        str,
-        float,
-    ]
+    VisionObservation
 ]:
     if previous_y is None:
         if next_y is None:
-            upper = anchor_y + 0.02
+            upper = (
+                anchor_y
+                + 0.02
+            )
         else:
             upper = (
                 anchor_y
@@ -188,7 +148,10 @@ def get_row_observations(
 
     if next_y is None:
         if previous_y is None:
-            lower = anchor_y - 0.02
+            lower = (
+                anchor_y
+                - 0.02
+            )
         else:
             lower = (
                 anchor_y
@@ -203,7 +166,9 @@ def get_row_observations(
             + next_y
         ) / 2
 
-    result = []
+    result: list[
+        VisionObservation
+    ] = []
 
     for observation in observations:
         y = observation[0]
@@ -225,12 +190,7 @@ def get_row_observations(
 
 def extract_completion_type(
     observations: list[
-        tuple[
-            float,
-            float,
-            str,
-            float,
-        ]
+        VisionObservation
     ],
 ) -> str:
     for (
@@ -254,12 +214,7 @@ def extract_completion_type(
 
 def extract_course_name(
     observations: list[
-        tuple[
-            float,
-            float,
-            str,
-            float,
-        ]
+        VisionObservation
     ],
 ) -> str:
     competency_phrases = [
@@ -300,28 +255,23 @@ def extract_course_name(
         if x >= 0.67:
             continue
 
-        # 이수구분 제거
         cleaned = re.sub(
             r"\b(?:전필|전선)\b",
             " ",
             cleaned,
         )
 
-        # 교과목 코드 제거
         cleaned = COURSE_CODE_RE.sub(
             " ",
             cleaned,
         )
 
-        # 주전공능력 문구 제거
         for phrase in competency_phrases:
             cleaned = cleaned.replace(
                 phrase,
                 " ",
             )
 
-        # OCR에서 능력의 마지막 '력'이
-        # 별도 block으로 떨어지는 경우 제거
         cleaned = re.sub(
             r"^\s*력\s*$",
             "",
@@ -348,7 +298,6 @@ def extract_course_name(
         ):
             continue
 
-        # 남아 있는 표 구조용 단어는 제외
         if cleaned in {
             "전필",
             "전선",
@@ -364,9 +313,6 @@ def extract_course_name(
             )
         )
 
-        # 교과목명 열에 가까울수록 우선.
-        # 다만 Vision이 여러 셀을 합친 block도
-        # 허용하기 위해 x=0.12부터 본다.
         position_score = (
             2
             if x >= 0.32
@@ -403,12 +349,7 @@ def extract_course_name(
 
 def extract_grade_semester(
     observations: list[
-        tuple[
-            float,
-            float,
-            str,
-            float,
-        ]
+        VisionObservation
     ],
 ) -> tuple[
     int,
@@ -471,26 +412,37 @@ def main() -> None:
         pdf_path
     )
 
-    page = document[
-        args.page - 1
-    ]
+    try:
+        if not (
+            1
+            <= args.page
+            <= document.page_count
+        ):
+            raise ValueError(
+                "PDF 페이지 범위는 "
+                f"1-{document.page_count}입니다."
+            )
 
-    with tempfile.TemporaryDirectory() as temp:
-        image_path = (
-            Path(temp)
-            / "page.png"
-        )
+        page = document[
+            args.page - 1
+        ]
 
-        render_page(
-            page,
-            image_path,
-        )
+        with tempfile.TemporaryDirectory() as temp:
+            image_path = (
+                Path(temp)
+                / "page.png"
+            )
 
-        observations = (
-            recognize_image(
+            render_page(
+                page,
+                image_path,
+            )
+
+            observations = recognize_image(
                 image_path
             )
-        )
+    finally:
+        document.close()
 
     anchors = find_course_anchors(
         observations
@@ -510,7 +462,7 @@ def main() -> None:
         f"page: {args.page}"
     )
     print(
-        f"Vision course anchors: "
+        "Vision course anchors: "
         f"{len(anchors)}"
     )
     print()
@@ -532,7 +484,10 @@ def main() -> None:
 
         next_y = (
             anchors[index + 1][0]
-            if index + 1 < len(anchors)
+            if (
+                index + 1
+                < len(anchors)
+            )
             else None
         )
 

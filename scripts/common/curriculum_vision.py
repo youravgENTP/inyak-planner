@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TypeAlias
 
 import fitz
 
@@ -10,7 +9,7 @@ from scripts.common.data_paths import (
 )
 
 
-VisionObservation: TypeAlias = tuple[
+VisionObservation = tuple[
     float,
     float,
     str,
