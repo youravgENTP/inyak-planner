@@ -243,11 +243,55 @@ def region_text(
         y_end,
     )
 
-    return " ".join(
-        word[4].strip()
-        for word in selected
-    ).strip()
+    if not selected:
+        return ""
 
+    lines: list[list[tuple]] = []
+
+    for word in selected:
+        if not lines:
+            lines.append([word])
+            continue
+
+        current_line = lines[-1]
+
+        current_y = sum(
+            item[1]
+            for item in current_line
+        ) / len(current_line)
+
+        if abs(
+            word[1] - current_y
+        ) <= 2.0:
+            current_line.append(
+                word
+            )
+        else:
+            lines.append(
+                [word]
+            )
+
+    line_texts: list[str] = []
+
+    for line in lines:
+        line.sort(
+            key=lambda word: word[0]
+        )
+
+        text = " ".join(
+            word[4].strip()
+            for word in line
+            if word[4].strip()
+        )
+
+        if text:
+            line_texts.append(
+                text
+            )
+
+    return "".join(
+        line_texts
+    ).strip()
 
 def get_single_code(
     words: list[tuple],
@@ -364,6 +408,196 @@ def normalize_name(
         " ",
         value,
     ).strip()
+
+
+def compact_name(
+    value: str,
+) -> str:
+    return re.sub(
+        r"\s+",
+        "",
+        value,
+    )
+
+
+def load_course_name_lookup(
+    year: int,
+) -> tuple[
+    dict[str, str],
+    set[str],
+]:
+    courses_path = (
+        EXTRACTED_CURRICULUM_DIR
+        / str(year)
+        / "courses.csv"
+    )
+
+    if not courses_path.exists():
+        raise FileNotFoundError(
+            "relation 이름 검증에 필요한 "
+            f"courses.csv가 없습니다: "
+            f"{courses_path}"
+        )
+
+    names_by_code: dict[
+        str,
+        set[str],
+    ] = {}
+
+    with courses_path.open(
+        "r",
+        encoding="utf-8-sig",
+        newline="",
+    ) as file:
+        reader = csv.DictReader(
+            file
+        )
+
+        for row in reader:
+            code = (
+                row.get(
+                    "course_code",
+                    "",
+                )
+                .strip()
+            )
+
+            name = normalize_name(
+                row.get(
+                    "course_name",
+                    "",
+                )
+            )
+
+            if not code or not name:
+                continue
+
+            names_by_code.setdefault(
+                code,
+                set(),
+            ).add(name)
+
+    lookup: dict[str, str] = {}
+    ambiguous_codes: set[str] = set()
+
+    for code, names in (
+        names_by_code.items()
+    ):
+        if len(names) == 1:
+            lookup[code] = next(
+                iter(names)
+            )
+        else:
+            ambiguous_codes.add(
+                code
+            )
+
+    return (
+        lookup,
+        ambiguous_codes,
+    )
+
+
+def reconcile_relation_names(
+    rows: list[RelationRow],
+    course_name_lookup: dict[
+        str,
+        str,
+    ],
+    ambiguous_codes: set[str],
+) -> None:
+    for row in rows:
+        problems: list[str] = []
+
+        sides = [
+            (
+                "구 교과목",
+                "old_course_code",
+                "old_course_name",
+            ),
+            (
+                "신규 교과목",
+                "new_course_code",
+                "new_course_name",
+            ),
+        ]
+
+        for (
+            label,
+            code_attribute,
+            name_attribute,
+        ) in sides:
+            code = getattr(
+                row,
+                code_attribute,
+            )
+
+            parsed_name = getattr(
+                row,
+                name_attribute,
+            )
+
+            if code in ambiguous_codes:
+                problems.append(
+                    f"{label} {code}: "
+                    "courses.csv에 동일 코드의 "
+                    "과목명이 여러 개 존재함"
+                )
+                continue
+
+            reference_name = (
+                course_name_lookup.get(
+                    code
+                )
+            )
+
+            if reference_name is None:
+                # 과거 관계표에만 존재하는 코드일 수 있으므로
+                # reference 부재 자체는 오류로 취급하지 않는다.
+                continue
+
+            if (
+                compact_name(
+                    parsed_name
+                )
+                == compact_name(
+                    reference_name
+                )
+            ):
+                setattr(
+                    row,
+                    name_attribute,
+                    reference_name,
+                )
+                continue
+
+            problems.append(
+                f"{label} {code}: "
+                f"relation='{parsed_name}' / "
+                f"courses='{reference_name}'"
+            )
+
+        if problems:
+            row.needs_review = True
+
+            existing_reason = (
+                row.review_reason.strip()
+            )
+
+            new_reason = "; ".join(
+                problems
+            )
+
+            if existing_reason:
+                row.review_reason = (
+                    existing_reason
+                    + "; "
+                    + new_reason
+                )
+            else:
+                row.review_reason = (
+                    new_reason
+                )
 
 
 def parse_relation_row(
@@ -1054,6 +1288,19 @@ def main() -> None:
         end_page,
     )
 
+    (
+        course_name_lookup,
+        ambiguous_codes,
+    ) = load_course_name_lookup(
+        args.year
+    )
+
+    reconcile_relation_names(
+        rows,
+        course_name_lookup,
+        ambiguous_codes,
+    )
+
     problems = validate_relations(
         rows
     )
@@ -1087,6 +1334,12 @@ def main() -> None:
         == "equivalent"
     )
 
+    review_count = sum(
+        1
+        for row in rows
+        if row.needs_review
+    )
+
     print()
     print(
         "Course relation extraction"
@@ -1111,6 +1364,10 @@ def main() -> None:
     print(
         f"equivalent: "
         f"{equivalent_count}"
+    )
+    print(
+        f"needs review: "
+        f"{review_count}"
     )
     print(
         f"problems: {len(problems)}"
