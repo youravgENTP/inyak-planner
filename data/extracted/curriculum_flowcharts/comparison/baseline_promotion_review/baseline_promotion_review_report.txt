@@ -1,0 +1,163 @@
+Baseline promotion review
+=============================================
+
+Purpose: separate unresolved baseline questions from seed-only reconciliation work.
+
+SUMMARY
+-------
+baseline_review_required: 24
+baseline_supported_seed_issue: 26
+baseline_supported_transition: 26
+seed_only_review: 35
+
+BASELINE REVIEW REQUIRED
+------------------------
+2023 | 내분비계 및 류마티스 질환 약물치료 | baseline=ADB063 | seed=ADB063 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=course_name;no_attribute_change_effective_year
+2023 | 신경생리학 | baseline=ADB004 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+2023 | 약학용어 | baseline=ADB076 | seed=ADB076 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;supported_previous_fields=completion_type,credits;unsupported_fields=grade
+2023 | 일반의약품학 | baseline=ADB084 | seed=ADB084 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;supported_previous_fields=semester;unsupported_fields=grade
+2023 | 조제학 | baseline=ADB077 | seed=ADB077 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade,semester;no_attribute_change_effective_year
+2023 | 종양생물학 | baseline=ADB091 | seed=ADB091 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade;no_attribute_change_effective_year
+2023 | 해부생리학 | baseline=ADB001 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+2024 | AI 의료약학빅데이터 | baseline=ADB053 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+2024 | 감염성 질환 약물치료학 | baseline=ADB069 | seed=ADA147 | source=code_pair | confidence=high
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+2024 | 내분비계 및 류마티스 질환 약물치료 | baseline=ADB063 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+2024 | 무기방사성 의약품학 | baseline=ADB052 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+2024 | 신경생리학 | baseline=ADB004 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+2024 | 신경정신계 및 신장 질환 약물치료학 | baseline=ADB062 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+2024 | 신약개발정보학 | baseline=ADB090 | seed=- | source=code_pair | confidence=high
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+2024 | 심혈관계 질환 약물치료학 | baseline=ADB082 | seed=ADB082 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade,course_name;no_attribute_change_effective_year
+2024 | 약물신호전달학 | baseline=ADB079 | seed=- | source=code_pair | confidence=high
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+2024 | 약업경영학 | baseline=ADB074 | seed=ADA118 | source=code_pair | confidence=high
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+2024 | 의료기관약국예비실습 | baseline=ADB086 | seed=ADA217 | source=code_pair | confidence=high
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+2024 | 의약품허가 | baseline=ADB088 | seed=- | source=code_pair | confidence=high
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+2024 | 의약화학1 | baseline=ADB047 | seed=ADB047 | source=same_code_changed | confidence=medium
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=completion_type;no_attribute_change_effective_year
+2024 | 조제학 | baseline=ADB077 | seed=ADA053 | source=code_pair | confidence=high
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+2024 | 종양생물학 | baseline=ADB091 | seed=- | source=code_pair | confidence=high
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+2024 | 해부생리학 | baseline=ADB001 | seed=- | source=baseline_only | confidence=medium
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+2024 | 호흡기계 및 소화기계 질환 약물치료학 | baseline=ADB071 | seed=ADA145 | source=code_pair | confidence=high
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+
+NON-BLOCKING BASELINE EVIDENCE
+------------------------------
+2022 | 심화실습 1 | baseline_supported_seed_issue
+2022 | 심화실습 2 | baseline_supported_seed_issue
+2022 | 의료기관약국 필수실무실습 1 | baseline_supported_seed_issue
+2022 | 의료기관약국 필수실무실습 2 | baseline_supported_seed_issue
+2022 | 의료기관약국 필수실무실습 3 | baseline_supported_seed_issue
+2022 | 의료기관약국 필수실무실습 4 | baseline_supported_seed_issue
+2022 | 제약산업 필수실무실습 | baseline_supported_seed_issue
+2022 | 지역약국 필수실무실습 1 | baseline_supported_seed_issue
+2022 | 지역약국 필수실무실습 2 | baseline_supported_seed_issue
+2023 | 심화실습 1 | baseline_supported_seed_issue
+2023 | 심화실습 2 | baseline_supported_seed_issue
+2023 | 약무행정실무필수실습 | baseline_supported_seed_issue
+2023 | 약전 및 품질관리학 | baseline_supported_seed_issue
+2023 | 약품면역학 | baseline_supported_seed_issue
+2023 | 약학실험5 | baseline_supported_seed_issue
+2023 | 의료기관약국 필수실무실습 1 | baseline_supported_seed_issue
+2023 | 의료기관약국 필수실무실습 2 | baseline_supported_seed_issue
+2023 | 의료기관약국 필수실무실습 3 | baseline_supported_seed_issue
+2023 | 의료기관약국 필수실무실습 4 | baseline_supported_seed_issue
+2023 | 의약품제조관리학 | baseline_supported_seed_issue
+2023 | 제약산업 필수실무실습 | baseline_supported_seed_issue
+2023 | 지역약국 예비실무실습 | baseline_supported_seed_issue
+2023 | 지역약국 필수실무실습 1 | baseline_supported_seed_issue
+2023 | 지역약국 필수실무실습 2 | baseline_supported_seed_issue
+2023 | 한약제제학 | baseline_supported_seed_issue
+2024 | 약학실험5 | baseline_supported_seed_issue
+2022 | 건강기능식품학 | baseline_supported_transition
+2022 | 바이오의약품학 | baseline_supported_transition
+2022 | 심혈관계 질환 약물치료학 | baseline_supported_transition
+2022 | 약물유전체학 | baseline_supported_transition
+2022 | 약학용어 | baseline_supported_transition
+2022 | 의약정보학과 경제성평가 | baseline_supported_transition
+2022 | 의약품설계학 | baseline_supported_transition
+2022 | 의약화학1 | baseline_supported_transition
+2022 | 임상미생물학 | baseline_supported_transition
+2022 | 임상약학 해설 | baseline_supported_transition
+2023 | 건강기능식품학 | baseline_supported_transition
+2023 | 바이오의약품 분석 | baseline_supported_transition
+2023 | 약용식물학 | baseline_supported_transition
+2023 | 약품생화학2 | baseline_supported_transition
+2023 | 약화학 1 | baseline_supported_transition
+2023 | 약화학 2 | baseline_supported_transition
+2023 | 의약화학1 | baseline_supported_transition
+2023 | 임상면역학 | baseline_supported_transition
+2023 | 임상미생물학 | baseline_supported_transition
+2023 | 천연물의약품학 | baseline_supported_transition
+2024 | 건강기능식품학 | baseline_supported_transition
+2024 | 물리약학2 | baseline_supported_transition
+2024 | 약품생화학2 | baseline_supported_transition
+2024 | 의약품합성학 | baseline_supported_transition
+2024 | 임상면역학 | baseline_supported_transition
+2024 | 천연물의약품학 | baseline_supported_transition
+
+SEED-ONLY REVIEW
+----------------
+2022 | 내분비계 및 류마티스 질환 약물치료학 | seed=ADA148
+2022 | 독성학1 | seed=ADA234
+2022 | 독성학2 | seed=ADA235
+2022 | 동물용의약품학 | seed=ADB089
+2022 | 방제학 | seed=ADB078
+2022 | 신장질환약물치료학 | seed=ADB108
+2022 | 약사와 건강증진 | seed=ADA239
+2022 | 유용천연물소재학 | seed=ADB113
+2022 | 의약품합성학 | seed=ADA198
+2022 | 임상생화학 | seed=ADA183
+2022 | 임상약물동태학 | seed=ADA150
+2022 | 임상영양학 | seed=ADA233
+2022 | 자원생약학 | seed=ADA228
+2022 | 정신신경계질환 약물치료학 | seed=ADB109
+2022 | 제제과학의실습 | seed=ADB111
+2022 | 특수환자군 정밀의료학 | seed=ADA237
+2022 | 항암약물요법1 | seed=ADB103
+2022 | 향장품학 | seed=ADB043
+2022 | 환경보건약학 | seed=ADA236
+2023 | 독성학1 | seed=ADA234
+2023 | 독성학2 | seed=ADA235
+2023 | 동물용의약품학 | seed=ADB089
+2023 | 방제학 | seed=ADB078
+2023 | 신장질환약물치료학 | seed=ADB108
+2023 | 의약품합성학 | seed=ADA198
+2023 | 정신신경계질환 약물치료학 | seed=ADB109
+2023 | 향장품학 | seed=ADB043
+2024 | 나노약학 | seed=-
+2024 | 내분비계 및 류마티스 질환 약물치료학 | seed=ADA148
+2024 | 독성학1 | seed=ADA234
+2024 | 독성학2 | seed=ADA235
+2024 | 동물용의약품학 | seed=ADB089
+2024 | 방제학 | seed=-
+2024 | 생약학개론 | seed=ADB112
+2024 | 향장품학 | seed=ADB043
+
+Interpretation
+--------------
+1. Only baseline_review_required rows are treated as potential blockers to promoting the provisional baseline.
+2. baseline_supported_seed_issue rows strengthen or preserve the baseline and belong to later seed cleanup.
+3. baseline_supported_transition rows represent later operational state and do not alter the immutable historical baseline.
+4. seed_only_review rows are not assumed to belong to or be absent from the cohort baseline without additional evidence.
+5. No data files or databases are modified.

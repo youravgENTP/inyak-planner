@@ -757,28 +757,20 @@ def classify_unpaired(
                     "Do not assign a code automatically."
                 )
 
-            elif (
-                first_year is not None
-                and first_year > year
-            ):
-                classification = (
-                    "legitimate_post_baseline_transition"
-                )
-
-                confidence = "medium"
-
-                evidence = (
-                    "seed_only_course_first_actual_offering_"
-                    f"after_entry_year:{first_year}"
-                )
-
-                action = (
-                    "Likely later curriculum addition. "
-                    "Keep out of immutable baseline; "
-                    "review change metadata in seed."
-                )
-
             else:
+                # seed-only 과목의 최초 실제 개설연도가
+                # 입학연도보다 늦다는 사실만으로는
+                # '후대 교육과정 추가'라고 판정할 수 없다.
+                #
+                # 예:
+                # 2022학번의 5~6학년 과목은
+                # 해당 cohort가 고학년에 도달한
+                # 2026~2027년에 처음 개설될 수도 있다.
+                #
+                # 따라서 baseline counterpart나
+                # 명시적 change metadata 없이
+                # 최초 개설연도만으로 transition을
+                # 확정하지 않는다.
                 classification = (
                     "needs_manual_mapping"
                 )
@@ -788,16 +780,22 @@ def classify_unpaired(
                 if first_year is None:
                     evidence = (
                         "seed_only_course_has_no_actual_"
-                        "offering_history"
+                        "offering_history;"
+                        "no_baseline_counterpart"
                     )
                 else:
                     evidence = (
-                        "seed_only_course_existed_by_or_before_"
-                        f"entry_year:{first_year}"
+                        "seed_only_course_has_actual_"
+                        f"offering_history_from:{first_year};"
+                        "first_offering_year_does_not_prove_"
+                        "post_baseline_addition;"
+                        "no_baseline_counterpart"
                     )
 
                 action = (
-                    "Manual curriculum-change review required."
+                    "Review curriculum provenance or explicit "
+                    "change metadata. Do not infer a later "
+                    "curriculum addition from offering year alone."
                 )
 
             output.append(
@@ -852,6 +850,7 @@ def classify_unpaired(
                 )
             )
 
+        
     return output
 
 
