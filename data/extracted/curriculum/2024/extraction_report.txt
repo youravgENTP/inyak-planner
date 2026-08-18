@@ -1,0 +1,26 @@
+Curriculum extraction report
+============================
+
+academic year: 2024
+source PDF: 2024학년도_약학과_교육과정.pdf
+course table pages: 4-15
+
+Extraction
+----------
+course rows extracted: 189
+parser warnings: 0
+
+Validation
+----------
+rows: 189
+valid course codes: 189
+invalid course codes: 0
+invalid grades: 0
+invalid semesters: 0
+invalid completion types: 0
+missing course names: 0
+invalid credits: 0
+missing source pages: 0
+duplicate extracted rows: 0
+
+RESULT: PASS
