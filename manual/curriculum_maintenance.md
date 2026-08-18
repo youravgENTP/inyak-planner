@@ -109,11 +109,11 @@
 
 Seed 파일:
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 예:
 
-    data/seed/curriculum_2022.csv
+    data/seed/curriculum/curriculum_2022.csv
 
 수정 후 다시:
 
@@ -126,7 +126,7 @@ Seed 파일:
 #### 0.2.5 SQLite 반영
 
     python scripts/import_curriculum.py \
-      data/seed/curriculum_2022.csv
+      data/seed/curriculum/curriculum_2022.csv
 
 정상적으로 완료되면 다음 값을 확인한다.
 
@@ -142,16 +142,16 @@ Seed 파일:
 
     git status
 
-    git diff --stat -- data/seed/curriculum_2022.csv
+    git diff --stat -- data/seed/curriculum/curriculum_2022.csv
 
-    git diff -- data/seed/curriculum_2022.csv
+    git diff -- data/seed/curriculum/curriculum_2022.csv
 
 
 #### 0.2.7 Git 반영
 
 대상 파일만 stage한다.
 
-    git add data/seed/curriculum_2022.csv
+    git add data/seed/curriculum/curriculum_2022.csv
 
 Stage된 내용을 확인한다.
 
@@ -175,7 +175,7 @@ Push:
 `DATABASE_URL`이 개발 DB를 가리키는 상태에서 실행한다.
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace
 
@@ -193,7 +193,7 @@ Push:
 Dry Run 결과가 예상과 일치하면:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace \
       --apply
@@ -253,7 +253,7 @@ PostgreSQL에 접속한 뒤:
 `DATABASE_URL`이 운영 DB를 가리키는 상태에서 실행한다.
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace
 
@@ -276,7 +276,7 @@ PostgreSQL에 접속한 뒤:
 Dry Run 결과가 정상이라면:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace \
       --apply
@@ -383,13 +383,13 @@ Dry Run 결과가 정상이라면:
 
 학번별 교육과정의 기준 파일이다.
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 예:
 
-    data/seed/curriculum_2022.csv
-    data/seed/curriculum_2023.csv
-    data/seed/curriculum_2024.csv
+    data/seed/curriculum/curriculum_2022.csv
+    data/seed/curriculum/curriculum_2023.csv
+    data/seed/curriculum/curriculum_2024.csv
 
 Seed CSV에는 해당 학번의:
 
@@ -502,7 +502,7 @@ Seed를 로컬 DB에 반영하면:
 
 교육과정 작업을 시작할 때는 최소한 다음 파일이 최신 `dev` 기준인지 확인한다.
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
     scripts/audit_curriculum.py
     scripts/import_curriculum.py
     scripts/import_curriculum_postgres.py
@@ -516,7 +516,7 @@ Seed를 로컬 DB에 반영하면:
 
 예를 들어 2022학번을 작업한다면 대상 Seed는:
 
-    data/seed/curriculum_2022.csv
+    data/seed/curriculum/curriculum_2022.csv
 
 이다.
 
@@ -556,7 +556,7 @@ Seed를 로컬 DB에 반영하면:
 
     --entry-year YYYY
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 예를 들어 2024학번을 작업한다면:
 
@@ -565,7 +565,7 @@ Seed를 로컬 DB에 반영하면:
 
 및:
 
-    data/seed/curriculum_2024.csv
+    data/seed/curriculum/curriculum_2024.csv
 
 를 사용한다.
 
@@ -575,11 +575,11 @@ Seed를 로컬 DB에 반영하면:
 
 학번별 전공 교육과정은 다음 Seed CSV에 저장한다.
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 예:
 
-    data/seed/curriculum_2022.csv
+    data/seed/curriculum/curriculum_2022.csv
 
 현재 교육과정 Seed는 다음 19개 컬럼을 사용한다.
 
@@ -1418,7 +1418,7 @@ ADA145에 다시:
 
 Audit 결과를 확인하고 필요한 경우:
 
-    data/seed/curriculum_2022.csv
+    data/seed/curriculum/curriculum_2022.csv
 
 를 수정한다.
 
@@ -1453,7 +1453,7 @@ Audit 결과를 확인하고 필요한 경우:
 Audit은 다음 두 데이터를 비교한다.
 
     교육과정:
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
     실제 개설 이력:
     data/db/inyak.db
@@ -1802,7 +1802,7 @@ Audit 결과만으로 변경 유형이 분명하지 않으면 SQLite의 `courses
 
 Audit과 실제 개설 이력을 확인한 뒤:
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 를 수정한다.
 
@@ -1887,9 +1887,9 @@ Seed를 수정한 뒤 DB 반영 전에 실제 변경 범위를 확인한다.
 
 예:
 
-    git diff --stat -- data/seed/curriculum_2022.csv
+    git diff --stat -- data/seed/curriculum/curriculum_2022.csv
 
-    git diff -- data/seed/curriculum_2022.csv
+    git diff -- data/seed/curriculum/curriculum_2022.csv
 
 예상하지 않은 행이 함께 수정되었거나 파일 전체가 변경된 것처럼 보이면 먼저 원인을 확인한다.
 
@@ -1947,7 +1947,7 @@ Seed 수정이 끝나면 같은 Audit을 다시 실행한다.
     cd /Users/younyung.gene/inyak-planner
 
     python scripts/import_curriculum.py \
-      data/seed/curriculum_2022.csv
+      data/seed/curriculum/curriculum_2022.csv
 
 정상적으로 완료되면 필요에 따라 SQLite에 접속한다.
 
@@ -2091,12 +2091,12 @@ DB에 쓰기 전에 Seed 구조를 검증한다.
 실행 형식:
 
     python scripts/import_curriculum.py \
-      data/seed/curriculum_YYYY.csv
+      data/seed/curriculum/curriculum_YYYY.csv
 
 예: 2024학번
 
     python scripts/import_curriculum.py \
-      data/seed/curriculum_2024.csv
+      data/seed/curriculum/curriculum_2024.csv
 
 
 #### 4.2.1 정상 출력
@@ -2371,13 +2371,13 @@ SQLite 검증까지 끝났으면 Git에 반영한다.
 
 Seed 변경 확인:
 
-    git diff --stat -- data/seed/curriculum_2022.csv
+    git diff --stat -- data/seed/curriculum/curriculum_2022.csv
 
-    git diff -- data/seed/curriculum_2022.csv
+    git diff -- data/seed/curriculum/curriculum_2022.csv
 
 대상 Seed만 stage:
 
-    git add data/seed/curriculum_2022.csv
+    git add data/seed/curriculum/curriculum_2022.csv
 
 Stage 결과 확인:
 
@@ -2432,7 +2432,7 @@ Git에 반영하기 전에 어떤 파일이 실제로 변경되었는지 먼저 
 
 예:
 
-    modified:   data/seed/curriculum_2022.csv
+    modified:   data/seed/curriculum/curriculum_2022.csv
     modified:   web/src/...
     untracked:  ...
 
@@ -2451,11 +2451,11 @@ Git에 반영하기 전에 어떤 파일이 실제로 변경되었는지 먼저 
 
 예:
 
-    git diff --stat -- data/seed/curriculum_2022.csv
+    git diff --stat -- data/seed/curriculum/curriculum_2022.csv
 
 전체 변경 내용:
 
-    git diff -- data/seed/curriculum_2022.csv
+    git diff -- data/seed/curriculum/curriculum_2022.csv
 
 다음을 확인한다.
 
@@ -2485,7 +2485,7 @@ SQLite importer를 실행하면 로컬:
 
 Git에 저장되는 기준 데이터는:
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 이다.
 
@@ -2510,15 +2510,15 @@ Git에 저장되는 기준 데이터는:
 
 예:
 
-    git add data/seed/curriculum_2022.csv
+    git add data/seed/curriculum/curriculum_2022.csv
 
 여러 학번을 의도적으로 동시에 수정했다면 각각 명시할 수 있다.
 
 예:
 
     git add \
-      data/seed/curriculum_2022.csv \
-      data/seed/curriculum_2023.csv
+      data/seed/curriculum/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2023.csv
 
 하지만 교육과정 유지보수는 가능한 한 한 학번씩 진행하는 것을 기본으로 한다.
 
@@ -2530,7 +2530,7 @@ Audit이나 importer 자체를 수정한 작업이라면 필요한 스크립트�
 예:
 
     git add \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       scripts/audit_curriculum.py
 
 스크립트를 수정하지 않았다면 Seed 작업에 스크립트 파일을 포함할 필요가 없다.
@@ -2710,7 +2710,7 @@ Dry Run:
     cd /Users/younyung.gene/inyak-planner
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace
 
@@ -2734,7 +2734,7 @@ Dry Run:
 Dry Run이 정상이라면:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace \
       --apply
@@ -2805,7 +2805,7 @@ Orphan 확인:
 Dry Run:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace
 
@@ -2815,7 +2815,7 @@ Dry Run:
 Dry Run이 개발에서 검증한 결과와 일치하면:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace \
       --apply
@@ -2939,13 +2939,13 @@ PostgreSQL에 해당 `entry_year`가 전혀 존재하지 않는 신규 학번이
 예:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_YYYY.csv \
+      data/seed/curriculum/curriculum_YYYY.csv \
       --project-ref PROJECT_REF
 
 Dry Run 확인 후:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_YYYY.csv \
+      data/seed/curriculum/curriculum_YYYY.csv \
       --project-ref PROJECT_REF \
       --apply
 
@@ -2964,7 +2964,7 @@ Dry Run 확인 후:
     export DATABASE_URL='개발 PostgreSQL 연결 문자열'
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace
 
@@ -3076,7 +3076,7 @@ Importer는 DELETE 예정인 `curriculum_courses.id`를:
 Dry Run 계획이 예상과 일치하면:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace \
       --apply
@@ -3288,7 +3288,7 @@ SQLite importer와 PostgreSQL importer가 출력한 값과 비교한다.
 Dry Run:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace
 
@@ -3352,7 +3352,7 @@ Dry Run:
 Dry Run을 확인한 뒤:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref alkamigyftmalimqoixa \
       --replace \
       --apply
@@ -3771,7 +3771,7 @@ CSV 헤더만 있고 실제 데이터 행이 없는 경우이다.
 
 대상 파일을 잘못 지정하지 않았는지 확인한다.
 
-    ls -l data/seed/curriculum_YYYY.csv
+    ls -l data/seed/curriculum/curriculum_YYYY.csv
 
 
 #### 7.2.3 `한 번에 하나의 입학년도만 import할 수 있습니다`
@@ -3780,7 +3780,7 @@ CSV 헤더만 있고 실제 데이터 행이 없는 경우이다.
 
 확인:
 
-    cut -d',' -f1 data/seed/curriculum_2022.csv \
+    cut -d',' -f1 data/seed/curriculum/curriculum_2022.csv \
       | sort \
       | uniq -c
 
@@ -4047,7 +4047,7 @@ SQLite DB는 존재하지만 스키마가 적용되지 않은 경우이다.
 예:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref PROJECT_REF \
       --replace
 
@@ -4246,7 +4246,7 @@ Seed 수정 후:
 다시:
 
     python scripts/import_curriculum.py \
-      data/seed/curriculum_2022.csv
+      data/seed/curriculum/curriculum_2022.csv
 
 를 실행한 뒤 SQL 검증을 반복한다.
 
@@ -4258,7 +4258,7 @@ PostgreSQL Dry Run부터 다시 진행한다.
 개발:
 
     python scripts/import_curriculum_postgres.py \
-      data/seed/curriculum_2022.csv \
+      data/seed/curriculum/curriculum_2022.csv \
       --project-ref rkunrjwetsnonwnmatec \
       --replace
 
@@ -4299,7 +4299,7 @@ Dry Run에서 차이를 확인한 뒤 Apply 여부를 결정한다.
 
 교육과정 내용의 기준:
 
-    data/seed/curriculum_YYYY.csv
+    data/seed/curriculum/curriculum_YYYY.csv
 
 실제 개설 이력의 기준:
 

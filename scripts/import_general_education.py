@@ -3,8 +3,8 @@
 Run from the project root:
 
     python scripts/import_general_education.py \
-        data/seed/general_education_requirements_2024.csv \
-        data/seed/general_education_areas_2024.csv
+        data/seed/genera_education/general_education_requirements_2024.csv \
+        data/seed/genera_education/general_education_areas_2024.csv
 
 The import replaces only the general-education rows for the
 entry year contained in the CSV files.

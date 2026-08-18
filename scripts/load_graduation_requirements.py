@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from data_paths import (
+    DATABASE_PATH,
+    GRADUATION_REQUIREMENTS_PATH,
+)
+
 import csv
 import sqlite3
 from pathlib import Path
@@ -7,19 +12,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-CSV_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "reference"
-    / "graduation_requirements.csv"
-)
-
-DATABASE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "inyak.db"
-)
+CSV_PATH = GRADUATION_REQUIREMENTS_PATH
 
 SCHEMA_PATH = (
     PROJECT_ROOT

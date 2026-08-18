@@ -10,11 +10,16 @@ This script:
 2. Looks up actual offering history from data/db/inyak.db.
 3. Uses the most recently offered matching course code as the representative code.
 4. Records older codes and naming differences in notes.
-5. Writes data/seed/curriculum_2024.csv.
+5. Writes data/seed/curriculum/curriculum_2024.csv.
 6. Verifies that required credits total 116.
 """
 
 from __future__ import annotations
+
+from data_paths import (
+    DATABASE_PATH,
+    curriculum_seed_path,
+)
 
 import csv
 import re
@@ -23,9 +28,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DB_PATH = PROJECT_ROOT / "data" / "db" / "inyak.db"
-OUTPUT_PATH = PROJECT_ROOT / "data" / "seed" / "curriculum_2024.csv"
+DB_PATH = DATABASE_PATH
+OUTPUT_PATH = curriculum_seed_path(2024)
 
 ENTRY_YEAR = 2024
 EXPECTED_COURSE_COUNT = 97

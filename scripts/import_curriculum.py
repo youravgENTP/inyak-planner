@@ -2,7 +2,7 @@
 
 Run from the project root:
 
-    python scripts/import_curriculum.py data/seed/curriculum_2024.csv
+    python scripts/import_curriculum.py data/seed/curriculum/curriculum_2024.csv
 
 The import replaces only the curriculum rows for the entry year contained
 in the CSV. It never modifies the crawled `courses` table.

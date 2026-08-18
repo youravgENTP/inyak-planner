@@ -9,14 +9,14 @@ replaced. Actual writes require --apply.
 Run a dry run first:
 
     python scripts/import_curriculum_postgres.py \
-        data/seed/curriculum_2024.csv \
+        data/seed/curriculum/curriculum_2024.csv \
         --project-ref PROJECT_REF \
         --replace
 
 Then apply:
 
     python scripts/import_curriculum_postgres.py \
-        data/seed/curriculum_2024.csv \
+        data/seed/curriculum/curriculum_2024.csv \
         --project-ref PROJECT_REF \
         --replace \
         --apply

@@ -2,20 +2,31 @@ from __future__ import annotations
 
 import argparse
 import csv
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 from server.database import (
     connect_database,
 )
 
+from data_paths import (
+    GENERAL_EDUCATION_COURSE_MAPPINGS_PATH,
+)
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+from data_paths import (
+    GENERAL_EDUCATION_COURSE_MAPPINGS_PATH,
+)
 
 DEFAULT_INPUT_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "general_education_course_mappings.csv"
+    GENERAL_EDUCATION_COURSE_MAPPINGS_PATH
 )
 
 REQUIRED_COLUMNS = {
@@ -384,7 +395,8 @@ def main() -> None:
         help=(
             "CSV 파일 경로 "
             "(기본값: "
-            "data/general_education_course_mappings.csv)"
+            "data/seed/general_education/"
+            "general_education_course_mappings.csv)"
         ),
     )
 

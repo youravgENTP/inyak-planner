@@ -13,13 +13,13 @@ The script:
 Example:
 
     python scripts/sync_curriculum_postgres.py \
-        data/seed/curriculum_2023.csv \
+        data/seed/curriculum/curriculum_2023.csv \
         --project-ref PROJECT_REF
 
 Apply:
 
     python scripts/sync_curriculum_postgres.py \
-        data/seed/curriculum_2023.csv \
+        data/seed/curriculum/curriculum_2023.csv \
         --project-ref PROJECT_REF \
         --apply
 """

@@ -34,16 +34,16 @@
 
 새로 만들 파일:
 
-data/seed/curriculum_2027.csv
+data/seed/curriculum/curriculum_2027.csv
 
-data/seed/general_education_requirements_2027.csv
+data/seed/general_education/general_education_requirements_2027.csv
 
-data/seed/general_education_areas_2027.csv
+data/seed/general_education/general_education_areas_2027.csv
 
 
 수정할 기존 파일:
 
-data/reference/graduation_requirements.csv
+data/seed/graduation/graduation_requirements.csv
 
 
 현재 전공 교육과정 importer:
@@ -74,7 +74,7 @@ scripts/import_general_education.py
 4. 전공 교육과정 CSV 만들기
 ==================================================
 
-만들어야하는 파일 : data/seed/curriculum_학년도.csv
+만들어야하는 파일 : data/seed/curriculum/curriculum_학년도.csv
 
 ==================================================
 5. curriculum_2027.csv 형식
@@ -227,7 +227,7 @@ ls -lh data/db/inyak.db
 
 20nn학번 import:
 
-python scripts/import_curriculum.py data/seed/curriculum_20nn.csv
+python scripts/import_curriculum.py data/seed/curriculum/curriculum_20nn.csv
 
 
 정상 출력 예시:
@@ -361,12 +361,12 @@ python scripts/audit_curriculum_credits.py
 
 파일:
 
-data/reference/graduation_requirements.csv
+data/seed/graduation/graduation_requirements.csv
 
 
 열기:
 
-code data/reference/graduation_requirements.csv
+code data/seed/graduation/graduation_requirements.csv
 
 
 헤더:
@@ -400,7 +400,7 @@ python scripts/load_graduation_requirements.py
 
 항상 다음 파일을 읽는다:
 
-data/reference/graduation_requirements.csv
+data/seed/graduation/graduation_requirements.csv
 
 
 대상 DB:
@@ -445,24 +445,24 @@ ORDER BY entry_year;
 
 필요한 새 파일:
 
-data/seed/general_education_requirements_2027.csv
+data/seed/general_education/general_education_requirements_2027.csv
 
-data/seed/general_education_areas_2027.csv
+data/seed/general_education/general_education_areas_2027.csv
 
 
 형식 참고용 복사:
 
-cp   data/seed/general_education_requirements_2024.csv   data/seed/general_education_requirements_2027.csv
+cp   data/seed/general_education/general_education_requirements_2024.csv   data/seed/general_education/general_education_requirements_2027.csv
 
 
-cp   data/seed/general_education_areas_2024.csv   data/seed/general_education_areas_2027.csv
+cp   data/seed/general_education/general_education_areas_2024.csv   data/seed/general_education/general_education_areas_2027.csv
 
 
 파일 열기:
 
-code data/seed/general_education_requirements_2027.csv
+code data/seed/general_education/general_education_requirements_2027.csv
 
-code data/seed/general_education_areas_2027.csv
+code data/seed/general_education/general_education_areas_2027.csv
 
 
 ==================================================
@@ -545,7 +545,7 @@ display_order
 
 실행:
 
-python scripts/import_general_education.py   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv
+python scripts/import_general_education.py   data/seed/general_education/general_education_requirements_2027.csv   data/seed/general_education/general_education_areas_2027.csv
 
 
 대상 DB:
@@ -601,7 +601,7 @@ ORDER BY ger.display_order, gea.display_order;
 
 현재 별도 파일:
 
-data/general_education_course_mappings.csv
+data/seed/general_education/general_education_course_mappings.csv
 
 
 관련 스크립트:
@@ -817,28 +817,28 @@ git status
 
 예상 변경 파일:
 
-data/seed/curriculum_2027.csv
+data/seed/curriculum/curriculum_2027.csv
 
-data/seed/general_education_requirements_2027.csv
+data/seed/general_education/general_education_requirements_2027.csv
 
-data/seed/general_education_areas_2027.csv
+data/seed/general_education/general_education_areas_2027.csv
 
-data/reference/graduation_requirements.csv
+data/seed/graduation/graduation_requirements.csv
 
 
 기존 파일 diff:
 
-git diff -- data/reference/graduation_requirements.csv
+git diff -- data/seed/graduation/graduation_requirements.csv
 
 
 새 파일 직접 확인:
 
-cat data/seed/curriculum_2027.csv
+cat data/seed/curriculum/curriculum_2027.csv
 
 
 또는:
 
-code data/seed/curriculum_2027.csv
+code data/seed/curriculum/curriculum_2027.csv
 
 
 ==================================================
@@ -850,7 +850,7 @@ code data/seed/curriculum_2027.csv
 
 실행:
 
-git add --   data/seed/curriculum_2027.csv   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv   data/reference/graduation_requirements.csv
+git add --   data/seed/curriculum/curriculum_2027.csv   data/seed/general_education/general_education_requirements_2027.csv   data/seed/general_education/general_education_areas_2027.csv   data/seed/graduation/graduation_requirements.csv
 
 
 확인:
@@ -1010,17 +1010,17 @@ import 전후 row count 출력
 
 현재 GitHub dev의 data/seed에서 확인되는 파일:
 
-data/seed/curriculum_2023.csv
+data/seed/curriculum/curriculum_2023.csv
 
-data/seed/curriculum_2024.csv
+data/seed/curriculum/curriculum_2024.csv
 
-data/seed/general_education_requirements_2023.csv
+data/seed/general_education/general_education_requirements_2023.csv
 
-data/seed/general_education_requirements_2024.csv
+data/seed/general_education/general_education_requirements_2024.csv
 
-data/seed/general_education_areas_2023.csv
+data/seed/general_education/general_education_areas_2023.csv
 
-data/seed/general_education_areas_2024.csv
+data/seed/general_education/general_education_areas_2024.csv
 
 
 현재 graduation_requirements.csv에는
@@ -1132,7 +1132,7 @@ git status
 
 전공 교육과정 import:
 
-python scripts/import_curriculum.py data/seed/curriculum_2027.csv
+python scripts/import_curriculum.py data/seed/curriculum/curriculum_2027.csv
 
 
 교육과정 audit:
@@ -1147,7 +1147,7 @@ python scripts/load_graduation_requirements.py
 
 교양요건 import:
 
-python scripts/import_general_education.py   data/seed/general_education_requirements_2027.csv   data/seed/general_education_areas_2027.csv
+python scripts/import_general_education.py   data/seed/general_education/general_education_requirements_2027.csv   data/seed/general_education/general_education_areas_2027.csv
 
 
 SQLite 확인:
