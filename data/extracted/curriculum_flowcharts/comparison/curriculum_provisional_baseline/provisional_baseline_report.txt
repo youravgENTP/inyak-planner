@@ -1,0 +1,68 @@
+Curriculum provisional cohort baseline report
+=============================================
+
+This is a provisional cohort baseline, not the final immutable baseline.
+Target: six-year pharmacy cohorts entering in 2022, 2023, and 2024.
+
+Elective-credit totals are descriptive only.
+They are NOT validated against the 79-credit graduation minimum.
+Only required-major credits are used as a hard total constraint.
+
+2022
+----
+source rows: 175
+baseline rows: 93
+excluded source rows: 82
+baseline total credits: 216
+baseline 전필 credits: 118
+baseline 전선 credits: 98 (descriptive only)
+
+2023
+----
+source rows: 180
+baseline rows: 95
+excluded source rows: 85
+baseline total credits: 220
+baseline 전필 credits: 118
+baseline 전선 credits: 102 (descriptive only)
+
+2024
+----
+source rows: 189
+baseline rows: 99
+excluded source rows: 90
+baseline total credits: 227
+baseline 전필 credits: 118
+baseline 전선 credits: 109 (descriptive only)
+
+MANUAL OVERRIDES
+----------------
+2022 | 4-2 | ADB067 | 약학실험5 | include_six_year | manual_required_credit_total_constraint:six_year_required_117_plus_ADB067_1_equals_118
+2023 | 4-2 | ADB067 | 약학실험5 | include_six_year | manual_required_credit_total_constraint:six_year_required_117_plus_ADB067_1_equals_118
+2024 | 4-2 | ADB067 | 약학실험5 | include_six_year | manual_cross_year_continuity_and_required_credit_total_constraint
+2024 | 3-1 | ADB028 | 의약품합성학1 | exclude_from_cohort | manual_curriculum_change:pharmaceutical_synthesis_1_2_replaced_by_ADA198
+2024 | 3-2 | ADB038 | 의약품합성학2 | exclude_from_cohort | manual_curriculum_change:pharmaceutical_synthesis_1_2_replaced_by_ADA198
+2024 | 5-1 | ADB070 | 항암약물요법 | exclude_from_cohort | manual_actual_offering_history_and_required_credit_total_constraint:ADB070_not_offered_2022_2026_and_ADB103_offered_from_2024
+
+FINAL EXCLUSION STATUS
+----------------------
+confirmed: 106
+conflict: 6
+paired_unknown: 74
+probable: 48
+unresolved: 23
+
+Rules
+-----
+1. Scenario B six_year or both is included in the cohort baseline.
+2. Scenario B four_year is excluded.
+3. Scenario B unassigned rows remain excluded unless a reviewed manual override exists.
+4. Backward-support and pair-closure evidence are inherited from the already-reviewed Scenario B artifact.
+5. ADB067 약학실험5 is manually included for 2022-2024.
+6. 2024 ADB028 and ADB038 are excluded because 의약품합성학1/2 were replaced by integrated ADA198 의약품합성학.
+7. 2024 ADB070 is excluded based on reviewed actual offering history plus the required-credit total constraint; ADB103 remains included.
+8. 2022-2024 전필 must each total exactly 118 credits or this script fails.
+9. The 79-credit elective requirement is a minimum graduation requirement, not a total curriculum-credit constraint.
+10. Source extracted CSVs, decision artifacts, seed data, data/baseline, and databases are not modified.
+11. Output curriculum CSVs retain the exact 19-column curriculum schema.
+12. entry_year is populated only here because this stage creates interpreted cohort snapshots.
