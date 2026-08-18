@@ -1,0 +1,300 @@
+Curriculum generation row-evidence report
+=============================================
+
+source years: 2022, 2023, 2024, 2025
+PDF rows analyzed: 640
+
+2022
+----
+rows: 175
+four_year: 53
+six_year: 65
+both: 1
+ambiguous: 42
+unresolved: 14
+
+2023
+----
+rows: 180
+four_year: 51
+six_year: 69
+both: 0
+ambiguous: 48
+unresolved: 12
+
+2024
+----
+rows: 189
+four_year: 0
+six_year: 73
+both: 0
+ambiguous: 44
+unresolved: 72
+
+2025
+----
+rows: 96
+four_year: 0
+six_year: 87
+both: 0
+ambiguous: 0
+unresolved: 9
+
+AMBIGUOUS ROWS
+--------------
+count: 134
+2022 | 4-1 | ADA102 | 의약화학 1 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADB050 | 건강기능식품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADA182 | 건강기능식품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADB047 | 의약화학1 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADB048 | 천연물의약품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADA122 | 천연물의약품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADA120 | 향장품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-1 | ADB043 | 향장품학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-2 | ADB057 | 생물약제학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-2 | ADA033 | 생물약제학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-2 | ADA086 | 약물동태학 | group=2 | 4year=yes | 6year=yes
+2022 | 4-2 | ADB058 | 약물동태학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-1 | ADA115 | 지역약국 예비실무실습 | group=2 | 4year=yes | 6year=yes
+2022 | 5-1 | ADB075 | 지역약국 예비실무실습 | group=2 | 4year=yes | 6year=yes
+2022 | 5-1 | ADB072 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2022 | 5-1 | ADA171 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2022 | 5-2 | ADA174 | 약무행정실무필수실습 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADB087 | 약무행정실무필수실습 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADB080 | 한약제제학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADA140 | 한약제제학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADA121 | 동물용의약품학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADB089 | 동물용의약품학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADA167 | 약전 및 품질관리학 | group=2 | 4year=yes | 6year=yes
+2022 | 5-2 | ADB081 | 약전 및 품질관리학 | group=2 | 4year=yes | 6year=yes
+2022 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB097 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADA218 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2022 | 6-1 | ADB092 | 지역약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADA226 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADB099 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADB100 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADA227 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2022 | 6-2 | ADB098 | 지역약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+2023 | 4-1 | ADA102 | 의약화학 1 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADB050 | 건강기능식품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADA182 | 건강기능식품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADA229 | 나노약학 | group=2 | 4year=no | 6year=yes
+2023 | 4-1 | ADB054 | 나노약학 | group=2 | 4year=no | 6year=yes
+2023 | 4-1 | ADB047 | 의약화학1 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADB048 | 천연물의약품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADA122 | 천연물의약품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADB043 | 향장품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-1 | ADA120 | 향장품학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADA103 | 의약화학 2 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADA230 | 법과학 | group=2 | 4year=no | 6year=yes
+2023 | 4-2 | ADB061 | 법과학 | group=2 | 4year=no | 6year=yes
+2023 | 4-2 | ADB057 | 생물약제학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADA033 | 생물약제학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADA086 | 약물동태학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADB058 | 약물동태학 | group=2 | 4year=yes | 6year=yes
+2023 | 4-2 | ADB059 | 의약화학2 | group=2 | 4year=yes | 6year=yes
+2023 | 5-1 | ADA115 | 지역약국 예비실무실습 | group=2 | 4year=yes | 6year=yes
+2023 | 5-1 | ADB075 | 지역약국 예비실무실습 | group=2 | 4year=yes | 6year=yes
+2023 | 5-1 | ADA171 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2023 | 5-1 | ADB072 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2023 | 5-2 | ADB087 | 약무행정실무필수실습 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADA174 | 약무행정실무필수실습 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADA140 | 한약제제학 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADB080 | 한약제제학 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADA121 | 동물용의약품학 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADB089 | 동물용의약품학 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADA167 | 약전 및 품질관리학 | group=2 | 4year=yes | 6year=yes
+2023 | 5-2 | ADB081 | 약전 및 품질관리학 | group=2 | 4year=yes | 6year=yes
+2023 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB097 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADA218 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2023 | 6-1 | ADB092 | 지역약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADA226 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADB099 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADB100 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADA227 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2023 | 6-2 | ADB098 | 지역약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADA102 | 의약화학 1 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADA229 | 나노약학 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADB054 | 나노약학 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADB047 | 의약화학1 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADB048 | 천연물의약품학 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADA122 | 천연물의약품학 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADA120 | 향장품학 | group=2 | 4year=no | 6year=yes
+2024 | 4-1 | ADB043 | 향장품학 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADA103 | 의약화학 2 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADB057 | 생물약제학 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADA033 | 생물약제학 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADA086 | 약물동태학 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADB058 | 약물동태학 | group=2 | 4year=no | 6year=yes
+2024 | 4-2 | ADB059 | 의약화학2 | group=2 | 4year=no | 6year=yes
+2024 | 5-1 | ADA115 | 지역약국 예비실무실습 | group=2 | 4year=no | 6year=yes
+2024 | 5-1 | ADB075 | 지역약국 예비실무실습 | group=2 | 4year=no | 6year=yes
+2024 | 5-1 | ADA171 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2024 | 5-1 | ADB072 | 의약품제조관리학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADA174 | 약무행정실무필수실습 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADB087 | 약무행정실무필수실습 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADB080 | 한약제제학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADA140 | 한약제제학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADA121 | 동물용의약품학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADB089 | 동물용의약품학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADA167 | 약전 및 품질관리학 | group=2 | 4year=no | 6year=yes
+2024 | 5-2 | ADB081 | 약전 및 품질관리학 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB097 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA218 | 제약산업 필수실무실습 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | group=2 | 4year=no | 6year=yes
+2024 | 6-1 | ADB092 | 지역약국 필수실무실습1 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADA226 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADB099 | 심화실습 1 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADB100 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADA227 | 심화실습 2 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | group=2 | 4year=no | 6year=yes
+2024 | 6-2 | ADB098 | 지역약국 필수실무실습2 | group=2 | 4year=no | 6year=yes
+
+UNRESOLVED ROWS
+---------------
+count: 107
+2022 | 3-1 | ADA223 | 상담지도 1
+2022 | 3-2 | ADA224 | 상담지도 II
+2022 | 3-2 | ADA092 | 신경생리학
+2022 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료
+2022 | 4-2 | ADA208 | 감염미생물학
+2022 | 4-2 | ADB067 | 약학실험5
+2022 | 4-2 | ADB073 | 의약정보학과 경제성평가
+2022 | 5-1 | ADB078 | 방제학
+2022 | 5-1 | ADB076 | 약학용어
+2022 | 5-1 | ADB077 | 조제학
+2022 | 5-2 | ADB086 | 의료기관약국예비실습
+2022 | 5-2 | ADA225 | 바이오의약품학
+2022 | 5-2 | ADB082 | 심혈관계 질환 약물치료학
+2022 | 5-2 | ADB084 | 일반의약품학
+2023 | 3-1 | ADA203 | 약용식물학
+2023 | 3-2 | ADA189 | 바이러스학
+2023 | 3-2 | ADA092 | 신경생리학
+2023 | 3-2 | ADA228 | 자원생약학
+2023 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료
+2023 | 4-1 | ADA063 | 약물유전체학
+2023 | 4-2 | ADA208 | 감염미생물학
+2023 | 4-2 | ADB067 | 약학실험5
+2023 | 5-1 | ADB078 | 방제학
+2023 | 5-2 | ADB086 | 의료기관약국예비실습
+2023 | 5-2 | ADA225 | 바이오의약품학
+2023 | 5-2 | ADB082 | 심혈관계 질환 약물치료학
+2024 | 3-1 | ADA002 | 면역학
+2024 | 3-1 | ADA076 | 물리약학 1
+2024 | 3-1 | ADA031 | 약품분석화학 1
+2024 | 3-1 | ADA042 | 약품생화학 1
+2024 | 3-1 | ADA201 | 약학실험 1
+2024 | 3-1 | ADB028 | 의약품합성학1
+2024 | 3-1 | ADA199 | 무기 및 방사성 의약품학
+2024 | 3-1 | ADA212 | 약사윤리와 진로 적응
+2024 | 3-1 | ADA203 | 약용식물학
+2024 | 3-1 | ADA051 | 약학통계
+2024 | 3-1 | ADA080 | 약화학
+2024 | 3-1 | ADA022 | 해부생리학
+2024 | 3-2 | ADA041 | 물리약학 2
+2024 | 3-2 | ADA074 | 약품분석화학 2
+2024 | 3-2 | ADA012 | 약품생화학 2
+2024 | 3-2 | ADA195 | 약학실험 2
+2024 | 3-2 | ADB038 | 의약품합성학2
+2024 | 3-2 | ADA189 | 바이러스학
+2024 | 3-2 | ADA006 | 병태생리학
+2024 | 3-2 | ADA092 | 신경생리학
+2024 | 3-2 | ADA196 | 약품기기분석학
+2024 | 3-2 | ADA181 | 의약분자생물학
+2024 | 3-2 | ADA197 | 의약품설계학
+2024 | 4-1 | ADA193 | 보건사회약학
+2024 | 4-1 | ADA065 | 생약학 1
+2024 | 4-1 | ADA030 | 약물학 1
+2024 | 4-1 | ADA104 | 약품 미생물학
+2024 | 4-1 | ADA184 | 약학실험 3
+2024 | 4-1 | ADA186 | 제제과학 1
+2024 | 4-1 | ADB053 | AI 의료약학빅데이터
+2024 | 4-1 | ADB050 | 건강기능식품학
+2024 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료
+2024 | 4-1 | ADB052 | 무기방사성 의약품학
+2024 | 4-1 | ADA063 | 약물유전체학
+2024 | 4-2 | ADA208 | 감염미생물학
+2024 | 4-2 | ADA055 | 생약학 2
+2024 | 4-2 | ADA001 | 약물학 2
+2024 | 4-2 | ADA192 | 약학실험 4
+2024 | 4-2 | ADB067 | 약학실험5
+2024 | 4-2 | ADA187 | 제제과학 2
+2024 | 4-2 | ADA230 | 법과학
+2024 | 4-2 | ADB061 | 법과학
+2024 | 4-2 | ADA136 | 심혈관계 질환 약물치료학
+2024 | 4-2 | ADA204 | 의약정보학과 커뮤니케이션
+2024 | 4-2 | ADA183 | 임상생화학
+2024 | 4-2 | ADA137 | 임상약학 해설
+2024 | 4-2 | ADA232 | 임상의약정보학
+2024 | 5-1 | ADA209 | 감염질환을 위한 항생물질학
+2024 | 5-1 | ADB062 | 신경정신계 및 신장 질환 약물치료학
+2024 | 5-1 | ADA217 | 의료기관약국 예비실무실습
+2024 | 5-1 | ADA206 | 의약품 경제성평가
+2024 | 5-1 | ADA200 | 제제과학실습
+2024 | 5-1 | ADB070 | 항암약물요법
+2024 | 5-1 | ADA202 | 항암약물요법 및 일반의약품약물요법
+2024 | 5-1 | ADB078 | 방제학
+2024 | 5-1 | ADA144 | 신경정신계질환 및 신장질환 약물치료학
+2024 | 5-1 | ADA132 | 예방약학 1
+2024 | 5-1 | ADA211 | 임상미생물학
+2024 | 5-1 | ADA150 | 임상약물동태학
+2024 | 5-1 | ADA145 | 호흡기계 및 소화기계 질환 약물치료학
+2024 | 5-2 | ADA147 | 감염성 질환 약물치료학
+2024 | 5-2 | ADA148 | 내분비계 및 류마티스 질환 약물치료학
+2024 | 5-2 | ADA194 | 보건의약관계법규
+2024 | 5-2 | ADB086 | 의료기관약국예비실습
+2024 | 5-2 | ADA190 | 임상면역학
+2024 | 5-2 | ADA045 | 독성학
+2024 | 5-2 | ADA225 | 바이오의약품학
+2024 | 5-2 | ADA191 | 신약개발임상시험
+2024 | 5-2 | ADB082 | 심혈관계 질환 약물치료학
+2024 | 5-2 | ADA118 | 약업경영학
+2024 | 5-2 | ADA109 | 예방약학 2
+2024 | 5-2 | ADA053 | 조제학
+2025 | 4-1 | ADB109 | 정신신경계질환 약물치료학
+2025 | 4-2 | ADB083 | 임상약학 해설
+2025 | 4-2 | ADB082 | 심혈관계 질환 약물치료학
+2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학
+2025 | 5-1 | ADA200 | 제제과학실습
+2025 | 5-1 | ADA132 | 예방약학 1
+2025 | 5-2 | ADA194 | 보건의약관계법규
+2025 | 5-2 | ADA190 | 임상면역학
+2025 | 5-2 | ADA109 | 예방약학 2
+
+Rules
+-----
+1. Generation evidence is attached to each PDF row, not globally to course_code.
+2. Grade 1-2 rows are six-year by domain rule.
+3. A flowchart is direct generation evidence only when exactly one PDF row shares the same normalized name, grade, and semester.
+4. If multiple PDF rows share one flowchart position, those rows remain ambiguous.
+5. A row directly present in both flowcharts is classified as both, not forced into one generation.
+6. No course-code prefix heuristic is used.
+7. No generation evidence is propagated across academic years.
