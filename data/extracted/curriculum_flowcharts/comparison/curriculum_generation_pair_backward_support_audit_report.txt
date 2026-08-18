@@ -1,0 +1,74 @@
+Curriculum generation pair backward support audit
+=============================================
+
+support rows: 38
+unique target rows: 38
+
+Candidate generation
+--------------------
+four_year: 0
+six_year: 38
+
+Distance
+--------
+1 year backward: 20
+2 years backward: 18
+
+Target year
+-----------
+2022: 19
+2023: 19
+
+BACKWARD SUPPORT CANDIDATES
+---------------------------
+2022 | 4-1 | ADA182 | 건강기능식품학 | candidate=six_year | from=2023 | distance=1 | strength=adjacent_year
+2022 | 4-1 | ADB047 | 의약화학1 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 4-1 | ADB048 | 천연물의약품학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 4-2 | ADB057 | 생물약제학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 4-2 | ADB058 | 약물동태학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 5-1 | ADA171 | 의약품제조관리학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 5-1 | ADA115 | 지역약국 예비실무실습 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 5-2 | ADA174 | 약무행정실무필수실습 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 5-2 | ADA167 | 약전 및 품질관리학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 5-2 | ADA140 | 한약제제학 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA218 | 제약산업 필수실무실습 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-2 | ADA226 | 심화실습 1 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-2 | ADA227 | 심화실습 2 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2022 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | candidate=six_year | from=2024 | distance=2 | strength=two_year
+2023 | 4-1 | ADB047 | 의약화학1 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 4-1 | ADB048 | 천연물의약품학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 4-2 | ADB057 | 생물약제학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 4-2 | ADB058 | 약물동태학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 4-2 | ADB059 | 의약화학2 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 5-1 | ADA171 | 의약품제조관리학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 5-1 | ADA115 | 지역약국 예비실무실습 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 5-2 | ADA174 | 약무행정실무필수실습 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 5-2 | ADA167 | 약전 및 품질관리학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 5-2 | ADA140 | 한약제제학 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA218 | 제약산업 필수실무실습 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-2 | ADA226 | 심화실습 1 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-2 | ADA227 | 심화실습 2 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+2023 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | candidate=six_year | from=2024 | distance=1 | strength=adjacent_year
+
+Rules
+-----
+1. Only original ambiguous two-code pair groups are inspected.
+2. The pair identity must remain exactly the same: grade, semester, normalized course name, and both course codes.
+3. The same course code member is followed backward; code prefixes are never interpreted.
+4. Only a later row whose current decision status is probable and whose provisional generation is four_year or six_year may act as a support source.
+5. Only earlier rows that remain paired_unknown are emitted.
+6. Support is limited to one or two years backward.
+7. A backward-support candidate is review-only. It does not become confirmed or probable.
+8. The opposite member of the pair is never assigned the opposite generation.
+9. No recursive propagation is performed. A backward-support row can never become a source.
+10. Decisions, preview, baseline, seed, and database data are not modified.
