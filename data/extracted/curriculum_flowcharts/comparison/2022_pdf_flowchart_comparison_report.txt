@@ -9,11 +9,11 @@ PDF row evidence summary
 ------------------------
 same_position_both: 23
 same_position_4year: 53
-same_position_6year: 83
+same_position_6year: 84
 name_elsewhere_both: 0
 name_elsewhere_4year: 4
 name_elsewhere_6year: 6
-no_flowchart_match: 6
+no_flowchart_match: 5
 
 4year flowchart rows missing from PDF at same position
 ----------------------------------------
@@ -34,7 +34,7 @@ count: 13
 
 6year flowchart rows missing from PDF at same position
 ----------------------------------------
-count: 10
+count: 9
 1-1 | 해부생리학1
 1-2 | 해부생리학2
 4-1 | 내분비계 및 류마티스질환 약물치료학
@@ -44,11 +44,10 @@ count: 10
 4-2 | 일반의약품학
 5-1 | 의약정보학과 경제성평가
 5-2 | 심혈관계질환 및 약물치료학
-5-2 | 의료기관약국예바실습
 
 PDF rows requiring review
 -------------------------
-count: 16
+count: 15
 1-1 | 해부생리학 | ADB001 | name_elsewhere_4year | 4year=3-1 | 6year=-
 1-2 | 신경생리학 | ADB004 | name_elsewhere_4year | 4year=3-1 | 6year=-
 3-1 | 상담지도 1 | ADA223 | no_flowchart_match | 4year=- | 6year=-
@@ -61,7 +60,6 @@ count: 16
 5-1 | 방제학 | ADB078 | name_elsewhere_6year | 4year=- | 6year=4-1
 5-1 | 약학용어 | ADB076 | name_elsewhere_6year | 4year=- | 6year=4-1
 5-1 | 조제학 | ADB077 | name_elsewhere_6year | 4year=- | 6year=4-1
-5-2 | 의료기관약국예비실습 | ADB086 | no_flowchart_match | 4year=- | 6year=-
 5-2 | 바이오의약품학 | ADA225 | name_elsewhere_6year | 4year=- | 6year=4-2
 5-2 | 심혈관계 질환 약물치료학 | ADB082 | name_elsewhere_4year | 4year=4-2 | 6year=-
 5-2 | 일반의약품학 | ADB084 | name_elsewhere_6year | 4year=- | 6year=4-2

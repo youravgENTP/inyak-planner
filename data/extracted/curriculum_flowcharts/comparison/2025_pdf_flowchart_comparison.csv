@@ -47,7 +47,7 @@
 2025,4,1,감염질환을 위한 항생물질학,ADB045,전필,2,,,,yes,no,4-1,same_position_6year
 2025,4,1,예방약학1,ADB044,전필,3,,,,yes,no,4-1,same_position_6year
 2025,4,1,의약화학1,ADB047,전필,2,,,,yes,no,4-1,same_position_6year
-2025,4,1,정신신경계질환 약물치료학,ADB109,전필,2,,,,no,no,,no_flowchart_match
+2025,4,1,정신신경계질환 약물치료학,ADB109,전필,2,,,,yes,no,4-1,same_position_6year
 2025,4,1,제제과학의실습,ADB111,전필,2,,,,yes,no,4-1,same_position_6year
 2025,4,1,바이오의약품 분석,ADB060,전선,2,,,,yes,no,4-1,same_position_6year
 2025,4,1,의약품설계학,ADB066,전선,2,,,,yes,no,4-1,same_position_6year
@@ -56,7 +56,7 @@
 2025,4,2,보건의약관계법규,ADB064,전필,2,,,,yes,no,4-2,same_position_6year
 2025,4,2,약학실험5,ADB067,전필,1,,,,yes,no,4-2,same_position_6year
 2025,4,2,예방약학2,ADB055,전필,2,,,,yes,no,4-2,same_position_6year
-2025,4,2,임상약학 해설,ADB083,전필,1,,,,no,no,,no_flowchart_match
+2025,4,2,임상약학 해설,ADB083,전필,1,,,,yes,no,4-2,same_position_6year
 2025,4,2,건강기능식품학,ADB050,전선,2,,,,yes,no,4-2,same_position_6year
 2025,4,2,생물약제학,ADB057,전선,2,,,,yes,no,4-2,same_position_6year
 2025,4,2,심혈관계 질환 약물치료학,ADB082,전선,3,,,,no,no,,no_flowchart_match

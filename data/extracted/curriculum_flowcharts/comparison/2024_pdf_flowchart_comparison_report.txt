@@ -9,25 +9,24 @@ PDF row evidence summary
 ------------------------
 same_position_both: 0
 same_position_4year: 0
-same_position_6year: 113
+same_position_6year: 114
 name_elsewhere_both: 0
 name_elsewhere_4year: 0
 name_elsewhere_6year: 38
-no_flowchart_match: 38
+no_flowchart_match: 37
 
 6year flowchart rows missing from PDF at same position
 ----------------------------------------
-count: 6
+count: 5
 4-1 | 내분비계 및 류마터스질환 약물치료학
 4-1 | 조제학
 4-1 | 방제학
 4-2 | 심혈관계질환 및 약물치료학
-5-2 | 의료기관약국예바실습
 5-2 | 종양생물학
 
 PDF rows requiring review
 -------------------------
-count: 76
+count: 75
 1-1 | 해부생리학 | ADB001 | no_flowchart_match | 4year=- | 6year=-
 1-2 | 신경생리학 | ADB004 | no_flowchart_match | 4year=- | 6year=-
 2-2 | 조제학 | ADB077 | name_elsewhere_6year | 4year=- | 6year=4-1
@@ -95,7 +94,6 @@ count: 76
 5-2 | 감염성 질환 약물치료학 | ADA147 | name_elsewhere_6year | 4year=- | 6year=4-2
 5-2 | 내분비계 및 류마티스 질환 약물치료학 | ADA148 | no_flowchart_match | 4year=- | 6year=-
 5-2 | 보건의약관계법규 | ADA194 | name_elsewhere_6year | 4year=- | 6year=4-2
-5-2 | 의료기관약국예비실습 | ADB086 | no_flowchart_match | 4year=- | 6year=-
 5-2 | 임상면역학 | ADA190 | name_elsewhere_6year | 4year=- | 6year=3-2
 5-2 | 독성학 | ADA045 | name_elsewhere_6year | 4year=- | 6year=3-2
 5-2 | 바이오의약품학 | ADA225 | name_elsewhere_6year | 4year=- | 6year=4-2

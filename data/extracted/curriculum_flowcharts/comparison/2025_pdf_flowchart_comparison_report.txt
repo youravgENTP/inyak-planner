@@ -9,22 +9,20 @@ PDF row evidence summary
 ------------------------
 same_position_both: 0
 same_position_4year: 0
-same_position_6year: 87
+same_position_6year: 89
 name_elsewhere_both: 0
 name_elsewhere_4year: 0
 name_elsewhere_6year: 5
-no_flowchart_match: 4
+no_flowchart_match: 2
 
 6year flowchart rows missing from PDF at same position
 ----------------------------------------
-count: 13
+count: 11
 3-1 | AI의료약학빅데이터
 3-2 | 무기방사성의약품학
-4-1 | 정신신경게 질환 약물치료학
 4-1 | 나노약학
 4-1 | 향장품학
 4-2 | 심혈관계질환 및 약물치료학
-4-2 | 임상익학해설
 4-2 | 법과학
 5-1 | 약물유전체학
 5-1 | 임상약물동태학
@@ -34,9 +32,7 @@ count: 13
 
 PDF rows requiring review
 -------------------------
-count: 9
-4-1 | 정신신경계질환 약물치료학 | ADB109 | no_flowchart_match | 4year=- | 6year=-
-4-2 | 임상약학 해설 | ADB083 | no_flowchart_match | 4year=- | 6year=-
+count: 7
 4-2 | 심혈관계 질환 약물치료학 | ADB082 | no_flowchart_match | 4year=- | 6year=-
 5-1 | 감염질환을 위한 항생물질학 | ADA209 | name_elsewhere_6year | 4year=- | 6year=4-1
 5-1 | 제제과학실습 | ADA200 | no_flowchart_match | 4year=- | 6year=-

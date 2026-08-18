@@ -2,20 +2,20 @@ Curriculum near-name match audit
 =============================================
 
 rows analyzed: 640
-rows with any near candidate: 13
-near one-sided candidates: 8
+rows with any near candidate: 8
+near one-sided candidates: 6
 
 2022
 ----
 rows: 175
-one_sided_candidate: 4
+one_sided_candidate: 3
 near_match_candidate: 0
 multiple_candidates: 0
 
 2023
 ----
 rows: 180
-one_sided_candidate: 4
+one_sided_candidate: 3
 near_match_candidate: 0
 multiple_candidates: 0
 
@@ -23,35 +23,30 @@ multiple_candidates: 0
 ----
 rows: 189
 one_sided_candidate: 0
-near_match_candidate: 2
+near_match_candidate: 1
 multiple_candidates: 0
 
 2025
 ----
 rows: 96
 one_sided_candidate: 0
-near_match_candidate: 3
+near_match_candidate: 1
 multiple_candidates: 0
 
 ONE-SIDED CANDIDATES
 --------------------
-count: 8
+count: 6
 2022 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료 -> 내분비계 및 류마티스질환 약물치료학 | generation=six_year | type=edit_distance_1 | distance=1
 2022 | 4-2 | ADA208 | 감염미생물학 -> 감염성미생물학 | generation=four_year | type=edit_distance_1 | distance=1
-2022 | 5-2 | ADB086 | 의료기관약국예비실습 -> 의료기관약국예바실습 | generation=six_year | type=edit_distance_1 | distance=1
 2022 | 5-2 | ADB082 | 심혈관계 질환 약물치료학 -> 심혈관계질환 및 약물치료학 | generation=six_year | type=edit_distance_1 | distance=1
 2023 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료 -> 내분비계 및 류마티스질환 약물치료학 | generation=six_year | type=edit_distance_1 | distance=1
 2023 | 4-2 | ADA208 | 감염미생물학 -> 감염성미생물학 | generation=four_year | type=edit_distance_1 | distance=1
-2023 | 5-2 | ADB086 | 의료기관약국예비실습 -> 의료기관약국예바실습 | generation=six_year | type=edit_distance_1 | distance=1
 2023 | 5-2 | ADB082 | 심혈관계 질환 약물치료학 -> 심혈관계질환 및 약물치료학 | generation=six_year | type=edit_distance_1 | distance=1
 
 OTHER NEAR-MATCH CANDIDATES
 ---------------------------
-count: 5
+count: 2
 2024 | 4-2 | ADA136 | 심혈관계 질환 약물치료학 | 4year=- | 6year=심혈관계질환 및 약물치료학 | status=near_match_candidate
-2024 | 5-2 | ADB086 | 의료기관약국예비실습 | 4year=- | 6year=의료기관약국예바실습 | status=near_match_candidate
-2025 | 4-1 | ADB109 | 정신신경계질환 약물치료학 | 4year=- | 6year=정신신경게 질환 약물치료학 | status=near_match_candidate
-2025 | 4-2 | ADB083 | 임상약학 해설 | 4year=- | 6year=임상익학해설 | status=near_match_candidate
 2025 | 4-2 | ADB082 | 심혈관계 질환 약물치료학 | 4year=- | 6year=심혈관계질환 및 약물치료학 | status=near_match_candidate
 
 Rules

@@ -6,10 +6,10 @@ rows analyzed: 640
 Generation evidence
 -------------------
 four_year: 104
-six_year: 294
+six_year: 299
 both: 1
 ambiguous: 134
-unresolved: 107
+unresolved: 102
 
 Integrated evidence
 -------------------
@@ -21,8 +21,8 @@ rows with official course relation: 100
 Review priority
 ---------------
 high: 72
-medium: 169
-low: 399
+medium: 164
+low: 404
 
 AMBIGUOUS GROUPS WITH PARTNER RELATION
 --------------------------------------

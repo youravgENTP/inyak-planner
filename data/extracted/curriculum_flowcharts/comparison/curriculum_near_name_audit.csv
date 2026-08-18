@@ -136,7 +136,7 @@
 2022,5,2,보건의약관계법규,ADA194,전필,2,yes,yes,no,,,,0,,yes,no,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2022,5,2,약무행정실무필수실습,ADA174,전필,1,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2022,5,2,약무행정실무필수실습,ADB087,전필,1,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
-2022,5,2,의료기관약국예비실습,ADB086,전필,2,yes,no,no,,,,0,,yes,no,yes,의료기관약국예바실습,edit_distance_1,1,1,의료기관약국예바실습,near_match_6year,six_year,one_sided_candidate
+2022,5,2,의료기관약국예비실습,ADB086,전필,2,yes,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2022,5,2,임상면역학,ADA190,전필,3,yes,yes,no,,,,0,,yes,no,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2022,5,2,임상약학 해설,ADB083,전필,1,yes,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2022,5,2,한약제제학,ADB080,전필,2,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
@@ -318,7 +318,7 @@
 2023,5,2,보건의약관계법규,ADA194,전필,2,yes,yes,no,,,,0,,yes,no,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2023,5,2,약무행정실무필수실습,ADB087,전필,1,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2023,5,2,약무행정실무필수실습,ADA174,전필,1,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
-2023,5,2,의료기관약국예비실습,ADB086,전필,2,yes,no,no,,,,0,,yes,no,yes,의료기관약국예바실습,edit_distance_1,1,1,의료기관약국예바실습,near_match_6year,six_year,one_sided_candidate
+2023,5,2,의료기관약국예비실습,ADB086,전필,2,yes,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2023,5,2,임상면역학,ADA190,전필,3,yes,yes,no,,,,0,,yes,no,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2023,5,2,임상약학 해설,ADB083,전필,1,yes,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2023,5,2,한약제제학,ADA140,전필,2,yes,yes,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
@@ -505,7 +505,7 @@
 2024,5,2,보건의약관계법규,ADA194,전필,2,no,no,no,,,,0,,yes,no,no,,,,0,,no_near_match,,no_candidate
 2024,5,2,약무행정실무필수실습,ADA174,전필,1,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2024,5,2,약무행정실무필수실습,ADB087,전필,1,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
-2024,5,2,의료기관약국예비실습,ADB086,전필,2,no,no,no,,,,0,,yes,no,yes,의료기관약국예바실습,edit_distance_1,1,1,의료기관약국예바실습,near_match_6year,,near_match_candidate
+2024,5,2,의료기관약국예비실습,ADB086,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2024,5,2,임상면역학,ADA190,전필,3,no,no,no,,,,0,,yes,no,no,,,,0,,no_near_match,,no_candidate
 2024,5,2,임상약학 해설,ADB083,전필,1,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2024,5,2,한약제제학,ADB080,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
@@ -591,7 +591,7 @@
 2025,4,1,감염질환을 위한 항생물질학,ADB045,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,1,예방약학1,ADB044,전필,3,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,1,의약화학1,ADB047,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
-2025,4,1,정신신경계질환 약물치료학,ADB109,전필,2,no,no,no,,,,0,,yes,no,yes,정신신경게 질환 약물치료학,edit_distance_1,1,1,정신신경게 질환 약물치료학,near_match_6year,,near_match_candidate
+2025,4,1,정신신경계질환 약물치료학,ADB109,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,1,제제과학의실습,ADB111,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,1,바이오의약품 분석,ADB060,전선,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,1,의약품설계학,ADB066,전선,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
@@ -600,7 +600,7 @@
 2025,4,2,보건의약관계법규,ADB064,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,2,약학실험5,ADB067,전필,1,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,2,예방약학2,ADB055,전필,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
-2025,4,2,임상약학 해설,ADB083,전필,1,no,no,no,,,,0,,yes,no,yes,임상익학해설,edit_distance_1,1,1,임상익학해설,near_match_6year,,near_match_candidate
+2025,4,2,임상약학 해설,ADB083,전필,1,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,2,건강기능식품학,ADB050,전선,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,2,생물약제학,ADB057,전선,2,no,no,no,,,,0,,yes,yes,no,,,,0,,exact_evidence_already_exists,,no_candidate
 2025,4,2,심혈관계 질환 약물치료학,ADB082,전선,3,no,no,no,,,,0,,yes,no,yes,심혈관계질환 및 약물치료학,edit_distance_1,1,1,심혈관계질환 및 약물치료학,near_match_6year,,near_match_candidate

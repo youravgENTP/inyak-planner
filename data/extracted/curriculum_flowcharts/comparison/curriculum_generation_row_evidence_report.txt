@@ -8,37 +8,37 @@ PDF rows analyzed: 640
 ----
 rows: 175
 four_year: 53
-six_year: 65
+six_year: 66
 both: 1
 ambiguous: 42
-unresolved: 14
+unresolved: 13
 
 2023
 ----
 rows: 180
 four_year: 51
-six_year: 69
+six_year: 70
 both: 0
 ambiguous: 48
-unresolved: 12
+unresolved: 11
 
 2024
 ----
 rows: 189
 four_year: 0
-six_year: 73
+six_year: 74
 both: 0
 ambiguous: 44
-unresolved: 72
+unresolved: 71
 
 2025
 ----
 rows: 96
 four_year: 0
-six_year: 87
+six_year: 89
 both: 0
 ambiguous: 0
-unresolved: 9
+unresolved: 7
 
 AMBIGUOUS ROWS
 --------------
@@ -180,7 +180,7 @@ count: 134
 
 UNRESOLVED ROWS
 ---------------
-count: 107
+count: 102
 2022 | 3-1 | ADA223 | 상담지도 1
 2022 | 3-2 | ADA224 | 상담지도 II
 2022 | 3-2 | ADA092 | 신경생리학
@@ -191,7 +191,6 @@ count: 107
 2022 | 5-1 | ADB078 | 방제학
 2022 | 5-1 | ADB076 | 약학용어
 2022 | 5-1 | ADB077 | 조제학
-2022 | 5-2 | ADB086 | 의료기관약국예비실습
 2022 | 5-2 | ADA225 | 바이오의약품학
 2022 | 5-2 | ADB082 | 심혈관계 질환 약물치료학
 2022 | 5-2 | ADB084 | 일반의약품학
@@ -204,7 +203,6 @@ count: 107
 2023 | 4-2 | ADA208 | 감염미생물학
 2023 | 4-2 | ADB067 | 약학실험5
 2023 | 5-1 | ADB078 | 방제학
-2023 | 5-2 | ADB086 | 의료기관약국예비실습
 2023 | 5-2 | ADA225 | 바이오의약품학
 2023 | 5-2 | ADB082 | 심혈관계 질환 약물치료학
 2024 | 3-1 | ADA002 | 면역학
@@ -270,7 +268,6 @@ count: 107
 2024 | 5-2 | ADA147 | 감염성 질환 약물치료학
 2024 | 5-2 | ADA148 | 내분비계 및 류마티스 질환 약물치료학
 2024 | 5-2 | ADA194 | 보건의약관계법규
-2024 | 5-2 | ADB086 | 의료기관약국예비실습
 2024 | 5-2 | ADA190 | 임상면역학
 2024 | 5-2 | ADA045 | 독성학
 2024 | 5-2 | ADA225 | 바이오의약품학
@@ -279,8 +276,6 @@ count: 107
 2024 | 5-2 | ADA118 | 약업경영학
 2024 | 5-2 | ADA109 | 예방약학 2
 2024 | 5-2 | ADA053 | 조제학
-2025 | 4-1 | ADB109 | 정신신경계질환 약물치료학
-2025 | 4-2 | ADB083 | 임상약학 해설
 2025 | 4-2 | ADB082 | 심혈관계 질환 약물치료학
 2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학
 2025 | 5-1 | ADA200 | 제제과학실습
