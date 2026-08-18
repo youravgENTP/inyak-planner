@@ -13,14 +13,12 @@ from scripts.probes.probe_vision_ocr import (
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-RAW_CURRICULUM_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "curriculum_pdfs"
+from scripts.common.data_paths import (
+    RAW_CURRICULUM_PDFS_DIR,
 )
+
+
+RAW_CURRICULUM_DIR = RAW_CURRICULUM_PDFS_DIR
 
 COURSE_CODE_RE = re.compile(
     r"\b(?:ADA|ADB)\d{3}\b"

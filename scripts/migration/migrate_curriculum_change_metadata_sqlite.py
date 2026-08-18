@@ -4,14 +4,12 @@ import sqlite3
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-DB_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "inyak.db"
+from scripts.common.data_paths import (
+    DATABASE_PATH,
 )
+
+
+DB_PATH = DATABASE_PATH
 
 
 def main() -> None:

@@ -5,6 +5,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+SCHEMA_PATH = SCRIPTS_DIR / "schema.sql"
+
 DATA_DIR = PROJECT_ROOT / "data"
 
 RAW_DIR = DATA_DIR / "raw"

@@ -3,6 +3,7 @@ from __future__ import annotations
 from scripts.common.data_paths import (
     DATABASE_PATH,
     GRADUATION_REQUIREMENTS_PATH,
+    SCHEMA_PATH,
 )
 
 import csv
@@ -10,15 +11,7 @@ import sqlite3
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
 CSV_PATH = GRADUATION_REQUIREMENTS_PATH
-
-SCHEMA_PATH = (
-    PROJECT_ROOT
-    / "scripts"
-    / "schema.sql"
-)
 
 
 UPSERT_SQL = """

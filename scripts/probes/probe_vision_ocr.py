@@ -10,14 +10,12 @@ import Vision
 from Foundation import NSURL
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-RAW_CURRICULUM_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "curriculum_pdfs"
+from scripts.common.data_paths import (
+    RAW_CURRICULUM_PDFS_DIR,
 )
+
+
+RAW_CURRICULUM_DIR = RAW_CURRICULUM_PDFS_DIR
 
 
 def find_pdf(

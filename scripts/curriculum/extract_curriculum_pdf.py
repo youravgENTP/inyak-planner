@@ -9,21 +9,13 @@ from pathlib import Path
 import fitz
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-RAW_CURRICULUM_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "raw"
-    / "curriculum_pdfs"
+from scripts.common.data_paths import (
+    EXTRACTED_CURRICULUM_DIR,
+    RAW_CURRICULUM_PDFS_DIR,
 )
 
-EXTRACTED_CURRICULUM_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "extracted"
-    / "curriculum"
-)
+
+RAW_CURRICULUM_DIR = RAW_CURRICULUM_PDFS_DIR
 
 COURSE_CODE_RE = re.compile(r"^(ADA|ADB)\d{3}$")
 GRADE_SEMESTER_RE = re.compile(r"^([1-6])-([12])$")
