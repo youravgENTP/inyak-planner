@@ -1,0 +1,47 @@
+﻿academic_year,side,course_code,course_name,grade,semester,completion_type,credits,db_terms,exact_name_db_codes,reason
+2022,seed,ADA148,내분비계 및 류마티스 질환 약물치료학,5,2,전선,2,2022-2;2023-2;2024-2;2025-2;2026-2,ADA148,no_same_name_or_official_relation_pair
+2022,seed,ADA150,임상약물동태학,5,1,전선,2,2022-1;2023-1;2024-1;2026-1,ADA150,no_same_name_or_official_relation_pair
+2022,seed,ADA183,임상생화학,5,1,전선,2,2022-2;2023-2;2024-2;2026-1,ADA183,no_same_name_or_official_relation_pair
+2022,seed,ADA198,의약품합성학,3,2,전필,2,2022-2;2024-2;2025-2;2026-2,ADA198,no_same_name_or_official_relation_pair
+2022,seed,ADA228,자원생약학,3,1,전선,2,2024-1,ADA228,no_same_name_or_official_relation_pair
+2022,seed,ADA233,임상영양학,4,1,전선,2,2023-2;2024-2;2025-1;2026-1,ADA233,no_same_name_or_official_relation_pair
+2022,seed,ADA234,독성학1,5,1,전선,2,2026-1,ADA234,no_same_name_or_official_relation_pair
+2022,seed,ADA235,독성학2,5,2,전선,2,2026-2,ADA235,no_same_name_or_official_relation_pair
+2022,seed,ADA236,환경보건약학,5,1,전선,2,2026-1,ADA236,no_same_name_or_official_relation_pair
+2022,seed,ADA237,특수환자군 정밀의료학,5,2,전필,2,2026-2,ADA237,no_same_name_or_official_relation_pair
+2022,seed,ADA239,약사와 건강증진,5,2,전선,2,2026-2,ADA239,no_same_name_or_official_relation_pair
+2022,seed,ADB043,향장품학,4,1,전선,2,2026-1,ADA120;ADB043,no_same_name_or_official_relation_pair
+2022,seed,ADB078,방제학,5,1,전선,3,,,no_same_name_or_official_relation_pair
+2022,seed,ADB089,동물용의약품학,5,1,전선,1,2026-1,ADA121;ADB089,no_same_name_or_official_relation_pair
+2022,seed,ADB103,항암약물요법1,5,1,전필,2,2024-1;2025-1;2026-1,ADB103,no_same_name_or_official_relation_pair
+2022,seed,ADB108,신장질환약물치료학,5,2,전필,2,2024-1;2025-1;2026-2,ADB108,no_same_name_or_official_relation_pair
+2022,seed,ADB109,정신신경계질환 약물치료학,4,1,전필,2,2025-1;2026-1,ADB109,no_same_name_or_official_relation_pair
+2022,seed,ADB111,제제과학의실습,4,1,전필,2,2025-1,ADB111,no_same_name_or_official_relation_pair
+2022,seed,ADB113,유용천연물소재학,5,2,전선,3,2025-2;2026-2,ADB113,no_same_name_or_official_relation_pair
+2023,baseline,ADB001,해부생리학,1,1,전선,3,2022-1,ADA022;ADB001,no_same_name_or_official_relation_pair
+2023,baseline,ADB004,신경생리학,1,2,전선,1,2022-2,ADA092;ADB004,no_same_name_or_official_relation_pair
+2023,baseline,ADB021,약품면역학,2,2,전필,2,2023-2;2024-2;2025-2;2026-2,ADB021,no_same_name_or_official_relation_pair
+2023,baseline,ADB067,약학실험5,4,2,전필,1,2025-2;2026-2,ADB067,no_same_name_or_official_relation_pair
+2023,seed,ADA198,의약품합성학,3,2,전필,2,2022-2;2024-2;2025-2;2026-2,ADA198,no_same_name_or_official_relation_pair
+2023,seed,ADA234,독성학1,5,1,전선,2,2026-1,ADA234,no_same_name_or_official_relation_pair
+2023,seed,ADA235,독성학2,5,2,전선,2,2026-2,ADA235,no_same_name_or_official_relation_pair
+2023,seed,ADB043,향장품학,4,1,전선,2,2026-1,ADA120;ADB043,no_same_name_or_official_relation_pair
+2023,seed,ADB078,방제학,4,1,전선,3,,,no_same_name_or_official_relation_pair
+2023,seed,ADB089,동물용의약품학,5,2,전선,2,2026-1,ADA121;ADB089,no_same_name_or_official_relation_pair
+2023,seed,ADB108,신장질환약물치료학,5,2,전필,2,2024-1;2025-1;2026-2,ADB108,no_same_name_or_official_relation_pair
+2023,seed,ADB109,정신신경계질환 약물치료학,4,1,전필,2,2025-1;2026-1,ADB109,no_same_name_or_official_relation_pair
+2024,baseline,ADB001,해부생리학,1,1,전선,3,2022-1,ADA022;ADB001,no_same_name_or_official_relation_pair
+2024,baseline,ADB004,신경생리학,1,2,전선,1,2022-2,ADA092;ADB004,no_same_name_or_official_relation_pair
+2024,baseline,ADB052,무기방사성 의약품학,4,1,전선,2,,,no_same_name_or_official_relation_pair
+2024,baseline,ADB053,AI 의료약학빅데이터,4,1,전선,2,,,no_same_name_or_official_relation_pair
+2024,baseline,ADB062,신경정신계 및 신장 질환 약물치료학,5,1,전필,3,,,no_same_name_or_official_relation_pair
+2024,baseline,ADB063,내분비계 및 류마티스 질환 약물치료,4,1,전선,2,,,no_same_name_or_official_relation_pair
+2024,baseline,ADB067,약학실험5,4,2,전필,1,2025-2;2026-2,ADB067,no_same_name_or_official_relation_pair
+2024,seed,ADA148,내분비계 및 류마티스 질환 약물치료학,4,1,전선,2,2022-2;2023-2;2024-2;2025-2;2026-2,ADA148,no_same_name_or_official_relation_pair
+2024,seed,ADA234,독성학1,5,1,전선,2,2026-1,ADA234,no_same_name_or_official_relation_pair
+2024,seed,ADA235,독성학2,5,2,전선,2,2026-2,ADA235,no_same_name_or_official_relation_pair
+2024,seed,ADB043,향장품학,4,1,전선,2,2026-1,ADA120;ADB043,no_same_name_or_official_relation_pair
+2024,seed,ADB089,동물용의약품학,5,2,전선,1,2026-1,ADA121;ADB089,no_same_name_or_official_relation_pair
+2024,seed,ADB112,생약학개론,3,1,전선,2,2025-1;2026-1,ADB112,no_same_name_or_official_relation_pair
+2024,seed,,나노약학,4,1,전선,2,,,seed_blank_code_no_baseline_pair
+2024,seed,,방제학,4,1,전선,,,,seed_blank_code_no_baseline_pair

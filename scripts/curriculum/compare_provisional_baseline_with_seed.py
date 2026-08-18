@@ -200,24 +200,66 @@ def build_code_index(
             ).strip()
         )
 
-        if not code:
-            raise RuntimeError(
-                f"{label} {year}: "
-                "빈 course_code가 있습니다: "
-                f"{row}"
+        if code:
+            key = (
+                f"CODE:{code}"
+            )
+        else:
+            grade = (
+                row.get(
+                    "grade",
+                    "",
+                ).strip()
             )
 
-        if code in index:
-            raise RuntimeError(
-                f"{label} {year}: "
-                "course_code가 중복됩니다: "
-                f"{code}"
+            semester = (
+                row.get(
+                    "semester",
+                    "",
+                ).strip()
             )
 
-        index[code] = row
+            course_name = (
+                normalize_name(
+                    row.get(
+                        "course_name",
+                        "",
+                    )
+                )
+            )
+
+            if not course_name:
+                raise RuntimeError(
+                    f"{label} {year}: "
+                    "course_code와 course_name이 "
+                    "모두 비어 있는 행이 있습니다: "
+                    f"{row}"
+                )
+
+            # 학정번호가 아직 확인되지 않은 seed 행은
+            # 비교 자체에서 제외하지 않는다.
+            # 다만 이름만으로 기존 학정번호가 있는 과목과
+            # 동일 과목이라고 추론하지 않기 위해
+            # 별도의 synthetic identity를 사용한다.
+            key = (
+                "NO_CODE:"
+                f"{grade}:"
+                f"{semester}:"
+                f"{course_name}"
+            )
+
+        if key in index:
+            raise RuntimeError(
+                f"{label} {year}: "
+                "비교용 identity가 중복됩니다: "
+                f"{key}"
+            )
+
+        index[
+            key
+        ] = row
 
     return index
-
 
 def changed_fields(
     baseline: dict[str, str],
