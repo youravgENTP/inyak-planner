@@ -1,0 +1,368 @@
+Seed reconciliation classification
+=============================================
+
+This is a diagnostic classification only.
+No baseline, seed, extracted source, or database data is modified.
+
+SUMMARY
+-------
+seed_wrong_or_suspect_code: 23 (high=23, medium=0)
+seed_missing_course: 3 (high=3, medium=0)
+needs_manual_mapping: 34 (high=11, medium=23)
+legitimate_post_baseline_transition: 51 (high=26, medium=25)
+
+DETAILS
+-------
+
+seed_wrong_or_suspect_code
+--------------------------
+2022 | 심화실습 1 | baseline=ADA226 | seed=ADB099 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 심화실습 2 | baseline=ADA227 | seed=ADB100 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 의료기관약국 필수실무실습 1 | baseline=ADA213 | seed=ADB093 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 의료기관약국 필수실무실습 2 | baseline=ADA214 | seed=ADB094 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 의료기관약국 필수실무실습 3 | baseline=ADA215 | seed=ADB095 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 의료기관약국 필수실무실습 4 | baseline=ADA216 | seed=ADB096 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 제약산업 필수실무실습 | baseline=ADA218 | seed=ADB097 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 지역약국 필수실무실습 1 | baseline=ADA219 | seed=ADB092 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2022 | 지역약국 필수실무실습 2 | baseline=ADA220 | seed=ADB098 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 심화실습 1 | baseline=ADA226 | seed=ADB099 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 심화실습 2 | baseline=ADA227 | seed=ADB100 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 약무행정실무필수실습 | baseline=ADA174 | seed=ADB087 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 약전 및 품질관리학 | baseline=ADA167 | seed=ADB081 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 의료기관약국 필수실무실습 1 | baseline=ADA213 | seed=ADB093 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 의료기관약국 필수실무실습 2 | baseline=ADA214 | seed=ADB094 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 의료기관약국 필수실무실습 3 | baseline=ADA215 | seed=ADB095 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 의료기관약국 필수실무실습 4 | baseline=ADA216 | seed=ADB096 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 의약품제조관리학 | baseline=ADA171 | seed=ADB072 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 제약산업 필수실무실습 | baseline=ADA218 | seed=ADB097 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 지역약국 예비실무실습 | baseline=ADA115 | seed=ADB075 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 지역약국 필수실무실습 1 | baseline=ADA219 | seed=ADB092 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 지역약국 필수실무실습 2 | baseline=ADA220 | seed=ADB098 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+2023 | 한약제제학 | baseline=ADA140 | seed=ADB080 | confidence=high | source=code_pair
+    evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
+    action: Review seed representative course_code. Do not change baseline.
+
+seed_missing_course
+-------------------
+2023 | 약품면역학 | baseline=ADB021 | seed=- | confidence=high | source=baseline_only
+    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
+    action: Review adding this course to seed. Preserve baseline.
+2023 | 약학실험5 | baseline=ADB067 | seed=- | confidence=high | source=baseline_only
+    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
+    action: Review adding this course to seed. Preserve baseline.
+2024 | 약학실험5 | baseline=ADB067 | seed=- | confidence=high | source=baseline_only
+    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
+    action: Review adding this course to seed. Preserve baseline.
+
+needs_manual_mapping
+--------------------
+2022 | 내분비계 및 류마티스 질환 약물치료학 | baseline=- | seed=ADA148 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2022 | 방제학 | baseline=- | seed=ADB078 | confidence=medium | source=seed_only
+    evidence: seed_only_course_has_no_actual_offering_history
+    action: Manual curriculum-change review required.
+2022 | 의약품합성학 | baseline=- | seed=ADA198 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2022 | 임상생화학 | baseline=- | seed=ADA183 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2022 | 임상약물동태학 | baseline=- | seed=ADA150 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2023 | 내분비계 및 류마티스 질환 약물치료 | baseline=ADB063 | seed=ADB063 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=course_name;no_attribute_change_effective_year
+    action: Review historical versus current course attributes before changing either side.
+2023 | 방제학 | baseline=- | seed=ADB078 | confidence=medium | source=seed_only
+    evidence: seed_only_course_has_no_actual_offering_history
+    action: Manual curriculum-change review required.
+2023 | 신경생리학 | baseline=ADB004 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+    action: Manual mapping review required.
+2023 | 약학용어 | baseline=ADB076 | seed=ADB076 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;supported_previous_fields=completion_type,credits;unsupported_fields=grade
+    action: Review historical versus current course attributes before changing either side.
+2023 | 의약품합성학 | baseline=- | seed=ADA198 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2023 | 일반의약품학 | baseline=ADB084 | seed=ADB084 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;supported_previous_fields=semester;unsupported_fields=grade
+    action: Review historical versus current course attributes before changing either side.
+2023 | 조제학 | baseline=ADB077 | seed=ADB077 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade,semester;no_attribute_change_effective_year
+    action: Review historical versus current course attributes before changing either side.
+2023 | 종양생물학 | baseline=ADB091 | seed=ADB091 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade;no_attribute_change_effective_year
+    action: Review historical versus current course attributes before changing either side.
+2023 | 해부생리학 | baseline=ADB001 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+    action: Manual mapping review required.
+2024 | AI 의료약학빅데이터 | baseline=ADB053 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+    action: Manual mapping review required.
+2024 | 감염성 질환 약물치료학 | baseline=ADB069 | seed=ADA147 | confidence=high | source=code_pair
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+    action: Review planned curriculum code versus actual operational code. Do not automatically replace baseline code.
+2024 | 나노약학 | baseline=- | seed=- | confidence=high | source=seed_only
+    evidence: seed_course_code_is_blank
+    action: Do not assign a code automatically.
+2024 | 내분비계 및 류마티스 질환 약물치료 | baseline=ADB063 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+    action: Manual mapping review required.
+2024 | 내분비계 및 류마티스 질환 약물치료학 | baseline=- | seed=ADA148 | confidence=medium | source=seed_only
+    evidence: seed_only_course_existed_by_or_before_entry_year:2022
+    action: Manual curriculum-change review required.
+2024 | 무기방사성 의약품학 | baseline=ADB052 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+    action: Manual mapping review required.
+2024 | 방제학 | baseline=- | seed=- | confidence=high | source=seed_only
+    evidence: seed_course_code_is_blank
+    action: Do not assign a code automatically.
+2024 | 신경생리학 | baseline=ADB004 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+    action: Manual mapping review required.
+2024 | 신경정신계 및 신장 질환 약물치료학 | baseline=ADB062 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;no_actual_offering_history
+    action: Manual mapping review required.
+2024 | 신약개발정보학 | baseline=ADB090 | seed=- | confidence=high | source=code_pair
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+    action: Leave seed code blank until independent code evidence is confirmed.
+2024 | 심혈관계 질환 약물치료학 | baseline=ADB082 | seed=ADB082 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=grade,course_name;no_attribute_change_effective_year
+    action: Review historical versus current course attributes before changing either side.
+2024 | 약물신호전달학 | baseline=ADB079 | seed=- | confidence=high | source=code_pair
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+    action: Leave seed code blank until independent code evidence is confirmed.
+2024 | 약업경영학 | baseline=ADB074 | seed=ADA118 | confidence=high | source=code_pair
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+    action: Review planned curriculum code versus actual operational code. Do not automatically replace baseline code.
+2024 | 의료기관약국예비실습 | baseline=ADB086 | seed=ADA217 | confidence=high | source=code_pair
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+    action: Review planned curriculum code versus actual operational code. Do not automatically replace baseline code.
+2024 | 의약품허가 | baseline=ADB088 | seed=- | confidence=high | source=code_pair
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+    action: Leave seed code blank until independent code evidence is confirmed.
+2024 | 의약화학1 | baseline=ADB047 | seed=ADB047 | confidence=medium | source=same_code_changed
+    evidence: same_course_code_core_attributes_differ;unsupported_fields=completion_type;no_attribute_change_effective_year
+    action: Review historical versus current course attributes before changing either side.
+2024 | 조제학 | baseline=ADB077 | seed=ADA053 | confidence=high | source=code_pair
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+    action: Review planned curriculum code versus actual operational code. Do not automatically replace baseline code.
+2024 | 종양생물학 | baseline=ADB091 | seed=- | confidence=high | source=code_pair
+    evidence: seed_course_code_is_blank;same_name_pair_exists
+    action: Leave seed code blank until independent code evidence is confirmed.
+2024 | 해부생리학 | baseline=ADB001 | seed=- | confidence=medium | source=baseline_only
+    evidence: baseline_only_row_requires_identity_review;multiple_exact_name_db_codes
+    action: Manual mapping review required.
+2024 | 호흡기계 및 소화기계 질환 약물치료학 | baseline=ADB071 | seed=ADA145 | confidence=high | source=code_pair
+    evidence: baseline_plan_code_has_no_offering_history;seed_code_has_actual_offering_history;cannot_infer_historical_identity_from_name_alone
+    action: Review planned curriculum code versus actual operational code. Do not automatically replace baseline code.
+
+legitimate_post_baseline_transition
+-----------------------------------
+2022 | 건강기능식품학 | baseline=ADA182 | seed=ADB050 | confidence=high | source=code_pair
+    evidence: baseline_code_was_offered_first;seed_code_was_offered_only_later;same_name_unique_pair
+    action: Preserve historical baseline code; keep later operational seed code if change metadata is recorded.
+2022 | 독성학1 | baseline=- | seed=ADA234 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 독성학2 | baseline=- | seed=ADA235 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 동물용의약품학 | baseline=- | seed=ADB089 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 바이오의약품학 | baseline=ADB056 | seed=ADB056 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 신장질환약물치료학 | baseline=- | seed=ADB108 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2024
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 심혈관계 질환 약물치료학 | baseline=ADB082 | seed=ADB082 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 약물유전체학 | baseline=ADB085 | seed=ADB085 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 약사와 건강증진 | baseline=- | seed=ADA239 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 약학용어 | baseline=ADB076 | seed=ADB076 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 유용천연물소재학 | baseline=- | seed=ADB113 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2025
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 의약정보학과 경제성평가 | baseline=ADB073 | seed=ADB073 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 의약품설계학 | baseline=ADB066 | seed=ADB066 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 의약화학1 | baseline=ADB047 | seed=ADB047 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 임상미생물학 | baseline=ADB046 | seed=ADB046 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 임상약학 해설 | baseline=ADB083 | seed=ADB083 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2022 | 임상영양학 | baseline=- | seed=ADA233 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2023
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 자원생약학 | baseline=- | seed=ADA228 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2024
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 정신신경계질환 약물치료학 | baseline=- | seed=ADB109 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2025
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 제제과학의실습 | baseline=- | seed=ADB111 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2025
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 특수환자군 정밀의료학 | baseline=- | seed=ADA237 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 항암약물요법1 | baseline=- | seed=ADB103 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2024
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 향장품학 | baseline=- | seed=ADB043 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2022 | 환경보건약학 | baseline=- | seed=ADA236 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 건강기능식품학 | baseline=ADA182 | seed=ADB050 | confidence=high | source=code_pair
+    evidence: baseline_code_was_offered_first;seed_code_was_offered_only_later;same_name_unique_pair
+    action: Preserve historical baseline code; keep later operational seed code if change metadata is recorded.
+2023 | 독성학1 | baseline=- | seed=ADA234 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 독성학2 | baseline=- | seed=ADA235 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 동물용의약품학 | baseline=- | seed=ADB089 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 바이오의약품 분석 | baseline=ADB060 | seed=ADB060 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 신장질환약물치료학 | baseline=- | seed=ADB108 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2024
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 약용식물학 | baseline=ADB049 | seed=ADB049 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 약품생화학2 | baseline=ADB016 | seed=ADB016 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 약화학 1 | baseline=ADB009 | seed=ADB009 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 약화학 2 | baseline=ADB018 | seed=ADB018 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2024
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 의약화학1 | baseline=ADB047 | seed=ADB047 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 임상면역학 | baseline=ADB035 | seed=ADB035 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 임상미생물학 | baseline=ADB046 | seed=ADB046 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 정신신경계질환 약물치료학 | baseline=- | seed=ADB109 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2025
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2023 | 천연물의약품학 | baseline=ADB048 | seed=ADB048 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2023 | 향장품학 | baseline=- | seed=ADB043 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2024 | 건강기능식품학 | baseline=ADA182 | seed=ADB050 | confidence=high | source=code_pair
+    evidence: baseline_code_was_offered_first;seed_code_was_offered_only_later;same_name_unique_pair
+    action: Preserve historical baseline code; keep later operational seed code if change metadata is recorded.
+2024 | 독성학1 | baseline=- | seed=ADA234 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2024 | 독성학2 | baseline=- | seed=ADA235 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2024 | 동물용의약품학 | baseline=- | seed=ADB089 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2024 | 물리약학2 | baseline=ADB019 | seed=ADB019 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2024 | 생약학개론 | baseline=- | seed=ADB112 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2025
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+2024 | 약품생화학2 | baseline=ADB016 | seed=ADB016 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2024 | 의약품합성학 | baseline=ADA198 | seed=ADA198 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2024 | 임상면역학 | baseline=ADB035 | seed=ADB035 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2025
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2024 | 천연물의약품학 | baseline=ADB048 | seed=ADB048 | confidence=high | source=same_code_changed
+    evidence: seed_attribute_change_metadata_matches_all_baseline_previous_values;effective_year=2026
+    action: Preserve baseline attributes and keep current seed attributes with change metadata.
+2024 | 향장품학 | baseline=- | seed=ADB043 | confidence=medium | source=seed_only
+    evidence: seed_only_course_first_actual_offering_after_entry_year:2026
+    action: Likely later curriculum addition. Keep out of immutable baseline; review change metadata in seed.
+
+Interpretation
+--------------
+1. seed_wrong_or_suspect_code is a seed review candidate, not an automatic fix.
+2. seed_missing_course means the baseline course has independent actual-offering support and no exact-name alternative code was found.
+3. legitimate_post_baseline_transition should remain outside the immutable historical baseline.
+4. needs_manual_mapping must not be changed automatically.
+5. No ADA/ADB prefix rule is used.

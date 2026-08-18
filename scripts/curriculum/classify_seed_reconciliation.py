@@ -855,16 +855,23 @@ def classify_unpaired(
     return output
 
 
+
 def previous_value_matches(
-    baseline_value: str,
-    previous_value: str,
+    baseline_value: str | None,
+    previous_value: str | None,
 ) -> bool:
     baseline_value = (
-        baseline_value.strip()
+        str(
+            baseline_value
+            or ""
+        ).strip()
     )
 
     previous_value = (
-        previous_value.strip()
+        str(
+            previous_value
+            or ""
+        ).strip()
     )
 
     if not baseline_value:
@@ -1005,9 +1012,12 @@ def classify_changed_rows(
                 )
 
         effective_year = (
-            metadata.get(
-                "attribute_change_effective_year",
-                "",
+            str(
+                metadata.get(
+                    "attribute_change_effective_year",
+                    "",
+                )
+                or ""
             ).strip()
         )
 
