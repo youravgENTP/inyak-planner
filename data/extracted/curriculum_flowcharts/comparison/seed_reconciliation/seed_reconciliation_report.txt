@@ -7,7 +7,7 @@ No baseline, seed, extracted source, or database data is modified.
 SUMMARY
 -------
 seed_wrong_or_suspect_code: 23 (high=23, medium=0)
-seed_missing_course: 3 (high=3, medium=0)
+seed_missing_course: 0 (high=0, medium=0)
 needs_manual_mapping: 59 (high=11, medium=48)
 legitimate_post_baseline_transition: 26 (high=26, medium=0)
 
@@ -85,18 +85,6 @@ seed_wrong_or_suspect_code
 2023 | 한약제제학 | baseline=ADA140 | seed=ADB080 | confidence=high | source=code_pair
     evidence: baseline_code_has_actual_offering_history;seed_code_has_no_actual_offering_history;same_name_unique_pair
     action: Review seed representative course_code. Do not change baseline.
-
-seed_missing_course
--------------------
-2023 | 약품면역학 | baseline=ADB021 | seed=- | confidence=high | source=baseline_only
-    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
-    action: Review adding this course to seed. Preserve baseline.
-2023 | 약학실험5 | baseline=ADB067 | seed=- | confidence=high | source=baseline_only
-    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
-    action: Review adding this course to seed. Preserve baseline.
-2024 | 약학실험5 | baseline=ADB067 | seed=- | confidence=high | source=baseline_only
-    evidence: baseline_course_has_actual_offering_history;no_alternative_exact_name_code;course_absent_from_seed
-    action: Review adding this course to seed. Preserve baseline.
 
 needs_manual_mapping
 --------------------

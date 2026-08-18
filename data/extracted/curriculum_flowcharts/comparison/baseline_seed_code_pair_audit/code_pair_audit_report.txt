@@ -9,7 +9,7 @@ database: /Users/younyung.gene/inyak-planner/data/db/inyak.db
 SUMMARY
 -------
 candidate pairs: 35
-unpaired differences: 46
+unpaired differences: 43
 
 Candidate evidence
 ------------------
@@ -84,8 +84,6 @@ UNPAIRED
 2022 | seed | ADB113 | 유용천연물소재학 | DB=2025-2;2026-2 | exact-name-codes=ADB113 | no_same_name_or_official_relation_pair
 2023 | baseline | ADB001 | 해부생리학 | DB=2022-1 | exact-name-codes=ADA022;ADB001 | no_same_name_or_official_relation_pair
 2023 | baseline | ADB004 | 신경생리학 | DB=2022-2 | exact-name-codes=ADA092;ADB004 | no_same_name_or_official_relation_pair
-2023 | baseline | ADB021 | 약품면역학 | DB=2023-2;2024-2;2025-2;2026-2 | exact-name-codes=ADB021 | no_same_name_or_official_relation_pair
-2023 | baseline | ADB067 | 약학실험5 | DB=2025-2;2026-2 | exact-name-codes=ADB067 | no_same_name_or_official_relation_pair
 2023 | seed | ADA198 | 의약품합성학 | DB=2022-2;2024-2;2025-2;2026-2 | exact-name-codes=ADA198 | no_same_name_or_official_relation_pair
 2023 | seed | ADA234 | 독성학1 | DB=2026-1 | exact-name-codes=ADA234 | no_same_name_or_official_relation_pair
 2023 | seed | ADA235 | 독성학2 | DB=2026-2 | exact-name-codes=ADA235 | no_same_name_or_official_relation_pair
@@ -100,7 +98,6 @@ UNPAIRED
 2024 | baseline | ADB053 | AI 의료약학빅데이터 | DB=- | exact-name-codes=- | no_same_name_or_official_relation_pair
 2024 | baseline | ADB062 | 신경정신계 및 신장 질환 약물치료학 | DB=- | exact-name-codes=- | no_same_name_or_official_relation_pair
 2024 | baseline | ADB063 | 내분비계 및 류마티스 질환 약물치료 | DB=- | exact-name-codes=- | no_same_name_or_official_relation_pair
-2024 | baseline | ADB067 | 약학실험5 | DB=2025-2;2026-2 | exact-name-codes=ADB067 | no_same_name_or_official_relation_pair
 2024 | seed | ADA148 | 내분비계 및 류마티스 질환 약물치료학 | DB=2022-2;2023-2;2024-2;2025-2;2026-2 | exact-name-codes=ADA148 | no_same_name_or_official_relation_pair
 2024 | seed | ADA234 | 독성학1 | DB=2026-1 | exact-name-codes=ADA234 | no_same_name_or_official_relation_pair
 2024 | seed | ADA235 | 독성학2 | DB=2026-2 | exact-name-codes=ADA235 | no_same_name_or_official_relation_pair

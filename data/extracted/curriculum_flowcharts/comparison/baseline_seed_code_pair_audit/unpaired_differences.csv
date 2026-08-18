@@ -20,8 +20,6 @@
 2022,seed,ADB113,유용천연물소재학,5,2,전선,3,2025-2;2026-2,ADB113,no_same_name_or_official_relation_pair
 2023,baseline,ADB001,해부생리학,1,1,전선,3,2022-1,ADA022;ADB001,no_same_name_or_official_relation_pair
 2023,baseline,ADB004,신경생리학,1,2,전선,1,2022-2,ADA092;ADB004,no_same_name_or_official_relation_pair
-2023,baseline,ADB021,약품면역학,2,2,전필,2,2023-2;2024-2;2025-2;2026-2,ADB021,no_same_name_or_official_relation_pair
-2023,baseline,ADB067,약학실험5,4,2,전필,1,2025-2;2026-2,ADB067,no_same_name_or_official_relation_pair
 2023,seed,ADA198,의약품합성학,3,2,전필,2,2022-2;2024-2;2025-2;2026-2,ADA198,no_same_name_or_official_relation_pair
 2023,seed,ADA234,독성학1,5,1,전선,2,2026-1,ADA234,no_same_name_or_official_relation_pair
 2023,seed,ADA235,독성학2,5,2,전선,2,2026-2,ADA235,no_same_name_or_official_relation_pair
@@ -36,7 +34,6 @@
 2024,baseline,ADB053,AI 의료약학빅데이터,4,1,전선,2,,,no_same_name_or_official_relation_pair
 2024,baseline,ADB062,신경정신계 및 신장 질환 약물치료학,5,1,전필,3,,,no_same_name_or_official_relation_pair
 2024,baseline,ADB063,내분비계 및 류마티스 질환 약물치료,4,1,전선,2,,,no_same_name_or_official_relation_pair
-2024,baseline,ADB067,약학실험5,4,2,전필,1,2025-2;2026-2,ADB067,no_same_name_or_official_relation_pair
 2024,seed,ADA148,내분비계 및 류마티스 질환 약물치료학,4,1,전선,2,2022-2;2023-2;2024-2;2025-2;2026-2,ADA148,no_same_name_or_official_relation_pair
 2024,seed,ADA234,독성학1,5,1,전선,2,2026-1,ADA234,no_same_name_or_official_relation_pair
 2024,seed,ADA235,독성학2,5,2,전선,2,2026-2,ADA235,no_same_name_or_official_relation_pair

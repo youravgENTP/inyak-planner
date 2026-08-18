@@ -18,25 +18,25 @@ seed only: 38
 2023
 ----
 baseline rows: 95
-seed rows: 99
-exact core matches: 62
+seed rows: 101
+exact core matches: 64
 changed same-code rows: 14
-baseline only: 19
+baseline only: 17
 seed only: 23
 
 2024
 ----
 baseline rows: 99
-seed rows: 100
-exact core matches: 75
+seed rows: 101
+exact core matches: 76
 changed same-code rows: 7
-baseline only: 17
+baseline only: 16
 seed only: 18
 
 TOTAL DIFFERENCES
 -----------------
 changed: 30
-baseline_only: 46
+baseline_only: 43
 seed_only: 79
 
 DETAILS
@@ -129,8 +129,6 @@ DETAILS
 2023 | BASELINE_ONLY | ADA227 | 심화실습 2
 2023 | BASELINE_ONLY | ADB001 | 해부생리학
 2023 | BASELINE_ONLY | ADB004 | 신경생리학
-2023 | BASELINE_ONLY | ADB021 | 약품면역학
-2023 | BASELINE_ONLY | ADB067 | 약학실험5
 2023 | SEED_ONLY | ADA198 | 의약품합성학
 2023 | SEED_ONLY | ADA234 | 독성학1
 2023 | SEED_ONLY | ADA235 | 독성학2
@@ -168,7 +166,6 @@ DETAILS
 2024 | BASELINE_ONLY | ADB053 | AI 의료약학빅데이터
 2024 | BASELINE_ONLY | ADB062 | 신경정신계 및 신장 질환 약물치료학
 2024 | BASELINE_ONLY | ADB063 | 내분비계 및 류마티스 질환 약물치료
-2024 | BASELINE_ONLY | ADB067 | 약학실험5
 2024 | BASELINE_ONLY | ADB069 | 감염성 질환 약물치료학
 2024 | BASELINE_ONLY | ADB071 | 호흡기계 및 소화기계 질환 약물치료학
 2024 | BASELINE_ONLY | ADB074 | 약업경영학
