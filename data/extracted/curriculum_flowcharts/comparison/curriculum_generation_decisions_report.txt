@@ -1,0 +1,277 @@
+Curriculum generation decision report
+=============================================
+
+rows analyzed: 640
+
+Decision status
+---------------
+confirmed: 410
+probable: 79
+paired_unknown: 112
+conflict: 6
+unresolved: 33
+
+Provisional generation
+----------------------
+four_year: 151
+six_year: 337
+both: 1
+
+PROBABLE
+--------
+count: 79
+2022 | 4-2 | ADB073 | 의약정보학과 경제성평가 | generation=six_year | reason=strong_same_code_continuity_evidence
+2022 | 5-1 | ADB076 | 약학용어 | generation=six_year | reason=strong_same_code_continuity_evidence
+2022 | 5-1 | ADB077 | 조제학 | generation=six_year | reason=strong_same_code_continuity_evidence
+2022 | 5-2 | ADB084 | 일반의약품학 | generation=six_year | reason=strong_same_code_continuity_evidence
+2023 | 4-1 | ADA182 | 건강기능식품학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2023 | 4-1 | ADB054 | 나노약학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2023 | 4-2 | ADB061 | 법과학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 3-1 | ADA002 | 면역학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA076 | 물리약학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA031 | 약품분석화학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA042 | 약품생화학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA201 | 약학실험 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADB028 | 의약품합성학1 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA199 | 무기 및 방사성 의약품학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA212 | 약사윤리와 진로 적응 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA051 | 약학통계 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA080 | 약화학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-1 | ADA022 | 해부생리학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA041 | 물리약학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA074 | 약품분석화학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA012 | 약품생화학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA195 | 약학실험 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADB038 | 의약품합성학2 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA006 | 병태생리학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA196 | 약품기기분석학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA181 | 의약분자생물학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 3-2 | ADA197 | 의약품설계학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA193 | 보건사회약학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA065 | 생약학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA030 | 약물학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA104 | 약품 미생물학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA184 | 약학실험 3 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADA186 | 제제과학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADB053 | AI 의료약학빅데이터 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADB052 | 무기방사성 의약품학 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 4-1 | ADB047 | 의약화학1 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 4-1 | ADB048 | 천연물의약품학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 4-2 | ADA208 | 감염미생물학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADA055 | 생약학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADA001 | 약물학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADA192 | 약학실험 4 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADA187 | 제제과학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADB057 | 생물약제학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 4-2 | ADA136 | 심혈관계 질환 약물치료학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADB058 | 약물동태학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 4-2 | ADA204 | 의약정보학과 커뮤니케이션 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADB059 | 의약화학2 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 4-2 | ADA183 | 임상생화학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 4-2 | ADA137 | 임상약학 해설 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADB062 | 신경정신계 및 신장 질환 약물치료학 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA200 | 제제과학실습 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA115 | 지역약국 예비실무실습 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 5-1 | ADB070 | 항암약물요법 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA202 | 항암약물요법 및 일반의약품약물요법 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA144 | 신경정신계질환 및 신장질환 약물치료학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA132 | 예방약학 1 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA171 | 의약품제조관리학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 5-1 | ADA211 | 임상미생물학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-1 | ADA150 | 임상약물동태학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADA194 | 보건의약관계법규 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADA174 | 약무행정실무필수실습 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 5-2 | ADA190 | 임상면역학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADA140 | 한약제제학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 5-2 | ADA045 | 독성학 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADA191 | 신약개발임상시험 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADB082 | 심혈관계 질환 약물치료학 | generation=six_year | reason=strong_same_code_continuity_evidence
+2024 | 5-2 | ADA167 | 약전 및 품질관리학 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 5-2 | ADA109 | 예방약학 2 | generation=four_year | reason=strong_same_code_continuity_evidence
+2024 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-1 | ADA218 | 제약산업 필수실무실습 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-2 | ADA226 | 심화실습 1 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-2 | ADA227 | 심화실습 2 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+2024 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | generation=six_year | reason=ambiguous_pair_one_sided_lineage_evidence
+
+CONFLICT
+--------
+count: 6
+2024 | 5-1 | ADA217 | 의료기관약국 예비실무실습 | continuity=four_year_and_six_year_both_present_within_two_year_window
+2024 | 5-1 | ADA206 | 의약품 경제성평가 | continuity=four_year_and_six_year_both_present_within_two_year_window
+2024 | 5-1 | ADA145 | 호흡기계 및 소화기계 질환 약물치료학 | continuity=four_year_and_six_year_both_present_within_two_year_window
+2024 | 5-2 | ADA147 | 감염성 질환 약물치료학 | continuity=four_year_and_six_year_both_present_within_two_year_window
+2024 | 5-2 | ADA148 | 내분비계 및 류마티스 질환 약물치료학 | continuity=four_year_and_six_year_both_present_within_two_year_window
+2024 | 5-2 | ADA118 | 약업경영학 | continuity=four_year_and_six_year_both_present_within_two_year_window
+
+PAIRED UNKNOWN
+--------------
+count: 112
+2022 | 4-1 | ADA102 | 의약화학 1 | lineage=unresolved
+2022 | 4-1 | ADB050 | 건강기능식품학 | lineage=unresolved
+2022 | 4-1 | ADA182 | 건강기능식품학 | lineage=unresolved
+2022 | 4-1 | ADB047 | 의약화학1 | lineage=unresolved
+2022 | 4-1 | ADB048 | 천연물의약품학 | lineage=unresolved
+2022 | 4-1 | ADA122 | 천연물의약품학 | lineage=unresolved
+2022 | 4-1 | ADA120 | 향장품학 | lineage=unresolved
+2022 | 4-1 | ADB043 | 향장품학 | lineage=unresolved
+2022 | 4-2 | ADB057 | 생물약제학 | lineage=unresolved
+2022 | 4-2 | ADA033 | 생물약제학 | lineage=unresolved
+2022 | 4-2 | ADA086 | 약물동태학 | lineage=unresolved
+2022 | 4-2 | ADB058 | 약물동태학 | lineage=unresolved
+2022 | 5-1 | ADA115 | 지역약국 예비실무실습 | lineage=unresolved
+2022 | 5-1 | ADB075 | 지역약국 예비실무실습 | lineage=unresolved
+2022 | 5-1 | ADB072 | 의약품제조관리학 | lineage=unresolved
+2022 | 5-1 | ADA171 | 의약품제조관리학 | lineage=unresolved
+2022 | 5-2 | ADA174 | 약무행정실무필수실습 | lineage=unresolved
+2022 | 5-2 | ADB087 | 약무행정실무필수실습 | lineage=unresolved
+2022 | 5-2 | ADB080 | 한약제제학 | lineage=unresolved
+2022 | 5-2 | ADA140 | 한약제제학 | lineage=unresolved
+2022 | 5-2 | ADA121 | 동물용의약품학 | lineage=unresolved
+2022 | 5-2 | ADB089 | 동물용의약품학 | lineage=unresolved
+2022 | 5-2 | ADA167 | 약전 및 품질관리학 | lineage=unresolved
+2022 | 5-2 | ADB081 | 약전 및 품질관리학 | lineage=unresolved
+2022 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | lineage=unresolved
+2022 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | lineage=unresolved
+2022 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | lineage=unresolved
+2022 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | lineage=unresolved
+2022 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | lineage=unresolved
+2022 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | lineage=unresolved
+2022 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | lineage=unresolved
+2022 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | lineage=unresolved
+2022 | 6-1 | ADB097 | 제약산업 필수실무실습 | lineage=unresolved
+2022 | 6-1 | ADA218 | 제약산업 필수실무실습 | lineage=unresolved
+2022 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | lineage=unresolved
+2022 | 6-1 | ADB092 | 지역약국 필수실무실습1 | lineage=unresolved
+2022 | 6-2 | ADA226 | 심화실습 1 | lineage=unresolved
+2022 | 6-2 | ADB099 | 심화실습 1 | lineage=unresolved
+2022 | 6-2 | ADB100 | 심화실습 2 | lineage=unresolved
+2022 | 6-2 | ADA227 | 심화실습 2 | lineage=unresolved
+2022 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | lineage=unresolved
+2022 | 6-2 | ADB098 | 지역약국 필수실무실습2 | lineage=unresolved
+2023 | 4-1 | ADA102 | 의약화학 1 | lineage=unresolved
+2023 | 4-1 | ADB050 | 건강기능식품학 | lineage=unresolved
+2023 | 4-1 | ADA229 | 나노약학 | lineage=unresolved
+2023 | 4-1 | ADB047 | 의약화학1 | lineage=unresolved
+2023 | 4-1 | ADB048 | 천연물의약품학 | lineage=unresolved
+2023 | 4-1 | ADA122 | 천연물의약품학 | lineage=unresolved
+2023 | 4-1 | ADB043 | 향장품학 | lineage=unresolved
+2023 | 4-1 | ADA120 | 향장품학 | lineage=unresolved
+2023 | 4-2 | ADA103 | 의약화학 2 | lineage=unresolved
+2023 | 4-2 | ADA230 | 법과학 | lineage=unresolved
+2023 | 4-2 | ADB057 | 생물약제학 | lineage=unresolved
+2023 | 4-2 | ADA033 | 생물약제학 | lineage=unresolved
+2023 | 4-2 | ADA086 | 약물동태학 | lineage=unresolved
+2023 | 4-2 | ADB058 | 약물동태학 | lineage=unresolved
+2023 | 4-2 | ADB059 | 의약화학2 | lineage=unresolved
+2023 | 5-1 | ADA115 | 지역약국 예비실무실습 | lineage=unresolved
+2023 | 5-1 | ADB075 | 지역약국 예비실무실습 | lineage=unresolved
+2023 | 5-1 | ADA171 | 의약품제조관리학 | lineage=unresolved
+2023 | 5-1 | ADB072 | 의약품제조관리학 | lineage=unresolved
+2023 | 5-2 | ADB087 | 약무행정실무필수실습 | lineage=unresolved
+2023 | 5-2 | ADA174 | 약무행정실무필수실습 | lineage=unresolved
+2023 | 5-2 | ADA140 | 한약제제학 | lineage=unresolved
+2023 | 5-2 | ADB080 | 한약제제학 | lineage=unresolved
+2023 | 5-2 | ADA121 | 동물용의약품학 | lineage=unresolved
+2023 | 5-2 | ADB089 | 동물용의약품학 | lineage=unresolved
+2023 | 5-2 | ADA167 | 약전 및 품질관리학 | lineage=unresolved
+2023 | 5-2 | ADB081 | 약전 및 품질관리학 | lineage=unresolved
+2023 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | lineage=unresolved
+2023 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | lineage=unresolved
+2023 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | lineage=unresolved
+2023 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | lineage=unresolved
+2023 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | lineage=unresolved
+2023 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | lineage=unresolved
+2023 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | lineage=unresolved
+2023 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | lineage=unresolved
+2023 | 6-1 | ADB097 | 제약산업 필수실무실습 | lineage=unresolved
+2023 | 6-1 | ADA218 | 제약산업 필수실무실습 | lineage=unresolved
+2023 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | lineage=unresolved
+2023 | 6-1 | ADB092 | 지역약국 필수실무실습1 | lineage=unresolved
+2023 | 6-2 | ADA226 | 심화실습 1 | lineage=unresolved
+2023 | 6-2 | ADB099 | 심화실습 1 | lineage=unresolved
+2023 | 6-2 | ADB100 | 심화실습 2 | lineage=unresolved
+2023 | 6-2 | ADA227 | 심화실습 2 | lineage=unresolved
+2023 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | lineage=unresolved
+2023 | 6-2 | ADB098 | 지역약국 필수실무실습2 | lineage=unresolved
+2024 | 4-1 | ADA102 | 의약화학 1 | lineage=unresolved
+2024 | 4-1 | ADA229 | 나노약학 | lineage=unresolved
+2024 | 4-1 | ADB054 | 나노약학 | lineage=unresolved
+2024 | 4-1 | ADA122 | 천연물의약품학 | lineage=unresolved
+2024 | 4-1 | ADA120 | 향장품학 | lineage=unresolved
+2024 | 4-1 | ADB043 | 향장품학 | lineage=unresolved
+2024 | 4-2 | ADA103 | 의약화학 2 | lineage=unresolved
+2024 | 4-2 | ADA033 | 생물약제학 | lineage=unresolved
+2024 | 4-2 | ADA086 | 약물동태학 | lineage=unresolved
+2024 | 5-1 | ADB075 | 지역약국 예비실무실습 | lineage=unresolved
+2024 | 5-1 | ADB072 | 의약품제조관리학 | lineage=unresolved
+2024 | 5-2 | ADB087 | 약무행정실무필수실습 | lineage=unresolved
+2024 | 5-2 | ADB080 | 한약제제학 | lineage=unresolved
+2024 | 5-2 | ADA121 | 동물용의약품학 | lineage=unresolved
+2024 | 5-2 | ADB089 | 동물용의약품학 | lineage=unresolved
+2024 | 5-2 | ADB081 | 약전 및 품질관리학 | lineage=unresolved
+2024 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | lineage=unresolved
+2024 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | lineage=unresolved
+2024 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | lineage=unresolved
+2024 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | lineage=unresolved
+2024 | 6-1 | ADB097 | 제약산업 필수실무실습 | lineage=unresolved
+2024 | 6-1 | ADB092 | 지역약국 필수실무실습1 | lineage=unresolved
+2024 | 6-2 | ADB099 | 심화실습 1 | lineage=unresolved
+2024 | 6-2 | ADB100 | 심화실습 2 | lineage=unresolved
+2024 | 6-2 | ADB098 | 지역약국 필수실무실습2 | lineage=unresolved
+
+UNRESOLVED
+----------
+count: 33
+2022 | 3-1 | ADA223 | 상담지도 1 | continuity=no_evidence | relation=no
+2022 | 3-2 | ADA224 | 상담지도 II | continuity=no_evidence | relation=no
+2022 | 3-2 | ADA092 | 신경생리학 | continuity=no_evidence | relation=no
+2022 | 4-2 | ADB067 | 약학실험5 | continuity=no_evidence | relation=no
+2022 | 5-1 | ADB078 | 방제학 | continuity=no_evidence | relation=no
+2022 | 5-2 | ADA225 | 바이오의약품학 | continuity=no_evidence | relation=yes
+2023 | 3-1 | ADA203 | 약용식물학 | continuity=candidate | relation=no
+2023 | 3-2 | ADA189 | 바이러스학 | continuity=candidate | relation=no
+2023 | 3-2 | ADA092 | 신경생리학 | continuity=no_evidence | relation=no
+2023 | 3-2 | ADA228 | 자원생약학 | continuity=candidate | relation=no
+2023 | 4-1 | ADA063 | 약물유전체학 | continuity=no_evidence | relation=no
+2023 | 4-2 | ADB067 | 약학실험5 | continuity=weak_only | relation=no
+2023 | 5-1 | ADB078 | 방제학 | continuity=no_evidence | relation=no
+2023 | 5-2 | ADA225 | 바이오의약품학 | continuity=no_evidence | relation=yes
+2024 | 3-1 | ADA203 | 약용식물학 | continuity=weak_only | relation=no
+2024 | 3-2 | ADA189 | 바이러스학 | continuity=weak_only | relation=no
+2024 | 3-2 | ADA092 | 신경생리학 | continuity=no_evidence | relation=no
+2024 | 4-1 | ADB050 | 건강기능식품학 | continuity=candidate | relation=no
+2024 | 4-1 | ADA063 | 약물유전체학 | continuity=no_evidence | relation=no
+2024 | 4-2 | ADB067 | 약학실험5 | continuity=candidate | relation=no
+2024 | 4-2 | ADA230 | 법과학 | continuity=no_evidence | relation=no
+2024 | 4-2 | ADB061 | 법과학 | continuity=weak_only | relation=no
+2024 | 4-2 | ADA232 | 임상의약정보학 | continuity=no_evidence | relation=no
+2024 | 5-1 | ADB078 | 방제학 | continuity=no_evidence | relation=no
+2024 | 5-2 | ADA225 | 바이오의약품학 | continuity=no_evidence | relation=yes
+2024 | 5-2 | ADA053 | 조제학 | continuity=no_evidence | relation=no
+2025 | 4-2 | ADB082 | 심혈관계 질환 약물치료학 | continuity=weak_only | relation=no
+2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | continuity=weak_only | relation=yes
+2025 | 5-1 | ADA200 | 제제과학실습 | continuity=weak_only | relation=yes
+2025 | 5-1 | ADA132 | 예방약학 1 | continuity=weak_only | relation=no
+2025 | 5-2 | ADA194 | 보건의약관계법규 | continuity=weak_only | relation=yes
+2025 | 5-2 | ADA190 | 임상면역학 | continuity=weak_only | relation=no
+2025 | 5-2 | ADA109 | 예방약학 2 | continuity=weak_only | relation=no
+
+Rules
+-----
+1. confirmed means row-level generation evidence already exists.
+2. Exact flowchart evidence, grade 1-2 evidence, and approved near-name evidence remain confirmed.
+3. Strong continuity evidence is probable, not confirmed.
+4. One-sided lineage evidence for an ambiguous row is probable, not confirmed.
+5. An ambiguous duplicate row without row-level resolution remains paired_unknown.
+6. Explicit continuity disagreement between four-year and six-year evidence is conflict.
+7. Moderate continuity evidence does not assign a provisional generation.
+8. Official equivalent/substitute relations are retained as evidence but do not assign generation here.
+9. No course-code prefix is used.
+10. This table is still diagnostic. It does not modify baseline, seed, or database data.

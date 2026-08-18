@@ -1,0 +1,106 @@
+Curriculum generation continuity audit
+=============================================
+
+unresolved rows analyzed: 96
+
+Candidate summary
+-----------------
+four_year: 47
+six_year: 15
+strong: 57
+moderate: 5
+conflict: 6
+weak_only: 11
+no_evidence: 17
+
+STRONG CANDIDATES
+-----------------
+count: 57
+2022 | 4-2 | ADB073 | 의약정보학과 경제성평가 | candidate=six_year | reason=two_year_forward_consensus | four_years=- | six_years=2023;2024
+2022 | 5-1 | ADB076 | 약학용어 | candidate=six_year | reason=two_year_forward_consensus | four_years=- | six_years=2023;2024
+2022 | 5-1 | ADB077 | 조제학 | candidate=six_year | reason=two_year_forward_consensus | four_years=- | six_years=2023;2024
+2022 | 5-2 | ADB084 | 일반의약품학 | candidate=six_year | reason=two_year_forward_consensus | four_years=- | six_years=2023;2024
+2024 | 3-1 | ADA002 | 면역학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA076 | 물리약학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA031 | 약품분석화학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA042 | 약품생화학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA201 | 약학실험 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADB028 | 의약품합성학1 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 3-1 | ADA199 | 무기 및 방사성 의약품학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA212 | 약사윤리와 진로 적응 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA051 | 약학통계 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA080 | 약화학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-1 | ADA022 | 해부생리학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA041 | 물리약학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA074 | 약품분석화학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA012 | 약품생화학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA195 | 약학실험 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADB038 | 의약품합성학2 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 3-2 | ADA006 | 병태생리학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA196 | 약품기기분석학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA181 | 의약분자생물학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 3-2 | ADA197 | 의약품설계학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA193 | 보건사회약학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA065 | 생약학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA030 | 약물학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA104 | 약품 미생물학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA184 | 약학실험 3 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADA186 | 제제과학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-1 | ADB053 | AI 의료약학빅데이터 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 4-1 | ADB063 | 내분비계 및 류마티스 질환 약물치료 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 4-1 | ADB052 | 무기방사성 의약품학 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 4-2 | ADA208 | 감염미생물학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA055 | 생약학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA001 | 약물학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA192 | 약학실험 4 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA187 | 제제과학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA136 | 심혈관계 질환 약물치료학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA204 | 의약정보학과 커뮤니케이션 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA183 | 임상생화학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 4-2 | ADA137 | 임상약학 해설 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADB062 | 신경정신계 및 신장 질환 약물치료학 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 5-1 | ADA200 | 제제과학실습 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADB070 | 항암약물요법 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 5-1 | ADA202 | 항암약물요법 및 일반의약품약물요법 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADA144 | 신경정신계질환 및 신장질환 약물치료학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADA132 | 예방약학 1 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADA211 | 임상미생물학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-1 | ADA150 | 임상약물동태학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-2 | ADA194 | 보건의약관계법규 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-2 | ADA190 | 임상면역학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-2 | ADA045 | 독성학 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-2 | ADA191 | 신약개발임상시험 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+2024 | 5-2 | ADB082 | 심혈관계 질환 약물치료학 | candidate=six_year | reason=two_year_backward_consensus | four_years=- | six_years=2022;2023
+2024 | 5-2 | ADA109 | 예방약학 2 | candidate=four_year | reason=two_year_backward_consensus | four_years=2022;2023 | six_years=-
+
+MODERATE CANDIDATES
+-------------------
+count: 5
+2023 | 3-1 | ADA203 | 약용식물학 | candidate=four_year | reason=previous_adjacent_year_support | four_years=2022 | six_years=-
+2023 | 3-2 | ADA189 | 바이러스학 | candidate=four_year | reason=previous_adjacent_year_support | four_years=2022 | six_years=-
+2023 | 3-2 | ADA228 | 자원생약학 | candidate=six_year | reason=next_adjacent_year_support | four_years=- | six_years=2024
+2024 | 4-1 | ADB050 | 건강기능식품학 | candidate=six_year | reason=next_adjacent_year_support | four_years=- | six_years=2025
+2024 | 4-2 | ADB067 | 약학실험5 | candidate=six_year | reason=next_adjacent_year_support | four_years=- | six_years=2025
+
+CONFLICTS
+---------
+count: 6
+2024 | 5-1 | ADA217 | 의료기관약국 예비실무실습 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+2024 | 5-1 | ADA206 | 의약품 경제성평가 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+2024 | 5-1 | ADA145 | 호흡기계 및 소화기계 질환 약물치료학 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+2024 | 5-2 | ADA147 | 감염성 질환 약물치료학 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+2024 | 5-2 | ADA148 | 내분비계 및 류마티스 질환 약물치료학 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+2024 | 5-2 | ADA118 | 약업경영학 | reason=four_year_and_six_year_both_present_within_two_year_window | four_years=2022;2023 | six_years=2025
+
+Rules
+-----
+1. Only rows currently classified as unresolved are analyzed.
+2. Course codes are never assigned a global generation.
+3. Only the same course code within two academic years before or after the target row is inspected.
+4. four_year and six_year row evidence may support continuity; ambiguous, unresolved, and both do not.
+5. If four-year and six-year evidence both occur within the two-year window, the result is conflict.
+6. Strong evidence requires either both immediate neighbors to agree or two consecutive years on one side to agree.
+7. One immediately adjacent year alone is reported only as a moderate candidate.
+8. Evidence existing only two years away is not assigned a generation candidate.
+9. This audit does not modify row generation evidence, lineage, baseline, seed, or database data.

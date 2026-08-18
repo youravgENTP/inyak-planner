@@ -1,0 +1,97 @@
+﻿academic_year,grade,semester,course_name,course_code,completion_type,credits,current_generation,previous_1_year,previous_1_generation,previous_1_reason,previous_2_year,previous_2_generation,previous_2_reason,next_1_year,next_1_generation,next_1_reason,next_2_year,next_2_generation,next_2_reason,supporting_four_years,supporting_six_years,continuity_candidate,continuity_strength,continuity_status,continuity_reason
+2022,3,1,상담지도 1,ADA223,전필,0,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,3,2,상담지도 II,ADA224,전필,0,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,3,2,신경생리학,ADA092,전선,1,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,4,2,약학실험5,ADB067,전필,1,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,4,2,의약정보학과 경제성평가,ADB073,전필,2,unresolved,,,,,,,2023,six_year,unique_pdf_row_matches_6year_flowchart,2024,six_year,unique_pdf_row_matches_6year_flowchart,,2023;2024,six_year,strong,candidate,two_year_forward_consensus
+2022,5,1,방제학,ADB078,전선,3,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,5,1,약학용어,ADB076,전선,2,unresolved,,,,,,,2023,six_year,grade_1_2_rule,2024,six_year,unique_pdf_row_matches_6year_flowchart,,2023;2024,six_year,strong,candidate,two_year_forward_consensus
+2022,5,1,조제학,ADB077,전선,3,unresolved,,,,,,,2023,six_year,grade_1_2_rule,2024,six_year,grade_1_2_rule,,2023;2024,six_year,strong,candidate,two_year_forward_consensus
+2022,5,2,바이오의약품학,ADA225,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2022,5,2,일반의약품학,ADB084,전선,3,unresolved,,,,,,,2023,six_year,grade_1_2_rule,2024,six_year,unique_pdf_row_matches_6year_flowchart,,2023;2024,six_year,strong,candidate,two_year_forward_consensus
+2023,3,1,약용식물학,ADA203,전선,2,unresolved,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,,,,2022,,four_year,moderate,candidate,previous_adjacent_year_support
+2023,3,2,바이러스학,ADA189,전선,3,unresolved,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,,,,2022,,four_year,moderate,candidate,previous_adjacent_year_support
+2023,3,2,신경생리학,ADA092,전선,1,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2023,3,2,자원생약학,ADA228,전선,3,unresolved,,,,,,,2024,six_year,unique_pdf_row_matches_6year_flowchart,,,,,2024,six_year,moderate,candidate,next_adjacent_year_support
+2023,4,1,약물유전체학,ADA063,전선,3,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2023,4,2,약학실험5,ADB067,전필,1,unresolved,,,,,,,,,,2025,six_year,unique_pdf_row_matches_6year_flowchart,,2025,,,weak_only,generation_evidence_exists_only_two_years_away
+2023,5,1,방제학,ADB078,전선,3,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2023,5,2,바이오의약품학,ADA225,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,3,1,면역학,ADA002,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,물리약학 1,ADA076,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약품분석화학 1,ADA031,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약품생화학 1,ADA042,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약학실험 1,ADA201,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,의약품합성학1,ADB028,전필,2,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,3,1,무기 및 방사성 의약품학,ADA199,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약사윤리와 진로 적응,ADA212,전선,1,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약용식물학,ADA203,전선,2,unresolved,,,,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022,,,,weak_only,generation_evidence_exists_only_two_years_away
+2024,3,1,약학통계,ADA051,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,약화학,ADA080,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,1,해부생리학,ADA022,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,물리약학 2,ADA041,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,약품분석화학 2,ADA074,전필,1,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,약품생화학 2,ADA012,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,약학실험 2,ADA195,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,의약품합성학2,ADB038,전필,2,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,3,2,바이러스학,ADA189,전선,3,unresolved,,,,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022,,,,weak_only,generation_evidence_exists_only_two_years_away
+2024,3,2,병태생리학,ADA006,전선,4,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,신경생리학,ADA092,전선,1,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,3,2,약품기기분석학,ADA196,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,의약분자생물학,ADA181,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,3,2,의약품설계학,ADA197,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,보건사회약학,ADA193,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,생약학 1,ADA065,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,약물학 1,ADA030,전필,4,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,약품 미생물학,ADA104,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,약학실험 3,ADA184,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,제제과학 1,ADA186,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,1,AI 의료약학빅데이터,ADB053,전선,2,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,4,1,건강기능식품학,ADB050,전선,2,unresolved,,,,,,,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,,2025,six_year,moderate,candidate,next_adjacent_year_support
+2024,4,1,내분비계 및 류마티스 질환 약물치료,ADB063,전선,2,unresolved,2023,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,2022,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,4,1,무기방사성 의약품학,ADB052,전선,2,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,4,1,약물유전체학,ADA063,전선,3,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,4,2,감염미생물학,ADA208,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_fouryear_flowchart_near_name,2022,four_year,unique_pdf_row_matches_fouryear_flowchart_near_name,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,생약학 2,ADA055,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,약물학 2,ADA001,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,약학실험 4,ADA192,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,약학실험5,ADB067,전필,1,unresolved,,,,,,,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,,2025,six_year,moderate,candidate,next_adjacent_year_support
+2024,4,2,제제과학 2,ADA187,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,법과학,ADA230,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,4,2,법과학,ADB061,전선,2,unresolved,,,,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022,,,weak_only,generation_evidence_exists_only_two_years_away
+2024,4,2,심혈관계 질환 약물치료학,ADA136,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,의약정보학과 커뮤니케이션,ADA204,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,임상생화학,ADA183,전선,1,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,임상약학 해설,ADA137,전선,1,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,4,2,임상의약정보학,ADA232,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,5,1,감염질환을 위한 항생물질학,ADA209,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,신경정신계 및 신장 질환 약물치료학,ADB062,전필,3,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,5,1,의료기관약국 예비실무실습,ADA217,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,1,의약품 경제성평가,ADA206,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,1,제제과학실습,ADA200,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,항암약물요법,ADB070,전필,2,unresolved,2023,six_year,unique_pdf_row_matches_6year_flowchart,2022,six_year,unique_pdf_row_matches_6year_flowchart,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,5,1,항암약물요법 및 일반의약품약물요법,ADA202,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,방제학,ADB078,전선,3,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,5,1,신경정신계질환 및 신장질환 약물치료학,ADA144,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,예방약학 1,ADA132,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,임상미생물학,ADA211,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,임상약물동태학,ADA150,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,1,호흡기계 및 소화기계 질환 약물치료학,ADA145,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,2,감염성 질환 약물치료학,ADA147,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,2,내분비계 및 류마티스 질환 약물치료학,ADA148,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,2,보건의약관계법규,ADA194,전필,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,2,임상면역학,ADA190,전필,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,2,독성학,ADA045,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,2,바이오의약품학,ADA225,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2024,5,2,신약개발임상시험,ADA191,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,2,심혈관계 질환 약물치료학,ADB082,전선,3,unresolved,2023,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,2022,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,,,,,,,,2022;2023,six_year,strong,candidate,two_year_backward_consensus
+2024,5,2,약업경영학,ADA118,전선,2,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,2025,six_year,unique_pdf_row_matches_6year_flowchart,,,,2022;2023,2025,,,conflict,four_year_and_six_year_both_present_within_two_year_window
+2024,5,2,예방약학 2,ADA109,전선,3,unresolved,2023,four_year,unique_pdf_row_matches_4year_flowchart,2022,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2022;2023,,four_year,strong,candidate,two_year_backward_consensus
+2024,5,2,조제학,ADA053,전선,2,unresolved,,,,,,,,,,,,,,,,,no_evidence,no_same_code_generation_evidence_within_two_year_window
+2025,4,2,심혈관계 질환 약물치료학,ADB082,전선,3,unresolved,,,,2023,six_year,unique_pdf_row_matches_sixyear_flowchart_near_name,,,,,,,,2023,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,1,감염질환을 위한 항생물질학,ADA209,전필,2,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,1,제제과학실습,ADA200,전필,2,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,1,예방약학 1,ADA132,전선,2,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,2,보건의약관계법규,ADA194,전필,2,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,2,임상면역학,ADA190,전필,3,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
+2025,5,2,예방약학 2,ADA109,전선,3,unresolved,,,,2023,four_year,unique_pdf_row_matches_4year_flowchart,,,,,,,2023,,,,weak_only,generation_evidence_exists_only_two_years_away
