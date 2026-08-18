@@ -353,6 +353,54 @@ def extract_completion_type(
     return None
 
 
+def normalize_course_name(
+    text: str,
+) -> str:
+    cleaned = clean_text(
+        text
+    )
+
+    cleaned = re.sub(
+        r"^[\s|:;•·ㆍ/\\\[\]「」]+",
+        "",
+        cleaned,
+    )
+
+    cleaned = re.sub(
+        r"^\d+\s+(?=[가-힣])",
+        "",
+        cleaned,
+    )
+
+    cleaned = re.sub(
+        (
+            r"\s+"
+            r"\d+(?:\.\d+)?"
+            r"\s+"
+            r"\d+(?:\.\d+)?"
+            r"\s+"
+            r"\d+(?:\.\d+)?"
+            r"\s*$"
+        ),
+        "",
+        cleaned,
+    )
+
+    cleaned = re.sub(
+        r"[\s|:;•·ㆍ/?]+$",
+        "",
+        cleaned,
+    )
+
+    cleaned = re.sub(
+        r"\s+",
+        " ",
+        cleaned,
+    ).strip()
+
+    return cleaned
+
+
 def extract_course_name(
     observations: list[
         VisionObservation
@@ -360,16 +408,37 @@ def extract_course_name(
 ) -> str:
     competency_phrases = [
         "문제 해결 능력",
+        "문제해결 능력",
         "문제 해결 능",
+        "문제해결 능",
         "전문 연구 능력",
+        "전문연구 능력",
         "전문 연구 능",
+        "전문연구 능",
         "융복합 능력",
         "융복합 능",
         "실험 수행 능력",
+        "실험수행 능력",
         "실험 수행 능",
+        "실험수행 능",
         "의사 전달 능력",
+        "의사전달 능력",
         "의사 전달 능",
+        "의사전달 능",
+        "팀워크 능력",
+        "팀워크 능",
     ]
+
+    rejected_exact = {
+        "전필",
+        "전선",
+        "능",
+        "능력",
+        "력",
+        "팀워크",
+        "팀워크 능",
+        "팀워크 능력",
+    }
 
     candidates: list[
         tuple[
@@ -418,39 +487,19 @@ def extract_course_name(
                 " ",
             )
 
-        cleaned = re.sub(
-            r"^\s*력\s*$",
-            "",
-            cleaned,
+        cleaned = normalize_course_name(
+            cleaned
         )
-
-        cleaned = re.sub(
-            r"^[•·ㆍ/\-\s]+",
-            "",
-            cleaned,
-        )
-
-        cleaned = re.sub(
-            r"\s+",
-            " ",
-            cleaned,
-        ).strip()
 
         if not cleaned:
+            continue
+
+        if cleaned in rejected_exact:
             continue
 
         if not HANGUL_RE.search(
             cleaned
         ):
-            continue
-
-        if cleaned in {
-            "전필",
-            "전선",
-            "능",
-            "능력",
-            "력",
-        }:
             continue
 
         hangul_count = len(
@@ -459,15 +508,22 @@ def extract_course_name(
             )
         )
 
-        position_score = (
-            2
-            if x >= 0.32
-            else 1
+        if x >= 0.30:
+            position_score = 12
+        elif x >= 0.22:
+            position_score = 4
+        else:
+            position_score = 0
+
+        confidence_score = int(
+            confidence
+            * 3
         )
 
         score = (
             hangul_count
             + position_score
+            + confidence_score
         )
 
         candidates.append(
@@ -485,13 +541,12 @@ def extract_course_name(
     candidates.sort(
         key=lambda item: (
             -item[0],
+            -item[2],
             -item[1],
-            item[2],
         )
     )
 
     return candidates[0][3]
-
 
 def extract_credit_from_vision(
     observations: list[
