@@ -28,3 +28,6 @@ config/private/
 
 # dev_account information
 dev_account/
+
+# dev notes
+dev_notes/
