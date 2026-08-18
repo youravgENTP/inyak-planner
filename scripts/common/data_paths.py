@@ -3,13 +3,29 @@ from __future__ import annotations
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DATA_DIR = PROJECT_ROOT / "data"
 
 RAW_DIR = DATA_DIR / "raw"
+EXTRACTED_DIR = DATA_DIR / "extracted"
 REFERENCE_DIR = DATA_DIR / "reference"
 SEED_DIR = DATA_DIR / "seed"
+
+RAW_CURRICULUM_PDFS_DIR = (
+    RAW_DIR
+    / "curriculum_pdfs"
+)
+
+RAW_GRADUATION_PDFS_DIR = (
+    RAW_DIR
+    / "graduation_pdfs"
+)
+
+EXTRACTED_CURRICULUM_DIR = (
+    EXTRACTED_DIR
+    / "curriculum"
+)
 
 CURRICULUM_SEED_DIR = (
     SEED_DIR

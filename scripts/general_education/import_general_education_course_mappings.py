@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -17,7 +17,7 @@ from server.database import (
     connect_database,
 )
 
-from data_paths import (
+from scripts.common.data_paths import (
     GENERAL_EDUCATION_COURSE_MAPPINGS_PATH,
 )
 

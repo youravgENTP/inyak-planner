@@ -16,7 +16,7 @@ This script:
 
 from __future__ import annotations
 
-from data_paths import (
+from scripts.common.data_paths import (
     DATABASE_PATH,
     curriculum_seed_path,
 )

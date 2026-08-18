@@ -10,7 +10,7 @@ import Vision
 from Foundation import NSURL
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_CURRICULUM_DIR = (
     PROJECT_ROOT

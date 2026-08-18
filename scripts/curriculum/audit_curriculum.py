@@ -5,12 +5,12 @@ import re
 import sqlite3
 from pathlib import Path
 
-from import_curriculum import (
+from scripts.curriculum.import_curriculum import (
     CurriculumCourse,
     load_csv,
 )
 
-from data_paths import (
+from scripts.common.data_paths import (
     CURRICULUM_SEED_DIR,
     DATABASE_PATH,
     curriculum_seed_path,

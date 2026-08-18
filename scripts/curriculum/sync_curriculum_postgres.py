@@ -33,7 +33,7 @@ from typing import Any
 
 import psycopg
 
-from import_curriculum import (
+from scripts.curriculum.import_curriculum import (
     CurriculumCourse,
     load_csv,
 )

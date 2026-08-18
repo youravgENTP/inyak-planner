@@ -7,13 +7,13 @@ from pathlib import Path
 
 import fitz
 
-from probe_vision_ocr import (
+from scripts.probes.probe_vision_ocr import (
     recognize_image,
     render_page,
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_CURRICULUM_DIR = (
     PROJECT_ROOT
