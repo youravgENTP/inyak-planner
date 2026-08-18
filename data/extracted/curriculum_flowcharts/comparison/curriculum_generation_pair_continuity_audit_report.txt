@@ -1,0 +1,92 @@
+Curriculum generation pair continuity audit
+=============================================
+
+pair histories: 24
+
+Patterns
+--------
+never_resolved: 2
+one_member_resolved_probable_only: 22
+
+PAIR HISTORIES
+--------------
+건강기능식품학 | pair=ADA182;ADB050 | years=2022;2023 | pattern=one_member_resolved_probable_only
+  ADA182 | 2022:paired_unknown/- | 2023:probable/six_year
+  ADB050 | 2022:paired_unknown/- | 2023:paired_unknown/-
+나노약학 | pair=ADA229;ADB054 | years=2023;2024 | pattern=one_member_resolved_probable_only
+  ADA229 | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB054 | 2023:probable/six_year | 2024:paired_unknown/-
+의약화학 1 | pair=ADA102;ADB047 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA102 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB047 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+천연물의약품학 | pair=ADA122;ADB048 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA122 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB048 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+향장품학 | pair=ADA120;ADB043 | years=2022;2023;2024 | pattern=never_resolved
+  ADA120 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB043 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+법과학 | pair=ADA230;ADB061 | years=2023 | pattern=one_member_resolved_probable_only
+  ADA230 | 2023:paired_unknown/-
+  ADB061 | 2023:probable/six_year
+생물약제학 | pair=ADA033;ADB057 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA033 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB057 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+약물동태학 | pair=ADA086;ADB058 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA086 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB058 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+의약화학 2 | pair=ADA103;ADB059 | years=2023;2024 | pattern=one_member_resolved_probable_only
+  ADA103 | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB059 | 2023:paired_unknown/- | 2024:probable/six_year
+의약품제조관리학 | pair=ADA171;ADB072 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA171 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB072 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+지역약국 예비실무실습 | pair=ADA115;ADB075 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA115 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB075 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+동물용의약품학 | pair=ADA121;ADB089 | years=2022;2023;2024 | pattern=never_resolved
+  ADA121 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+  ADB089 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+약무행정실무필수실습 | pair=ADA174;ADB087 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA174 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB087 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+약전 및 품질관리학 | pair=ADA167;ADB081 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA167 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB081 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+한약제제학 | pair=ADA140;ADB080 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA140 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB080 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+의료기관약국 필수실무실습 1 | pair=ADA213;ADB093 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA213 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB093 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+의료기관약국 필수실무실습 2 | pair=ADA214;ADB094 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA214 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB094 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+의료기관약국 필수실무실습 3 | pair=ADA215;ADB095 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA215 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB095 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+의료기관약국 필수실무실습 4 | pair=ADA216;ADB096 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA216 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB096 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+제약산업 필수실무실습 | pair=ADA218;ADB097 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA218 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB097 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+지역약국 필수실무실습 1 | pair=ADA219;ADB092 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA219 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB092 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+심화실습 1 | pair=ADA226;ADB099 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA226 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB099 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+심화실습 2 | pair=ADA227;ADB100 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA227 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB100 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+지역약국 필수실무실습 2 | pair=ADA220;ADB098 | years=2022;2023;2024 | pattern=one_member_resolved_probable_only
+  ADA220 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:probable/six_year
+  ADB098 | 2022:paired_unknown/- | 2023:paired_unknown/- | 2024:paired_unknown/-
+
+Rules
+-----
+1. This audit follows exact pair identity: same grade, semester, normalized course name, and same two course codes.
+2. It does not infer that the partner of a six-year row is four-year, or vice versa.
+3. confirmed and probable are shown only as existing evidence.
+4. probable evidence is not propagated backward or forward.
+5. No decisions, preview, baseline, seed, or database rows are changed.
