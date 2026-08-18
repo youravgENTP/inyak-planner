@@ -9,7 +9,7 @@ Extraction
 ----------
 Vision course anchors: 159
 course rows extracted: 159
-parser warnings: 1
+parser warnings: 0
 
 Validation
 ----------
@@ -41,8 +41,4 @@ all extracted credits: 361
 required credits: 205
 elective credits: 156
 
-RESULT: REVIEW REQUIRED
-
-Parser warnings
----------------
-page 7 / ADA187: Vision 학점 후보와 PDF 학점 불일치 (2 vs 3); PDF 학점 사용
+RESULT: PASS

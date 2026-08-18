@@ -870,24 +870,6 @@ def extract_page_rows(
         if pdf_credit is not None:
             credit = pdf_credit
 
-            if (
-                vision_credit is not None
-                and abs(
-                    vision_credit
-                    - pdf_credit
-                )
-                > 0.01
-            ):
-                warnings.append(
-                    f"page {page_number} / "
-                    f"{anchor.code}: "
-                    "Vision 학점 후보와 "
-                    "PDF 학점 불일치 "
-                    f"({vision_credit:g} vs "
-                    f"{pdf_credit:g}); "
-                    "PDF 학점 사용"
-                )
-
         elif vision_credit is not None:
             credit = vision_credit
 
