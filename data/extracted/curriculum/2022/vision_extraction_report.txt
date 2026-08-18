@@ -3,12 +3,12 @@ Vision curriculum extraction report
 
 academic year: 2022
 source PDF: 2022학년도_약학과_교육과정.pdf
-course table pages: 3-12
+course table pages: 2-12
 
 Extraction
 ----------
-Vision course anchors: 159
-course rows extracted: 159
+Vision course anchors: 175
+course rows extracted: 175
 parser warnings: 0
 
 Validation
@@ -25,6 +25,7 @@ suspicious course names: 0
 
 Rows by page
 ------------
+page 2: anchors=16, rows=16
 page 3: anchors=18, rows=18
 page 4: anchors=17, rows=17
 page 5: anchors=18, rows=18
@@ -38,8 +39,8 @@ page 12: anchors=14, rows=14
 
 Credit summary
 --------------
-all extracted credits: 361
-required credits: 205
-elective credits: 156
+all extracted credits: 401
+required credits: 224
+elective credits: 177
 
 RESULT: PASS

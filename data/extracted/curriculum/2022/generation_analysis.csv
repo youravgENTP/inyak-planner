@@ -1,0 +1,155 @@
+﻿candidate_code,candidate_name,candidate_grade,candidate_semester,candidate_completion_type,candidate_credits,candidate_prefix,classification,match_type,anchor_codes,anchor_names,anchor_grades,similarity,reason
+ADA002,면역학,3,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA076,물리약학 1,3,1,전필,3,ADA,PEET_COLLISION_EXACT,exact,ADB010,물리약학1,2-1,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB029,보건사회약학,3,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA223,상담지도 1,3,1,전필,0,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB026,생약학1,3,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB024,약물학1,3,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB025,약품미생물학,3,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA031,약품분석화학 1,3,1,전필,2,ADA,REVIEW_SIMILAR,similar,ADB011,의약품분석학1,2-1,0.857,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA042,약품생화학 1,3,1,전필,3,ADA,PEET_COLLISION_EXACT,exact,ADB008,약품생화학1,2-1,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADA201,약학실험 1,3,1,전필,2,ADA,PEET_COLLISION_EXACT,exact,ADB013,약학실험1,2-1,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB031,약학실험3,3,1,전필,2,ADB,REVIEW_SIMILAR,similar,ADB013;ADB022,약학실험1;약학실험2,2-1;2-2,0.800,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB030,의약품기기분석학1,3,1,전필,2,ADB,REVIEW_SIMILAR,similar,ADB011,의약품분석학1,2-1,0.875,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB028,의약품합성학1,3,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB027,제제과학1,3,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA199,무기 및 방사성 의약품학,3,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA212,약사윤리와 진로 적응,3,1,전선,1,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA051,약학통계,3,1,전선,2,ADA,PEET_COLLISION_EXACT,exact,ADB012,약학통계,2-1,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADA080,약화학,3,1,전선,3,ADA,PEET_COLLISION_FAMILY,family,ADB009;ADB018,약화학 1;약화학 2,2-1;2-2,,"1~2학년 수능세대 anchor와 같은 과목명 계열이며, 한쪽에만 말단 번호가 존재함."
+ADA022,해부생리학,3,1,전선,3,ADA,PEET_COLLISION_EXACT,exact,ADB001,해부생리학,1-1,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB034,감염성미생물학,3,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA041,물리약학 2,3,2,전필,2,ADA,PEET_COLLISION_EXACT,exact,ADB019,물리약학2,2-2,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADA224,상담지도 II,3,2,전필,0,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB036,생약학2,3,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB033,약물학2,3,2,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA074,약품분석화학 2,3,2,전필,1,ADA,REVIEW_SIMILAR,similar,ADB020,의약품분석학2,2-2,0.857,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA012,약품생화학 2,3,2,전필,2,ADA,PEET_COLLISION_EXACT,exact,ADB016,약품생화학2,2-2,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADA195,약학실험 2,3,2,전필,2,ADA,PEET_COLLISION_EXACT,exact,ADB022,약학실험2,2-2,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB041,약학실험4,3,2,전필,2,ADB,REVIEW_SIMILAR,similar,ADB013;ADB022,약학실험1;약학실험2,2-1;2-2,0.800,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA181,의약분자생물학,3,2,전필,2,ADA,PEET_COLLISION_EXACT,exact,ADB017,의약분자생물학,2-2,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB040,의약품기기분석학2,3,2,전필,2,ADB,REVIEW_SIMILAR,similar,ADB020,의약품분석학2,2-2,0.875,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA198,의약품합성학,3,2,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB038,의약품합성학2,3,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB037,제제과학2,3,2,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA189,바이러스학,3,2,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA006,병태생리학,3,2,전선,4,ADA,PEET_COLLISION_FAMILY,family,ADB007;ADB015,병태생리학1;병태생리학2,2-1;2-2,,"1~2학년 수능세대 anchor와 같은 과목명 계열이며, 한쪽에만 말단 번호가 존재함."
+ADA092,신경생리학,3,2,전선,1,ADA,PEET_COLLISION_EXACT,exact,ADB004,신경생리학,1-2,1.000,1~2학년 수능세대 anchor와 교과목명이 정규화 후 동일함.
+ADB039,약사 커뮤니케이션,3,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA196,약품기기분석학,3,2,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA197,의약품설계학,3,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB035,임상면역학,3,2,전선,1,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB045,감염질환을 위한 항생물질학,4,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA193,보건사회약학,4,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA065,생약학 1,4,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA030,약물학 1,4,1,전필,4,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA104,약품 미생물학,4,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA184,약학실험 3,4,1,전필,2,ADA,REVIEW_SIMILAR,similar,ADB013;ADB022,약학실험1;약학실험2,2-1;2-2,0.800,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB044,예방약학1,4,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA102,의약화학 1,4,1,전필,2,ADA,REVIEW_SIMILAR,similar,ADB009,약화학 1,2-1,0.889,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA186,제제과학 1,4,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB051,제제과학 실험,4,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB053,AI 의료약학빅데이터,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB050,건강기능식품학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA182,건강기능식품학,4,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB054,나노약학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB063,내분비계 및 류마티스 질환 약물치료,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB052,무기방사성 의약품학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB049,약용식물학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB047,의약화학1,4,1,전선,2,ADB,REVIEW_SIMILAR,similar,ADB009,약화학 1,2-1,0.889,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB046,임상미생물학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB048,천연물의약품학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA122,천연물의약품학,4,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA120,향장품학,4,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB043,향장품학,4,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA208,감염미생물학,4,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB069,감염성 질환 약물치료학,4,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB064,보건의약관계법규,4,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA055,생약학 2,4,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA001,약물학 2,4,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA192,약학실험 4,4,2,전필,2,ADA,REVIEW_SIMILAR,similar,ADB013;ADB022,약학실험1;약학실험2,2-1;2-2,0.800,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB067,약학실험5,4,2,전필,1,ADB,REVIEW_SIMILAR,similar,ADB013;ADB022,약학실험1;약학실험2,2-1;2-2,0.800,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADB055,예방약학2,4,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB073,의약정보학과 경제성평가,4,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA187,제제과학 2,4,2,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB060,바이오의약품 분석,4,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB056,바이오의약품학,4,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB061,법과학,4,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB057,생물약제학,4,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA033,생물약제학,4,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA136,심혈관계 질환 약물치료학,4,2,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA086,약물동태학,4,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB058,약물동태학,4,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB065,약사윤리,4,2,전선,1,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA203,약용식물학,4,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA204,의약정보학과 커뮤니케이션,4,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB066,의약품설계학,4,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB059,의약화학2,4,2,전선,2,ADB,REVIEW_SIMILAR,similar,ADB018,약화학 2,2-2,0.889,1~2학년 수능세대 anchor와 명칭 유사도가 높지만 자동 세대 판정 근거로는 충분하지 않음.
+ADA183,임상생화학,4,2,전선,1,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA137,임상약학 해설,4,2,전선,1,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB071,호흡기계 및 소화기계 질환 약물치료학,4,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA209,감염질환을 위한 항생물질학,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB062,신경정신계 및 신장 질환 약물치료학,5,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA217,의료기관약국 예비실무실습,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA206,의약품 경제성평가,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA200,제제과학실습,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA115,지역약국 예비실무실습,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB075,지역약국 예비실무실습,5,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB070,항암약물요법,5,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA202,항암약물요법 및 일반의약품약물요법,5,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB068,독성학,5,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB078,방제학,5,1,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA144,신경정신계질환 및 신장질환 약물치료학,5,1,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB079,약물신호전달학,5,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB074,약업경영학,5,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB076,약학용어,5,1,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA132,예방약학 1,5,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB072,의약품제조관리학,5,1,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA171,의약품제조관리학,5,1,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA211,임상미생물학,5,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA150,임상약물동태학,5,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB077,조제학,5,1,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA145,호흡기계 및 소화기계 질환 약물치료학,5,1,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA147,감염성 질환 약물치료학,5,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA148,내분비계 및 류마티스 질환 약물치료학,5,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA194,보건의약관계법규,5,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA174,약무행정실무필수실습,5,2,전필,1,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB087,약무행정실무필수실습,5,2,전필,1,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB086,의료기관약국예비실습,5,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA190,임상면역학,5,2,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB083,임상약학 해설,5,2,전필,1,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB080,한약제제학,5,2,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA140,한약제제학,5,2,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA045,독성학,5,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA121,동물용의약품학,5,2,전선,1,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB089,동물용의약품학,5,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA225,바이오의약품학,5,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA191,신약개발임상시험,5,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB090,신약개발정보학,5,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB082,심혈관계 질환 약물치료학,5,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB085,약물유전체학,5,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA118,약업경영학,5,2,전선,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA167,약전 및 품질관리학,5,2,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB081,약전 및 품질관리학,5,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA109,예방약학 2,5,2,전선,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB088,의약품허가,5,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB084,일반의약품학,5,2,전선,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB091,종양생물학,5,2,전선,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA213,의료기관약국 필수실무실습 1,6,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA214,의료기관약국 필수실무실습 2,6,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA215,의료기관약국 필수실무실습 3,6,1,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA216,의료기관약국 필수실무실습 4,6,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB093,의료기관약국 필수실무실습1,6,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB094,의료기관약국 필수실무실습2,6,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB095,의료기관약국 필수실무실습3,6,1,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB096,의료기관약국 필수실무실습4,6,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB097,제약산업 필수실무실습,6,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA218,제약산업 필수실무실습,6,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA219,지역약국 필수실무실습 1,6,1,전필,2,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB092,지역약국 필수실무실습1,6,1,전필,2,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA226,심화실습 1,6,2,전필,5,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB099,심화실습 1,6,2,전필,5,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB100,심화실습 2,6,2,전필,5,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA227,심화실습 2,6,2,전필,5,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADA220,지역약국 필수실무실습 2,6,2,전필,3,ADA,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
+ADB098,지역약국 필수실무실습2,6,2,전필,3,ADB,UNRESOLVED,,,,,,1~2학년 수능세대 anchor와 직접적인 명칭 충돌을 찾지 못함.
