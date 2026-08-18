@@ -10,20 +10,10 @@ from import_curriculum import (
     load_csv,
 )
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-SEED_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "seed"
-)
-
-DATABASE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "inyak.db"
+from data_paths import (
+    CURRICULUM_SEED_DIR,
+    DATABASE_PATH,
+    curriculum_seed_path,
 )
 
 
@@ -46,14 +36,13 @@ def load_curriculum_courses(
 ) -> list[CurriculumCourse]:
     if entry_year is None:
         csv_paths = sorted(
-            SEED_DIR.glob(
+            CURRICULUM_SEED_DIR.glob(
                 "curriculum_*.csv"
             )
         )
     else:
-        csv_path = (
-            SEED_DIR
-            / f"curriculum_{entry_year}.csv"
+        csv_path = curriculum_seed_path(
+            entry_year
         )
 
         if not csv_path.exists():
@@ -70,7 +59,7 @@ def load_curriculum_courses(
     if not csv_paths:
         raise RuntimeError(
             "교육과정 seed CSV를 찾을 수 없습니다: "
-            f"{SEED_DIR}"
+            f"{CURRICULUM_SEED_DIR}"
         )
 
     curriculum_courses: list[
