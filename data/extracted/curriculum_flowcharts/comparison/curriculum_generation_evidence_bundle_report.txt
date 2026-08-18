@@ -1,0 +1,119 @@
+Curriculum generation evidence bundle report
+=============================================
+
+rows analyzed: 640
+
+Generation evidence
+-------------------
+four_year: 104
+six_year: 294
+both: 1
+ambiguous: 134
+unresolved: 107
+
+Integrated evidence
+-------------------
+ambiguous groups: 67
+ambiguous groups with direct partner relation: 0
+ambiguous groups with courses.csv change metadata: 0
+rows with official course relation: 100
+
+Review priority
+---------------
+high: 72
+medium: 169
+low: 399
+
+AMBIGUOUS GROUPS WITH PARTNER RELATION
+--------------------------------------
+count: 0
+
+AMBIGUOUS GROUPS WITH CHANGE METADATA
+-------------------------------------
+count: 0
+
+HIGH PRIORITY ROWS
+------------------
+count: 72
+2022 | 4-2 | ADA208 | 감염미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2022 | 5-2 | ADA225 | 바이오의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2023 | 4-1 | ADB050 | 건강기능식품학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2023 | 4-1 | ADA182 | 건강기능식품학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2023 | 4-1 | ADA229 | 나노약학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2023 | 4-1 | ADB054 | 나노약학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2023 | 4-2 | ADA208 | 감염미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2023 | 4-2 | ADA230 | 법과학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2023 | 4-2 | ADB061 | 법과학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2023 | 5-2 | ADA225 | 바이오의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-1 | ADA201 | 약학실험 1 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-1 | ADA199 | 무기 및 방사성 의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-1 | ADA212 | 약사윤리와 진로 적응 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-1 | ADA051 | 약학통계 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-2 | ADA195 | 약학실험 2 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-2 | ADA196 | 약품기기분석학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 3-2 | ADA181 | 의약분자생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-1 | ADA193 | 보건사회약학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-1 | ADA184 | 약학실험 3 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-1 | ADA102 | 의약화학 1 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 4-1 | ADA186 | 제제과학 1 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-1 | ADB047 | 의약화학1 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 4-1 | ADB048 | 천연물의약품학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 4-1 | ADA122 | 천연물의약품학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADA208 | 감염미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-2 | ADA192 | 약학실험 4 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-2 | ADA103 | 의약화학 2 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADA187 | 제제과학 2 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-2 | ADB057 | 생물약제학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADA033 | 생물약제학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADA086 | 약물동태학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADB058 | 약물동태학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 4-2 | ADA204 | 의약정보학과 커뮤니케이션 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 4-2 | ADB059 | 의약화학2 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-1 | ADA217 | 의료기관약국 예비실무실습 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-1 | ADA200 | 제제과학실습 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-1 | ADA115 | 지역약국 예비실무실습 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-1 | ADB075 | 지역약국 예비실무실습 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 5-1 | ADA202 | 항암약물요법 및 일반의약품약물요법 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-1 | ADA171 | 의약품제조관리학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-1 | ADB072 | 의약품제조관리학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 5-1 | ADA211 | 임상미생물학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-2 | ADA194 | 보건의약관계법규 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-2 | ADA174 | 약무행정실무필수실습 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-2 | ADB087 | 약무행정실무필수실습 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 5-2 | ADB080 | 한약제제학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 5-2 | ADA140 | 한약제제학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-2 | ADA225 | 바이오의약품학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2024 | 5-2 | ADA167 | 약전 및 품질관리학 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 5-2 | ADB081 | 약전 및 품질관리학 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADA213 | 의료기관약국 필수실무실습 1 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADA214 | 의료기관약국 필수실무실습 2 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADA215 | 의료기관약국 필수실무실습 3 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADA216 | 의료기관약국 필수실무실습 4 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADB093 | 의료기관약국 필수실무실습1 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADB094 | 의료기관약국 필수실무실습2 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADB095 | 의료기관약국 필수실무실습3 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADB096 | 의료기관약국 필수실무실습4 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADB097 | 제약산업 필수실무실습 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-1 | ADA218 | 제약산업 필수실무실습 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADA219 | 지역약국 필수실무실습 1 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-1 | ADB092 | 지역약국 필수실무실습1 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-2 | ADA226 | 심화실습 1 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 6-2 | ADB099 | 심화실습 1 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-2 | ADB100 | 심화실습 2 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2024 | 6-2 | ADA227 | 심화실습 2 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate
+2024 | 6-2 | ADA220 | 지역약국 필수실무실습 2 | generation=ambiguous | flags=ambiguous_position;lineage_six_year;lineage_pair_one_sided_candidate;official_course_relation
+2024 | 6-2 | ADB098 | 지역약국 필수실무실습2 | generation=ambiguous | flags=ambiguous_position;lineage_pair_one_sided_candidate
+2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2025 | 5-1 | ADA200 | 제제과학실습 | generation=unresolved | flags=no_direct_generation;official_course_relation
+2025 | 5-2 | ADA194 | 보건의약관계법규 | generation=unresolved | flags=no_direct_generation;official_course_relation
+
+Interpretation rules
+--------------------
+1. This script collects evidence only. It does not assign a final curriculum generation.
+2. Flowchart evidence and the grade 1-2 rule remain the only current direct generation evidence.
+3. Lineage evidence is retained as a candidate, not a final assignment.
+4. substitute is directional and is preserved exactly as old -> new.
+5. equivalent relations are recorded as official relations but do not by themselves determine generation.
+6. A relation directly connecting two ambiguous partner codes is highlighted for manual review.
+7. Course-code prefixes are not used anywhere in this analysis.
