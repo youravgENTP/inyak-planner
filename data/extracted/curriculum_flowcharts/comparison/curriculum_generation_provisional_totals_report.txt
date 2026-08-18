@@ -1,0 +1,86 @@
+Curriculum generation provisional totals
+=============================================
+
+Scenario A = confirmed + probable + backward support
+Scenario B = Scenario A + opposite partner closure assumption
+
+2022
+----
+Scenario A
+  four_year: 55 rows, 126 credits (전필 72, 전선 54)
+  six_year: 92 rows, 215 credits (전필 117, 전선 98)
+Scenario B
+  four_year: 74 rows, 174 credits (전필 106, 전선 68)
+  six_year: 92 rows, 215 credits (전필 117, 전선 98)
+
+2023
+----
+Scenario A
+  four_year: 52 rows, 119 credits (전필 70, 전선 49)
+  six_year: 94 rows, 219 credits (전필 117, 전선 102)
+Scenario B
+  four_year: 74 rows, 173 credits (전필 106, 전선 67)
+  six_year: 94 rows, 219 credits (전필 117, 전선 102)
+
+2024
+----
+Scenario A
+  four_year: 45 rows, 104 credits (전필 59, 전선 45)
+  six_year: 101 rows, 232 credits (전필 123, 전선 109)
+Scenario B
+  four_year: 64 rows, 152 credits (전필 95, 전선 57)
+  six_year: 101 rows, 232 credits (전필 123, 전선 109)
+
+UNASSIGNED
+----------
+Scenario A: 106 rows, 237 credits
+Scenario B: 46 rows, 87 credits
+
+Scenario B remaining rows
+-------------------------
+2022 | 3-1 | ADA223 | 상담지도 1 | 0 credits | status=unresolved
+2022 | 3-2 | ADA224 | 상담지도 II | 0 credits | status=unresolved
+2022 | 3-2 | ADA092 | 신경생리학 | 1 credits | status=unresolved
+2022 | 4-1 | ADA120 | 향장품학 | 2 credits | status=paired_unknown
+2022 | 4-1 | ADB043 | 향장품학 | 2 credits | status=paired_unknown
+2022 | 4-2 | ADB067 | 약학실험5 | 1 credits | status=unresolved
+2022 | 5-1 | ADB078 | 방제학 | 3 credits | status=unresolved
+2022 | 5-2 | ADA121 | 동물용의약품학 | 1 credits | status=paired_unknown
+2022 | 5-2 | ADB089 | 동물용의약품학 | 2 credits | status=paired_unknown
+2022 | 5-2 | ADA225 | 바이오의약품학 | 2 credits | status=unresolved
+2023 | 3-1 | ADA203 | 약용식물학 | 2 credits | status=unresolved
+2023 | 3-2 | ADA189 | 바이러스학 | 3 credits | status=unresolved
+2023 | 3-2 | ADA092 | 신경생리학 | 1 credits | status=unresolved
+2023 | 3-2 | ADA228 | 자원생약학 | 3 credits | status=unresolved
+2023 | 4-1 | ADA063 | 약물유전체학 | 3 credits | status=unresolved
+2023 | 4-1 | ADB043 | 향장품학 | 2 credits | status=paired_unknown
+2023 | 4-1 | ADA120 | 향장품학 | 2 credits | status=paired_unknown
+2023 | 4-2 | ADB067 | 약학실험5 | 1 credits | status=unresolved
+2023 | 5-1 | ADB078 | 방제학 | 3 credits | status=unresolved
+2023 | 5-2 | ADA121 | 동물용의약품학 | 1 credits | status=paired_unknown
+2023 | 5-2 | ADB089 | 동물용의약품학 | 2 credits | status=paired_unknown
+2023 | 5-2 | ADA225 | 바이오의약품학 | 2 credits | status=unresolved
+2024 | 3-1 | ADA203 | 약용식물학 | 2 credits | status=unresolved
+2024 | 3-2 | ADA189 | 바이러스학 | 3 credits | status=unresolved
+2024 | 3-2 | ADA092 | 신경생리학 | 1 credits | status=unresolved
+2024 | 4-1 | ADB050 | 건강기능식품학 | 2 credits | status=unresolved
+2024 | 4-1 | ADA229 | 나노약학 | 2 credits | status=paired_unknown
+2024 | 4-1 | ADB054 | 나노약학 | 2 credits | status=paired_unknown
+2024 | 4-1 | ADA063 | 약물유전체학 | 3 credits | status=unresolved
+2024 | 4-1 | ADA120 | 향장품학 | 2 credits | status=paired_unknown
+2024 | 4-1 | ADB043 | 향장품학 | 2 credits | status=paired_unknown
+2024 | 4-2 | ADB067 | 약학실험5 | 1 credits | status=unresolved
+2024 | 4-2 | ADA230 | 법과학 | 2 credits | status=unresolved
+2024 | 4-2 | ADB061 | 법과학 | 2 credits | status=unresolved
+2024 | 4-2 | ADA232 | 임상의약정보학 | 2 credits | status=unresolved
+2024 | 5-1 | ADA217 | 의료기관약국 예비실무실습 | 2 credits | status=conflict
+2024 | 5-1 | ADA206 | 의약품 경제성평가 | 2 credits | status=conflict
+2024 | 5-1 | ADB078 | 방제학 | 3 credits | status=unresolved
+2024 | 5-1 | ADA145 | 호흡기계 및 소화기계 질환 약물치료학 | 2 credits | status=conflict
+2024 | 5-2 | ADA147 | 감염성 질환 약물치료학 | 2 credits | status=conflict
+2024 | 5-2 | ADA148 | 내분비계 및 류마티스 질환 약물치료학 | 2 credits | status=conflict
+2024 | 5-2 | ADA121 | 동물용의약품학 | 1 credits | status=paired_unknown
+2024 | 5-2 | ADB089 | 동물용의약품학 | 2 credits | status=paired_unknown
+2024 | 5-2 | ADA225 | 바이오의약품학 | 2 credits | status=unresolved
+2024 | 5-2 | ADA118 | 약업경영학 | 2 credits | status=conflict
+2024 | 5-2 | ADA053 | 조제학 | 2 credits | status=unresolved
