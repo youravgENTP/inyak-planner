@@ -27,6 +27,21 @@ SUPPORTED_YEARS = [
 #
 # 절대로 코드 prefix(ADA/ADB)나 이름 유사도로 생성하지 않는다.
 MANUAL_TRANSITIONS = {
+    2022: [
+        {
+            "label": (
+                "특수환자군 정밀의료학"
+            ),
+            "baseline_codes": [],
+            "seed_codes": [
+                "ADA237",
+            ],
+            "note": (
+                "2022학번이 5학년이던 2026학년도 2학기 "
+                "실제 개설 이력에 따라 추가된 전공필수 2학점 과목."
+            ),
+        },
+    ],
     2024: [
         {
             "label": (
@@ -336,6 +351,22 @@ def contribution_line(
             contribution.impact
         )
     )
+
+    if (
+        not before_rows
+        and after_rows
+    ):
+        after_text = " + ".join(
+            format_course_state(row)
+            for row in after_rows
+        )
+
+        return (
+            f"{contribution.label}: "
+            f"신규 → "
+            f"{after_text} "
+            f"({impact_text})"
+        )
 
     if (
         len(before_rows) == 1
