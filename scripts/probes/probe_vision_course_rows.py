@@ -1,24 +1,25 @@
 from __future__ import annotations
 
-import argparse
-import re
-import tempfile
-from pathlib import Path
+def find_pdf(
+    year: int,
+) -> Path:
+    year_dir = (
+        RAW_CURRICULUM_DIR
+        / str(year)
+    )
 
-import fitz
+    pdfs = sorted(
+        year_dir.glob("*.pdf")
+    )
 
-from scripts.probes.probe_vision_ocr import (
-    recognize_image,
-    render_page,
-)
+    if len(pdfs) != 1:
+        raise RuntimeError(
+            f"{year}학년도 PDF가 "
+            f"정확히 1개여야 합니다: "
+            f"{pdfs}"
+        )
 
-
-from scripts.common.data_paths import (
-    RAW_CURRICULUM_PDFS_DIR,
-)
-
-
-RAW_CURRICULUM_DIR = RAW_CURRICULUM_PDFS_DIR
+    return pdfs[0]
 
 COURSE_CODE_RE = re.compile(
     r"\b(?:ADA|ADB)\d{3}\b"
@@ -462,7 +463,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    pdf_path = find_pdf(
+    pdf_path = find_curriculum_pdf(
         args.year
     )
 

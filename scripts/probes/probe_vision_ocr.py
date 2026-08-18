@@ -5,192 +5,12 @@ import tempfile
 from pathlib import Path
 
 import fitz
-import Quartz
-import Vision
-from Foundation import NSURL
 
-
-from scripts.common.data_paths import (
-    RAW_CURRICULUM_PDFS_DIR,
+from scripts.common.curriculum_vision import (
+    find_curriculum_pdf,
+    recognize_image,
+    render_page,
 )
-
-
-RAW_CURRICULUM_DIR = RAW_CURRICULUM_PDFS_DIR
-
-
-def find_pdf(
-    year: int,
-) -> Path:
-    year_dir = (
-        RAW_CURRICULUM_DIR
-        / str(year)
-    )
-
-    pdfs = sorted(
-        year_dir.glob("*.pdf")
-    )
-
-    if len(pdfs) != 1:
-        raise RuntimeError(
-            f"{year}학년도 PDF가 "
-            f"정확히 1개여야 합니다: "
-            f"{pdfs}"
-        )
-
-    return pdfs[0]
-
-
-def render_page(
-    page: fitz.Page,
-    output_path: Path,
-) -> None:
-    matrix = fitz.Matrix(
-        3.0,
-        3.0,
-    )
-
-    pixmap = page.get_pixmap(
-        matrix=matrix,
-        alpha=False,
-    )
-
-    pixmap.save(
-        output_path
-    )
-
-
-def recognize_image(
-    image_path: Path,
-) -> list[
-    tuple[
-        float,
-        float,
-        str,
-        float,
-    ]
-]:
-    image_url = NSURL.fileURLWithPath_(
-        str(image_path)
-    )
-
-    image_source = (
-        Quartz.CGImageSourceCreateWithURL(
-            image_url,
-            None,
-        )
-    )
-
-    if image_source is None:
-        raise RuntimeError(
-            "CGImageSource를 "
-            "생성할 수 없습니다."
-        )
-
-    cg_image = (
-        Quartz.CGImageSourceCreateImageAtIndex(
-            image_source,
-            0,
-            None,
-        )
-    )
-
-    if cg_image is None:
-        raise RuntimeError(
-            "CGImage를 "
-            "생성할 수 없습니다."
-        )
-
-    request = (
-        Vision.VNRecognizeTextRequest.alloc()
-        .init()
-    )
-
-    request.setRecognitionLevel_(
-        Vision.VNRequestTextRecognitionLevelAccurate
-    )
-
-    request.setRecognitionLanguages_(
-        [
-            "ko-KR",
-            "en-US",
-        ]
-    )
-
-    request.setUsesLanguageCorrection_(
-        True
-    )
-
-    handler = (
-        Vision.VNImageRequestHandler.alloc()
-        .initWithCGImage_options_(
-            cg_image,
-            None,
-        )
-    )
-
-    success, error = (
-        handler.performRequests_error_(
-            [request],
-            None,
-        )
-    )
-
-    if not success:
-        raise RuntimeError(
-            f"Vision OCR 실패: {error}"
-        )
-
-    results = []
-
-    observations = (
-        request.results()
-        or []
-    )
-
-    for observation in observations:
-        candidates = (
-            observation.topCandidates_(
-                1
-            )
-        )
-
-        if not candidates:
-            continue
-
-        candidate = candidates[0]
-
-        text = str(
-            candidate.string()
-        ).strip()
-
-        if not text:
-            continue
-
-        confidence = float(
-            candidate.confidence()
-        )
-
-        box = (
-            observation.boundingBox()
-        )
-
-        results.append(
-            (
-                float(box.origin.y),
-                float(box.origin.x),
-                text,
-                confidence,
-            )
-        )
-
-    results.sort(
-        key=lambda item: (
-            -item[0],
-            item[1],
-        )
-    )
-
-    return results
 
 
 def main() -> None:
@@ -216,7 +36,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    pdf_path = find_pdf(
+    pdf_path = find_curriculum_pdf(
         args.year
     )
 
@@ -224,34 +44,37 @@ def main() -> None:
         pdf_path
     )
 
-    if not (
-        1
-        <= args.page
-        <= document.page_count
-    ):
-        raise ValueError(
-            f"PDF 페이지 범위는 "
-            f"1-{document.page_count}입니다."
-        )
+    try:
+        if not (
+            1
+            <= args.page
+            <= document.page_count
+        ):
+            raise ValueError(
+                "PDF 페이지 범위는 "
+                f"1-{document.page_count}입니다."
+            )
 
-    page = document[
-        args.page - 1
-    ]
+        page = document[
+            args.page - 1
+        ]
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        image_path = (
-            Path(temp_dir)
-            / "page.png"
-        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            image_path = (
+                Path(temp_dir)
+                / "page.png"
+            )
 
-        render_page(
-            page,
-            image_path,
-        )
+            render_page(
+                page,
+                image_path,
+            )
 
-        results = recognize_image(
-            image_path
-        )
+            results = recognize_image(
+                image_path
+            )
+    finally:
+        document.close()
 
     print()
     print(
@@ -267,7 +90,7 @@ def main() -> None:
         f"page: {args.page}"
     )
     print(
-        f"recognized blocks: "
+        "recognized blocks: "
         f"{len(results)}"
     )
     print()
