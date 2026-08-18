@@ -1,0 +1,48 @@
+Vision curriculum extraction report
+===================================
+
+academic year: 2022
+source PDF: 2022학년도_약학과_교육과정.pdf
+course table pages: 3-12
+
+Extraction
+----------
+Vision course anchors: 159
+course rows extracted: 159
+parser warnings: 1
+
+Validation
+----------
+invalid course codes: 0
+invalid grades: 0
+invalid semesters: 0
+invalid completion types: 0
+missing course names: 0
+invalid credits: 0
+duplicate rows: 0
+low confidence rows: 0
+
+Rows by page
+------------
+page 3: anchors=18, rows=18
+page 4: anchors=17, rows=17
+page 5: anchors=18, rows=18
+page 6: anchors=16, rows=16
+page 7: anchors=15, rows=15
+page 8: anchors=15, rows=15
+page 9: anchors=16, rows=16
+page 10: anchors=15, rows=15
+page 11: anchors=15, rows=15
+page 12: anchors=14, rows=14
+
+Credit summary
+--------------
+all extracted credits: 361
+required credits: 205
+elective credits: 156
+
+RESULT: REVIEW REQUIRED
+
+Parser warnings
+---------------
+page 7 / ADA187: Vision 학점 후보와 PDF 학점 불일치 (2 vs 3); PDF 학점 사용
