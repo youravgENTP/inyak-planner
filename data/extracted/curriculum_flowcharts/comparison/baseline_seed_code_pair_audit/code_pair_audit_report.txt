@@ -8,17 +8,16 @@ database: /Users/younyung.gene/inyak-planner/data/db/inyak.db
 
 SUMMARY
 -------
-candidate pairs: 35
-unpaired differences: 43
+candidate pairs: 12
+unpaired differences: 48
 
 Candidate evidence
 ------------------
-same_name_unique: 35
+same_name_unique: 12
 seed_blank_code: 4
 
 DB chronology
 -------------
-baseline_code_only_in_db: 23
 baseline_then_seed: 3
 seed_code_missing: 4
 seed_code_only_in_db: 5
@@ -26,30 +25,7 @@ seed_code_only_in_db: 5
 CANDIDATE PAIRS
 ---------------
 2022 | 건강기능식품학 | baseline=ADA182 (2022-1;2023-1;2024-2) | seed=ADB050 (2025-2;2026-2) | type=same_name_unique | relation=no | chronology=baseline_then_seed
-2022 | 의료기관약국 필수실무실습 1 | baseline=ADA213 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB093 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 의료기관약국 필수실무실습 2 | baseline=ADA214 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB094 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 의료기관약국 필수실무실습 3 | baseline=ADA215 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB095 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 의료기관약국 필수실무실습 4 | baseline=ADA216 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB096 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 제약산업 필수실무실습 | baseline=ADA218 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB097 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 지역약국 필수실무실습 1 | baseline=ADA219 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB092 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 지역약국 필수실무실습 2 | baseline=ADA220 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB098 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 심화실습 1 | baseline=ADA226 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB099 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2022 | 심화실습 2 | baseline=ADA227 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB100 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 지역약국 예비실무실습 | baseline=ADA115 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB075 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 한약제제학 | baseline=ADA140 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB080 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 약전 및 품질관리학 | baseline=ADA167 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB081 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 의약품제조관리학 | baseline=ADA171 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB072 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 약무행정실무필수실습 | baseline=ADA174 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB087 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
 2023 | 건강기능식품학 | baseline=ADA182 (2022-1;2023-1;2024-2) | seed=ADB050 (2025-2;2026-2) | type=same_name_unique | relation=no | chronology=baseline_then_seed
-2023 | 의료기관약국 필수실무실습 1 | baseline=ADA213 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB093 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 의료기관약국 필수실무실습 2 | baseline=ADA214 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB094 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 의료기관약국 필수실무실습 3 | baseline=ADA215 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB095 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 의료기관약국 필수실무실습 4 | baseline=ADA216 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB096 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 제약산업 필수실무실습 | baseline=ADA218 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB097 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 지역약국 필수실무실습 1 | baseline=ADA219 (2022-1;2023-1;2024-1;2025-1;2026-1) | seed=ADB092 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 지역약국 필수실무실습 2 | baseline=ADA220 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB098 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 심화실습 1 | baseline=ADA226 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB099 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
-2023 | 심화실습 2 | baseline=ADA227 (2022-2;2023-2;2024-2;2025-2;2026-2) | seed=ADB100 (-) | type=same_name_unique | relation=no | chronology=baseline_code_only_in_db
 2024 | 건강기능식품학 | baseline=ADA182 (2022-1;2023-1;2024-2) | seed=ADB050 (2025-2;2026-2) | type=same_name_unique | relation=no | chronology=baseline_then_seed
 2024 | 감염성 질환 약물치료학 | baseline=ADB069 (-) | seed=ADA147 (2022-2;2023-2;2024-2;2025-2;2026-2) | type=same_name_unique | relation=no | chronology=seed_code_only_in_db
 2024 | 호흡기계 및 소화기계 질환 약물치료학 | baseline=ADB071 (-) | seed=ADA145 (2022-1;2023-1;2024-1;2025-1;2026-1) | type=same_name_unique | relation=no | chronology=seed_code_only_in_db
@@ -75,7 +51,12 @@ UNPAIRED
 2022 | seed | ADA237 | 특수환자군 정밀의료학 | DB=2026-2 | exact-name-codes=ADA237 | no_same_name_or_official_relation_pair
 2022 | seed | ADA239 | 약사와 건강증진 | DB=2026-2 | exact-name-codes=ADA239 | no_same_name_or_official_relation_pair
 2022 | seed | ADB043 | 향장품학 | DB=2026-1 | exact-name-codes=ADA120;ADB043 | no_same_name_or_official_relation_pair
+2022 | seed | ADB072 | 의약품제조관리학 | DB=- | exact-name-codes=ADA171 | no_same_name_or_official_relation_pair
+2022 | seed | ADB075 | 지역약국 예비실무실습 | DB=- | exact-name-codes=ADA115 | no_same_name_or_official_relation_pair
 2022 | seed | ADB078 | 방제학 | DB=- | exact-name-codes=- | no_same_name_or_official_relation_pair
+2022 | seed | ADB080 | 한약제제학 | DB=- | exact-name-codes=ADA140 | no_same_name_or_official_relation_pair
+2022 | seed | ADB081 | 약전 및 품질관리학 | DB=- | exact-name-codes=ADA167 | no_same_name_or_official_relation_pair
+2022 | seed | ADB087 | 약무행정실무필수실습 | DB=- | exact-name-codes=ADA174 | no_same_name_or_official_relation_pair
 2022 | seed | ADB089 | 동물용의약품학 | DB=2026-1 | exact-name-codes=ADA121;ADB089 | no_same_name_or_official_relation_pair
 2022 | seed | ADB103 | 항암약물요법1 | DB=2024-1;2025-1;2026-1 | exact-name-codes=ADB103 | no_same_name_or_official_relation_pair
 2022 | seed | ADB108 | 신장질환약물치료학 | DB=2024-1;2025-1;2026-2 | exact-name-codes=ADB108 | no_same_name_or_official_relation_pair

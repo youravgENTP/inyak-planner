@@ -10,19 +10,19 @@ notes and change metadata are intentionally ignored.
 ----
 baseline rows: 93
 seed rows: 121
-exact core matches: 74
+exact core matches: 83
 changed same-code rows: 9
-baseline only: 10
-seed only: 38
+baseline only: 1
+seed only: 29
 
 2023
 ----
 baseline rows: 95
 seed rows: 101
-exact core matches: 64
+exact core matches: 78
 changed same-code rows: 14
-baseline only: 17
-seed only: 23
+baseline only: 3
+seed only: 9
 
 2024
 ----
@@ -36,8 +36,8 @@ seed only: 18
 TOTAL DIFFERENCES
 -----------------
 changed: 30
-baseline_only: 43
-seed_only: 79
+baseline_only: 20
+seed_only: 56
 
 DETAILS
 -------
@@ -51,15 +51,6 @@ DETAILS
 2022 | CHANGED | ADB083 | 임상약학 해설 -> 임상약학 해설 | fields=grade
 2022 | CHANGED | ADB085 | 약물유전체학 -> 약물유전체학 | fields=grade;semester
 2022 | BASELINE_ONLY | ADA182 | 건강기능식품학
-2022 | BASELINE_ONLY | ADA213 | 의료기관약국 필수실무실습 1
-2022 | BASELINE_ONLY | ADA214 | 의료기관약국 필수실무실습 2
-2022 | BASELINE_ONLY | ADA215 | 의료기관약국 필수실무실습 3
-2022 | BASELINE_ONLY | ADA216 | 의료기관약국 필수실무실습 4
-2022 | BASELINE_ONLY | ADA218 | 제약산업 필수실무실습
-2022 | BASELINE_ONLY | ADA219 | 지역약국 필수실무실습 1
-2022 | BASELINE_ONLY | ADA220 | 지역약국 필수실무실습 2
-2022 | BASELINE_ONLY | ADA226 | 심화실습 1
-2022 | BASELINE_ONLY | ADA227 | 심화실습 2
 2022 | SEED_ONLY | ADA118 | 약업경영학
 2022 | SEED_ONLY | ADA145 | 호흡기계 및 소화기계 질환 약물치료학
 2022 | SEED_ONLY | ADA147 | 감염성 질환 약물치료학
@@ -84,15 +75,6 @@ DETAILS
 2022 | SEED_ONLY | ADB081 | 약전 및 품질관리학
 2022 | SEED_ONLY | ADB087 | 약무행정실무필수실습
 2022 | SEED_ONLY | ADB089 | 동물용의약품학
-2022 | SEED_ONLY | ADB092 | 지역약국 필수실무실습1
-2022 | SEED_ONLY | ADB093 | 의료기관약국 필수실무실습1
-2022 | SEED_ONLY | ADB094 | 의료기관약국 필수실무실습2
-2022 | SEED_ONLY | ADB095 | 의료기관약국 필수실무실습3
-2022 | SEED_ONLY | ADB096 | 의료기관약국 필수실무실습4
-2022 | SEED_ONLY | ADB097 | 제약산업 필수실무실습
-2022 | SEED_ONLY | ADB098 | 지역약국 필수실무실습2
-2022 | SEED_ONLY | ADB099 | 심화실습1
-2022 | SEED_ONLY | ADB100 | 심화실습2
 2022 | SEED_ONLY | ADB103 | 항암약물요법1
 2022 | SEED_ONLY | ADB108 | 신장질환약물치료학
 2022 | SEED_ONLY | ADB109 | 정신신경계질환 약물치료학
@@ -112,21 +94,7 @@ DETAILS
 2023 | CHANGED | ADB077 | 조제학 -> 조제학 | fields=grade;semester
 2023 | CHANGED | ADB084 | 일반의약품학 -> 일반의약품학 | fields=grade;semester
 2023 | CHANGED | ADB091 | 종양생물학 -> 종양생물학 | fields=grade
-2023 | BASELINE_ONLY | ADA115 | 지역약국 예비실무실습
-2023 | BASELINE_ONLY | ADA140 | 한약제제학
-2023 | BASELINE_ONLY | ADA167 | 약전 및 품질관리학
-2023 | BASELINE_ONLY | ADA171 | 의약품제조관리학
-2023 | BASELINE_ONLY | ADA174 | 약무행정실무필수실습
 2023 | BASELINE_ONLY | ADA182 | 건강기능식품학
-2023 | BASELINE_ONLY | ADA213 | 의료기관약국 필수실무실습 1
-2023 | BASELINE_ONLY | ADA214 | 의료기관약국 필수실무실습 2
-2023 | BASELINE_ONLY | ADA215 | 의료기관약국 필수실무실습 3
-2023 | BASELINE_ONLY | ADA216 | 의료기관약국 필수실무실습 4
-2023 | BASELINE_ONLY | ADA218 | 제약산업 필수실무실습
-2023 | BASELINE_ONLY | ADA219 | 지역약국 필수실무실습 1
-2023 | BASELINE_ONLY | ADA220 | 지역약국 필수실무실습 2
-2023 | BASELINE_ONLY | ADA226 | 심화실습 1
-2023 | BASELINE_ONLY | ADA227 | 심화실습 2
 2023 | BASELINE_ONLY | ADB001 | 해부생리학
 2023 | BASELINE_ONLY | ADB004 | 신경생리학
 2023 | SEED_ONLY | ADA198 | 의약품합성학
@@ -134,22 +102,8 @@ DETAILS
 2023 | SEED_ONLY | ADA235 | 독성학2
 2023 | SEED_ONLY | ADB043 | 향장품학
 2023 | SEED_ONLY | ADB050 | 건강기능식품학
-2023 | SEED_ONLY | ADB072 | 의약품제조관리학
-2023 | SEED_ONLY | ADB075 | 지역약국 예비실무실습
 2023 | SEED_ONLY | ADB078 | 방제학
-2023 | SEED_ONLY | ADB080 | 한약제제학
-2023 | SEED_ONLY | ADB081 | 약전 및 품질관리학
-2023 | SEED_ONLY | ADB087 | 약무행정실무필수실습
 2023 | SEED_ONLY | ADB089 | 동물용의약품학
-2023 | SEED_ONLY | ADB092 | 지역약국 필수실무실습1
-2023 | SEED_ONLY | ADB093 | 의료기관약국 필수실무실습1
-2023 | SEED_ONLY | ADB094 | 의료기관약국 필수실무실습2
-2023 | SEED_ONLY | ADB095 | 의료기관약국 필수실무실습3
-2023 | SEED_ONLY | ADB096 | 의료기관약국 필수실무실습4
-2023 | SEED_ONLY | ADB097 | 제약산업 필수실무실습
-2023 | SEED_ONLY | ADB098 | 지역약국 필수실무실습2
-2023 | SEED_ONLY | ADB099 | 심화실습1
-2023 | SEED_ONLY | ADB100 | 심화실습2
 2023 | SEED_ONLY | ADB108 | 신장질환약물치료학
 2023 | SEED_ONLY | ADB109 | 정신신경계질환 약물치료학
 2024 | CHANGED | ADA198 | 의약품합성학 -> 의약품합성학 | fields=credits
