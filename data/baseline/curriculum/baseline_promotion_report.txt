@@ -1,0 +1,45 @@
+Curriculum baseline promotion
+=============================================
+
+mode: APPLY
+
+Target cohort baseline is immutable historical entry-year data.
+
+2022
+----
+rows: 93
+total credits: 216
+required credits: 118
+elective listed credits: 98
+sha256: 5f2fe3677ee91445cb93eb91d1e00ecaf24f655b89780528b96683c8cd068a06
+target state before apply: absent
+
+2023
+----
+rows: 95
+total credits: 220
+required credits: 118
+elective listed credits: 102
+sha256: e1d1fb5365d27f30186593b1a7a4af4cbbd9bd9d75b08142e4933946a2b5877d
+target state before apply: absent
+
+2024
+----
+rows: 99
+total credits: 227
+required credits: 118
+elective listed credits: 109
+sha256: a3a1c815f561113ba8397596add9014e69616b1d99c30c686581142b29fc791f
+target state before apply: absent
+
+Guards
+------
+1. Exact 19-column schema required.
+2. entry_year must equal cohort year for every row.
+3. Expected row counts are enforced.
+4. Major-required credits must equal 118 for 2022-2024.
+5. Total listed credits and elective listed credits are checked.
+6. Existing non-identical baseline files are never overwritten.
+7. Promoted files are byte-identical copies of provisional files.
+
+Promotion completed successfully.
