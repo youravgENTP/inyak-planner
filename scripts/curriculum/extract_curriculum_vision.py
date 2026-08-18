@@ -352,7 +352,6 @@ def extract_completion_type(
 
     return None
 
-
 def normalize_course_name(
     text: str,
 ) -> str:
@@ -387,7 +386,7 @@ def normalize_course_name(
     )
 
     cleaned = re.sub(
-        r"[\s|:;•·ㆍ/?]+$",
+        r"[\s|:;•·ㆍ/]+$",
         "",
         cleaned,
     )
@@ -399,7 +398,6 @@ def normalize_course_name(
     ).strip()
 
     return cleaned
-
 
 def extract_course_name(
     observations: list[
@@ -547,6 +545,102 @@ def extract_course_name(
     )
 
     return candidates[0][3]
+
+
+def recover_course_name_terminal_number(
+    course_name: str,
+    observations: list[
+        VisionObservation
+    ],
+    anchor_y: float,
+    next_y: float | None,
+) -> str:
+    if not course_name.endswith(
+        "?"
+    ):
+        return course_name
+
+    if next_y is None:
+        lower_y = (
+            anchor_y
+            - 0.06
+        )
+    else:
+        lower_y = next_y
+
+    number_candidates: list[
+        str
+    ] = []
+
+    for (
+        y,
+        x,
+        text,
+        confidence,
+    ) in observations:
+        if not (
+            lower_y
+            < y
+            <= anchor_y
+        ):
+            continue
+
+        if not (
+            0.30
+            <= x
+            < 0.67
+        ):
+            continue
+
+        cleaned = clean_text(
+            text
+        )
+
+        if not cleaned:
+            continue
+
+        if HANGUL_RE.search(
+            cleaned
+        ):
+            continue
+
+        match = re.search(
+            (
+                r"\b(?:"
+                r"Education|"
+                r"Educat\s+ion|"
+                r"Practice"
+                r")\s*"
+                r"([1-9])\b"
+            ),
+            cleaned,
+            flags=re.IGNORECASE,
+        )
+
+        if match is None:
+            continue
+
+        number_candidates.append(
+            match.group(1)
+        )
+
+    unique_numbers = set(
+        number_candidates
+    )
+
+    if len(
+        unique_numbers
+    ) != 1:
+        return course_name
+
+    recovered_number = (
+        number_candidates[0]
+    )
+
+    return (
+        course_name[:-1]
+        + recovered_number
+    )
 
 def extract_credit_from_vision(
     observations: list[
@@ -878,6 +972,15 @@ def extract_page_rows(
         course_name = (
             extract_course_name(
                 row_observations
+            )
+        )
+
+        course_name = (
+            recover_course_name_terminal_number(
+                course_name,
+                observations,
+                anchor.y,
+                next_y,
             )
         )
 
