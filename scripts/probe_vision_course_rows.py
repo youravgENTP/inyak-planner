@@ -7,7 +7,10 @@ from pathlib import Path
 
 import fitz
 
-from probe_vision_ocr import recognize_image
+from probe_vision_ocr import (
+    recognize_image,
+    render_page,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -20,7 +23,11 @@ RAW_CURRICULUM_DIR = (
 )
 
 COURSE_CODE_RE = re.compile(
-    r"^(ADA|ADB)\d{3}$"
+    r"\b(?:ADA|ADB)\d{3}\b"
+)
+
+GRADE_SEMESTER_RE = re.compile(
+    r"\b([1-6])-([12])\b"
 )
 
 HANGUL_RE = re.compile(
@@ -50,156 +57,289 @@ def find_pdf(
     return pdfs[0]
 
 
-def find_course_code_words(
-    page: fitz.Page,
-) -> list[tuple]:
-    words = page.get_text(
-        "words"
-    )
-
-    result = []
-
-    for word in words:
-        text = word[4].strip()
-
-        if COURSE_CODE_RE.fullmatch(
-            text
-        ):
-            result.append(word)
-
-    result.sort(
-        key=lambda word: word[1]
-    )
-
-    return result
-
-
-def render_crop(
-    page: fitz.Page,
-    clip: fitz.Rect,
-    output_path: Path,
-) -> None:
-    matrix = fitz.Matrix(
-        4.0,
-        4.0,
-    )
-
-    pixmap = page.get_pixmap(
-        matrix=matrix,
-        clip=clip,
-        alpha=False,
-    )
-
-    pixmap.save(
-        output_path
-    )
-
-
-def clean_ocr_text(
-    value: str,
+def clean_text(
+    text: str,
 ) -> str:
-    value = value.strip()
+    text = text.strip()
 
-    value = re.sub(
-        r"^[•·ㆍ\-\s]+",
-        "",
-        value,
-    )
-
-    value = re.sub(
+    text = re.sub(
         r"\s+",
         " ",
-        value,
+        text,
     )
 
-    return value.strip()
+    return text
 
 
-def recognize_completion_type(
-    page: fitz.Page,
-    row_top: float,
-    row_bottom: float,
-    temp_dir: Path,
-    index: int,
-) -> str:
-    clip = fitz.Rect(
-        page.rect.width * 0.115,
-        row_top,
-        page.rect.width * 0.155,
-        row_bottom,
+def extract_code(
+    text: str,
+) -> str | None:
+    match = COURSE_CODE_RE.search(
+        text
     )
 
-    image_path = (
-        temp_dir
-        / f"completion_{index}.png"
-    )
+    if match is None:
+        return None
 
-    render_crop(
-        page,
-        clip,
-        image_path,
-    )
+    return match.group(0)
 
-    results = recognize_image(
-        image_path
-    )
 
-    texts = [
-        clean_ocr_text(text)
-        for _, _, text, _
-        in results
+def find_course_anchors(
+    observations: list[
+        tuple[
+            float,
+            float,
+            str,
+            float,
+        ]
+    ],
+) -> list[
+    tuple[
+        float,
+        str,
     ]
+]:
+    anchors: list[
+        tuple[
+            float,
+            str,
+        ]
+    ] = []
 
-    for text in texts:
-        if "전필" in text:
-            return "전필"
-
-        if "전선" in text:
-            return "전선"
-
-    return "?"
-
-
-def recognize_course_name(
-    page: fitz.Page,
-    row_top: float,
-    row_bottom: float,
-    temp_dir: Path,
-    index: int,
-) -> str:
-    clip = fitz.Rect(
-        page.rect.width * 0.325,
-        row_top,
-        page.rect.width * 0.675,
-        row_bottom,
-    )
-
-    image_path = (
-        temp_dir
-        / f"name_{index}.png"
-    )
-
-    render_crop(
-        page,
-        clip,
-        image_path,
-    )
-
-    results = recognize_image(
-        image_path
-    )
-
-    korean_lines = []
+    seen: set[
+        tuple[
+            float,
+            str,
+        ]
+    ] = set()
 
     for (
         y,
         x,
         text,
         confidence,
-    ) in results:
-        cleaned = clean_ocr_text(
+    ) in observations:
+        code = extract_code(
             text
         )
+
+        if code is None:
+            continue
+
+        key = (
+            round(y, 4),
+            code,
+        )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+
+        anchors.append(
+            (
+                y,
+                code,
+            )
+        )
+
+    anchors.sort(
+        key=lambda item: -item[0]
+    )
+
+    return anchors
+
+
+def get_row_observations(
+    observations: list[
+        tuple[
+            float,
+            float,
+            str,
+            float,
+        ]
+    ],
+    anchor_y: float,
+    previous_y: float | None,
+    next_y: float | None,
+) -> list[
+    tuple[
+        float,
+        float,
+        str,
+        float,
+    ]
+]:
+    if previous_y is None:
+        if next_y is None:
+            upper = anchor_y + 0.02
+        else:
+            upper = (
+                anchor_y
+                + (
+                    anchor_y
+                    - next_y
+                ) / 2
+            )
+    else:
+        upper = (
+            previous_y
+            + anchor_y
+        ) / 2
+
+    if next_y is None:
+        if previous_y is None:
+            lower = anchor_y - 0.02
+        else:
+            lower = (
+                anchor_y
+                - (
+                    previous_y
+                    - anchor_y
+                ) / 2
+            )
+    else:
+        lower = (
+            anchor_y
+            + next_y
+        ) / 2
+
+    result = []
+
+    for observation in observations:
+        y = observation[0]
+
+        if lower <= y < upper:
+            result.append(
+                observation
+            )
+
+    result.sort(
+        key=lambda item: (
+            -item[0],
+            item[1],
+        )
+    )
+
+    return result
+
+
+def extract_completion_type(
+    observations: list[
+        tuple[
+            float,
+            float,
+            str,
+            float,
+        ]
+    ],
+) -> str:
+    for (
+        y,
+        x,
+        text,
+        confidence,
+    ) in observations:
+        cleaned = clean_text(
+            text
+        )
+
+        if "전필" in cleaned:
+            return "전필"
+
+        if "전선" in cleaned:
+            return "전선"
+
+    return "?"
+
+
+def extract_course_name(
+    observations: list[
+        tuple[
+            float,
+            float,
+            str,
+            float,
+        ]
+    ],
+) -> str:
+    competency_phrases = [
+        "문제 해결 능력",
+        "문제 해결 능",
+        "전문 연구 능력",
+        "전문 연구 능",
+        "융복합 능력",
+        "융복합 능",
+        "실험 수행 능력",
+        "실험 수행 능",
+        "의사 전달 능력",
+        "의사 전달 능",
+    ]
+
+    candidates: list[
+        tuple[
+            int,
+            float,
+            float,
+            str,
+        ]
+    ] = []
+
+    for (
+        y,
+        x,
+        text,
+        confidence,
+    ) in observations:
+        cleaned = clean_text(
+            text
+        )
+
+        if not cleaned:
+            continue
+
+        if x >= 0.67:
+            continue
+
+        # 이수구분 제거
+        cleaned = re.sub(
+            r"\b(?:전필|전선)\b",
+            " ",
+            cleaned,
+        )
+
+        # 교과목 코드 제거
+        cleaned = COURSE_CODE_RE.sub(
+            " ",
+            cleaned,
+        )
+
+        # 주전공능력 문구 제거
+        for phrase in competency_phrases:
+            cleaned = cleaned.replace(
+                phrase,
+                " ",
+            )
+
+        # OCR에서 능력의 마지막 '력'이
+        # 별도 block으로 떨어지는 경우 제거
+        cleaned = re.sub(
+            r"^\s*력\s*$",
+            "",
+            cleaned,
+        )
+
+        cleaned = re.sub(
+            r"^[•·ㆍ/\-\s]+",
+            "",
+            cleaned,
+        )
+
+        cleaned = re.sub(
+            r"\s+",
+            " ",
+            cleaned,
+        ).strip()
 
         if not cleaned:
             continue
@@ -209,34 +349,104 @@ def recognize_course_name(
         ):
             continue
 
-        korean_lines.append(
-            (
-                y,
-                x,
-                cleaned,
-                confidence,
+        # 남아 있는 표 구조용 단어는 제외
+        if cleaned in {
+            "전필",
+            "전선",
+            "능",
+            "능력",
+            "력",
+        }:
+            continue
+
+        hangul_count = len(
+            HANGUL_RE.findall(
+                cleaned
             )
         )
 
-    korean_lines.sort(
+        # 교과목명 열에 가까울수록 우선.
+        # 다만 Vision이 여러 셀을 합친 block도
+        # 허용하기 위해 x=0.12부터 본다.
+        position_score = (
+            2
+            if x >= 0.32
+            else 1
+        )
+
+        score = (
+            hangul_count
+            + position_score
+        )
+
+        candidates.append(
+            (
+                score,
+                y,
+                x,
+                cleaned,
+            )
+        )
+
+    if not candidates:
+        return ""
+
+    candidates.sort(
         key=lambda item: (
             -item[0],
-            item[1],
+            -item[1],
+            item[2],
         )
     )
 
-    return " ".join(
-        item[2]
-        for item in korean_lines
-    ).strip()
+    return candidates[0][3]
+
+
+def extract_grade_semester(
+    observations: list[
+        tuple[
+            float,
+            float,
+            str,
+            float,
+        ]
+    ],
+) -> tuple[
+    int,
+    int,
+] | None:
+    for (
+        y,
+        x,
+        text,
+        confidence,
+    ) in observations:
+        if x >= 0.12:
+            continue
+
+        match = (
+            GRADE_SEMESTER_RE.search(
+                text
+            )
+        )
+
+        if match is None:
+            continue
+
+        return (
+            int(match.group(1)),
+            int(match.group(2)),
+        )
+
+    return None
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "PyMuPDF 교과목 코드 위치를 "
-            "anchor로 삼아 Vision OCR로 "
-            "이수구분과 교과목명을 확인합니다."
+            "전체 페이지 Vision OCR 결과에서 "
+            "교과목 코드를 anchor로 삼아 "
+            "교육과정 행을 재구성합니다."
         )
     )
 
@@ -266,10 +476,25 @@ def main() -> None:
         args.page - 1
     ]
 
-    code_words = (
-        find_course_code_words(
-            page
+    with tempfile.TemporaryDirectory() as temp:
+        image_path = (
+            Path(temp)
+            / "page.png"
         )
+
+        render_page(
+            page,
+            image_path,
+        )
+
+        observations = (
+            recognize_image(
+                image_path
+            )
+        )
+
+    anchors = find_course_anchors(
+        observations
     )
 
     print()
@@ -286,112 +511,83 @@ def main() -> None:
         f"page: {args.page}"
     )
     print(
-        f"course rows: "
-        f"{len(code_words)}"
+        f"Vision course anchors: "
+        f"{len(anchors)}"
     )
     print()
 
-    if not code_words:
-        return
+    current_grade: int | None = None
+    current_semester: int | None = None
 
-    code_ys = [
-        (
-            word[1]
-            + word[3]
-        ) / 2
-        for word in code_words
-    ]
-
-    with tempfile.TemporaryDirectory() as temp:
-        temp_dir = Path(
-            temp
+    for index, (
+        anchor_y,
+        code,
+    ) in enumerate(
+        anchors
+    ):
+        previous_y = (
+            anchors[index - 1][0]
+            if index > 0
+            else None
         )
 
-        for index, word in enumerate(
-            code_words
-        ):
-            code = word[4].strip()
+        next_y = (
+            anchors[index + 1][0]
+            if index + 1 < len(anchors)
+            else None
+        )
 
-            center_y = (
-                word[1]
-                + word[3]
-            ) / 2
-
-            if index == 0:
-                next_y = (
-                    code_ys[index + 1]
-                )
-
-                spacing = (
-                    next_y
-                    - center_y
-                )
-
-                row_top = (
-                    center_y
-                    - spacing / 2
-                )
-            else:
-                previous_y = (
-                    code_ys[index - 1]
-                )
-
-                row_top = (
-                    previous_y
-                    + center_y
-                ) / 2
-
-            if index == (
-                len(code_words) - 1
-            ):
-                previous_y = (
-                    code_ys[index - 1]
-                )
-
-                spacing = (
-                    center_y
-                    - previous_y
-                )
-
-                row_bottom = (
-                    center_y
-                    + spacing / 2
-                )
-            else:
-                next_y = (
-                    code_ys[index + 1]
-                )
-
-                row_bottom = (
-                    center_y
-                    + next_y
-                ) / 2
-
-            completion_type = (
-                recognize_completion_type(
-                    page,
-                    row_top,
-                    row_bottom,
-                    temp_dir,
-                    index,
-                )
+        row_observations = (
+            get_row_observations(
+                observations,
+                anchor_y,
+                previous_y,
+                next_y,
             )
+        )
 
-            course_name = (
-                recognize_course_name(
-                    page,
-                    row_top,
-                    row_bottom,
-                    temp_dir,
-                    index,
-                )
+        grade_semester = (
+            extract_grade_semester(
+                row_observations
             )
+        )
 
-            print(
-                f"{code} | "
-                f"{completion_type} | "
-                f"{course_name}"
+        if grade_semester is not None:
+            (
+                current_grade,
+                current_semester,
+            ) = grade_semester
+
+        completion_type = (
+            extract_completion_type(
+                row_observations
             )
+        )
+
+        course_name = (
+            extract_course_name(
+                row_observations
+            )
+        )
+
+        grade_semester_text = (
+            (
+                f"{current_grade}-"
+                f"{current_semester}"
+            )
+            if (
+                current_grade is not None
+                and current_semester is not None
+            )
+            else "?"
+        )
+
+        print(
+            f"{grade_semester_text} | "
+            f"{code} | "
+            f"{completion_type} | "
+            f"{course_name}"
+        )
 
 
 if __name__ == "__main__":
