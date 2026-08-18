@@ -10,16 +10,12 @@ import psycopg
 from psycopg import sql
 
 
-PROJECT_ROOT = Path(
-    __file__
-).resolve().parents[1]
-
-SQLITE_DATABASE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "inyak.db"
+from scripts.common.data_paths import (
+    DATABASE_PATH,
 )
+
+
+SQLITE_DATABASE_PATH = DATABASE_PATH
 
 
 TABLES = [

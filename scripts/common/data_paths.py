@@ -61,6 +61,31 @@ DATABASE_PATH = (
     / "inyak.db"
 )
 
+DATABASE_PATH = (
+    DATA_DIR
+    / "db"
+    / "inyak.db"
+)
+
+AUTH_DATABASE_PATH = (
+    DATA_DIR
+    / "db"
+    / "auth.db"
+)
+
+PROFILE_IMAGE_DIRECTORY = (
+    DATA_DIR
+    / "uploads"
+    / "profile-images"
+)
+
+
+PROFILE_IMAGE_DIRECTORY = (
+    DATA_DIR
+    / "uploads"
+    / "profile-images"
+)
+
 
 def curriculum_seed_path(
     entry_year: int,

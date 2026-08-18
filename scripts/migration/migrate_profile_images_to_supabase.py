@@ -8,15 +8,8 @@ from pathlib import Path
 from supabase import create_client
 
 
-PROJECT_ROOT = Path(
-    __file__
-).resolve().parents[1]
-
-PROFILE_IMAGE_DIRECTORY = (
-    PROJECT_ROOT
-    / "data"
-    / "uploads"
-    / "profile-images"
+from scripts.common.data_paths import (
+    PROFILE_IMAGE_DIRECTORY,
 )
 
 BUCKET_NAME = "profile-images"

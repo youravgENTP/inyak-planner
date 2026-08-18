@@ -12,15 +12,8 @@ import psycopg
 from psycopg import sql
 
 
-PROJECT_ROOT = Path(
-    __file__
-).resolve().parents[1]
-
-AUTH_DATABASE_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "db"
-    / "auth.db"
+from scripts.common.data_paths import (
+    AUTH_DATABASE_PATH,
 )
 
 
