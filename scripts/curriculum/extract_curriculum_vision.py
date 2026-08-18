@@ -360,7 +360,7 @@ def normalize_course_name(
     )
 
     cleaned = re.sub(
-        r"^[\s|:;•·ㆍ/\\\[\]「」]+",
+        r"^[\s|:;•·ㆍ/\-\\\[\]「」]+",
         "",
         cleaned,
     )
