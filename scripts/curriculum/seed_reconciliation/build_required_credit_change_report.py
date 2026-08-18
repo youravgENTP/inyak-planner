@@ -388,7 +388,17 @@ def contribution_line(
             )
 
     before_text = " + ".join(
-        format_course_state(row)
+        format_course_state(
+            row,
+            include_name=(
+                normalize_name(
+                    course_name(row)
+                )
+                != normalize_name(
+                    contribution.label
+                )
+            ),
+        )
         for row in before_rows
     )
 
