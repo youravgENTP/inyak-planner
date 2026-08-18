@@ -1,0 +1,47 @@
+Curriculum extraction report
+============================
+
+academic year: 2023
+source PDF: 2023학년도_약학과_교육과정.pdf
+course table pages: 4-15
+
+Extraction
+----------
+course rows extracted: 180
+parser warnings: 0
+
+Validation
+----------
+rows: 180
+valid course codes: 180
+invalid course codes: 0
+invalid grades: 0
+invalid semesters: 0
+invalid completion types: 0
+missing course names: 0
+invalid credits: 0
+missing source pages: 0
+duplicate extracted rows: 0
+
+Rows by page
+------------
+page 4: 16
+page 5: 18
+page 6: 17
+page 7: 18
+page 8: 16
+page 9: 17
+page 10: 16
+page 11: 15
+page 12: 15
+page 13: 16
+page 14: 12
+page 15: 4
+
+Credit summary
+--------------
+all extracted credits: 417
+required credits: 224
+elective credits: 193
+
+RESULT: PASS

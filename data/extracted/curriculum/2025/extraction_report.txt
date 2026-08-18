@@ -1,0 +1,41 @@
+Curriculum extraction report
+============================
+
+academic year: 2025
+source PDF: 2025학년도_약학과_교육과정.pdf
+course table pages: 4-9
+
+Extraction
+----------
+course rows extracted: 96
+parser warnings: 0
+
+Validation
+----------
+rows: 96
+valid course codes: 96
+invalid course codes: 0
+invalid grades: 0
+invalid semesters: 0
+invalid completion types: 0
+missing course names: 0
+invalid credits: 0
+missing source pages: 0
+duplicate extracted rows: 0
+
+Rows by page
+------------
+page 4: 16
+page 5: 18
+page 6: 17
+page 7: 17
+page 8: 14
+page 9: 14
+
+Credit summary
+--------------
+all extracted credits: 223
+required credits: 134
+elective credits: 89
+
+RESULT: PASS

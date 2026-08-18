@@ -1,0 +1,42 @@
+Course relation extraction report
+=================================
+
+academic year: 2025
+source PDF: 2025학년도_약학과_교육과정.pdf
+relation pages: 11-11
+
+Extraction
+----------
+total relations: 22
+substitute relations: 10
+equivalent relations: 12
+cross-designated relations: 20
+rows needing review: 0
+validation problems: 0
+
+RESULT: PASS
+
+Relations
+---------
+substitute + equivalent: ADA073 항생물질학 -> ADA209 감염질환을 위한 항생물질학 (2019) [page 11, row 1]
+substitute + equivalent: ADA083 유기약품합성화학 -> ADA198 의약품합성학 (2018) [page 11, row 2]
+substitute + equivalent: ADA133 병원약학 -> ADA217 의료기관약국 예비실무실습 (2020) [page 11, row 3]
+substitute + equivalent: ADA151 병원약학실무필수실습1 -> ADA213 의료기관약국 필수실무실습 1 (2020) [page 11, row 4]
+substitute + equivalent: ADA152 병원약학실무필수실습2 -> ADA214 의료기관약국 필수실무실습 2 (2020) [page 11, row 5]
+substitute + equivalent: ADA153 지역약국실무필수실습1 -> ADA219 지역약국 필수실무실습 1 (2020) [page 11, row 6]
+substitute + equivalent: ADA154 지역약국실무필수실습2 -> ADA220 지역약국 필수실무실습 2 (2020) [page 11, row 7]
+substitute + equivalent: ADA155 제약산업실무필수실습 -> ADA218 제약산업 필수실무실습 (2020) [page 11, row 8]
+substitute + equivalent: ADA169 병원약학실무필수실습3 -> ADA215 의료기관약국 필수실무실습 3 (2020) [page 11, row 9]
+substitute + equivalent: ADA170 병원약학실무필수실습4 -> ADA216 의료기관약국 필수실무실습 4 (2020) [page 11, row 10]
+equivalent: ADA025 약사법규 -> ADA194 보건의약관계법규 (2017) [page 11, row 1]
+equivalent + substitute: ADA073 항생물질학 -> ADA209 감염질환을 위한 항생물질학 (2019) [page 11, row 2]
+equivalent + substitute: ADA083 유기약품합성화학 -> ADA198 의약품합성학 (2017) [page 11, row 3]
+equivalent + substitute: ADA133 병원약학 -> ADA217 의료기관약국 예비실무실습 (2020) [page 11, row 4]
+equivalent + substitute: ADA151 병원약학실무필수실습1 -> ADA213 의료기관약국 필수실무실습 1 (2020) [page 11, row 5]
+equivalent + substitute: ADA152 병원약학실무필수실습2 -> ADA214 의료기관약국 필수실무실습 2 (2020) [page 11, row 6]
+equivalent + substitute: ADA153 지역약국실무필수실습1 -> ADA219 지역약국 필수실무실습 1 (2020) [page 11, row 7]
+equivalent + substitute: ADA154 지역약국실무필수실습2 -> ADA220 지역약국 필수실무실습 2 (2020) [page 11, row 8]
+equivalent + substitute: ADA155 제약산업실무필수실습 -> ADA218 제약산업 필수실무실습 (2020) [page 11, row 9]
+equivalent + substitute: ADA169 병원약학실무필수실습3 -> ADA215 의료기관약국 필수실무실습 3 (2020) [page 11, row 10]
+equivalent + substitute: ADA170 병원약학실무필수실습4 -> ADA216 의료기관약국 필수실무실습 4 (2020) [page 11, row 11]
+equivalent: ADA172 제제공학 실습 -> ADA200 제제과학실습 (2017) [page 11, row 12]
