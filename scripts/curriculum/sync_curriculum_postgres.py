@@ -38,7 +38,7 @@ from scripts.curriculum.import_curriculum import (
     load_csv,
 )
 
-from import_curriculum_postgres import (
+from scripts.curriculum.import_curriculum_postgres import (
     get_database_url,
     verify_postgres_schema,
     verify_project_ref,
