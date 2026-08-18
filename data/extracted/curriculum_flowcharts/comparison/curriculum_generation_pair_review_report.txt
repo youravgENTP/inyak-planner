@@ -1,0 +1,143 @@
+Curriculum generation pair review
+=============================================
+
+ambiguous groups: 67
+
+Group status
+------------
+partially_resolved: 22
+fully_unresolved: 45
+resolved_split: 0
+resolved_same_generation: 0
+review: 0
+
+By year
+-------
+2022: partial=0, full_unknown=21, split=0, same=0, review=0
+2023: partial=3, full_unknown=21, split=0, same=0, review=0
+2024: partial=19, full_unknown=3, split=0, same=0, review=0
+
+PARTIALLY RESOLVED
+------------------
+2023 | 4-1 | 건강기능식품학
+  ADA182 | status=probable | generation=six_year | lineage=six_year
+  ADB050 | status=paired_unknown | generation=- | lineage=unresolved
+2023 | 4-1 | 나노약학
+  ADA229 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB054 | status=probable | generation=six_year | lineage=six_year
+2023 | 4-2 | 법과학
+  ADA230 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB061 | status=probable | generation=six_year | lineage=six_year
+2024 | 4-1 | 의약화학 1
+  ADA102 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB047 | status=probable | generation=six_year | lineage=six_year
+2024 | 4-1 | 천연물의약품학
+  ADA122 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB048 | status=probable | generation=six_year | lineage=six_year
+2024 | 4-2 | 생물약제학
+  ADA033 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB057 | status=probable | generation=six_year | lineage=six_year
+2024 | 4-2 | 약물동태학
+  ADA086 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB058 | status=probable | generation=six_year | lineage=six_year
+2024 | 4-2 | 의약화학 2
+  ADA103 | status=paired_unknown | generation=- | lineage=unresolved
+  ADB059 | status=probable | generation=six_year | lineage=six_year
+2024 | 5-1 | 의약품제조관리학
+  ADA171 | status=probable | generation=six_year | lineage=six_year
+  ADB072 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 5-1 | 지역약국 예비실무실습
+  ADA115 | status=probable | generation=six_year | lineage=six_year
+  ADB075 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 5-2 | 약무행정실무필수실습
+  ADA174 | status=probable | generation=six_year | lineage=six_year
+  ADB087 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 5-2 | 약전 및 품질관리학
+  ADA167 | status=probable | generation=six_year | lineage=six_year
+  ADB081 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 5-2 | 한약제제학
+  ADA140 | status=probable | generation=six_year | lineage=six_year
+  ADB080 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 의료기관약국 필수실무실습 1
+  ADA213 | status=probable | generation=six_year | lineage=six_year
+  ADB093 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 의료기관약국 필수실무실습 2
+  ADA214 | status=probable | generation=six_year | lineage=six_year
+  ADB094 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 의료기관약국 필수실무실습 3
+  ADA215 | status=probable | generation=six_year | lineage=six_year
+  ADB095 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 의료기관약국 필수실무실습 4
+  ADA216 | status=probable | generation=six_year | lineage=six_year
+  ADB096 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 제약산업 필수실무실습
+  ADA218 | status=probable | generation=six_year | lineage=six_year
+  ADB097 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-1 | 지역약국 필수실무실습 1
+  ADA219 | status=probable | generation=six_year | lineage=six_year
+  ADB092 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-2 | 심화실습 1
+  ADA226 | status=probable | generation=six_year | lineage=six_year
+  ADB099 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-2 | 심화실습 2
+  ADA227 | status=probable | generation=six_year | lineage=six_year
+  ADB100 | status=paired_unknown | generation=- | lineage=unresolved
+2024 | 6-2 | 지역약국 필수실무실습 2
+  ADA220 | status=probable | generation=six_year | lineage=six_year
+  ADB098 | status=paired_unknown | generation=- | lineage=unresolved
+
+FULLY UNRESOLVED
+----------------
+2022 | 4-1 | 건강기능식품학 | ADA182 / ADB050
+2022 | 4-1 | 의약화학 1 | ADA102 / ADB047
+2022 | 4-1 | 천연물의약품학 | ADA122 / ADB048
+2022 | 4-1 | 향장품학 | ADA120 / ADB043
+2022 | 4-2 | 생물약제학 | ADA033 / ADB057
+2022 | 4-2 | 약물동태학 | ADA086 / ADB058
+2022 | 5-1 | 의약품제조관리학 | ADA171 / ADB072
+2022 | 5-1 | 지역약국 예비실무실습 | ADA115 / ADB075
+2022 | 5-2 | 동물용의약품학 | ADA121 / ADB089
+2022 | 5-2 | 약무행정실무필수실습 | ADA174 / ADB087
+2022 | 5-2 | 약전 및 품질관리학 | ADA167 / ADB081
+2022 | 5-2 | 한약제제학 | ADA140 / ADB080
+2022 | 6-1 | 의료기관약국 필수실무실습 1 | ADA213 / ADB093
+2022 | 6-1 | 의료기관약국 필수실무실습 2 | ADA214 / ADB094
+2022 | 6-1 | 의료기관약국 필수실무실습 3 | ADA215 / ADB095
+2022 | 6-1 | 의료기관약국 필수실무실습 4 | ADA216 / ADB096
+2022 | 6-1 | 제약산업 필수실무실습 | ADA218 / ADB097
+2022 | 6-1 | 지역약국 필수실무실습 1 | ADA219 / ADB092
+2022 | 6-2 | 심화실습 1 | ADA226 / ADB099
+2022 | 6-2 | 심화실습 2 | ADA227 / ADB100
+2022 | 6-2 | 지역약국 필수실무실습 2 | ADA220 / ADB098
+2023 | 4-1 | 의약화학 1 | ADA102 / ADB047
+2023 | 4-1 | 천연물의약품학 | ADA122 / ADB048
+2023 | 4-1 | 향장품학 | ADA120 / ADB043
+2023 | 4-2 | 생물약제학 | ADA033 / ADB057
+2023 | 4-2 | 약물동태학 | ADA086 / ADB058
+2023 | 4-2 | 의약화학 2 | ADA103 / ADB059
+2023 | 5-1 | 의약품제조관리학 | ADA171 / ADB072
+2023 | 5-1 | 지역약국 예비실무실습 | ADA115 / ADB075
+2023 | 5-2 | 동물용의약품학 | ADA121 / ADB089
+2023 | 5-2 | 약무행정실무필수실습 | ADA174 / ADB087
+2023 | 5-2 | 약전 및 품질관리학 | ADA167 / ADB081
+2023 | 5-2 | 한약제제학 | ADA140 / ADB080
+2023 | 6-1 | 의료기관약국 필수실무실습 1 | ADA213 / ADB093
+2023 | 6-1 | 의료기관약국 필수실무실습 2 | ADA214 / ADB094
+2023 | 6-1 | 의료기관약국 필수실무실습 3 | ADA215 / ADB095
+2023 | 6-1 | 의료기관약국 필수실무실습 4 | ADA216 / ADB096
+2023 | 6-1 | 제약산업 필수실무실습 | ADA218 / ADB097
+2023 | 6-1 | 지역약국 필수실무실습 1 | ADA219 / ADB092
+2023 | 6-2 | 심화실습 1 | ADA226 / ADB099
+2023 | 6-2 | 심화실습 2 | ADA227 / ADB100
+2023 | 6-2 | 지역약국 필수실무실습 2 | ADA220 / ADB098
+2024 | 4-1 | 나노약학 | ADA229 / ADB054
+2024 | 4-1 | 향장품학 | ADA120 / ADB043
+2024 | 5-2 | 동물용의약품학 | ADA121 / ADB089
+
+Rules
+-----
+1. Groups are reconstructed from rows whose original generation evidence is ambiguous.
+2. A probable row remains probable; its partner is not assigned the opposite generation.
+3. partially_resolved means exactly one row is confirmed/probable and the partner remains paired_unknown.
+4. fully_unresolved means both rows remain paired_unknown.
+5. This report does not change decision, preview, baseline, seed, or database data.

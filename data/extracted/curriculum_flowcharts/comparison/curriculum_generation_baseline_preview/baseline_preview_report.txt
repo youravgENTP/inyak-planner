@@ -1,0 +1,52 @@
+Curriculum generation baseline preview report
+=============================================
+
+This is a diagnostic preview only.
+No data/baseline, seed, or DB data is modified.
+
+2022
+----
+four_year: 55 rows, 126 credits
+six_year: 73 rows, 166 credits
+excluded: 48 rows, 111 credits
+excluded paired_unknown: 42
+excluded conflict: 0
+excluded unresolved: 6
+excluded missing_decision: 0
+
+2023
+----
+four_year: 52 rows, 119 credits
+six_year: 75 rows, 170 credits
+excluded: 53 rows, 128 credits
+excluded paired_unknown: 45
+excluded conflict: 0
+excluded unresolved: 8
+excluded missing_decision: 0
+
+2024
+----
+four_year: 45 rows, 104 credits
+six_year: 101 rows, 232 credits
+excluded: 43 rows, 96 credits
+excluded paired_unknown: 25
+excluded conflict: 6
+excluded unresolved: 12
+excluded missing_decision: 0
+
+TOTAL
+-----
+four_year preview rows: 152
+six_year preview rows: 249
+excluded source rows: 144
+
+Inclusion rules
+---------------
+1. confirmed four_year -> four-year preview.
+2. confirmed six_year -> six-year preview.
+3. confirmed both -> both previews.
+4. probable rows are included only in their provisional generation.
+5. paired_unknown, conflict, and unresolved rows are excluded.
+6. No opposite-generation partner is inferred from a probable row.
+7. Included preview CSVs retain the exact 19-column extracted courses.csv schema.
+8. entry_year is not populated or changed by this preview.

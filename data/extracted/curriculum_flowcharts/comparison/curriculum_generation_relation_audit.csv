@@ -1,0 +1,35 @@
+﻿academic_year,grade,semester,course_name,course_code,decision_status,relation_found,relation_type,relation_role,relation_source_years,relation_designation_year,counterpart_code,counterpart_name,counterpart_same_year_generation,counterpart_same_year_status,counterpart_previous_year_generation,counterpart_previous_year_status,counterpart_next_year_generation,counterpart_next_year_status,supporting_four_years,supporting_six_years,relation_candidate,relation_status,relation_strength,relation_reason
+2022,3,1,상담지도 1,ADA223,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2022,3,2,상담지도 II,ADA224,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2022,3,2,신경생리학,ADA092,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2022,4,2,약학실험5,ADB067,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2022,5,1,방제학,ADB078,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2022,5,2,바이오의약품학,ADA225,unresolved,yes,equivalent,new,2023;2024,2021,ADA107,생물의약품학,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2023,3,1,약용식물학,ADA203,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,3,2,바이러스학,ADA189,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,3,2,신경생리학,ADA092,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,3,2,자원생약학,ADA228,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,4,1,약물유전체학,ADA063,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,4,2,약학실험5,ADB067,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,5,1,방제학,ADB078,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2023,5,2,바이오의약품학,ADA225,unresolved,yes,equivalent,new,2023;2024,2021,ADA107,생물의약품학,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2024,3,1,약용식물학,ADA203,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,3,2,바이러스학,ADA189,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,3,2,신경생리학,ADA092,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,1,건강기능식품학,ADB050,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,1,약물유전체학,ADA063,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,2,약학실험5,ADB067,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,2,법과학,ADA230,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,2,법과학,ADB061,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,4,2,임상의약정보학,ADA232,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,5,1,방제학,ADB078,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2024,5,2,바이오의약품학,ADA225,unresolved,yes,equivalent,new,2023;2024,2021,ADA107,생물의약품학,,none,,none,six_year,confirmed,,2025,six_year,candidate,moderate,confirmed_counterpart_single_adjacent_year
+2024,5,2,조제학,ADA053,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2025,4,2,심혈관계 질환 약물치료학,ADB082,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2025,5,1,감염질환을 위한 항생물질학,ADA209,unresolved,yes,substitute,new,2023;2024;2025,2019,ADA073,항생물질학,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2025,5,1,감염질환을 위한 항생물질학,ADA209,unresolved,yes,equivalent,new,2023;2024;2025,2019,ADA073,항생물질학,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2025,5,1,제제과학실습,ADA200,unresolved,yes,equivalent,new,2023;2024;2025,2017,ADA172,제제공학 실습,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2025,5,1,예방약학 1,ADA132,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2025,5,2,보건의약관계법규,ADA194,unresolved,yes,equivalent,new,2023;2024;2025,2017,ADA025,약사법규,,none,,none,,none,,,,no_evidence,,no_confirmed_counterpart_generation_within_one_year_window
+2025,5,2,임상면역학,ADA190,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation
+2025,5,2,예방약학 2,ADA109,unresolved,no,,,,,,,,,,,,,,,,no_relation,,no_applicable_official_relation

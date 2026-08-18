@@ -1,0 +1,74 @@
+Curriculum generation relation audit
+=============================================
+
+relation audit rows: 34
+
+Candidate summary
+-----------------
+four_year: 0
+six_year: 1
+strong: 0
+moderate: 1
+conflict: 0
+no_relation: 27
+no_evidence: 6
+
+CANDIDATES
+----------
+count: 1
+2024 | 5-2 | ADA225 | 바이오의약품학 | relation=equivalent | counterpart=ADA107 생물의약품학 | candidate=six_year | strength=moderate | reason=confirmed_counterpart_single_adjacent_year
+
+CONFLICTS
+---------
+count: 0
+
+NO USABLE RELATION EVIDENCE
+---------------------------
+count: 33
+2022 | 3-1 | ADA223 | 상담지도 1 | status=no_relation
+2022 | 3-2 | ADA224 | 상담지도 II | status=no_relation
+2022 | 3-2 | ADA092 | 신경생리학 | status=no_relation
+2022 | 4-2 | ADB067 | 약학실험5 | status=no_relation
+2022 | 5-1 | ADB078 | 방제학 | status=no_relation
+2022 | 5-2 | ADA225 | 바이오의약품학 | status=no_evidence
+2023 | 3-1 | ADA203 | 약용식물학 | status=no_relation
+2023 | 3-2 | ADA189 | 바이러스학 | status=no_relation
+2023 | 3-2 | ADA092 | 신경생리학 | status=no_relation
+2023 | 3-2 | ADA228 | 자원생약학 | status=no_relation
+2023 | 4-1 | ADA063 | 약물유전체학 | status=no_relation
+2023 | 4-2 | ADB067 | 약학실험5 | status=no_relation
+2023 | 5-1 | ADB078 | 방제학 | status=no_relation
+2023 | 5-2 | ADA225 | 바이오의약품학 | status=no_evidence
+2024 | 3-1 | ADA203 | 약용식물학 | status=no_relation
+2024 | 3-2 | ADA189 | 바이러스학 | status=no_relation
+2024 | 3-2 | ADA092 | 신경생리학 | status=no_relation
+2024 | 4-1 | ADB050 | 건강기능식품학 | status=no_relation
+2024 | 4-1 | ADA063 | 약물유전체학 | status=no_relation
+2024 | 4-2 | ADB067 | 약학실험5 | status=no_relation
+2024 | 4-2 | ADA230 | 법과학 | status=no_relation
+2024 | 4-2 | ADB061 | 법과학 | status=no_relation
+2024 | 4-2 | ADA232 | 임상의약정보학 | status=no_relation
+2024 | 5-1 | ADB078 | 방제학 | status=no_relation
+2024 | 5-2 | ADA053 | 조제학 | status=no_relation
+2025 | 4-2 | ADB082 | 심혈관계 질환 약물치료학 | status=no_relation
+2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | status=no_evidence
+2025 | 5-1 | ADA209 | 감염질환을 위한 항생물질학 | status=no_evidence
+2025 | 5-1 | ADA200 | 제제과학실습 | status=no_evidence
+2025 | 5-1 | ADA132 | 예방약학 1 | status=no_relation
+2025 | 5-2 | ADA194 | 보건의약관계법규 | status=no_evidence
+2025 | 5-2 | ADA190 | 임상면역학 | status=no_relation
+2025 | 5-2 | ADA109 | 예방약학 2 | status=no_relation
+
+Rules
+-----
+1. Only currently unresolved decision rows are audited.
+2. Only confirmed counterpart generation evidence is used.
+3. substitute relations propagate only in the official old -> new direction.
+4. equivalent relations may be inspected in either direction.
+5. Only counterpart evidence from the same year or one adjacent year is inspected.
+6. Same-year confirmed counterpart evidence is strong.
+7. Matching confirmed evidence on both adjacent years is strong.
+8. A single adjacent confirmed year is moderate.
+9. four-year and six-year support together is conflict.
+10. No 2-hop relation propagation is performed.
+11. This audit does not modify decisions, baseline, seed, or DB.
