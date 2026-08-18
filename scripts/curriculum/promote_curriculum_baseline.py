@@ -374,10 +374,16 @@ def validate_rows(
                 f"value={completion_type}"
             )
 
-        if change_role not in {
-            "current",
-            "legacy",
-        }:
+        # Historical baseline에서는 변경관리 metadata가
+        # 아직 부여되지 않은 공란도 정상이다.
+        # 값이 존재하는 경우에만 허용값을 검증한다.
+        if (
+            change_role
+            and change_role not in {
+                "current",
+                "legacy",
+            }
+        ):
             raise RuntimeError(
                 f"{year}: 잘못된 change_role. "
                 f"row={index}, "
