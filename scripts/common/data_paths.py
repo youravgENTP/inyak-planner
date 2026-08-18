@@ -20,6 +20,11 @@ RAW_CURRICULUM_PDFS_DIR = (
     / "curriculum_pdfs"
 )
 
+RAW_CURRICULUM_FLOWCHARTS_DIR = (
+    RAW_DIR
+    / "curriculum_flowcharts"
+)
+
 RAW_GRADUATION_PDFS_DIR = (
     RAW_DIR
     / "graduation_pdfs"
@@ -28,6 +33,11 @@ RAW_GRADUATION_PDFS_DIR = (
 EXTRACTED_CURRICULUM_DIR = (
     EXTRACTED_DIR
     / "curriculum"
+)
+
+EXTRACTED_CURRICULUM_FLOWCHARTS_DIR = (
+    EXTRACTED_DIR
+    / "curriculum_flowcharts"
 )
 
 CURRICULUM_SEED_DIR = (
@@ -61,24 +71,11 @@ DATABASE_PATH = (
     / "inyak.db"
 )
 
-DATABASE_PATH = (
-    DATA_DIR
-    / "db"
-    / "inyak.db"
-)
-
 AUTH_DATABASE_PATH = (
     DATA_DIR
     / "db"
     / "auth.db"
 )
-
-PROFILE_IMAGE_DIRECTORY = (
-    DATA_DIR
-    / "uploads"
-    / "profile-images"
-)
-
 
 PROFILE_IMAGE_DIRECTORY = (
     DATA_DIR
