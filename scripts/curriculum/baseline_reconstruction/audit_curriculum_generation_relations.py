@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.common.data_paths import (
+    CURRICULUM_RECONCILED_DIR,
     EXTRACTED_CURRICULUM_DIR,
-    EXTRACTED_CURRICULUM_FLOWCHARTS_DIR,
 )
 
 
@@ -73,10 +73,7 @@ class Relation:
 
 
 def comparison_directory() -> Path:
-    return (
-        EXTRACTED_CURRICULUM_FLOWCHARTS_DIR
-        / "comparison"
-    )
+    return CURRICULUM_RECONCILED_DIR
 
 
 def decisions_path() -> Path:
