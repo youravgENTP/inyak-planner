@@ -10,6 +10,21 @@ SCHEMA_PATH = SCRIPTS_DIR / "schema.sql"
 
 DATA_DIR = PROJECT_ROOT / "data"
 
+CURRICULUM_PIPELINE_DIR = (
+    DATA_DIR
+    / "curriculum_pipeline"
+)
+
+CURRICULUM_SOURCE_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "01_source"
+)
+
+CURRICULUM_EXTRACTED_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "02_extracted"
+)
+
 RAW_DIR = DATA_DIR / "raw"
 EXTRACTED_DIR = DATA_DIR / "extracted"
 REFERENCE_DIR = DATA_DIR / "reference"
