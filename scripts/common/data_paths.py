@@ -31,12 +31,12 @@ REFERENCE_DIR = DATA_DIR / "reference"
 SEED_DIR = DATA_DIR / "seed"
 
 RAW_CURRICULUM_PDFS_DIR = (
-    RAW_DIR
+    CURRICULUM_SOURCE_DIR
     / "curriculum_pdfs"
 )
 
 RAW_CURRICULUM_FLOWCHARTS_DIR = (
-    RAW_DIR
+    CURRICULUM_SOURCE_DIR
     / "curriculum_flowcharts"
 )
 
@@ -46,12 +46,12 @@ RAW_GRADUATION_PDFS_DIR = (
 )
 
 EXTRACTED_CURRICULUM_DIR = (
-    EXTRACTED_DIR
+    CURRICULUM_EXTRACTED_DIR
     / "curriculum"
 )
 
 EXTRACTED_CURRICULUM_FLOWCHARTS_DIR = (
-    EXTRACTED_DIR
+    CURRICULUM_EXTRACTED_DIR
     / "curriculum_flowcharts"
 )
 
