@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.common.data_paths import (
-    EXTRACTED_CURRICULUM_FLOWCHARTS_DIR,
+    CURRICULUM_RECONCILED_DIR,
 )
 
 
@@ -91,10 +91,7 @@ def normalize_course_name(
 
 
 def comparison_directory() -> Path:
-    return (
-        EXTRACTED_CURRICULUM_FLOWCHARTS_DIR
-        / "comparison"
-    )
+    return CURRICULUM_RECONCILED_DIR
 
 
 def row_evidence_path() -> Path:
