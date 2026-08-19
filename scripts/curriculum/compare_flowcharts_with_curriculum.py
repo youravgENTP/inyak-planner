@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.common.data_paths import (
+    CURRICULUM_COMPARISON_DIR,
     EXTRACTED_CURRICULUM_DIR,
     EXTRACTED_CURRICULUM_FLOWCHARTS_DIR,
 )
@@ -100,10 +101,7 @@ def flowchart_courses_path(
 
 
 def comparison_output_dir() -> Path:
-    return (
-        EXTRACTED_CURRICULUM_FLOWCHARTS_DIR
-        / "comparison"
-    )
+    return CURRICULUM_COMPARISON_DIR
 
 
 def comparison_csv_path(
