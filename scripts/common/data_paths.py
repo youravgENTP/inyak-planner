@@ -25,6 +25,31 @@ CURRICULUM_EXTRACTED_DIR = (
     / "02_extracted"
 )
 
+CURRICULUM_NORMALIZED_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "03_normalized"
+)
+
+CURRICULUM_RECONCILED_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "04_reconciled"
+)
+
+CURRICULUM_BASELINE_CANDIDATES_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "05_baseline_candidates"
+)
+
+CURRICULUM_REVIEW_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "06_review"
+)
+
+CURRICULUM_BASELINE_DIR = (
+    CURRICULUM_PIPELINE_DIR
+    / "07_baseline"
+)
+
 RAW_DIR = DATA_DIR / "raw"
 EXTRACTED_DIR = DATA_DIR / "extracted"
 REFERENCE_DIR = DATA_DIR / "reference"
