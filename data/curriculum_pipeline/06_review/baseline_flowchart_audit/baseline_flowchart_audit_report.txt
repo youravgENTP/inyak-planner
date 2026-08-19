@@ -1,0 +1,72 @@
+Baseline vs 6-year curriculum flowchart audit
+================================================
+
+Comparison rules:
+- baseline = historical entry-year curriculum
+- flowchart absence does NOT prove a baseline error
+- FLOWCHART_ONLY is a possible baseline omission
+- POSITION_MISMATCH requires review
+- course names are compared after whitespace removal only
+- no fuzzy matching is used
+
+2022
+------------------------------------------------
+MATCH: 84
+POSITION_MISMATCH: 4
+BASELINE_ONLY: 5
+FLOWCHART_ONLY: 7
+
+FLOWCHART_ONLY
+- 1-1 해부생리학1
+- 1-2 해부생리학2
+- 4-1 내분비계 및 류마티스질환 약물치료학
+- 4-1 방제학
+- 4-1 향장품학
+- 5-2 동물용의약품학
+- 5-2 심혈관계질환 및 약물치료학
+
+POSITION_MISMATCH
+- 의약정보학과 경제성평가 | baseline=4-2 | flowchart=5-1
+- 약학용어 | baseline=5-1 | flowchart=4-1
+- 조제학 | baseline=5-1 | flowchart=4-1
+- 일반의약품학 | baseline=5-2 | flowchart=4-2
+
+2023
+------------------------------------------------
+MATCH: 86
+POSITION_MISMATCH: 4
+BASELINE_ONLY: 5
+FLOWCHART_ONLY: 5
+
+FLOWCHART_ONLY
+- 4-1 내분비계 및 류마티스질환 약물치료학
+- 4-1 방제학
+- 4-1 향장품학
+- 5-2 동물용의약품학
+- 5-2 심혈관계질환 및 약물치료학
+
+POSITION_MISMATCH
+- 약학용어 | baseline=2-2 | flowchart=4-1
+- 일반의약품학 | baseline=2-2 | flowchart=4-2
+- 조제학 | baseline=2-2 | flowchart=4-1
+- 종양생물학 | baseline=2-2 | flowchart=5-2
+
+2024
+------------------------------------------------
+MATCH: 89
+POSITION_MISMATCH: 2
+BASELINE_ONLY: 8
+FLOWCHART_ONLY: 6
+
+FLOWCHART_ONLY
+- 4-1 나노약학
+- 4-1 내분비계 및 류마터스질환 약물치료학
+- 4-1 방제학
+- 4-1 향장품학
+- 4-2 심혈관계질환 및 약물치료학
+- 5-2 동물용의약품학
+
+POSITION_MISMATCH
+- 조제학 | baseline=2-2 | flowchart=4-1
+- 종양생물학 | baseline=2-2 | flowchart=5-2
+

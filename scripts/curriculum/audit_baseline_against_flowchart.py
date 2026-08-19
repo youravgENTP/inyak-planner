@@ -1,7 +1,3 @@
-cd /Users/younyung.gene/inyak-planner
-
-cat > scripts/curriculum/audit_baseline_against_flowchart.py <<'PY'
-from __future__ import annotations
 
 import argparse
 import csv
@@ -948,4 +944,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-PY

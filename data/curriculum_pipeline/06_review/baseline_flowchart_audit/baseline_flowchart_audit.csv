@@ -1,0 +1,306 @@
+﻿entry_year,status,course_name,normalized_course_name,baseline_grade,baseline_semester,baseline_course_code,baseline_completion_type,baseline_credits,flowchart_grade,flowchart_semester,flowchart_course_name,reason
+2022,FLOWCHART_ONLY,해부생리학1,해부생리학1,,,,,,1,1,해부생리학1,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,해부생리학2,해부생리학2,,,,,,1,2,해부생리학2,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,내분비계 및 류마티스질환 약물치료학,내분비계및류마티스질환약물치료학,,,,,,4,1,내분비계 및 류마티스질환 약물치료학,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,방제학,방제학,,,,,,4,1,방제학,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,향장품학,향장품학,,,,,,4,1,향장품학,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,동물용의약품학,동물용의약품학,,,,,,5,2,동물용의약품학,6year_flowchart_course_not_present_in_baseline
+2022,FLOWCHART_ONLY,심혈관계질환 및 약물치료학,심혈관계질환및약물치료학,,,,,,5,2,심혈관계질환 및 약물치료학,6year_flowchart_course_not_present_in_baseline
+2022,POSITION_MISMATCH,의약정보학과 경제성평가,의약정보학과경제성평가,4,2,ADB073,전필,2,5,1,의약정보학과 경제성평가,same_name_different_position
+2022,POSITION_MISMATCH,약학용어,약학용어,5,1,ADB076,전선,2,4,1,약학용어,same_name_different_position
+2022,POSITION_MISMATCH,조제학,조제학,5,1,ADB077,전선,3,4,1,조제학,same_name_different_position
+2022,POSITION_MISMATCH,일반의약품학,일반의약품학,5,2,ADB084,전선,3,4,2,일반의약품학,same_name_different_position
+2022,BASELINE_ONLY,해부생리학,해부생리학,1,1,ADB001,전선,3,,,,course_not_present_in_6year_flowchart
+2022,BASELINE_ONLY,신경생리학,신경생리학,1,2,ADB004,전선,1,,,,course_not_present_in_6year_flowchart
+2022,BASELINE_ONLY,내분비계 및 류마티스 질환 약물치료,내분비계및류마티스질환약물치료,4,1,ADB063,전선,2,,,,course_not_present_in_6year_flowchart
+2022,BASELINE_ONLY,약학실험5,약학실험5,4,2,ADB067,전필,1,,,,course_not_present_in_6year_flowchart
+2022,BASELINE_ONLY,심혈관계 질환 약물치료학,심혈관계질환약물치료학,5,2,ADB082,전선,3,,,,course_not_present_in_6year_flowchart
+2022,MATCH,약학기초생물학1,약학기초생물학1,1,1,ADB002,전선,3,1,1,약학기초생물학1,same_name_same_position
+2022,MATCH,약학기초화학1,약학기초화학1,1,1,ADB003,전선,3,1,1,약학기초화학1,same_name_same_position
+2022,MATCH,약학기초생물학2,약학기초생물학2,1,2,ADB005,전선,3,1,2,약학기초생물학2,same_name_same_position
+2022,MATCH,약학기초화학2,약학기초화학2,1,2,ADB006,전선,3,1,2,약학기초화학2,same_name_same_position
+2022,MATCH,물리약학1,물리약학1,2,1,ADB010,전필,3,2,1,물리약학1,same_name_same_position
+2022,MATCH,병태생리학1,병태생리학1,2,1,ADB007,전선,2,2,1,병태생리학1,same_name_same_position
+2022,MATCH,약품생화학1,약품생화학1,2,1,ADB008,전필,3,2,1,약품생화학1,same_name_same_position
+2022,MATCH,약학실험1,약학실험1,2,1,ADB013,전필,2,2,1,약학실험1,same_name_same_position
+2022,MATCH,약학통계,약학통계,2,1,ADB012,전필,2,2,1,약학통계,same_name_same_position
+2022,MATCH,약화학 1,약화학1,2,1,ADB009,전선,3,2,1,약화학1,same_name_same_position
+2022,MATCH,의약품분석학1,의약품분석학1,2,1,ADB011,전필,2,2,1,의약품분석학1,same_name_same_position
+2022,MATCH,물리약학2,물리약학2,2,2,ADB019,전필,2,2,2,물리약학2,same_name_same_position
+2022,MATCH,병태생리학2,병태생리학2,2,2,ADB015,전선,2,2,2,병태생리학2,same_name_same_position
+2022,MATCH,약품면역학,약품면역학,2,2,ADB021,전필,2,2,2,약품면역학,same_name_same_position
+2022,MATCH,약품생화학2,약품생화학2,2,2,ADB016,전필,3,2,2,약품생화학2,same_name_same_position
+2022,MATCH,약학실험2,약학실험2,2,2,ADB022,전필,2,2,2,약학실험2,same_name_same_position
+2022,MATCH,약화학 2,약화학2,2,2,ADB018,전필,3,2,2,약화학2,same_name_same_position
+2022,MATCH,의약분자생물학,의약분자생물학,2,2,ADB017,전선,2,2,2,의약분자생물학,same_name_same_position
+2022,MATCH,의약품분석학2,의약품분석학2,2,2,ADB020,전필,2,2,2,의약품분석학2,same_name_same_position
+2022,MATCH,보건사회약학,보건사회약학,3,1,ADB029,전필,3,3,1,보건사회약학,same_name_same_position
+2022,MATCH,생약학1,생약학1,3,1,ADB026,전필,2,3,1,생약학1,same_name_same_position
+2022,MATCH,약물학1,약물학1,3,1,ADB024,전필,3,3,1,약물학1,same_name_same_position
+2022,MATCH,약품미생물학,약품미생물학,3,1,ADB025,전필,3,3,1,약품미생물학,same_name_same_position
+2022,MATCH,약학실험3,약학실험3,3,1,ADB031,전필,2,3,1,약학실험3,same_name_same_position
+2022,MATCH,의약품기기분석학1,의약품기기분석학1,3,1,ADB030,전필,2,3,1,의약품기기분석학1,same_name_same_position
+2022,MATCH,의약품합성학1,의약품합성학1,3,1,ADB028,전필,2,3,1,의약품합성학1,same_name_same_position
+2022,MATCH,제제과학1,제제과학1,3,1,ADB027,전필,3,3,1,제제과학1,same_name_same_position
+2022,MATCH,감염성미생물학,감염성미생물학,3,2,ADB034,전필,2,3,2,감염성미생물학,same_name_same_position
+2022,MATCH,생약학2,생약학2,3,2,ADB036,전필,2,3,2,생약학2,same_name_same_position
+2022,MATCH,약물학2,약물학2,3,2,ADB033,전필,3,3,2,약물학2,same_name_same_position
+2022,MATCH,약사 커뮤니케이션,약사커뮤니케이션,3,2,ADB039,전선,2,3,2,약사커뮤니케이션,same_name_same_position
+2022,MATCH,약학실험4,약학실험4,3,2,ADB041,전필,2,3,2,약학실험4,same_name_same_position
+2022,MATCH,의약품기기분석학2,의약품기기분석학2,3,2,ADB040,전필,2,3,2,의약품기기분석학2,same_name_same_position
+2022,MATCH,의약품합성학2,의약품합성학2,3,2,ADB038,전필,2,3,2,의약품합성학2,same_name_same_position
+2022,MATCH,임상면역학,임상면역학,3,2,ADB035,전선,1,3,2,임상면역학,same_name_same_position
+2022,MATCH,제제과학2,제제과학2,3,2,ADB037,전필,3,3,2,제제과학2,same_name_same_position
+2022,MATCH,AI 의료약학빅데이터,AI의료약학빅데이터,4,1,ADB053,전선,2,4,1,AI 의료약학빅데이터,same_name_same_position
+2022,MATCH,감염질환을 위한 항생물질학,감염질환을위한항생물질학,4,1,ADB045,전필,2,4,1,감염질환을 위한 항생물질학,same_name_same_position
+2022,MATCH,건강기능식품학,건강기능식품학,4,1,ADA182,전선,2,4,1,건강기능식품학,same_name_same_position
+2022,MATCH,나노약학,나노약학,4,1,ADB054,전선,2,4,1,나노약학,same_name_same_position
+2022,MATCH,무기방사성 의약품학,무기방사성의약품학,4,1,ADB052,전선,2,4,1,무기방사성 의약품학,same_name_same_position
+2022,MATCH,약용식물학,약용식물학,4,1,ADB049,전선,2,4,1,약용식물학,same_name_same_position
+2022,MATCH,예방약학1,예방약학1,4,1,ADB044,전필,3,4,1,예방약학1,same_name_same_position
+2022,MATCH,의약화학1,의약화학1,4,1,ADB047,전선,2,4,1,의약화학1,same_name_same_position
+2022,MATCH,임상미생물학,임상미생물학,4,1,ADB046,전선,2,4,1,임상미생물학,same_name_same_position
+2022,MATCH,제제과학 실험,제제과학실험,4,1,ADB051,전필,2,4,1,제제과학 실험,same_name_same_position
+2022,MATCH,천연물의약품학,천연물의약품학,4,1,ADB048,전선,2,4,1,천연물의약품학,same_name_same_position
+2022,MATCH,감염성 질환 약물치료학,감염성질환약물치료학,4,2,ADB069,전필,2,4,2,감염성 질환 약물치료학,same_name_same_position
+2022,MATCH,바이오의약품 분석,바이오의약품분석,4,2,ADB060,전선,2,4,2,바이오의약품 분석,same_name_same_position
+2022,MATCH,바이오의약품학,바이오의약품학,4,2,ADB056,전선,2,4,2,바이오의약품학,same_name_same_position
+2022,MATCH,법과학,법과학,4,2,ADB061,전선,2,4,2,법과학,same_name_same_position
+2022,MATCH,보건의약관계법규,보건의약관계법규,4,2,ADB064,전필,2,4,2,보건의약관계법규,same_name_same_position
+2022,MATCH,생물약제학,생물약제학,4,2,ADB057,전선,2,4,2,생물약제학,same_name_same_position
+2022,MATCH,약물동태학,약물동태학,4,2,ADB058,전선,3,4,2,약물동태학,same_name_same_position
+2022,MATCH,약사윤리,약사윤리,4,2,ADB065,전선,1,4,2,약사윤리,same_name_same_position
+2022,MATCH,예방약학2,예방약학2,4,2,ADB055,전필,2,4,2,예방약학2,same_name_same_position
+2022,MATCH,의약품설계학,의약품설계학,4,2,ADB066,전선,3,4,2,의약품설계학,same_name_same_position
+2022,MATCH,의약화학2,의약화학2,4,2,ADB059,전선,2,4,2,의약화학2,same_name_same_position
+2022,MATCH,호흡기계 및 소화기계 질환 약물치료학,호흡기계및소화기계질환약물치료학,4,2,ADB071,전선,2,4,2,호흡기계 및 소화기계질환 약물치료학,same_name_same_position
+2022,MATCH,독성학,독성학,5,1,ADB068,전선,2,5,1,독성학,same_name_same_position
+2022,MATCH,신경정신계 및 신장 질환 약물치료학,신경정신계및신장질환약물치료학,5,1,ADB062,전필,3,5,1,신경정신계 및 신장질환 약물치료학,same_name_same_position
+2022,MATCH,약물신호전달학,약물신호전달학,5,1,ADB079,전선,2,5,1,약물신호전달학,same_name_same_position
+2022,MATCH,약업경영학,약업경영학,5,1,ADB074,전선,2,5,1,약업경영학,same_name_same_position
+2022,MATCH,의약품제조관리학,의약품제조관리학,5,1,ADA171,전선,3,5,1,의약품제조관리학,same_name_same_position
+2022,MATCH,지역약국 예비실무실습,지역약국예비실무실습,5,1,ADA115,전필,2,5,1,지역약국 예비실무실습,same_name_same_position
+2022,MATCH,항암약물요법,항암약물요법,5,1,ADB070,전필,2,5,1,항암약물요법,same_name_same_position
+2022,MATCH,신약개발정보학,신약개발정보학,5,2,ADB090,전선,2,5,2,신약개발정보학,same_name_same_position
+2022,MATCH,약무행정실무필수실습,약무행정실무필수실습,5,2,ADA174,전필,1,5,2,약무행정실무필수실습,same_name_same_position
+2022,MATCH,약물유전체학,약물유전체학,5,2,ADB085,전선,3,5,2,약물유전체학,same_name_same_position
+2022,MATCH,약전 및 품질관리학,약전및품질관리학,5,2,ADA167,전선,3,5,2,약전 및 품질관리학,same_name_same_position
+2022,MATCH,의료기관약국예비실습,의료기관약국예비실습,5,2,ADB086,전필,2,5,2,의료기관약국예비실습,same_name_same_position
+2022,MATCH,의약품허가,의약품허가,5,2,ADB088,전선,3,5,2,의약품허가,same_name_same_position
+2022,MATCH,임상약학 해설,임상약학해설,5,2,ADB083,전필,1,5,2,임상약학해설,same_name_same_position
+2022,MATCH,종양생물학,종양생물학,5,2,ADB091,전선,2,5,2,종양생물학,same_name_same_position
+2022,MATCH,한약제제학,한약제제학,5,2,ADA140,전필,2,5,2,한약제제학,same_name_same_position
+2022,MATCH,의료기관약국 필수실무실습 1,의료기관약국필수실무실습1,6,1,ADA213,전필,3,6,1,의료기관약국필수실무실습1,same_name_same_position
+2022,MATCH,의료기관약국 필수실무실습 2,의료기관약국필수실무실습2,6,1,ADA214,전필,2,6,1,의료기관약국필수실무실습2,same_name_same_position
+2022,MATCH,의료기관약국 필수실무실습 3,의료기관약국필수실무실습3,6,1,ADA215,전필,3,6,1,의료기관약국필수실무실습3,same_name_same_position
+2022,MATCH,의료기관약국 필수실무실습 4,의료기관약국필수실무실습4,6,1,ADA216,전필,2,6,1,의료기관약국필수실무실습4,same_name_same_position
+2022,MATCH,제약산업 필수실무실습,제약산업필수실무실습,6,1,ADA218,전필,2,6,1,제약산업필수실무실습,same_name_same_position
+2022,MATCH,지역약국 필수실무실습 1,지역약국필수실무실습1,6,1,ADA219,전필,2,6,1,지역약국필수실무실습1,same_name_same_position
+2022,MATCH,심화실습 1,심화실습1,6,2,ADA226,전필,5,6,2,심화실습 1,same_name_same_position
+2022,MATCH,심화실습 2,심화실습2,6,2,ADA227,전필,5,6,2,심화실습 2,same_name_same_position
+2022,MATCH,지역약국 필수실무실습 2,지역약국필수실무실습2,6,2,ADA220,전필,3,6,2,지역약국필수실무실습2,same_name_same_position
+2023,FLOWCHART_ONLY,내분비계 및 류마티스질환 약물치료학,내분비계및류마티스질환약물치료학,,,,,,4,1,내분비계 및 류마티스질환 약물치료학,6year_flowchart_course_not_present_in_baseline
+2023,FLOWCHART_ONLY,방제학,방제학,,,,,,4,1,방제학,6year_flowchart_course_not_present_in_baseline
+2023,FLOWCHART_ONLY,향장품학,향장품학,,,,,,4,1,향장품학,6year_flowchart_course_not_present_in_baseline
+2023,FLOWCHART_ONLY,동물용의약품학,동물용의약품학,,,,,,5,2,동물용의약품학,6year_flowchart_course_not_present_in_baseline
+2023,FLOWCHART_ONLY,심혈관계질환 및 약물치료학,심혈관계질환및약물치료학,,,,,,5,2,심혈관계질환 및 약물치료학,6year_flowchart_course_not_present_in_baseline
+2023,POSITION_MISMATCH,약학용어,약학용어,2,2,ADB076,전선,2,4,1,약학용어,same_name_different_position
+2023,POSITION_MISMATCH,일반의약품학,일반의약품학,2,2,ADB084,전선,3,4,2,일반의약품학,same_name_different_position
+2023,POSITION_MISMATCH,조제학,조제학,2,2,ADB077,전선,3,4,1,조제학,same_name_different_position
+2023,POSITION_MISMATCH,종양생물학,종양생물학,2,2,ADB091,전선,2,5,2,종양생물학,same_name_different_position
+2023,BASELINE_ONLY,해부생리학,해부생리학,1,1,ADB001,전선,3,,,,course_not_present_in_6year_flowchart
+2023,BASELINE_ONLY,신경생리학,신경생리학,1,2,ADB004,전선,1,,,,course_not_present_in_6year_flowchart
+2023,BASELINE_ONLY,내분비계 및 류마티스 질환 약물치료,내분비계및류마티스질환약물치료,4,1,ADB063,전선,2,,,,course_not_present_in_6year_flowchart
+2023,BASELINE_ONLY,약학실험5,약학실험5,4,2,ADB067,전필,1,,,,course_not_present_in_6year_flowchart
+2023,BASELINE_ONLY,심혈관계 질환 약물치료학,심혈관계질환약물치료학,5,2,ADB082,전선,3,,,,course_not_present_in_6year_flowchart
+2023,MATCH,약학기초생물학1,약학기초생물학1,1,1,ADB002,전선,3,1,1,약학기초생물학1,same_name_same_position
+2023,MATCH,약학기초화학1,약학기초화학1,1,1,ADB003,전선,3,1,1,약학기 초화학1,same_name_same_position
+2023,MATCH,해부생리학1,해부생리학1,1,1,ADB101,전선,2,1,1,해부생리학1,same_name_same_position
+2023,MATCH,약학기초생물학2,약학기초생물학2,1,2,ADB005,전선,3,1,2,약학기초생물학2,same_name_same_position
+2023,MATCH,약학기초화학2,약학기초화학2,1,2,ADB006,전선,3,1,2,약학기초화학2,same_name_same_position
+2023,MATCH,해부생리학2,해부생리학2,1,2,ADB102,전선,2,1,2,해부생리학2,same_name_same_position
+2023,MATCH,물리약학1,물리약학1,2,1,ADB010,전필,3,2,1,물리약학1,same_name_same_position
+2023,MATCH,병태생리학1,병태생리학1,2,1,ADB007,전선,2,2,1,병태생리학1,same_name_same_position
+2023,MATCH,약품생화학1,약품생화학1,2,1,ADB008,전필,3,2,1,약품생화학1,same_name_same_position
+2023,MATCH,약학실험1,약학실험1,2,1,ADB013,전필,2,2,1,약학실험1,same_name_same_position
+2023,MATCH,약학통계,약학통계,2,1,ADB012,전필,2,2,1,약학통계,same_name_same_position
+2023,MATCH,약화학 1,약화학1,2,1,ADB009,전선,3,2,1,약화학1,same_name_same_position
+2023,MATCH,의약품분석학1,의약품분석학1,2,1,ADB011,전필,2,2,1,의약품분석학1,same_name_same_position
+2023,MATCH,물리약학2,물리약학2,2,2,ADB019,전필,2,2,2,물리약학2,same_name_same_position
+2023,MATCH,병태생리학2,병태생리학2,2,2,ADB015,전선,2,2,2,병태생리학2,same_name_same_position
+2023,MATCH,약품면역학,약품면역학,2,2,ADB021,전필,2,2,2,약품면역학,same_name_same_position
+2023,MATCH,약품생화학2,약품생화학2,2,2,ADB016,전필,3,2,2,약품생화학2,same_name_same_position
+2023,MATCH,약학실험2,약학실험2,2,2,ADB022,전필,2,2,2,약학실험2,same_name_same_position
+2023,MATCH,약화학 2,약화학2,2,2,ADB018,전필,3,2,2,약화학2,same_name_same_position
+2023,MATCH,의약분자생물학,의약분자생물학,2,2,ADB017,전선,2,2,2,의약분자생물학,same_name_same_position
+2023,MATCH,의약품분석학2,의약품분석학2,2,2,ADB020,전필,2,2,2,의약품분석학2,same_name_same_position
+2023,MATCH,보건사회약학,보건사회약학,3,1,ADB029,전필,3,3,1,보건사회약학,same_name_same_position
+2023,MATCH,생약학1,생약학1,3,1,ADB026,전필,2,3,1,생약학1,same_name_same_position
+2023,MATCH,약물학1,약물학1,3,1,ADB024,전필,3,3,1,약물학1,same_name_same_position
+2023,MATCH,약품미생물학,약품미생물학,3,1,ADB025,전필,3,3,1,약품미생물학,same_name_same_position
+2023,MATCH,약학실험3,약학실험3,3,1,ADB031,전필,2,3,1,약학실험3,same_name_same_position
+2023,MATCH,의약품기기분석학1,의약품기기분석학1,3,1,ADB030,전필,2,3,1,의약품기기분석학1,same_name_same_position
+2023,MATCH,의약품합성학1,의약품합성학1,3,1,ADB028,전필,2,3,1,의약품합성학1,same_name_same_position
+2023,MATCH,제제과학1,제제과학1,3,1,ADB027,전필,3,3,1,제제과학1,same_name_same_position
+2023,MATCH,감염성미생물학,감염성미생물학,3,2,ADB034,전필,2,3,2,감염성미생물학,same_name_same_position
+2023,MATCH,생약학2,생약학2,3,2,ADB036,전필,2,3,2,생약학2,same_name_same_position
+2023,MATCH,약물학2,약물학2,3,2,ADB033,전필,3,3,2,약물학2,same_name_same_position
+2023,MATCH,약사 커뮤니케이션,약사커뮤니케이션,3,2,ADB039,전선,2,3,2,약사커뮤니케이션,same_name_same_position
+2023,MATCH,약학실험4,약학실험4,3,2,ADB041,전필,2,3,2,약학실험4,same_name_same_position
+2023,MATCH,의약품기기분석학2,의약품기기분석학2,3,2,ADB040,전필,2,3,2,의약품기기분석학2,same_name_same_position
+2023,MATCH,의약품합성학2,의약품합성학2,3,2,ADB038,전필,2,3,2,의약품합성학2,same_name_same_position
+2023,MATCH,임상면역학,임상면역학,3,2,ADB035,전선,1,3,2,임상면역학,same_name_same_position
+2023,MATCH,제제과학2,제제과학2,3,2,ADB037,전필,3,3,2,제제과학2,same_name_same_position
+2023,MATCH,AI 의료약학빅데이터,AI의료약학빅데이터,4,1,ADB053,전선,2,4,1,AI 의료약학빅데이터,same_name_same_position
+2023,MATCH,감염질환을 위한 항생물질학,감염질환을위한항생물질학,4,1,ADB045,전필,2,4,1,감염질환을 위한 항생물질학,same_name_same_position
+2023,MATCH,건강기능식품학,건강기능식품학,4,1,ADA182,전선,2,4,1,건강기능식품학,same_name_same_position
+2023,MATCH,나노약학,나노약학,4,1,ADB054,전선,2,4,1,나노약학,same_name_same_position
+2023,MATCH,무기방사성 의약품학,무기방사성의약품학,4,1,ADB052,전선,2,4,1,무기방사성 의약품학,same_name_same_position
+2023,MATCH,약용식물학,약용식물학,4,1,ADB049,전선,2,4,1,약용식물학,same_name_same_position
+2023,MATCH,예방약학1,예방약학1,4,1,ADB044,전필,3,4,1,예방약학1,same_name_same_position
+2023,MATCH,의약화학1,의약화학1,4,1,ADB047,전선,2,4,1,의약화학1,same_name_same_position
+2023,MATCH,임상미생물학,임상미생물학,4,1,ADB046,전선,2,4,1,임상미생물학,same_name_same_position
+2023,MATCH,제제과학 실험,제제과학실험,4,1,ADB051,전필,2,4,1,제제과학 실험,same_name_same_position
+2023,MATCH,천연물의약품학,천연물의약품학,4,1,ADB048,전선,2,4,1,천연물의약품학,same_name_same_position
+2023,MATCH,감염성 질환 약물치료학,감염성질환약물치료학,4,2,ADB069,전필,2,4,2,감염성 질환 약물치료학,same_name_same_position
+2023,MATCH,바이오의약품 분석,바이오의약품분석,4,2,ADB060,전선,2,4,2,바이오의약품 분석,same_name_same_position
+2023,MATCH,바이오의약품학,바이오의약품학,4,2,ADB056,전선,2,4,2,바이오의약품학,same_name_same_position
+2023,MATCH,법과학,법과학,4,2,ADB061,전선,2,4,2,법과학,same_name_same_position
+2023,MATCH,보건의약관계법규,보건의약관계법규,4,2,ADB064,전필,2,4,2,보건의약관계법규,same_name_same_position
+2023,MATCH,생물약제학,생물약제학,4,2,ADB057,전선,2,4,2,생물약제학,same_name_same_position
+2023,MATCH,약물동태학,약물동태학,4,2,ADB058,전선,3,4,2,약물동태학,same_name_same_position
+2023,MATCH,약사윤리,약사윤리,4,2,ADB065,전선,1,4,2,약사윤리,same_name_same_position
+2023,MATCH,예방약학2,예방약학2,4,2,ADB055,전필,2,4,2,예방약학2,same_name_same_position
+2023,MATCH,의약품설계학,의약품설계학,4,2,ADB066,전선,3,4,2,의약품설계학,same_name_same_position
+2023,MATCH,의약화학2,의약화학2,4,2,ADB059,전선,2,4,2,의약화학2,same_name_same_position
+2023,MATCH,호흡기계 및 소화기계 질환 약물치료학,호흡기계및소화기계질환약물치료학,4,2,ADB071,전선,2,4,2,호흡기계 및 소화기계질환 약물치료학,same_name_same_position
+2023,MATCH,독성학,독성학,5,1,ADB068,전선,2,5,1,독성학,same_name_same_position
+2023,MATCH,신경정신계 및 신장 질환 약물치료학,신경정신계및신장질환약물치료학,5,1,ADB062,전필,3,5,1,신경정신계 및 신장질환 약물치료학,same_name_same_position
+2023,MATCH,약물신호전달학,약물신호전달학,5,1,ADB079,전선,2,5,1,약물신호전달학,same_name_same_position
+2023,MATCH,약업경영학,약업경영학,5,1,ADB074,전선,2,5,1,약업경영학,same_name_same_position
+2023,MATCH,의약정보학과 경제성평가,의약정보학과경제성평가,5,1,ADB073,전필,2,5,1,의약정보학과 경제성평가,same_name_same_position
+2023,MATCH,의약품제조관리학,의약품제조관리학,5,1,ADA171,전선,3,5,1,의약품제조관리학,same_name_same_position
+2023,MATCH,지역약국 예비실무실습,지역약국예비실무실습,5,1,ADA115,전필,2,5,1,지역약국예비실무실습,same_name_same_position
+2023,MATCH,항암약물요법,항암약물요법,5,1,ADB070,전필,2,5,1,항암약물요법,same_name_same_position
+2023,MATCH,신약개발정보학,신약개발정보학,5,2,ADB090,전선,2,5,2,신약개발정보학,same_name_same_position
+2023,MATCH,약무행정실무필수실습,약무행정실무필수실습,5,2,ADA174,전필,1,5,2,약무행정실무필수실습,same_name_same_position
+2023,MATCH,약물유전체학,약물유전체학,5,2,ADB085,전선,3,5,2,약물유전체학,same_name_same_position
+2023,MATCH,약전 및 품질관리학,약전및품질관리학,5,2,ADA167,전선,3,5,2,약전 및 품질관리학,same_name_same_position
+2023,MATCH,의료기관약국예비실습,의료기관약국예비실습,5,2,ADB086,전필,2,5,2,의료기관약국예비실습,same_name_same_position
+2023,MATCH,의약품허가,의약품허가,5,2,ADB088,전선,3,5,2,의약품허가,same_name_same_position
+2023,MATCH,임상약학 해설,임상약학해설,5,2,ADB083,전필,1,5,2,임상약학해설,same_name_same_position
+2023,MATCH,한약제제학,한약제제학,5,2,ADA140,전필,2,5,2,한약제제학,same_name_same_position
+2023,MATCH,의료기관약국 필수실무실습 1,의료기관약국필수실무실습1,6,1,ADA213,전필,3,6,1,의료기관약국필수실무실습1,same_name_same_position
+2023,MATCH,의료기관약국 필수실무실습 2,의료기관약국필수실무실습2,6,1,ADA214,전필,2,6,1,의료기관약국필수실무실습2,same_name_same_position
+2023,MATCH,의료기관약국 필수실무실습 3,의료기관약국필수실무실습3,6,1,ADA215,전필,3,6,1,의료기관약국필수실무실습3,same_name_same_position
+2023,MATCH,의료기관약국 필수실무실습 4,의료기관약국필수실무실습4,6,1,ADA216,전필,2,6,1,의료기관약국필수실무실습4,same_name_same_position
+2023,MATCH,제약산업 필수실무실습,제약산업필수실무실습,6,1,ADA218,전필,2,6,1,제약산업필수실무실습,same_name_same_position
+2023,MATCH,지역약국 필수실무실습 1,지역약국필수실무실습1,6,1,ADA219,전필,2,6,1,지역약국필수실무실습1,same_name_same_position
+2023,MATCH,심화실습 1,심화실습1,6,2,ADA226,전필,5,6,2,심화실습 1,same_name_same_position
+2023,MATCH,심화실습 2,심화실습2,6,2,ADA227,전필,5,6,2,심화실습 2,same_name_same_position
+2023,MATCH,지역약국 필수실무실습 2,지역약국필수실무실습2,6,2,ADA220,전필,3,6,2,지역약국필수실무실습2,same_name_same_position
+2024,FLOWCHART_ONLY,나노약학,나노약학,,,,,,4,1,나노약학,6year_flowchart_course_not_present_in_baseline
+2024,FLOWCHART_ONLY,내분비계 및 류마터스질환 약물치료학,내분비계및류마터스질환약물치료학,,,,,,4,1,내분비계 및 류마터스질환 약물치료학,6year_flowchart_course_not_present_in_baseline
+2024,FLOWCHART_ONLY,방제학,방제학,,,,,,4,1,방제학,6year_flowchart_course_not_present_in_baseline
+2024,FLOWCHART_ONLY,향장품학,향장품학,,,,,,4,1,향장품학,6year_flowchart_course_not_present_in_baseline
+2024,FLOWCHART_ONLY,심혈관계질환 및 약물치료학,심혈관계질환및약물치료학,,,,,,4,2,심혈관계질환 및 약물치료학,6year_flowchart_course_not_present_in_baseline
+2024,FLOWCHART_ONLY,동물용의약품학,동물용의약품학,,,,,,5,2,동물용의약품학,6year_flowchart_course_not_present_in_baseline
+2024,POSITION_MISMATCH,조제학,조제학,2,2,ADB077,전선,3,4,1,조제학,same_name_different_position
+2024,POSITION_MISMATCH,종양생물학,종양생물학,2,2,ADB091,전선,2,5,2,종양생물학,same_name_different_position
+2024,BASELINE_ONLY,해부생리학,해부생리학,1,1,ADB001,전선,3,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,신경생리학,신경생리학,1,2,ADB004,전선,1,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,AI 의료약학빅데이터,AI의료약학빅데이터,4,1,ADB053,전선,2,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,내분비계 및 류마티스 질환 약물치료,내분비계및류마티스질환약물치료,4,1,ADB063,전선,2,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,무기방사성 의약품학,무기방사성의약품학,4,1,ADB052,전선,2,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,약학실험5,약학실험5,4,2,ADB067,전필,1,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,신경정신계 및 신장 질환 약물치료학,신경정신계및신장질환약물치료학,5,1,ADB062,전필,3,,,,course_not_present_in_6year_flowchart
+2024,BASELINE_ONLY,심혈관계 질환 약물치료학,심혈관계질환약물치료학,5,2,ADB082,전선,3,,,,course_not_present_in_6year_flowchart
+2024,MATCH,약학기초생물학1,약학기초생물학1,1,1,ADB002,전선,3,1,1,약학기초생물학1,same_name_same_position
+2024,MATCH,약학기초화학1,약학기초화학1,1,1,ADB003,전선,3,1,1,약학기초화학1,same_name_same_position
+2024,MATCH,해부생리학1,해부생리학1,1,1,ADB101,전선,2,1,1,해부생리학1,same_name_same_position
+2024,MATCH,약학기초생물학2,약학기초생물학2,1,2,ADB005,전선,3,1,2,약학기초생물학2,same_name_same_position
+2024,MATCH,약학기초화학2,약학기초화학2,1,2,ADB006,전선,3,1,2,약학기초화학2,same_name_same_position
+2024,MATCH,해부생리학2,해부생리학2,1,2,ADB102,전선,2,1,2,해부생리학2,same_name_same_position
+2024,MATCH,물리약학1,물리약학1,2,1,ADB010,전필,3,2,1,물리약학1,same_name_same_position
+2024,MATCH,병태생리학1,병태생리학1,2,1,ADB007,전선,2,2,1,병태생리학1,same_name_same_position
+2024,MATCH,약용식물학,약용식물학,2,1,ADB049,전필,2,2,1,약용식물학,same_name_same_position
+2024,MATCH,약품생화학1,약품생화학1,2,1,ADB008,전필,3,2,1,약품생화학1,same_name_same_position
+2024,MATCH,약학실험1,약학실험1,2,1,ADB013,전필,2,2,1,약학실험1,same_name_same_position
+2024,MATCH,약학통계,약학통계,2,1,ADB012,전필,2,2,1,약학통계,same_name_same_position
+2024,MATCH,약화학 1,약화학1,2,1,ADB009,전필,3,2,1,약화학1,same_name_same_position
+2024,MATCH,의약품분석학1,의약품분석학1,2,1,ADB011,전필,2,2,1,의약품분석학1,same_name_same_position
+2024,MATCH,물리약학2,물리약학2,2,2,ADB019,전필,2,2,2,물리약학2,same_name_same_position
+2024,MATCH,병태생리학2,병태생리학2,2,2,ADB015,전선,2,2,2,병태생리학2,same_name_same_position
+2024,MATCH,약품면역학,약품면역학,2,2,ADB021,전필,2,2,2,약품면역학,same_name_same_position
+2024,MATCH,약품생화학2,약품생화학2,2,2,ADB016,전필,2,2,2,약품생화학2,same_name_same_position
+2024,MATCH,약학실험2,약학실험2,2,2,ADB022,전필,2,2,2,약학실험2,same_name_same_position
+2024,MATCH,약화학 2,약화학2,2,2,ADB018,전선,3,2,2,약화학2,same_name_same_position
+2024,MATCH,의약분자생물학,의약분자생물학,2,2,ADB017,전선,2,2,2,의약분자생물학,same_name_same_position
+2024,MATCH,의약품개발사,의약품개발사,2,2,ADB105,전선,2,2,2,의약품개발사,same_name_same_position
+2024,MATCH,의약품분석학2,의약품분석학2,2,2,ADB020,전필,2,2,2,의약품분석학2,same_name_same_position
+2024,MATCH,보건사회약학,보건사회약학,3,1,ADB029,전필,3,3,1,보건사회약학,same_name_same_position
+2024,MATCH,생약학1,생약학1,3,1,ADB026,전필,2,3,1,생약학1,same_name_same_position
+2024,MATCH,약물유전체학,약물유전체학,3,1,ADB085,전선,3,3,1,약물유전체학,same_name_same_position
+2024,MATCH,약물학1,약물학1,3,1,ADB024,전필,3,3,1,약물학1,same_name_same_position
+2024,MATCH,약품미생물학,약품미생물학,3,1,ADB025,전필,3,3,1,약품미생물학,same_name_same_position
+2024,MATCH,약학실험3,약학실험3,3,1,ADB031,전필,2,3,1,약학실험3,same_name_same_position
+2024,MATCH,의약품기기분석학1,의약품기기분석학1,3,1,ADB030,전필,2,3,1,의약품기기분석학1,same_name_same_position
+2024,MATCH,자원생약학,자원생약학,3,1,ADA228,전선,2,3,1,자원생약학,same_name_same_position
+2024,MATCH,제제과학1,제제과학1,3,1,ADB027,전필,3,3,1,제제과학1,same_name_same_position
+2024,MATCH,감염성미생물학,감염성미생물학,3,2,ADB034,전필,2,3,2,감염성미생물학,same_name_same_position
+2024,MATCH,독성학,독성학,3,2,ADB068,전선,3,3,2,독성학,same_name_same_position
+2024,MATCH,법화학,법화학,3,2,ADB106,전선,2,3,2,법화학,same_name_same_position
+2024,MATCH,생약학2,생약학2,3,2,ADB036,전필,2,3,2,생약학2,same_name_same_position
+2024,MATCH,약물학2,약물학2,3,2,ADB033,전필,3,3,2,약물학2,same_name_same_position
+2024,MATCH,약사 커뮤니케이션,약사커뮤니케이션,3,2,ADB039,전선,2,3,2,약사커뮤니케이션,same_name_same_position
+2024,MATCH,약학실험4,약학실험4,3,2,ADB041,전필,2,3,2,약학실험4,same_name_same_position
+2024,MATCH,약학용어,약학용어,3,2,ADB076,전필,1,3,2,약학용어,same_name_same_position
+2024,MATCH,의약품기기분석학2,의약품기기분석학2,3,2,ADB040,전필,2,3,2,의약품기기분석학2,same_name_same_position
+2024,MATCH,의약품합성학,의약품합성학,3,2,ADA198,전필,2,3,2,의약품합성학,same_name_same_position
+2024,MATCH,임상면역학,임상면역학,3,2,ADB035,전선,1,3,2,임상면역학,same_name_same_position
+2024,MATCH,제제과학2,제제과학2,3,2,ADB037,전필,3,3,2,제제과학2,same_name_same_position
+2024,MATCH,감염질환을 위한 항생물질학,감염질환을위한항생물질학,4,1,ADB045,전필,2,4,1,감염질환을 위한 항생물질학,same_name_same_position
+2024,MATCH,예방약학1,예방약학1,4,1,ADB044,전필,3,4,1,예방약학1,same_name_same_position
+2024,MATCH,의약화학1,의약화학1,4,1,ADB047,전선,2,4,1,의약화학1,same_name_same_position
+2024,MATCH,임상미생물학,임상미생물학,4,1,ADB046,전선,2,4,1,임상미생물학,same_name_same_position
+2024,MATCH,제제과학 실험,제제과학실험,4,1,ADB051,전필,2,4,1,제제과학 실험,same_name_same_position
+2024,MATCH,천연물의약품학,천연물의약품학,4,1,ADB048,전선,2,4,1,천연물의약품학,same_name_same_position
+2024,MATCH,감염성 질환 약물치료학,감염성질환약물치료학,4,2,ADB069,전필,2,4,2,감염성 질환 약물치료학,same_name_same_position
+2024,MATCH,바이오의약품 분석,바이오의약품분석,4,2,ADB060,전선,2,4,2,바이오의약품 분석,same_name_same_position
+2024,MATCH,바이오의약품학,바이오의약품학,4,2,ADB056,전선,2,4,2,바이오의약품학,same_name_same_position
+2024,MATCH,보건의약관계법규,보건의약관계법규,4,2,ADB064,전필,2,4,2,보건의약관계법규,same_name_same_position
+2024,MATCH,생물약제학,생물약제학,4,2,ADB057,전선,2,4,2,생물약제학,same_name_same_position
+2024,MATCH,약물동태학,약물동태학,4,2,ADB058,전선,3,4,2,약물동태학,same_name_same_position
+2024,MATCH,약사윤리,약사윤리,4,2,ADB065,전선,1,4,2,약사윤리,same_name_same_position
+2024,MATCH,예방약학2,예방약학2,4,2,ADB055,전필,2,4,2,예방약학2,same_name_same_position
+2024,MATCH,의약품설계학,의약품설계학,4,2,ADB066,전선,3,4,2,의약품설계학,same_name_same_position
+2024,MATCH,의약화학2,의약화학2,4,2,ADB059,전선,2,4,2,의약화학2,same_name_same_position
+2024,MATCH,임상영양학,임상영양학,4,2,ADA233,전선,2,4,2,임상영양학,same_name_same_position
+2024,MATCH,호흡기계 및 소화기계 질환 약물치료학,호흡기계및소화기계질환약물치료학,4,2,ADB071,전선,2,4,2,호흡기계 및 소화기계질환 약물치료학,same_name_same_position
+2024,MATCH,신경정신계질환 약물치료학,신경정신계질환약물치료학,5,1,ADB104,전선,2,5,1,신경정신계 질환 약물치료학,same_name_same_position
+2024,MATCH,신장질환약물치료학,신장질환약물치료학,5,1,ADB108,전선,2,5,1,신장질환 약물치료학,same_name_same_position
+2024,MATCH,약물신호전달학,약물신호전달학,5,1,ADB079,전선,2,5,1,약물신호전달학,same_name_same_position
+2024,MATCH,약업경영학,약업경영학,5,1,ADB074,전선,2,5,1,약업경영학,same_name_same_position
+2024,MATCH,의약정보학과 경제성평가,의약정보학과경제성평가,5,1,ADB073,전필,2,5,1,의약정보학과 경제성평가,same_name_same_position
+2024,MATCH,의약품제조관리학,의약품제조관리학,5,1,ADA171,전선,3,5,1,의약품제조관리학,same_name_same_position
+2024,MATCH,일반의약품학,일반의약품학,5,1,ADB084,전선,3,5,1,일반의약품학,same_name_same_position
+2024,MATCH,지역약국 예비실무실습,지역약국예비실무실습,5,1,ADA115,전필,2,5,1,지역약국예비실무실습,same_name_same_position
+2024,MATCH,항암약물요법1,항암약물요법1,5,1,ADB103,전필,2,5,1,항암약물요법1,same_name_same_position
+2024,MATCH,건강기능식품학,건강기능식품학,5,2,ADA182,전선,2,5,2,건강기능식품학,same_name_same_position
+2024,MATCH,신약개발정보학,신약개발정보학,5,2,ADB090,전선,2,5,2,신약개발정보학,same_name_same_position
+2024,MATCH,약무행정실무필수실습,약무행정실무필수실습,5,2,ADA174,전필,1,5,2,약무행정실무필수실습,same_name_same_position
+2024,MATCH,약전 및 품질관리학,약전및품질관리학,5,2,ADA167,전선,3,5,2,약전 및 품질관리학,same_name_same_position
+2024,MATCH,의료기관약국예비실습,의료기관약국예비실습,5,2,ADB086,전필,2,5,2,의료기관약국예비실습,same_name_same_position
+2024,MATCH,의약품허가,의약품허가,5,2,ADB088,전선,3,5,2,의약품허가,same_name_same_position
+2024,MATCH,임상약학 해설,임상약학해설,5,2,ADB083,전필,1,5,2,임상약학해설,same_name_same_position
+2024,MATCH,한약제제학,한약제제학,5,2,ADA140,전필,2,5,2,한약제제학,same_name_same_position
+2024,MATCH,항암약물요법2,항암약물요법2,5,2,ADB107,전선,2,5,2,항암약물요법2,same_name_same_position
+2024,MATCH,의료기관약국 필수실무실습 1,의료기관약국필수실무실습1,6,1,ADA213,전필,3,6,1,의료기관약국필수실무실습1,same_name_same_position
+2024,MATCH,의료기관약국 필수실무실습 2,의료기관약국필수실무실습2,6,1,ADA214,전필,2,6,1,의료기관약국필수실무실습2,same_name_same_position
+2024,MATCH,의료기관약국 필수실무실습 3,의료기관약국필수실무실습3,6,1,ADA215,전필,3,6,1,의료기관약국필수실무실습3,same_name_same_position
+2024,MATCH,의료기관약국 필수실무실습 4,의료기관약국필수실무실습4,6,1,ADA216,전필,2,6,1,의료기관약국필수실무실습4,same_name_same_position
+2024,MATCH,제약산업 필수실무실습,제약산업필수실무실습,6,1,ADA218,전필,2,6,1,제약산업필수실무실습,same_name_same_position
+2024,MATCH,지역약국 필수실무실습 1,지역약국필수실무실습1,6,1,ADA219,전필,2,6,1,지역약국필수실무실습1,same_name_same_position
+2024,MATCH,심화실습 1,심화실습1,6,2,ADA226,전필,5,6,2,심화실습 1,same_name_same_position
+2024,MATCH,심화실습 2,심화실습2,6,2,ADA227,전필,5,6,2,심화실습 2,same_name_same_position
+2024,MATCH,지역약국 필수실무실습 2,지역약국필수실무실습2,6,2,ADA220,전필,3,6,2,지역약국필수실무실습2,same_name_same_position
