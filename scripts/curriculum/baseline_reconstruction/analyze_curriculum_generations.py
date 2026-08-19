@@ -9,6 +9,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 from scripts.common.data_paths import (
+    CURRICULUM_RECONCILED_DIR,
     EXTRACTED_CURRICULUM_DIR,
 )
 
@@ -877,13 +878,24 @@ def main() -> None:
             )
         )
 
+    output_dir = (
+        CURRICULUM_RECONCILED_DIR
+        / "generation_analysis"
+        / str(args.year)
+    )
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
     csv_path = (
-        input_dir
+        output_dir
         / "generation_analysis.csv"
     )
 
     report_path = (
-        input_dir
+        output_dir
         / "generation_analysis_report.txt"
     )
 
