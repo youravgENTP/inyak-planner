@@ -5,7 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from scripts.common.data_paths import (
-    EXTRACTED_CURRICULUM_FLOWCHARTS_DIR,
+    CURRICULUM_RECONCILED_DIR,
 )
 
 
@@ -45,10 +45,7 @@ OUTPUT_COLUMNS = [
 
 
 def comparison_directory() -> Path:
-    return (
-        EXTRACTED_CURRICULUM_FLOWCHARTS_DIR
-        / "comparison"
-    )
+    return CURRICULUM_RECONCILED_DIR
 
 
 def row_evidence_path() -> Path:
