@@ -2,6 +2,10 @@ import type {
   CourseRecord,
 } from '../course-records/types'
 import type {
+  CurriculumDeliveryRule,
+  CurriculumDeliveryType,
+} from '../curriculum-delivery-rules/types'
+import type {
   Curriculum,
 } from '../curriculum/types'
 import type {
@@ -23,6 +27,8 @@ export interface CompletionSimulationInput {
   curriculum: Curriculum
   progress: GraduationProgress
   records: readonly CourseRecord[]
+  deliveryRules:
+    readonly CurriculumDeliveryRule[]
   startGrade: number
   startSemester: number
   strategy: SimulationStrategy
@@ -56,6 +62,14 @@ export interface CompletionSimulationResult {
   externalGeneralEducationCredits: number
   unallocatedElectiveCredits: number
   unallocatedGeneralEducationCredits: number
+  generalEducationAreaRequirements:
+    GeneralEducationAreaRequirement[]
+}
+
+export interface GeneralEducationAreaRequirement {
+  category: string
+  remainingAreaCount: number
+  requiredAreaNames: string[]
 }
 
 
@@ -124,8 +138,28 @@ function isBeforeStart(
 
 function sumPracticumCredits(
   curriculum: Curriculum,
-  courseCodes: ReadonlySet<string>,
+  deliveryRules:
+    readonly CurriculumDeliveryRule[],
+  deliveryType: CurriculumDeliveryType,
+  fallbackCourseCodes:
+    ReadonlySet<string>,
 ): number {
+  const configuredCourseCodes =
+    new Set(
+      deliveryRules
+        .filter(
+          (rule) =>
+            rule.deliveryType ===
+              deliveryType,
+        )
+        .map((rule) => rule.courseCode),
+    )
+
+  const courseCodes =
+    configuredCourseCodes.size > 0
+      ? configuredCourseCodes
+      : fallbackCourseCodes
+
   return curriculum.courses
     .filter(
       (course) =>
@@ -174,6 +208,8 @@ export function createCompletionSimulation(
   const advancedPracticumCredits =
     sumPracticumCredits(
       input.curriculum,
+      input.deliveryRules,
+      'flexible_practicum',
       ADVANCED_PRACTICUM_CODES,
     )
 
@@ -352,6 +388,32 @@ export function createCompletionSimulation(
       0,
     )
 
+  const generalEducationAreaRequirements =
+    input.progress.generalEducation
+      .map((requirement) => ({
+        category: requirement.category,
+        remainingAreaCount:
+          requirement.remainingAreaCount ??
+          requirement.areas.filter(
+            (area) =>
+              area.isRequired &&
+              !area.isSatisfied,
+          ).length,
+        requiredAreaNames:
+          requirement.areas
+            .filter(
+              (area) =>
+                area.isRequired &&
+                !area.isSatisfied,
+            )
+            .map((area) => area.areaName),
+      }))
+      .filter(
+        (requirement) =>
+          requirement.remainingAreaCount > 0 ||
+          requirement.requiredAreaNames.length > 0,
+      )
+
   return {
     semesters,
     sixthYearRequiredCredits,
@@ -367,6 +429,8 @@ export function createCompletionSimulation(
     vacationPracticumCredits:
       sumPracticumCredits(
         input.curriculum,
+        input.deliveryRules,
+        'vacation_practicum',
         VACATION_PRACTICUM_CODES,
       ),
     externalGeneralEducationCredits,
@@ -374,5 +438,6 @@ export function createCompletionSimulation(
       remainingElectiveCredits,
     unallocatedGeneralEducationCredits:
       remainingGeneralEducationCredits,
+    generalEducationAreaRequirements,
   }
 }

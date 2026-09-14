@@ -28,6 +28,12 @@ import type {
   CourseRecord,
 } from '../domain/course-records/types'
 import {
+  fetchCurriculumDeliveryRules,
+} from '../domain/curriculum-delivery-rules/api'
+import type {
+  CurriculumDeliveryRule,
+} from '../domain/curriculum-delivery-rules/types'
+import {
   fetchCurriculum,
 } from '../domain/curriculum/api'
 import type {
@@ -237,6 +243,11 @@ export function ProgressTrackerPage({
   ] = useState<Curriculum | null>(null)
 
   const [
+    curriculumDeliveryRules,
+    setCurriculumDeliveryRules,
+  ] = useState<CurriculumDeliveryRule[]>([])
+
+  const [
     generalEducation,
     setGeneralEducation,
   ] = useState<GeneralEducation | null>(
@@ -292,6 +303,7 @@ export function ProgressTrackerPage({
         const [
           records,
           curriculumResult,
+          curriculumDeliveryRulesResult,
           generalEducationResult,
           graduationRequirementsResult,
           lecturesResult,
@@ -300,6 +312,9 @@ export function ProgressTrackerPage({
           fetchCurriculum(
             user.entryYear,
           ),
+          fetchCurriculumDeliveryRules(
+            user.entryYear,
+          ).catch(() => []),
           fetchGeneralEducation(
             user.entryYear,
           ),
@@ -312,6 +327,9 @@ export function ProgressTrackerPage({
         setCourseRecords(records)
         setCurriculum(
           curriculumResult,
+        )
+        setCurriculumDeliveryRules(
+          curriculumDeliveryRulesResult,
         )
         setGeneralEducation(
           generalEducationResult,
@@ -700,6 +718,9 @@ export function ProgressTrackerPage({
             <CompletionSimulation
               user={user}
               curriculum={curriculum}
+              deliveryRules={
+                curriculumDeliveryRules
+              }
               records={courseRecords}
               progress={graduationProgress}
             />

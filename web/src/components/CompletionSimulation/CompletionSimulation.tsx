@@ -15,6 +15,9 @@ import type {
   CourseRecord,
 } from '../../domain/course-records/types'
 import type {
+  CurriculumDeliveryRule,
+} from '../../domain/curriculum-delivery-rules/types'
+import type {
   Curriculum,
 } from '../../domain/curriculum/types'
 import type {
@@ -28,6 +31,8 @@ interface CompletionSimulationProps {
   user: AuthUser
   curriculum: Curriculum
   records: readonly CourseRecord[]
+  deliveryRules:
+    readonly CurriculumDeliveryRule[]
   progress: GraduationProgress
 }
 
@@ -102,6 +107,7 @@ export function CompletionSimulation({
   user,
   curriculum,
   records,
+  deliveryRules,
   progress,
 }: CompletionSimulationProps) {
   const [startTerm, setStartTerm] =
@@ -146,6 +152,41 @@ export function CompletionSimulation({
     setExternalGeneralEducationCredits] =
     useState(0)
 
+  const allowedAdvancedPracticumTerms =
+    useMemo(
+      () => {
+        const configuredTerms =
+          deliveryRules
+            .filter(
+              (rule) =>
+                rule.deliveryType ===
+                  'flexible_practicum',
+            )
+            .flatMap(
+              (rule) =>
+                rule.allowedActivityPeriods,
+            )
+            .filter(
+              (period): period is
+                AdvancedPracticumTerm =>
+                period === '6-1' ||
+                period === '6-2',
+            )
+
+        return configuredTerms.length > 0
+          ? [...new Set(configuredTerms)]
+          : (['6-1', '6-2'] as const)
+      },
+      [deliveryRules],
+    )
+
+  const effectiveAdvancedPracticumTerm =
+    allowedAdvancedPracticumTerms.includes(
+      advancedPracticumTerm,
+    )
+      ? advancedPracticumTerm
+      : allowedAdvancedPracticumTerms[0]
+
   const [startGrade, startSemester] =
     startTerm.split('-').map(Number)
 
@@ -155,15 +196,18 @@ export function CompletionSimulation({
         curriculum,
         progress,
         records,
+        deliveryRules,
         startGrade,
         startSemester,
         strategy,
         externalGeneralEducationCredits,
-        advancedPracticumTerm,
+        advancedPracticumTerm:
+          effectiveAdvancedPracticumTerm,
       }),
     [
-      advancedPracticumTerm,
       curriculum,
+      deliveryRules,
+      effectiveAdvancedPracticumTerm,
       externalGeneralEducationCredits,
       progress,
       records,
@@ -263,11 +307,11 @@ export function CompletionSimulation({
           <legend>심화실습 실제 활동</legend>
 
           <div className="completion-simulation-segmented">
-            {(['6-1', '6-2'] as const).map(
+            {allowedAdvancedPracticumTerms.map(
               (term) => (
                 <button
                   aria-pressed={
-                    advancedPracticumTerm ===
+                    effectiveAdvancedPracticumTerm ===
                       term
                   }
                   key={term}
@@ -410,6 +454,42 @@ export function CompletionSimulation({
           학점을 추가로 배치해야 합니다.
         </div>
       ) : null}
+
+      {simulation
+        .generalEducationAreaRequirements
+        .length > 0 ? (
+          <section className="completion-simulation-area-warning">
+            <div>
+              <strong>교양 영역 확인 필요</strong>
+              <p>
+                학점 총량을 채워도 아래 영역을
+                충족하지 않으면 졸업요건이
+                완료되지 않습니다.
+              </p>
+            </div>
+
+            <ul>
+              {simulation
+                .generalEducationAreaRequirements
+                .map((requirement) => (
+                  <li key={requirement.category}>
+                    <strong>
+                      {requirement.category}
+                    </strong>
+                    <span>
+                      {requirement.remainingAreaCount}
+                      개 영역 추가 필요
+                      {requirement
+                        .requiredAreaNames
+                        .length > 0
+                        ? ` · 필수: ${requirement.requiredAreaNames.join(', ')}`
+                        : ''}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          </section>
+        ) : null}
 
       <div className="completion-simulation-semesters">
         {simulation.semesters.map(

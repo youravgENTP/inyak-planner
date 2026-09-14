@@ -45,6 +45,7 @@ from server.timetables_router import (
 
 from server.database import (
     get_curriculum_courses,
+    get_curriculum_delivery_rules,
     get_general_education_requirements,
     get_graduation_requirements,
     get_lecture_by_id,
@@ -165,6 +166,21 @@ def read_curriculum(
         "entry_year": entry_year,
         "count": len(courses),
         "courses": courses,
+    }
+
+
+@app.get("/api/curriculum-delivery-rules")
+def read_curriculum_delivery_rules(
+    entry_year: int = Query(ge=2000, le=2100),
+) -> Dict[str, Any]:
+    rules = get_curriculum_delivery_rules(
+        entry_year=entry_year,
+    )
+
+    return {
+        "entry_year": entry_year,
+        "count": len(rules),
+        "rules": rules,
     }
 
 
@@ -408,4 +424,3 @@ def download_syllabi(
             ),
         },
     )
-

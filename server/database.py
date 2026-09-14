@@ -254,6 +254,106 @@ def get_curriculum_courses(
     ]
 
 
+DEFAULT_VACATION_PRACTICUM_CODES = (
+    "ADA213",
+    "ADA214",
+    "ADA215",
+    "ADA216",
+    "ADA218",
+    "ADA219",
+    "ADA220",
+)
+
+DEFAULT_FLEXIBLE_PRACTICUM_CODES = (
+    "ADA226",
+    "ADA227",
+)
+
+
+def get_default_curriculum_delivery_rules(
+    *,
+    entry_year: int,
+) -> List[Dict[str, Any]]:
+    """Migration 전에도 사용할 수 있는 실습 정책을 반환한다."""
+    rules: List[Dict[str, Any]] = []
+
+    for course_code in DEFAULT_VACATION_PRACTICUM_CODES:
+        rules.append(
+            {
+                "entry_year": entry_year,
+                "course_code": course_code,
+                "delivery_type": "vacation_practicum",
+                "default_activity_period": "5-summer",
+                "allowed_activity_periods": [
+                    "5-summer",
+                    "5-winter",
+                ],
+                "consumes_regular_credit_limit": True,
+                "notes": (
+                    "실제 활동은 5학년 방학, "
+                    "학점 인정은 공식 교육과정 학기 기준."
+                ),
+            }
+        )
+
+    for course_code in DEFAULT_FLEXIBLE_PRACTICUM_CODES:
+        rules.append(
+            {
+                "entry_year": entry_year,
+                "course_code": course_code,
+                "delivery_type": "flexible_practicum",
+                "default_activity_period": "6-1",
+                "allowed_activity_periods": [
+                    "6-1",
+                    "6-2",
+                ],
+                "consumes_regular_credit_limit": True,
+                "notes": (
+                    "실제 활동은 6-1 또는 6-2, "
+                    "학점 인정은 공식 6-2 기준."
+                ),
+            }
+        )
+
+    return rules
+
+
+def get_curriculum_delivery_rules(
+    *,
+    entry_year: int,
+) -> List[Dict[str, Any]]:
+    """입학연도별 실제 실습 시기 정책을 조회한다."""
+    try:
+        with connect_database() as connection:
+            rows = connection.execute(
+                """
+                SELECT
+                    entry_year,
+                    course_code,
+                    delivery_type,
+                    default_activity_period,
+                    allowed_activity_periods,
+                    consumes_regular_credit_limit,
+                    notes
+                FROM curriculum_delivery_rules
+                WHERE entry_year = %s
+                ORDER BY course_code
+                """,
+                (entry_year,),
+            ).fetchall()
+    except psycopg.errors.UndefinedTable:
+        return get_default_curriculum_delivery_rules(
+            entry_year=entry_year,
+        )
+
+    if not rows:
+        return get_default_curriculum_delivery_rules(
+            entry_year=entry_year,
+        )
+
+    return [dict(row) for row in rows]
+
+
 def get_graduation_requirements(
     *,
     entry_year: int,
