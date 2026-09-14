@@ -52,6 +52,10 @@ const PAGE_PATHS:
 function getActiveNavigationPage(
   pathname: string,
 ): AppNavigationPage {
+  if (pathname.startsWith('/progress')) {
+    return 'progress'
+  }
+
   switch (pathname) {
     case '/timetable/compare':
       return 'timetableComparison'
@@ -61,9 +65,6 @@ function getActiveNavigationPage(
 
     case '/curriculum':
       return 'curriculum'
-
-    case '/progress':
-      return 'progress'
 
     case '/gpa':
       return 'gpa'
@@ -304,7 +305,7 @@ function App() {
         />
 
         <Route
-          path="/progress"
+          path="/progress/*"
           element={
             <ProgressTrackerPage
               user={currentUser}

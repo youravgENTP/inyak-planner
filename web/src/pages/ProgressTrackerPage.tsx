@@ -4,7 +4,14 @@ import {
   useMemo,
   useState,
 } from 'react'
+import {
+  NavLink,
+  useLocation,
+} from 'react-router'
 
+import {
+  CompletionSimulation,
+} from '../components/CompletionSimulation/CompletionSimulation'
 import { DownloadIcon } from '../components/DownloadIcon'
 
 import {
@@ -206,6 +213,19 @@ export function ProgressTrackerPage({
   user,
   onOpenAccount,
 }: ProgressTrackerPageProps) {
+  const location = useLocation()
+
+  const activeSubpage =
+    location.pathname.endsWith(
+      '/semesters',
+    )
+      ? 'semesters'
+      : location.pathname.endsWith(
+          '/simulation',
+        )
+        ? 'simulation'
+        : 'status'
+
   const [
     courseRecords,
     setCourseRecords,
@@ -503,6 +523,45 @@ export function ProgressTrackerPage({
         ) : null}
       </header>
 
+      <nav
+        aria-label="개인 이수 현황 하위 메뉴"
+        className="graduation-subpage-nav"
+      >
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? 'graduation-subpage-link graduation-subpage-link--active'
+              : 'graduation-subpage-link'
+          }
+          end
+          to="/progress"
+        >
+          이수 현황
+        </NavLink>
+
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? 'graduation-subpage-link graduation-subpage-link--active'
+              : 'graduation-subpage-link'
+          }
+          to="/progress/semesters"
+        >
+          학기별 이수
+        </NavLink>
+
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? 'graduation-subpage-link graduation-subpage-link--active'
+              : 'graduation-subpage-link'
+          }
+          to="/progress/simulation"
+        >
+          이수 시뮬레이션
+        </NavLink>
+      </nav>
+
       {dataAreLoading ? (
         <div className="graduation-placeholder-card">
           <h2>
@@ -542,7 +601,8 @@ export function ProgressTrackerPage({
       dataError === null &&
       graduationProgress !== null ? (
         <>
-          <div className="graduation-progress-summary-grid">
+          {activeSubpage === 'status' ? (
+            <div className="graduation-progress-summary-grid">
             <CreditSummaryCard
               title="총 이수학점"
               progress={
@@ -583,9 +643,11 @@ export function ProgressTrackerPage({
                 />
               ))}
             </div>
+          ) : null}
 
           {curriculum !== null &&
-          generalEducation !== null ? (
+          generalEducation !== null &&
+          activeSubpage === 'semesters' ? (
             <GraduationSemesterBoard
               user={user}
               curriculum={curriculum}
@@ -633,7 +695,18 @@ export function ProgressTrackerPage({
             />
           ) : null}
 
-          {courseRecords.length === 0 ? (
+          {curriculum !== null &&
+          activeSubpage === 'simulation' ? (
+            <CompletionSimulation
+              user={user}
+              curriculum={curriculum}
+              records={courseRecords}
+              progress={graduationProgress}
+            />
+          ) : null}
+
+          {courseRecords.length === 0 &&
+          activeSubpage === 'status' ? (
             <div className="graduation-placeholder-card graduation-placeholder-card--compact">
               <h2>
                 아직 저장된 과목이 없습니다.

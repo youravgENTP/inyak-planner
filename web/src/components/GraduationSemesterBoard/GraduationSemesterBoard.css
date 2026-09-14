@@ -88,7 +88,7 @@
 
 .graduation-board-year-group {
   display: flex;
-  width: 292px;
+  width: 598px;
   flex-shrink: 0;
   flex-direction: column;
   gap: 12px;
@@ -115,14 +115,25 @@
 
 .graduation-board-year-semesters {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
 }
 
 .graduation-board-year-group
   .graduation-board-card {
-  width: 100%;
+  width: 292px;
   min-height: 0;
+}
+
+@media (max-width: 720px) {
+
+  .graduation-board-year-group {
+    width: 292px;
+  }
+
+  .graduation-board-year-semesters {
+    flex-direction: column;
+  }
 }
 
 .graduation-board-card {

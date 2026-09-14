@@ -444,10 +444,10 @@ function SemesterCard({
     <article className="graduation-board-card">
       <header className="graduation-board-card-header">
         <div>
-          <span>학년별 이수 현황</span>
+          <span>{grade}학년</span>
 
           <h3>
-            {grade}학년
+            {grade}학년 {card.semester}학기
           </h3>
         </div>
       </header>
@@ -893,57 +893,30 @@ function YearCard({
     record: CourseRecord,
   ) => void
 }) {
-  /*
-   * 학년 카드는 1학기와 2학기를
-   * 하나의 accordion 카드로 합칩니다.
-   *
-   * 원래 semester 정보는 각 공식 과목 또는
-   * CourseRecord에 그대로 남아 있으므로
-   * 과목 상세에서 다시 표시할 수 있습니다.
-   */
-  const combinedCard:
-    YearSemesterBoard = {
-      semester: 0,
-
-      requiredCourses:
-        card.semesters.flatMap(
-          (semesterBoard) =>
-            semesterBoard
-              .requiredCourses,
-        ),
-
-      electiveRecords:
-        card.semesters.flatMap(
-          (semesterBoard) =>
-            semesterBoard
-              .electiveRecords,
-        ),
-
-      generalEducationRecords:
-        card.semesters.flatMap(
-          (semesterBoard) =>
-            semesterBoard
-              .generalEducationRecords,
-        ),
-
-      unmatchedRecords:
-        card.semesters.flatMap(
-          (semesterBoard) =>
-            semesterBoard
-              .unmatchedRecords,
-        ),
-    }
-
   return (
     <section className="graduation-board-year-group">
-      <SemesterCard
-        card={combinedCard}
-        grade={card.grade}
-        curriculum={curriculum}
-        onRecordUpdated={
-          onRecordUpdated
-        }
-      />
+      <header className="graduation-board-year-header">
+        <div>
+          <span>학년별 이수 현황</span>
+          <h3>{card.grade}학년</h3>
+        </div>
+      </header>
+
+      <div className="graduation-board-year-semesters">
+        {card.semesters.map(
+          (semesterCard) => (
+            <SemesterCard
+              card={semesterCard}
+              grade={card.grade}
+              curriculum={curriculum}
+              key={semesterCard.semester}
+              onRecordUpdated={
+                onRecordUpdated
+              }
+            />
+          ),
+        )}
+      </div>
     </section>
   )
 }
@@ -971,7 +944,7 @@ export function GraduationSemesterBoard({
     <section className="graduation-board-section">
       <header className="graduation-board-section-header">
         <div>
-          <p>학년별 이수 현황</p>
+          <p>학기별 이수 현황</p>
 
           <h2>
             전공 교육과정 이수 보드
@@ -1008,7 +981,7 @@ export function GraduationSemesterBoard({
 
       <div
         className="graduation-board-scroll"
-        aria-label="학년별 전공 이수 현황"
+        aria-label="학기별 전공 이수 현황"
       >
         <div className="graduation-board-list">
           {board.transferCredits !== null ? (
