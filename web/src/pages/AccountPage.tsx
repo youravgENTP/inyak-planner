@@ -13,6 +13,7 @@ import {
   type AuthUser,
   type StudentType,
 } from '../domain/auth/api'
+import { StudyOsTimetableExport } from '../components/account/StudyOsTimetableExport'
 
 import './AccountPage.css'
 
@@ -396,6 +397,19 @@ export function AccountPage({
             )}
           </div>
         </div>
+      </div>
+
+      <div className="account-section">
+        <div className="account-section-heading">
+          <h2>StudyOS 연동</h2>
+
+          <p>
+            저장된 시간표의 선택 강의와 수업시간을
+            StudyOS용 JSON으로 내보냅니다.
+          </p>
+        </div>
+
+        <StudyOsTimetableExport />
       </div>
 
       <div className="account-section">
