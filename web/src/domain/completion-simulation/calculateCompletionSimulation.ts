@@ -7,7 +7,11 @@ import type {
 } from '../curriculum-delivery-rules/types'
 import type {
   Curriculum,
+  CurriculumCourse,
 } from '../curriculum/types'
+import {
+  matchCurriculumRecords,
+} from '../graduation-progress/matchCurriculumRecords.ts'
 import type {
   GraduationProgress,
 } from '../graduation-progress/types'
@@ -15,13 +19,15 @@ import type {
 
 export const REGULAR_SEMESTER_CREDIT_LIMIT = 24
 
-export type SimulationStrategy =
-  | 'minimize_sixth_year'
-  | 'fill_24'
-
 export type AdvancedPracticumTerm =
   | '6-1'
   | '6-2'
+
+export type SemesterSimulationStatus =
+  | 'completed'
+  | 'current'
+  | 'projected'
+  | 'sixth_year'
 
 export interface CompletionSimulationInput {
   curriculum: Curriculum
@@ -29,9 +35,8 @@ export interface CompletionSimulationInput {
   records: readonly CourseRecord[]
   deliveryRules:
     readonly CurriculumDeliveryRule[]
-  startGrade: number
-  startSemester: number
-  strategy: SimulationStrategy
+  currentGrade: number
+  currentSemester: number
   externalGeneralEducationCredits: number
   advancedPracticumTerm:
     AdvancedPracticumTerm
@@ -40,18 +45,25 @@ export interface CompletionSimulationInput {
 export interface SemesterSimulation {
   grade: number
   semester: number
-  isBeforeStart: boolean
-  requiredCredits: number
+  status: SemesterSimulationStatus
+  recordedCredits: number
+  officialRequiredCredits: number
+  requiredCreditsToTake: number
   electiveCredits: number
   generalEducationCredits: number
   additionalCredits: number
   practicumActivityCredits: number
   totalCredits: number
-  remainingCapacity: number
+  remainingAvailableCredits: number | null
+  attendanceCredits: number
 }
 
 export interface CompletionSimulationResult {
   semesters: SemesterSimulation[]
+  confirmedCredits: number
+  scheduledCredits: number
+  remainingGraduationCredits: number
+  preSixthGraduationCredits: number
   sixthYearRequiredCredits: number
   sixthYearRegularCapacity: number
   sixthYearAttendanceCredits: number
@@ -120,30 +132,57 @@ function getRemainingCredits(
 }
 
 
-function isBeforeStart(
+function getTermIndex(
   grade: number,
   semester: number,
-  startGrade: number,
-  startSemester: number,
-): boolean {
+): number {
   return (
-    grade < startGrade ||
-    (
-      grade === startGrade &&
-      semester < startSemester
-    )
+    (grade - 1) * 2 +
+    (semester - 1)
   )
 }
 
 
-function sumPracticumCredits(
-  curriculum: Curriculum,
+function recordCountsTowardProjection(
+  record: CourseRecord,
+): boolean {
+  return (
+    !record.isRetake &&
+    record.letterGrade !== 'F'
+  )
+}
+
+
+function recordBelongsToSemester(
+  record: CourseRecord,
+  grade: number,
+  semester: number,
+): boolean {
+  return (
+    record.grade === grade &&
+    record.semester === semester
+  )
+}
+
+
+function sumCredits(
+  records: readonly CourseRecord[],
+): number {
+  return records.reduce(
+    (total, record) =>
+      total + record.credits,
+    0,
+  )
+}
+
+
+function getConfiguredCourseCodes(
   deliveryRules:
     readonly CurriculumDeliveryRule[],
   deliveryType: CurriculumDeliveryType,
   fallbackCourseCodes:
     ReadonlySet<string>,
-): number {
+): ReadonlySet<string> {
   const configuredCourseCodes =
     new Set(
       deliveryRules
@@ -155,11 +194,16 @@ function sumPracticumCredits(
         .map((rule) => rule.courseCode),
     )
 
-  const courseCodes =
-    configuredCourseCodes.size > 0
-      ? configuredCourseCodes
-      : fallbackCourseCodes
+  return configuredCourseCodes.size > 0
+    ? configuredCourseCodes
+    : fallbackCourseCodes
+}
 
+
+function sumPracticumCredits(
+  curriculum: Curriculum,
+  courseCodes: ReadonlySet<string>,
+): number {
   return curriculum.courses
     .filter(
       (course) =>
@@ -175,42 +219,98 @@ function sumPracticumCredits(
 }
 
 
-function getScheduledFlexibleCredits(
-  records: readonly CourseRecord[],
+function getOfficialRequiredCourses(
+  curriculum: Curriculum,
   grade: number,
   semester: number,
-  completionType: '전선' | '교양',
-): number {
-  return records
-    .filter(
-      (record) =>
-        record.grade === grade &&
-        record.semester === semester &&
-        record.completionType ===
-          completionType &&
-        record.letterGrade !== 'F' &&
-        (
-          record.status === 'planned' ||
-          record.status === 'in_progress'
-        ),
-    )
-    .reduce(
-      (total, record) =>
-        total + record.credits,
-      0,
-    )
+): CurriculumCourse[] {
+  return curriculum.courses.filter(
+    (course) =>
+      course.changeRole === 'current' &&
+      course.grade === grade &&
+      course.semester === semester &&
+      course.completionType === '전필',
+  )
+}
+
+
+function getSemesterStatus(
+  grade: number,
+  semester: number,
+  currentGrade: number,
+  currentSemester: number,
+): SemesterSimulationStatus {
+  const index = getTermIndex(
+    grade,
+    semester,
+  )
+  const currentIndex = getTermIndex(
+    currentGrade,
+    currentSemester,
+  )
+
+  if (index < currentIndex) {
+    return 'completed'
+  }
+
+  if (index === currentIndex) {
+    return 'current'
+  }
+
+  if (grade === 6) {
+    return 'sixth_year'
+  }
+
+  return 'projected'
 }
 
 
 export function createCompletionSimulation(
   input: CompletionSimulationInput,
 ): CompletionSimulationResult {
-  const advancedPracticumCredits =
-    sumPracticumCredits(
-      input.curriculum,
+  const effectiveRecords =
+    input.records.filter(
+      recordCountsTowardProjection,
+    )
+
+  const matchResult = matchCurriculumRecords(
+    input.curriculum,
+    effectiveRecords,
+  )
+
+  const matchedRecordByCourseId =
+    new Map(
+      matchResult.matches.map(
+        (match) => [
+          match.curriculumCourse.id,
+          match.record,
+        ],
+      ),
+    )
+
+  const advancedPracticumCodes =
+    getConfiguredCourseCodes(
       input.deliveryRules,
       'flexible_practicum',
       ADVANCED_PRACTICUM_CODES,
+    )
+
+  const vacationPracticumCodes =
+    getConfiguredCourseCodes(
+      input.deliveryRules,
+      'vacation_practicum',
+      VACATION_PRACTICUM_CODES,
+    )
+
+  const practicumCourseCodes = new Set([
+    ...advancedPracticumCodes,
+    ...vacationPracticumCodes,
+  ])
+
+  const advancedPracticumCredits =
+    sumPracticumCredits(
+      input.curriculum,
+      advancedPracticumCodes,
     )
 
   let remainingElectiveCredits =
@@ -244,6 +344,7 @@ export function createCompletionSimulation(
       0,
     )
 
+  let preSixthGraduationCredits = 0
   const semesters: SemesterSimulation[] = []
 
   for (let grade = 1; grade <= 6; grade += 1) {
@@ -252,86 +353,195 @@ export function createCompletionSimulation(
       semester <= 2;
       semester += 1
     ) {
-      const requiredCredits =
-        input.curriculum.courses
-          .filter(
-            (course) =>
-              course.changeRole === 'current' &&
-              course.grade === grade &&
-              course.semester === semester &&
-              course.completionType === '전필',
-          )
-          .reduce(
-            (total, course) =>
-              total + (course.credits ?? 0),
-            0,
-          )
-
-      const beforeStart = isBeforeStart(
+      const status = getSemesterStatus(
         grade,
         semester,
-        input.startGrade,
-        input.startSemester,
+        input.currentGrade,
+        input.currentSemester,
       )
 
-      const scheduledElectiveCredits =
-        beforeStart
-          ? 0
-          : getScheduledFlexibleCredits(
-              input.records,
+      const semesterRecords =
+        effectiveRecords.filter(
+          (record) =>
+            recordBelongsToSemester(
+              record,
               grade,
               semester,
-              '전선',
-            )
+            ),
+        )
 
-      const scheduledGeneralEducationCredits =
-        beforeStart
-          ? 0
-          : getScheduledFlexibleCredits(
-              input.records,
-              grade,
-              semester,
-              '교양',
-            )
+      const recordedCredits =
+        sumCredits(semesterRecords)
+
+      const recordedElectiveCredits =
+        sumCredits(
+          semesterRecords.filter(
+            (record) =>
+              record.completionType ===
+                '전선',
+          ),
+        )
+
+      const recordedGeneralEducationCredits =
+        sumCredits(
+          semesterRecords.filter(
+            (record) =>
+              record.completionType ===
+                '교양',
+          ),
+        )
+
+      const recordedOtherCredits =
+        sumCredits(
+          semesterRecords.filter(
+            (record) =>
+              record.completionType ===
+                '기타',
+          ),
+        )
+
+      const officialRequiredCourses =
+        getOfficialRequiredCourses(
+          input.curriculum,
+          grade,
+          semester,
+        )
+
+      const officialRequiredCredits =
+        officialRequiredCourses.reduce(
+          (total, course) =>
+            total + (course.credits ?? 0),
+          0,
+        )
+
+      const requiredCreditsToTake =
+        officialRequiredCourses.reduce(
+          (total, course) => {
+            const courseCredits =
+              course.credits ?? 0
+            const isPracticum =
+              course.courseCode !== null &&
+              practicumCourseCodes.has(
+                course.courseCode,
+              )
+
+            if (isPracticum) {
+              return total + courseCredits
+            }
+
+            const record =
+              matchedRecordByCourseId.get(
+                course.id,
+              )
+
+            if (record === undefined) {
+              return total + courseCredits
+            }
+
+            if (
+              recordBelongsToSemester(
+                record,
+                grade,
+                semester,
+              ) &&
+              (
+                record.status === 'planned' ||
+                record.status === 'in_progress'
+              )
+            ) {
+              return total + courseCredits
+            }
+
+            return total
+          },
+          0,
+        )
+
+      if (
+        status === 'completed' ||
+        status === 'current'
+      ) {
+        const nonPracticumRecords =
+          semesterRecords.filter(
+            (record) =>
+              record.courseCode === null ||
+              !practicumCourseCodes.has(
+                record.courseCode,
+              ),
+          )
+
+        semesters.push({
+          grade,
+          semester,
+          status,
+          recordedCredits,
+          officialRequiredCredits,
+          requiredCreditsToTake: 0,
+          electiveCredits:
+            recordedElectiveCredits,
+          generalEducationCredits:
+            recordedGeneralEducationCredits,
+          additionalCredits:
+            recordedOtherCredits,
+          practicumActivityCredits: 0,
+          totalCredits: recordedCredits,
+          remainingAvailableCredits:
+            status === 'current'
+              ? Math.max(
+                  REGULAR_SEMESTER_CREDIT_LIMIT -
+                    recordedCredits,
+                  0,
+                )
+              : null,
+          attendanceCredits:
+            sumCredits(nonPracticumRecords),
+        })
+
+        continue
+      }
 
       let capacity = Math.max(
         REGULAR_SEMESTER_CREDIT_LIMIT -
-          requiredCredits -
-          scheduledElectiveCredits -
-          scheduledGeneralEducationCredits,
+          requiredCreditsToTake -
+          recordedElectiveCredits -
+          recordedGeneralEducationCredits -
+          recordedOtherCredits,
         0,
       )
 
-      let electiveCredits = 0
-      let generalEducationCredits = 0
-      let additionalCredits = 0
+      const electiveCredits = Math.min(
+        remainingElectiveCredits,
+        capacity,
+      )
+      remainingElectiveCredits -=
+        electiveCredits
+      capacity -= electiveCredits
 
-      if (!beforeStart) {
-        electiveCredits = Math.min(
-          remainingElectiveCredits,
-          capacity,
-        )
-        remainingElectiveCredits -=
-          electiveCredits
-        capacity -= electiveCredits
+      const generalEducationCredits = Math.min(
+        remainingGeneralEducationCredits,
+        capacity,
+      )
+      remainingGeneralEducationCredits -=
+        generalEducationCredits
+      capacity -= generalEducationCredits
 
-        generalEducationCredits = Math.min(
-          remainingGeneralEducationCredits,
-          capacity,
-        )
-        remainingGeneralEducationCredits -=
+      const additionalCredits =
+        status === 'projected'
+          ? capacity
+          : 0
+
+      if (status === 'projected') {
+        preSixthGraduationCredits +=
+          requiredCreditsToTake +
+          electiveCredits +
           generalEducationCredits
-        capacity -= generalEducationCredits
-
-        if (input.strategy === 'fill_24') {
-          additionalCredits = capacity
-        }
       }
 
       const totalCredits =
-        requiredCredits +
-        scheduledElectiveCredits +
-        scheduledGeneralEducationCredits +
+        requiredCreditsToTake +
+        recordedElectiveCredits +
+        recordedGeneralEducationCredits +
+        recordedOtherCredits +
         electiveCredits +
         generalEducationCredits +
         additionalCredits
@@ -339,15 +549,19 @@ export function createCompletionSimulation(
       semesters.push({
         grade,
         semester,
-        isBeforeStart: beforeStart,
-        requiredCredits,
+        status,
+        recordedCredits,
+        officialRequiredCredits,
+        requiredCreditsToTake,
         electiveCredits:
-          scheduledElectiveCredits +
+          recordedElectiveCredits +
           electiveCredits,
         generalEducationCredits:
-          scheduledGeneralEducationCredits +
+          recordedGeneralEducationCredits +
           generalEducationCredits,
-        additionalCredits,
+        additionalCredits:
+          recordedOtherCredits +
+          additionalCredits,
         practicumActivityCredits:
           grade === 6 &&
           `${grade}-${semester}` ===
@@ -355,12 +569,17 @@ export function createCompletionSimulation(
             ? advancedPracticumCredits
             : 0,
         totalCredits,
-        remainingCapacity:
+        remainingAvailableCredits:
           Math.max(
             REGULAR_SEMESTER_CREDIT_LIMIT -
               totalCredits,
             0,
           ),
+        attendanceCredits:
+          recordedElectiveCredits +
+          recordedGeneralEducationCredits +
+          electiveCredits +
+          generalEducationCredits,
       })
     }
   }
@@ -374,17 +593,15 @@ export function createCompletionSimulation(
   const sixthYearRequiredCredits =
     sixthYearSemesters.reduce(
       (total, semester) =>
-        total + semester.requiredCredits,
+        total +
+        semester.officialRequiredCredits,
       0,
     )
 
   const sixthYearAttendanceCredits =
     sixthYearSemesters.reduce(
       (total, semester) =>
-        total +
-        semester.electiveCredits +
-        semester.generalEducationCredits +
-        semester.additionalCredits,
+        total + semester.attendanceCredits,
       0,
     )
 
@@ -414,14 +631,44 @@ export function createCompletionSimulation(
           requirement.requiredAreaNames.length > 0,
       )
 
+  const remainingGraduationCredits =
+    getRemainingCredits(
+      input.progress.totalCredits,
+    )
+
   return {
     semesters,
+    confirmedCredits:
+      sumCredits(
+        effectiveRecords.filter(
+          (record) =>
+            record.status === 'completed' ||
+            record.status === 'substituted',
+        ),
+      ),
+    scheduledCredits:
+      sumCredits(
+        effectiveRecords.filter(
+          (record) =>
+            record.status === 'in_progress' ||
+            record.status === 'planned',
+        ),
+      ),
+    remainingGraduationCredits,
+    preSixthGraduationCredits:
+      Math.min(
+        preSixthGraduationCredits,
+        remainingGraduationCredits,
+      ),
     sixthYearRequiredCredits,
     sixthYearRegularCapacity:
-      (
-        REGULAR_SEMESTER_CREDIT_LIMIT *
-        sixthYearSemesters.length
-      ) - sixthYearRequiredCredits,
+      Math.max(
+        (
+          REGULAR_SEMESTER_CREDIT_LIMIT *
+          sixthYearSemesters.length
+        ) - sixthYearRequiredCredits,
+        0,
+      ),
     sixthYearAttendanceCredits,
     advancedPracticumCredits,
     advancedPracticumTerm:
@@ -429,9 +676,7 @@ export function createCompletionSimulation(
     vacationPracticumCredits:
       sumPracticumCredits(
         input.curriculum,
-        input.deliveryRules,
-        'vacation_practicum',
-        VACATION_PRACTICUM_CODES,
+        vacationPracticumCodes,
       ),
     externalGeneralEducationCredits,
     unallocatedElectiveCredits:
