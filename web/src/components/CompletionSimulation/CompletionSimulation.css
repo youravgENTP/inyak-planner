@@ -65,6 +65,12 @@
   color: #666;
 }
 
+.completion-simulation-control-help {
+  color: #7b827e;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .completion-simulation-controls select,
 .completion-simulation-credit-input input {
   min-height: 40px;

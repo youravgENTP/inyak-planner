@@ -110,12 +110,16 @@ export function CompletionSimulation({
   deliveryRules,
   progress,
 }: CompletionSimulationProps) {
+  const [defaultStartTerm] = useState(
+    () =>
+      getDefaultStartTerm(
+        user.entryYear,
+      ),
+  )
+
   const [startTerm, setStartTerm] =
     useState(
-      () =>
-        getDefaultStartTerm(
-          user.entryYear,
-        ),
+      () => defaultStartTerm,
     )
 
   const [strategy, setStrategy] =
@@ -240,7 +244,10 @@ export function CompletionSimulation({
 
       <div className="completion-simulation-controls">
         <label>
-          <span>계획 시작 학기</span>
+          <span>
+            어느 학기부터 남은 학점을
+            배분할까요?
+          </span>
           <select
             value={startTerm}
             onChange={(event) => {
@@ -263,11 +270,22 @@ export function CompletionSimulation({
                     value={`${grade}-${semester}`}
                   >
                     {grade}학년 {semester}학기
+                    {`${grade}-${semester}` ===
+                    defaultStartTerm
+                      ? ' · 현재 학기'
+                      : ''}
                   </option>
                 )
               },
             )}
           </select>
+
+          <small className="completion-simulation-control-help">
+            선택한 학기 이전은 이미 지난
+            학기로 보고, 남은 전선·교양을
+            이 학기부터 6학년 2학기까지
+            배분합니다.
+          </small>
         </label>
 
         <fieldset>
