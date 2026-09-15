@@ -56,10 +56,20 @@ const emptyCreditProgress = {
 }
 
 const progress = {
-  totalCredits: emptyCreditProgress,
+  totalCredits: {
+    ...emptyCreditProgress,
+    requiredCredits: 48,
+    remainingCredits: 48,
+    isSatisfied: false,
+  },
   majorRequired: {
     completionType: '전필',
-    credits: emptyCreditProgress,
+    credits: {
+      ...emptyCreditProgress,
+      requiredCredits: 27,
+      remainingCredits: 27,
+      isSatisfied: false,
+    },
     courses: null,
     isSatisfied: true,
   },
@@ -96,9 +106,14 @@ const progress = {
   substitutedRecords: [],
 } as any
 
+const regularUser = {
+  studentType: 'regular',
+} as const
+
 
 test('calculates the official sixth-year 14/13 split', () => {
   const result = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress,
     records: [],
@@ -109,8 +124,10 @@ test('calculates the official sixth-year 14/13 split', () => {
     advancedPracticumTerm: '6-1',
   })
 
-  const sixthYear = result.semesters.filter(
-    (semester) => semester.grade === 6,
+  const sixthYear = result.rows.filter(
+    (row) =>
+      row.kind === 'regular' &&
+      row.grade === 6,
   )
 
   assert.deepEqual(
@@ -128,13 +145,13 @@ test('calculates the official sixth-year 14/13 split', () => {
       { required: 13, remaining: 11 },
     ],
   )
-  assert.equal(result.sixthYearRegularCapacity, 21)
   assert.equal(result.sixthYearAttendanceCredits, 21)
 })
 
 
 test('moves activity, but not recognized credits', () => {
   const firstTerm = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress,
     records: [],
@@ -146,6 +163,7 @@ test('moves activity, but not recognized credits', () => {
   })
 
   const secondTerm = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress,
     records: [],
@@ -159,34 +177,55 @@ test('moves activity, but not recognized credits', () => {
   assert.equal(firstTerm.advancedPracticumCredits, 10)
   assert.equal(firstTerm.vacationPracticumCredits, 17)
   assert.equal(
-    firstTerm.semesters.at(-2)
+    firstTerm.rows.find(
+      (row) => row.key === '6-1',
+    )
       .practicumActivityCredits,
     10,
   )
   assert.equal(
-    firstTerm.semesters.at(-1)
+    firstTerm.rows.find(
+      (row) => row.key === '6-2',
+    )
       .practicumActivityCredits,
     0,
   )
   assert.equal(
-    secondTerm.semesters.at(-2)
+    secondTerm.rows.find(
+      (row) => row.key === '6-1',
+    )
       .practicumActivityCredits,
     0,
   )
   assert.equal(
-    secondTerm.semesters.at(-1)
+    secondTerm.rows.find(
+      (row) => row.key === '6-2',
+    )
       .practicumActivityCredits,
     10,
   )
   assert.equal(
-    firstTerm.sixthYearRequiredCredits,
-    secondTerm.sixthYearRequiredCredits,
+    firstTerm.rows
+      .filter((row) => row.grade === 6)
+      .reduce(
+        (total, row) =>
+          total + row.officialRequiredCredits,
+        0,
+      ),
+    secondTerm.rows
+      .filter((row) => row.grade === 6)
+      .reduce(
+        (total, row) =>
+          total + row.officialRequiredCredits,
+        0,
+      ),
   )
 })
 
 
 test('external general education reduces regular load', () => {
   const result = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress,
     records: [],
@@ -272,8 +311,8 @@ test('reflects actual and in-progress user records', () => {
       ...emptyCreditProgress,
       completedCredits: 6,
       inProgressCredits: 3,
-      requiredCredits: 21,
-      remainingCredits: 15,
+      requiredCredits: 48,
+      remainingCredits: 39,
       isSatisfied: false,
     },
     majorElective: {
@@ -297,6 +336,7 @@ test('reflects actual and in-progress user records', () => {
   } as any
 
   const result = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress: recordProgress,
     records,
@@ -309,21 +349,17 @@ test('reflects actual and in-progress user records', () => {
 
   assert.equal(result.confirmedCredits, 6)
   assert.equal(result.scheduledCredits, 3)
-  assert.equal(result.remainingGraduationCredits, 12)
+  assert.equal(result.remainingGraduationCredits, 39)
   assert.equal(
-    result.semesters.find(
-      (semester) =>
-        semester.grade === 2 &&
-        semester.semester === 1,
-    ).recordedCredits,
+    result.rows.find(
+      (row) => row.key === '2-1',
+    ).total.resident,
     6,
   )
   assert.equal(
-    result.semesters.find(
-      (semester) =>
-        semester.grade === 5 &&
-        semester.semester === 2,
-    ).recordedCredits,
+    result.rows.find(
+      (row) => row.key === '5-2',
+    ).total.resident,
     3,
   )
   assert.equal(result.sixthYearAttendanceCredits, 12)
@@ -332,6 +368,7 @@ test('reflects actual and in-progress user records', () => {
 
 test('fills every next semester through 5-2 to 24 credits', () => {
   const result = createCompletionSimulation({
+    user: regularUser,
     curriculum,
     progress,
     records: [],
@@ -343,16 +380,259 @@ test('fills every next semester through 5-2 to 24 credits', () => {
   })
 
   const projectedSemesters =
-    result.semesters.filter(
-      (semester) =>
-        semester.status === 'projected',
+    result.rows.filter(
+      (row) =>
+        row.status === 'projected',
     )
 
   assert.deepEqual(
     projectedSemesters.map(
-      (semester) => semester.totalCredits,
+      (row) =>
+        row.total.resident +
+        row.total.transfer +
+        row.total.projected,
     ),
     [24, 24, 24, 24],
   )
   assert.equal(result.sixthYearAttendanceCredits, 0)
+})
+
+
+test('calculates 128 minus 2 minus 27, then 96 and 3', () => {
+  const userProgress = {
+    ...progress,
+    totalCredits: {
+      ...emptyCreditProgress,
+      requiredCredits: 128,
+      remainingCredits: 128,
+      isSatisfied: false,
+    },
+    majorElective: {
+      ...progress.majorElective,
+      credits: {
+        ...emptyCreditProgress,
+        requiredCredits: 99,
+        remainingCredits: 99,
+        isSatisfied: false,
+      },
+    },
+    generalEducation: [
+      {
+        ...progress.generalEducation[0],
+        credits: {
+          ...emptyCreditProgress,
+          requiredCredits: 2,
+          remainingCredits: 2,
+          isSatisfied: false,
+        },
+      },
+    ],
+  } as any
+
+  const result = createCompletionSimulation({
+    user: regularUser,
+    curriculum,
+    progress: userProgress,
+    records: [],
+    deliveryRules: [],
+    currentGrade: 3,
+    currentSemester: 2,
+    externalGeneralEducationCredits: 2,
+    advancedPracticumTerm: '6-1',
+  })
+
+  assert.equal(result.remainingGraduationCredits, 128)
+  assert.equal(result.remainingAfterExternalCredits, 126)
+  assert.equal(result.practicumCreditsApplied, 27)
+  assert.equal(result.regularClassCreditsNeeded, 99)
+  assert.equal(result.preSixthTotalCapacity, 96)
+  assert.equal(result.sixthYearAttendanceCredits, 3)
+
+  const sixthFirst = result.rows.find(
+    (row) => row.key === '6-1',
+  )
+  const sixthSecond = result.rows.find(
+    (row) => row.key === '6-2',
+  )
+
+  assert.equal(
+    sixthFirst.total.projected,
+    17,
+  )
+  assert.equal(
+    sixthFirst.remainingAvailableCredits,
+    7,
+  )
+  assert.equal(
+    sixthSecond.total.projected,
+    13,
+  )
+  assert.equal(
+    sixthSecond.remainingAvailableCredits,
+    11,
+  )
+  assert.equal(
+    result.rows.some(
+      (row) =>
+        row.key === 'unknown-seasonal' &&
+        row.generalEducation.projected === 2,
+    ),
+    true,
+  )
+})
+
+
+test('shows transfer credits once and maps them to curriculum terms', () => {
+  const transferCurriculum = {
+    entryYear: 2024,
+    count: 2,
+    courses: [
+      {
+        ...curriculum.courses[0],
+        id: 101,
+        grade: 1,
+        semester: 1,
+        courseCode: 'TRANSFER-101',
+        courseName: '전적대 인정 전필 1',
+        credits: 3,
+      },
+      {
+        ...curriculum.courses[0],
+        id: 102,
+        grade: 2,
+        semester: 1,
+        courseCode: 'TRANSFER-102',
+        courseName: '전적대 인정 전필 2',
+        credits: 2,
+      },
+    ],
+  } as any
+
+  const transferRecords = [
+    {
+      id: 'transfer-1',
+      curriculumCourseId: 101,
+      grade: null,
+      semester: null,
+      term: null,
+      courseCode: 'TRANSFER-101',
+      courseName: '전적대 인정 전필 1',
+      completionType: '전필',
+      credits: 3,
+      status: 'substituted',
+      letterGrade: null,
+      isRetake: false,
+    },
+    {
+      id: 'transfer-2',
+      curriculumCourseId: 102,
+      grade: null,
+      semester: null,
+      term: null,
+      courseCode: 'TRANSFER-102',
+      courseName: '전적대 인정 전필 2',
+      completionType: '전필',
+      credits: 2,
+      status: 'substituted',
+      letterGrade: null,
+      isRetake: false,
+    },
+  ] as any
+
+  const result = createCompletionSimulation({
+    user: { studentType: 'transfer' },
+    curriculum: transferCurriculum,
+    progress,
+    records: transferRecords,
+    deliveryRules: [],
+    currentGrade: 3,
+    currentSemester: 2,
+    externalGeneralEducationCredits: 0,
+    advancedPracticumTerm: '6-1',
+  })
+
+  assert.equal(result.confirmedCredits, 5)
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === 'transfer-summary',
+    ).total.transfer,
+    5,
+  )
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === '1-1',
+    ).required.transfer,
+    3,
+  )
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === '2-1',
+    ).required.transfer,
+    2,
+  )
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === '1-2',
+    ).status,
+    'transfer_credit',
+  )
+})
+
+
+test('places recorded summer and winter courses in separate rows', () => {
+  const seasonalRecords = [
+    {
+      id: 'summer-general',
+      curriculumCourseId: null,
+      grade: 3,
+      semester: 1,
+      term: 'summer',
+      courseCode: 'SUMMER-1',
+      courseName: '여름 교양',
+      completionType: '교양',
+      credits: 2,
+      status: 'completed',
+      letterGrade: 'A',
+      isRetake: false,
+    },
+    {
+      id: 'winter-elective',
+      curriculumCourseId: null,
+      grade: 3,
+      semester: 2,
+      term: 'winter',
+      courseCode: 'WINTER-1',
+      courseName: '겨울 전선',
+      completionType: '전선',
+      credits: 3,
+      status: 'planned',
+      letterGrade: null,
+      isRetake: false,
+    },
+  ] as any
+
+  const result = createCompletionSimulation({
+    user: regularUser,
+    curriculum,
+    progress,
+    records: seasonalRecords,
+    deliveryRules: [],
+    currentGrade: 3,
+    currentSemester: 2,
+    externalGeneralEducationCredits: 0,
+    advancedPracticumTerm: '6-1',
+  })
+
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === '3-summer',
+    ).generalEducation.resident,
+    2,
+  )
+  assert.equal(
+    result.rows.find(
+      (row) => row.key === '3-winter',
+    ).elective.projected,
+    3,
+  )
 })

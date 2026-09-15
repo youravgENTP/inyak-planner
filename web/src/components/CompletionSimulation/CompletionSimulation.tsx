@@ -9,7 +9,8 @@ import type {
 import {
   createCompletionSimulation,
   type AdvancedPracticumTerm,
-  type SemesterSimulationStatus,
+  type CreditSourceBreakdown,
+  type SimulationRowStatus,
 } from '../../domain/completion-simulation/calculateCompletionSimulation'
 import type {
   CourseRecord,
@@ -131,13 +132,17 @@ function getNextSemesterLabel(
 
 
 function getStatusLabel(
-  status: SemesterSimulationStatus,
+  status: SimulationRowStatus,
 ): string {
   switch (status) {
+    case 'transfer_credit':
+      return '전적대 학점인정'
     case 'completed':
-      return '실제 이수'
+      return '이수 완료'
     case 'current':
       return '현재 학기'
+    case 'planned':
+      return '수강 예정'
     case 'projected':
       return '24학점 가정'
     case 'sixth_year':
@@ -172,6 +177,65 @@ function MetricCard({
       <strong>{value}</strong>
       <small>{detail}</small>
     </article>
+  )
+}
+
+
+function CreditBreakdown({
+  breakdown,
+}: {
+  breakdown: CreditSourceBreakdown
+}) {
+  const parts = [
+    breakdown.resident > 0
+      ? {
+          key: 'resident',
+          value: breakdown.resident,
+          label: '재학 중 이수',
+        }
+      : null,
+    breakdown.transfer > 0
+      ? {
+          key: 'transfer',
+          value: breakdown.transfer,
+          label: '전적대 인정',
+        }
+      : null,
+    breakdown.projected > 0
+      ? {
+          key: 'projected',
+          value: breakdown.projected,
+          label: '미래 예상',
+        }
+      : null,
+  ].filter(
+    (part): part is NonNullable<
+      typeof part
+    > => part !== null,
+  )
+
+  if (parts.length === 0) {
+    return <span>0</span>
+  }
+
+  return (
+    <span className="completion-simulation-credit-parts">
+      {parts.map((part, index) => (
+        <span key={part.key}>
+          {index > 0 ? (
+            <i aria-hidden="true">+</i>
+          ) : null}
+          <b
+            className={
+              `completion-simulation-credit--${part.key}`
+            }
+            title={part.label}
+          >
+            {part.value}
+          </b>
+        </span>
+      ))}
+    </span>
   )
 }
 
@@ -258,6 +322,7 @@ export function CompletionSimulation({
   const simulation = useMemo(
     () =>
       createCompletionSimulation({
+        user,
         curriculum,
         progress,
         records,
@@ -278,15 +343,9 @@ export function CompletionSimulation({
       externalGeneralEducationCredits,
       progress,
       records,
+      user,
     ],
   )
-
-  const hasUnallocatedCredits =
-    simulation.unallocatedElectiveCredits >
-      0 ||
-    simulation
-      .unallocatedGeneralEducationCredits >
-      0
 
   return (
     <section className="completion-simulation">
@@ -312,8 +371,15 @@ export function CompletionSimulation({
         </div>
 
         <p>
-          실제 이수·수강 중·수강 예정 기록을
-          먼저 반영하고,{' '}
+          실제 기록은 확정{' '}
+          <strong>
+            {simulation.confirmedCredits}학점
+          </strong>
+          , 수강 중·예정{' '}
+          <strong>
+            {simulation.scheduledCredits}학점
+          </strong>
+          입니다.{' '}
           <strong>
             {getNextSemesterLabel(
               currentAcademicTerm.grade,
@@ -410,67 +476,60 @@ export function CompletionSimulation({
 
       <div className="completion-simulation-metrics">
         <MetricCard
-          label="확정 이수학점"
-          value={
-            `${simulation.confirmedCredits}학점`
-          }
-          detail="이수 완료·대체 인정, F 제외"
-        />
-
-        <MetricCard
-          label="수강 중·예정"
-          value={
-            `${simulation.scheduledCredits}학점`
-          }
-          detail="실제 저장된 사용자 기록"
-        />
-
-        <MetricCard
           label="졸업요건 잔여"
           value={
             `${simulation.remainingGraduationCredits}학점`
           }
-          detail="수강 중·예정까지 반영"
+          detail="실제·수강 중·예정 기록 반영"
         />
 
         <MetricCard
-          label="5학년 2학기까지 추가 충족"
+          label="정규학기 외 교양"
           value={
-            `${simulation.preSixthGraduationCredits}학점`
+            `−${simulation.externalGeneralEducationCredits}학점`
           }
-          detail="다음 학기부터 24학점 가정"
+          detail={
+            `잔여 ${simulation.remainingAfterExternalCredits}학점`
+          }
+        />
+
+        <MetricCard
+          label="선이수·후인정 실습"
+          value={
+            `−${simulation.practicumCreditsApplied}학점`
+          }
+          detail={
+            `정규수업 필요 ${simulation.regularClassCreditsNeeded}학점`
+          }
+        />
+
+        <MetricCard
+          label="5학년 2학기까지 수강 가능"
+          value={
+            `${simulation.preSixthTotalCapacity}학점`
+          }
+          detail={
+            simulation.preSixthNewCapacity ===
+              simulation.preSixthTotalCapacity
+              ? '남은 정규학기 × 24학점'
+              : `기존 예정 반영 후 신규 ${simulation.preSixthNewCapacity}학점`
+          }
         />
 
         <MetricCard
           emphasized
-          label="6학년 실제 등교 필요"
+          label="6학년 실제 추가 등교"
           value={
             `${simulation.sixthYearAttendanceCredits}학점`
           }
-          detail="남은 전선·교양, 6-1 우선 배치"
+          detail="6-1부터 우선 배치"
         />
       </div>
 
       <div className="completion-simulation-practicum-note">
-        <strong>6학년 실습과 등교학점은 별도입니다.</strong>
+        <strong>학점 인정과 실제 활동을 분리해 계산합니다.</strong>
         <p>
-          공식 전필은 6학년 1학기{' '}
-          {
-            simulation.semesters.find(
-              (semester) =>
-                semester.grade === 6 &&
-                semester.semester === 1,
-            )?.officialRequiredCredits ?? 0
-          }
-          학점, 2학기{' '}
-          {
-            simulation.semesters.find(
-              (semester) =>
-                semester.grade === 6 &&
-                semester.semester === 2,
-            )?.officialRequiredCredits ?? 0
-          }
-          학점으로 인정됩니다. 심화실습{' '}
+          심화실습{' '}
           {simulation.advancedPracticumCredits}
           학점의 실제 활동은{' '}
           {simulation.advancedPracticumTerm ===
@@ -479,27 +538,23 @@ export function CompletionSimulation({
             : '6학년 2학기'}
           , 나머지 필수실무실습{' '}
           {simulation.vacationPracticumCredits}
-          학점은 5학년 방학 활동으로
-          계산합니다.
+          학점은 5학년 방학 활동으로 보되,
+          학점은 공식 6학년 학기에
+          인정합니다.
         </p>
       </div>
 
-      {hasUnallocatedCredits ? (
+      {simulation.sixthYearUnallocatedCredits >
+      0 ? (
         <div
           className="completion-simulation-warning"
           role="status"
         >
           6학년의 추가 수강 가능학점을 모두
-          사용해도 졸업요건이 부족합니다.
-          전선{' '}
-          {simulation.unallocatedElectiveCredits}
-          학점, 교양{' '}
-          {
-            simulation
-              .unallocatedGeneralEducationCredits
-          }
-          학점을 계절학기 또는 다른 방법으로
-          추가 이수해야 합니다.
+          사용해도{' '}
+          {simulation.sixthYearUnallocatedCredits}
+          학점이 부족합니다. 계절학기 또는
+          다른 이수 방법이 필요합니다.
         </div>
       ) : null}
 
@@ -542,13 +597,11 @@ export function CompletionSimulation({
       <section className="completion-simulation-table-section">
         <header>
           <div>
-            <p>실제 기록 + 24학점 가정</p>
+            <p>검정 재학 · 초록 전적대 · 파랑 미래</p>
             <h3>학기별 이수 요약</h3>
           </div>
 
-          <span>
-            단위: 학점
-          </span>
+          <span>단위: 학점</span>
         </header>
 
         <div className="completion-simulation-table-scroll">
@@ -557,116 +610,100 @@ export function CompletionSimulation({
               <tr>
                 <th scope="col">학기</th>
                 <th scope="col">상태</th>
-                <th scope="col">실제·예정 기록</th>
-                <th scope="col">공식 전필</th>
-                <th scope="col">전선·교양 배정</th>
-                <th scope="col">총 인정학점</th>
+                <th scope="col">해당 학기 전필</th>
+                <th scope="col">이수 전필</th>
+                <th scope="col">이수 전선</th>
+                <th scope="col">이수 교양</th>
+                <th scope="col">
+                  총 이수/수강 학점
+                </th>
                 <th scope="col">
                   해당 학기 잔여 수강 가능학점
                 </th>
-                <th scope="col">실제 등교학점</th>
               </tr>
             </thead>
 
             <tbody>
-              {simulation.semesters.map(
-                (semester) => (
-                  <tr
-                    className={
-                      `completion-simulation-row--${semester.status}`
-                    }
-                    key={
-                      `${semester.grade}-` +
-                      semester.semester
-                    }
-                  >
-                    <th scope="row">
-                      {semester.grade}-
-                      {semester.semester}
-                    </th>
-                    <td>
-                      <span className="completion-simulation-status">
-                        {getStatusLabel(
-                          semester.status,
-                        )}
-                      </span>
-                    </td>
-                    <td>
-                      {semester.recordedCredits}
-                    </td>
-                    <td>
-                      <strong>
+              {simulation.rows.map((row) => (
+                <tr
+                  className={
+                    `completion-simulation-row--${row.status}`
+                  }
+                  key={row.key}
+                >
+                  <th scope="row">
+                    {row.label}
+                  </th>
+                  <td>
+                    <span className="completion-simulation-status">
+                      {getStatusLabel(row.status)}
+                    </span>
+                  </td>
+                  <td>
+                    {row.officialRequiredCredits}
+                  </td>
+                  <td>
+                    <CreditBreakdown
+                      breakdown={row.required}
+                    />
+                  </td>
+                  <td>
+                    <CreditBreakdown
+                      breakdown={row.elective}
+                    />
+                    {row.additionalElectiveCredits >
+                    0 ? (
+                      <small>
+                        졸업요건 외 추가 선택{' '}
                         {
-                          semester
-                            .officialRequiredCredits
+                          row
+                            .additionalElectiveCredits
                         }
-                      </strong>
-                      {semester.status ===
-                        'projected' &&
-                      semester.requiredCreditsToTake !==
-                        semester.officialRequiredCredits ? (
-                        <small>
-                          남은 전필{' '}
-                          {
-                            semester
-                              .requiredCreditsToTake
-                          }
-                        </small>
-                      ) : null}
-                    </td>
-                    <td>
-                      <strong>
-                        전선{' '}
-                        {semester.electiveCredits}
-                        {' · '}교양{' '}
-                        {
-                          semester
-                            .generalEducationCredits
-                        }
-                      </strong>
-                      {semester.additionalCredits >
-                      0 ? (
-                        <small>
-                          졸업요건 외 추가 수강{' '}
-                          {semester.additionalCredits}
-                        </small>
-                      ) : null}
-                    </td>
-                    <td>
-                      <strong>
-                        {semester.totalCredits}
-                      </strong>
-                    </td>
-                    <td>
-                      {semester
-                        .remainingAvailableCredits ===
-                      null
-                        ? '—'
-                        : semester
-                            .remainingAvailableCredits}
-                    </td>
-                    <td>
-                      <strong>
-                        {semester.attendanceCredits}
-                      </strong>
-                      {semester
-                        .practicumActivityCredits >
-                      0 ? (
-                        <small>
-                          별도 실습 활동{' '}
-                          {
-                            semester
-                              .practicumActivityCredits
-                          }
-                        </small>
-                      ) : null}
-                    </td>
-                  </tr>
-                ),
-              )}
+                      </small>
+                    ) : null}
+                  </td>
+                  <td>
+                    <CreditBreakdown
+                      breakdown={
+                        row.generalEducation
+                      }
+                    />
+                  </td>
+                  <td>
+                    <CreditBreakdown
+                      breakdown={row.total}
+                    />
+                    {row.practicumActivityCredits >
+                    0 ? (
+                      <small>
+                        별도 실습 활동{' '}
+                        {row.practicumActivityCredits}
+                      </small>
+                    ) : null}
+                  </td>
+                  <td>
+                    {row.remainingAvailableCredits ===
+                    null
+                      ? '—'
+                      : row.remainingAvailableCredits}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
+
+        {simulation.rows.some(
+          (row) =>
+            row.kind === 'transfer_summary',
+        ) ? (
+          <p className="completion-simulation-transfer-note">
+            전적대 학점인정 요약행과 1·2학년
+            학기별 초록색 학점은 같은 기록을
+            보여주며, 전체 이수학점에는 한 번만
+            합산됩니다.
+          </p>
+        ) : null}
       </section>
     </section>
   )
